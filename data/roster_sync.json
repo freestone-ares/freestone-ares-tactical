@@ -1,6 +1,6 @@
 {
-  "version": "7.8.0",
-  "lastUpdated": 1728118800000,
+  "version": "7.8.1",
+  "lastUpdated": 1728126000000,
   "updatedBy": "KG5TZT",
   "members": [
     {
@@ -17,7 +17,14 @@
       "canSendAlerts": true,
       "phone": "903-644-5856",
       "email": "fcares@pm.me",
-      "fema": ["IS-100", "IS-200", "IS-300", "IS-400", "IS-700", "IS-800"],
+      "fema": [
+        "IS-100",
+        "IS-200",
+        "IS-300",
+        "IS-400",
+        "IS-700",
+        "IS-800"
+      ],
       "power": "Commercial & Battery Backup & Emergency Generator",
       "isSpotter": true,
       "photo": ""
@@ -36,7 +43,13 @@
       "canSendAlerts": true,
       "phone": "903-394-1772",
       "email": "AI5OX@yahoo.com",
-      "fema": ["IS-100", "IS-200", "IS-300", "IS-700", "IS-800"],
+      "fema": [
+        "IS-100",
+        "IS-200",
+        "IS-300",
+        "IS-700",
+        "IS-800"
+      ],
       "power": "Commercial & Battery Backup",
       "isSpotter": true,
       "photo": ""
@@ -55,7 +68,14 @@
       "canSendAlerts": false,
       "phone": "903-389-3335",
       "email": "freestone.emc@co.freestone.tx.us",
-      "fema": ["IS-100", "IS-200", "IS-300", "IS-400", "IS-700", "IS-800"],
+      "fema": [
+        "IS-100",
+        "IS-200",
+        "IS-300",
+        "IS-400",
+        "IS-700",
+        "IS-800"
+      ],
       "power": "Commercial & Emergency Generator",
       "isSpotter": false,
       "photo": ""
@@ -74,7 +94,12 @@
       "canSendAlerts": false,
       "phone": "903-388-3470",
       "email": "bryant1969@yahoo.com",
-      "fema": ["IS-100", "IS-200", "IS-700", "IS-800"],
+      "fema": [
+        "IS-100",
+        "IS-200",
+        "IS-700",
+        "IS-800"
+      ],
       "power": "Commercial & Battery Backup",
       "isSpotter": true,
       "photo": ""
@@ -93,7 +118,12 @@
       "canSendAlerts": false,
       "phone": "903-875-6420",
       "email": "paulparrish@gmail.com",
-      "fema": ["IS-100", "IS-200", "IS-700", "IS-800"],
+      "fema": [
+        "IS-100",
+        "IS-200",
+        "IS-700",
+        "IS-800"
+      ],
       "power": "Commercial & Battery Backup",
       "isSpotter": true,
       "photo": ""
@@ -112,7 +142,12 @@
       "canSendAlerts": false,
       "phone": "254-488-1431",
       "email": "kj5gpk@gmail.com",
-      "fema": ["IS-100", "IS-200", "IS-700", "IS-800"],
+      "fema": [
+        "IS-100",
+        "IS-200",
+        "IS-700",
+        "IS-800"
+      ],
       "power": "Commercial & Battery Backup",
       "isSpotter": true,
       "photo": ""
@@ -131,7 +166,10 @@
       "canSendAlerts": false,
       "phone": "903-366-0169",
       "email": "houndheadjr@gmail.com",
-      "fema": ["IS-100", "IS-700"],
+      "fema": [
+        "IS-100",
+        "IS-700"
+      ],
       "power": "Commercial & Battery Backup",
       "isSpotter": true,
       "photo": ""
@@ -150,7 +188,10 @@
       "canSendAlerts": false,
       "phone": "360-907-5717",
       "email": "cybercowboy777@gmail.com",
-      "fema": ["IS-100", "IS-700"],
+      "fema": [
+        "IS-100",
+        "IS-700"
+      ],
       "power": "Commercial & Battery Backup",
       "isSpotter": true,
       "photo": ""
@@ -169,7 +210,12 @@
       "canSendAlerts": false,
       "phone": "903-390-8828",
       "email": "danharringtonweldingandfabrication@outlook.com",
-      "fema": ["IS-100", "IS-200", "IS-700", "IS-800"],
+      "fema": [
+        "IS-100",
+        "IS-200",
+        "IS-700",
+        "IS-800"
+      ],
       "power": "Commercial & Battery Backup",
       "isSpotter": true,
       "photo": ""
@@ -188,7 +234,12 @@
       "canSendAlerts": false,
       "phone": "254-625-1643",
       "email": "bullardfarms@gmail.com",
-      "fema": ["IS-100", "IS-200", "IS-700", "IS-800"],
+      "fema": [
+        "IS-100",
+        "IS-200",
+        "IS-700",
+        "IS-800"
+      ],
       "power": "Commercial & Battery Backup",
       "isSpotter": true,
       "photo": ""
@@ -207,7 +258,12 @@
       "canSendAlerts": false,
       "phone": "408-767-0606",
       "email": "peteharper1@yahoo.com",
-      "fema": ["IS-100", "IS-200", "IS-700", "IS-800"],
+      "fema": [
+        "IS-100",
+        "IS-200",
+        "IS-700",
+        "IS-800"
+      ],
       "power": "Commercial & Battery Backup",
       "isSpotter": true,
       "photo": ""
@@ -226,7 +282,12 @@
       "canSendAlerts": false,
       "phone": "903-922-7620",
       "email": "n5wmh3@gmail.com",
-      "fema": ["IS-100", "IS-200", "IS-700", "IS-800"],
+      "fema": [
+        "IS-100",
+        "IS-200",
+        "IS-700",
+        "IS-800"
+      ],
       "power": "Commercial & Battery Backup",
       "isSpotter": true,
       "photo": ""
@@ -245,7 +306,12 @@
       "canSendAlerts": false,
       "phone": "903-944-8870",
       "email": "operator@epsilonseven.com",
-      "fema": ["IS-100", "IS-200", "IS-700", "IS-800"],
+      "fema": [
+        "IS-100",
+        "IS-200",
+        "IS-700",
+        "IS-800"
+      ],
       "power": "Commercial & Battery Backup",
       "isSpotter": true,
       "photo": ""
@@ -264,7 +330,10 @@
       "canSendAlerts": false,
       "phone": "903-390-6967",
       "email": "ke5mib@fcares.org",
-      "fema": ["IS-100", "IS-700"],
+      "fema": [
+        "IS-100",
+        "IS-700"
+      ],
       "power": "Commercial",
       "isSpotter": false,
       "photo": ""
@@ -283,7 +352,10 @@
       "canSendAlerts": false,
       "phone": "903-388-3253",
       "email": "kately.craig@gmail.com",
-      "fema": ["IS-100", "IS-700"],
+      "fema": [
+        "IS-100",
+        "IS-700"
+      ],
       "power": "Commercial",
       "isSpotter": false,
       "photo": ""
@@ -302,7 +374,10 @@
       "canSendAlerts": false,
       "phone": "903-392-5432",
       "email": "rjandrews2010@gmail.com",
-      "fema": ["IS-100", "IS-700"],
+      "fema": [
+        "IS-100",
+        "IS-700"
+      ],
       "power": "Commercial",
       "isSpotter": false,
       "photo": ""
