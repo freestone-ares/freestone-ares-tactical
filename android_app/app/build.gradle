@@ -6,6 +6,16 @@ android {
     namespace 'org.freestone.ares'
     compileSdk 34
 
+    signingConfigs {
+        fieldRelease {
+            storeFile file("${rootDir}/keystore/field.keystore")
+            storePassword 'freestone_ares_field_2026'
+            keyAlias 'freestone-ares'
+            keyPassword 'freestone_ares_field_2026'
+            storeType 'PKCS12'
+        }
+    }
+
     defaultConfig {
         applicationId "org.freestone.ares.tactical"
         minSdk 24
@@ -19,11 +29,12 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.fieldRelease
         }
         debug {
             applicationIdSuffix ".debug"
             debuggable true
+            signingConfig signingConfigs.fieldRelease
         }
     }
     compileOptions {
