@@ -1,0 +1,32 @@
+{
+  "name": "Freestone County ARES Tactical Mobile",
+  "short_name": "FC ARES",
+  "description": "Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES, Texas",
+  "start_url": "./ares_tactical_preview.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0b0e14",
+  "theme_color": "#0b0e14",
+  "categories": ["utilities", "emergency", "navigation"],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
