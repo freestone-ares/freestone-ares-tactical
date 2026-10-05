@@ -35,6 +35,7 @@ jobs:
         working-directory: ./android_app
         env:
           ANDROID_HOME: /usr/local/lib/android/sdk
+          BUILD_NUMBER: ${{ github.run_number }}
         run: |
           gradle wrapper --gradle-version 8.5
           chmod +x gradlew
@@ -52,21 +53,24 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v7.4-field-build
-          name: "Freestone ARES Tactical v7.4 (Android Field APK)"
+          tag_name: v7.4.${{ github.run_number }}
+          target_commitish: ${{ github.sha }}
+          name: "Freestone ARES Tactical v7.4.${{ github.run_number }} (Field APK)"
+          make_latest: true
           body: |
-            ## Freestone County ARES - Tactical Operations Field Build (v7.4)
+            ## Freestone County ARES - Tactical Operations Field Build (v7.4.${{ github.run_number }})
             
-            This is the direct standalone Android APK for field testing tonight.
+            This is the latest standalone Android APK for Freestone County ARES field operations.
             
-            ### Quick Install Instructions for Android:
-            1. Download `Freestone-ARES-Tactical-v7.4.apk` below directly on your Android phone.
-            2. Tap the downloaded file in your browser downloads or Files app.
-            3. Tap **Install** (if prompted by Android, allow *"Install unknown apps"* for Chrome/Files).
-            4. Launch **Freestone ARES** from your home screen.
+            ### Quick Install / Update Instructions for Android:
+            - **In Obtainium:** Open Obtainium and tap **Check for updates** (or swipe down to refresh), then tap **Update**.
+            - **Direct APK:** Download `Freestone-ARES-Tactical-v7.4.apk` below directly on your Android phone and install.
             
             ### Included in this build:
-            - **Pre-Seeded Verified Roster:** 16 Freestone County operators with passwordless 6-digit OTP login.
+            - **Multi-Operator Authentication:** Clean initial state requiring verified operator selection and 6-digit OTP claim (fixes auto-login as EC).
+            - **16 Verified Operators Pre-Seeded:** All active county operators loaded with full callsign and credential mapping.
+            - **1-Tap Share Modal:** QR code generator and native SMS/Share integration for instant field distribution.
+            - **Obtainium Auto-Update Sync:** Semantic version tracking (`v7.4.${{ github.run_number }}`) enabled for automatic over-the-air update detection.
             - **Offline Texas County Maps:** Pre-cached OpenStreetMap tile engine for field comms without internet.
             - **Tactical Field Tools:** ICS-213 form generator, APRS-IS beacon monitor, NetLogger sync, repeater directory.
             - **Direct Dial:** One-touch `📞 CALL` and `💬 SMS` native dialer integration.
