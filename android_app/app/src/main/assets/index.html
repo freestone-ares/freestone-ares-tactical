@@ -192,11 +192,11 @@
             <button onclick="setTheme('red')" class="px-2 py-1 rounded text-xs text-red-400 hover:bg-slate-800 transition font-mono-tac font-bold" title="Red Night-Vision">RED</button>
           </div>
 
-          <!-- Operator Profile & EC Simulator Chip -->
-          <button onclick="openSessionModal()" id="session-btn" class="px-2.5 py-1.5 rounded text-xs bg-emerald-950 text-emerald-300 border border-emerald-800 hover:bg-emerald-900 transition font-mono-tac font-bold flex items-center gap-1.5 shadow" title="EC Admin Profile & Role Simulator">
-            <span>👤</span>
-            <span id="current-user-call">KG5TZT (EC)</span>
-            <span id="current-user-auth-badge" class="px-1 py-0.2 rounded text-[9px] bg-red-950 text-red-400 border border-red-800 font-bold">DISPATCH</span>
+          <!-- Operator Profile & Login / Callsign Claim Chip -->
+          <button onclick="handleSessionButtonClick()" id="session-btn" class="px-2.5 py-1.5 rounded text-xs bg-amber-950/90 text-amber-300 border border-amber-700 hover:bg-amber-900 transition font-mono-tac font-bold flex items-center gap-1.5 shadow" title="Sign In or Claim Callsign">
+            <span id="session-btn-icon">🔑</span>
+            <span id="current-user-call">SIGN IN / CLAIM CALLSIGN</span>
+            <span id="current-user-auth-badge" class="px-1 py-0.2 rounded text-[9px] bg-amber-950 text-amber-400 border border-amber-800 font-bold">GUEST</span>
           </button>
         </div>
       </div>
@@ -509,6 +509,21 @@
     
     <!-- 0.5 STEP 2: TACTICAL DASHBOARD & MISSION CLOCKS -->
     <section id="view-dash" class="tab-content space-y-6">
+
+      <!-- Guest Mode Sign-In Prompt Banner (Shown when not authenticated) -->
+      <div id="dash-guest-banner" class="bg-gradient-to-r from-amber-950/90 via-slate-900 to-amber-950/70 border-2 border-amber-500/70 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-[0_0_15px_rgba(245,158,11,0.25)]">
+        <div class="flex items-center gap-3 text-left">
+          <span class="text-2xl">⚠️</span>
+          <div>
+            <div class="text-amber-400 font-bold text-sm tracking-wide">YOU ARE RUNNING IN GUEST PRIVACY MODE</div>
+            <p class="text-[11px] text-slate-300">Roster phone numbers and dispatch controls are locked. Sign in or claim your verified callsign to unlock full tactical communications and direct calling.</p>
+          </div>
+        </div>
+        <button onclick="openMagicLinkModal()" class="w-full sm:w-auto px-4 py-2.5 bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 text-slate-950 font-black rounded-lg text-xs font-mono-tac shadow transition flex items-center justify-center gap-2 whitespace-nowrap">
+          <span>🔑</span>
+          <span>SIGN IN / CLAIM CALLSIGN</span>
+        </button>
+      </div>
       
       <!-- Step 2 Explanatory Header -->
       <div class="bg-gradient-to-r from-amber-950/60 via-slate-900 to-[#10151d] border-2 border-amber-500/50 rounded-xl p-5 shadow-[0_0_20px_rgba(245,158,11,0.15)] flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -584,20 +599,20 @@
         <div class="lg:col-span-5 bg-[#10151d] border border-slate-800 rounded-xl p-5 space-y-4 font-mono-tac">
           <div class="flex items-center justify-between border-b border-slate-800 pb-3">
             <span class="text-xs font-bold text-slate-200">LOGGED OPERATOR PROFILE</span>
-            <span class="text-[10px] text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800 font-bold">AUTHENTICATED</span>
+            <span id="dash-auth-badge" class="text-[10px] text-amber-400 bg-amber-950 px-2 py-0.5 rounded border border-amber-800 font-bold">GUEST (LOCKED)</span>
           </div>
 
           <!-- Operator Details -->
           <div class="flex items-start gap-3 p-3 bg-[#0b0e14] rounded-lg border border-slate-800">
-            <div class="w-12 h-12 rounded-xl bg-black border border-emerald-500/60 flex items-center justify-center text-emerald-400 font-bold text-base shadow-[0_0_12px_rgba(16,185,129,0.3)]">
-              EC
+            <div id="dash-user-avatar" class="w-12 h-12 rounded-xl bg-amber-950/60 border border-amber-500/60 flex items-center justify-center text-amber-400 font-bold text-base shadow-[0_0_12px_rgba(245,158,11,0.3)]">
+              🔒
             </div>
             <div class="flex-1 min-w-0">
               <div class="flex items-center gap-2">
-                <h3 id="dash-user-name" class="text-sm font-bold text-white truncate">Brian Davis</h3>
-                <span id="dash-user-call" class="text-sm font-black text-emerald-400">KG5TZT</span>
+                <h3 id="dash-user-name" class="text-sm font-bold text-white truncate">Guest Operator</h3>
+                <span id="dash-user-call" class="text-sm font-black text-amber-400">GUEST</span>
               </div>
-              <p class="text-[11px] text-slate-400">Emergency Coordinator &bull; Amateur Extra</p>
+              <p id="dash-user-role-text" class="text-[11px] text-slate-400">Unauthenticated Guest &bull; Masked View</p>
               <div class="flex flex-wrap items-center gap-1.5 mt-1.5 text-[10px]">
                 <span class="bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded border border-amber-800 font-bold">RACES: TX-FC-01</span>
                 <span class="bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded">GMRS: WRPN302</span>
@@ -4135,12 +4150,12 @@
     // State management
     const appState = {
       theme: 'green',
-      isLoggedIn: true,
-      myCall: 'KG5TZT',
-      myName: 'Brian Davis',
-      myRole: 'Emergency Coordinator (EC)',
-      myLevel: 'EC',
-      canSendAlerts: true,
+      isLoggedIn: false,
+      myCall: 'GUEST',
+      myName: 'Guest Operator',
+      myRole: 'Guest Viewer',
+      myLevel: 'Guest',
+      canSendAlerts: false,
       deviceView: 'desktop',
       calendarView: 'agenda',
       calendarCategory: 'all',
@@ -6203,7 +6218,63 @@ D. Out-of-County stations and visitors.
       document.getElementById('session-modal').classList.add('hidden');
     }
 
+    function handleSessionButtonClick() {
+      if (!appState.isLoggedIn || appState.myCall === 'GUEST') {
+        openMagicLinkModal();
+      } else {
+        openSessionModal();
+      }
+    }
+
+    function updateDashboardUserProfile() {
+      const nameEl = document.getElementById('dash-user-name');
+      const callEl = document.getElementById('dash-user-call');
+      const roleTextEl = document.getElementById('dash-user-role-text');
+      const avatarEl = document.getElementById('dash-user-avatar');
+      const authBadge = document.getElementById('dash-auth-badge');
+      const guestBanner = document.getElementById('dash-guest-banner');
+
+      if (!appState.isLoggedIn || appState.myCall === 'GUEST') {
+        if (nameEl) nameEl.textContent = 'Guest Operator';
+        if (callEl) {
+          callEl.textContent = 'GUEST';
+          callEl.className = 'text-sm font-black text-amber-400';
+        }
+        if (roleTextEl) roleTextEl.innerHTML = 'Unauthenticated Guest &bull; Masked View';
+        if (avatarEl) {
+          avatarEl.textContent = '🔒';
+          avatarEl.className = 'w-12 h-12 rounded-xl bg-amber-950/60 border border-amber-500/60 flex items-center justify-center text-amber-400 font-bold text-base shadow-[0_0_12px_rgba(245,158,11,0.3)]';
+        }
+        if (authBadge) {
+          authBadge.textContent = 'GUEST (LOCKED)';
+          authBadge.className = 'text-[10px] text-amber-400 bg-amber-950 px-2 py-0.5 rounded border border-amber-800 font-bold';
+        }
+        if (guestBanner) guestBanner.classList.remove('hidden');
+      } else {
+        if (nameEl) nameEl.textContent = appState.myName;
+        if (callEl) {
+          callEl.textContent = appState.myCall;
+          callEl.className = 'text-sm font-black text-emerald-400';
+        }
+        if (roleTextEl) roleTextEl.innerHTML = `${appState.myRole} &bull; ${appState.myLevel}`;
+        if (avatarEl) {
+          const initials = appState.myCall === 'KG5TZT' ? 'EC' : appState.myCall.substring(0, 2);
+          avatarEl.textContent = initials;
+          avatarEl.className = 'w-12 h-12 rounded-xl bg-black border border-emerald-500/60 flex items-center justify-center text-emerald-400 font-bold text-base shadow-[0_0_12px_rgba(16,185,129,0.3)]';
+        }
+        if (authBadge) {
+          authBadge.textContent = 'AUTHENTICATED';
+          authBadge.className = 'text-[10px] text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800 font-bold';
+        }
+        if (guestBanner) guestBanner.classList.add('hidden');
+      }
+    }
+
     function switchOperator(callsign, showAlert = true) {
+      if (!callsign || callsign === 'GUEST') {
+        logoutOperator();
+        return;
+      }
       appState.isLoggedIn = true;
       if (callsign === 'KG5TZT') {
         appState.myCall = 'KG5TZT';
@@ -6213,10 +6284,10 @@ D. Out-of-County stations and visitors.
         appState.canSendAlerts = true;
       } else {
         const m = appState.members.find(x => x.call === callsign) || {
-          call: 'KJ5GPK',
-          name: 'Leonard Smith',
+          call: callsign,
+          name: 'Verified Operator',
           role: 'Field Operator',
-          level: 'Field Operator',
+          level: 'Level 2 - Core Operations',
           canSendAlerts: false
         };
         m.claimed = true;
@@ -6234,6 +6305,7 @@ D. Out-of-County stations and visitors.
       }));
 
       updateSessionHeaderUI();
+      updateDashboardUserProfile();
       updateDispatchControlsVisibility();
       updateCalendarDispatchButton();
       renderCalendarEvents();
@@ -6255,33 +6327,36 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
       const callEl = document.getElementById('current-user-call');
       const authBadge = document.getElementById('current-user-auth-badge');
       const sessionBtn = document.getElementById('session-btn');
+      const iconEl = document.getElementById('session-btn-icon');
 
-      if (!appState.isLoggedIn) {
-        if (callEl) callEl.textContent = 'GUEST (MASKED)';
+      if (!appState.isLoggedIn || appState.myCall === 'GUEST') {
+        if (iconEl) iconEl.textContent = '🔑';
+        if (callEl) callEl.textContent = 'SIGN IN / CLAIM CALL';
         if (authBadge) {
-          authBadge.textContent = 'RESTRICTED';
-          authBadge.className = 'px-1 py-0.2 rounded text-[9px] bg-amber-950 text-amber-400 border border-amber-800 font-bold';
+          authBadge.textContent = 'GUEST';
+          authBadge.className = 'px-1.5 py-0.5 rounded text-[9px] bg-amber-950 text-amber-400 border border-amber-800 font-bold';
         }
         if (sessionBtn) {
-          sessionBtn.className = 'px-2.5 py-1.5 rounded text-xs bg-amber-950/80 text-amber-300 border border-amber-700 hover:bg-amber-900 transition font-mono-tac font-bold flex items-center gap-1.5 shadow animate-pulse';
+          sessionBtn.className = 'px-2.5 py-1.5 rounded text-xs bg-amber-950/90 text-amber-300 border border-amber-700 hover:bg-amber-900 transition font-mono-tac font-bold flex items-center gap-1.5 shadow animate-pulse';
           sessionBtn.title = 'Guest Mode — Tap to Claim Callsign & Unlock';
         }
       } else {
+        if (iconEl) iconEl.textContent = '👤';
         if (callEl) {
-          callEl.textContent = `${appState.myCall} (${appState.myCall === 'KG5TZT' ? 'EC' : 'VOLUNTEER'})`;
+          callEl.textContent = `${appState.myCall} (${appState.myCall === 'KG5TZT' ? 'EC' : appState.myRole.split(' ')[0]})`;
         }
         if (authBadge) {
           if (appState.canSendAlerts) {
             authBadge.textContent = 'DISPATCH';
             authBadge.className = 'px-1 py-0.2 rounded text-[9px] bg-red-950 text-red-400 border border-red-800 font-bold';
           } else {
-            authBadge.textContent = 'RECEIVE ONLY';
-            authBadge.className = 'px-1 py-0.2 rounded text-[9px] bg-slate-900 text-slate-400 border border-slate-700 font-bold';
+            authBadge.textContent = 'OPERATOR';
+            authBadge.className = 'px-1 py-0.2 rounded text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold';
           }
         }
         if (sessionBtn) {
           sessionBtn.className = 'px-2.5 py-1.5 rounded text-xs bg-emerald-950 text-emerald-300 border border-emerald-800 hover:bg-emerald-900 transition font-mono-tac font-bold flex items-center gap-1.5 shadow';
-          sessionBtn.title = 'Active Operator Profile & Settings';
+          sessionBtn.title = `Logged In as ${appState.myName} (${appState.myCall}) — Tap to Switch or Logout`;
         }
       }
     }
@@ -8345,37 +8420,50 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
     // ==========================================
     // STEP 1: PASSWORDLESS AUTH & ROSTER CLAIM SYSTEM
     // ==========================================
+    function populateAuthCallsignSelect() {
+      const select = document.getElementById('auth-callsign-select');
+      if (!select) return;
+      select.innerHTML = '<option value="" disabled selected>-- SELECT YOUR CALLSIGN TO LOG IN --</option>';
+      appState.members.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m.call;
+        opt.textContent = `${m.call} - ${m.name} (${m.role})`;
+        opt.setAttribute('data-email', m.email);
+        opt.setAttribute('data-name', m.name);
+        select.appendChild(opt);
+      });
+      if (appState.isLoggedIn && appState.myCall !== 'GUEST') {
+        select.value = appState.myCall;
+      }
+    }
+
     function initAuthSession() {
       try {
         const saved = localStorage.getItem('fc_ares_auth_session');
         if (saved) {
           const sess = JSON.parse(saved);
-          if (sess.isLoggedIn === false) {
-            appState.isLoggedIn = false;
-            appState.myCall = 'GUEST';
-            appState.myName = 'Guest Responder';
-            appState.myRole = 'Guest Viewer';
-            appState.myLevel = 'Guest';
-            appState.canSendAlerts = false;
-          } else if (sess.call) {
+          if (sess && sess.isLoggedIn && sess.call && sess.call !== 'GUEST') {
             switchOperator(sess.call, false);
+            return;
           }
-        } else {
-          // Default to Master EC Brian Davis on first run
-          appState.isLoggedIn = true;
-          appState.myCall = 'KG5TZT';
-          appState.myName = 'Brian Davis';
-          appState.myRole = 'Emergency Coordinator (EC)';
-          appState.myLevel = 'EC';
-          appState.canSendAlerts = true;
         }
+
+        // Clean install or unauthenticated session -> Start in Guest Mode and direct to Login
+        appState.isLoggedIn = false;
+        appState.myCall = 'GUEST';
+        appState.myName = 'Guest Operator';
+        appState.myRole = 'Guest Viewer';
+        appState.myLevel = 'Guest';
+        appState.canSendAlerts = false;
+
+        switchTab('auth');
       } catch (e) {
         console.error('Session init error:', e);
       }
     }
 
     function loginAsCallsign(call, showAlert = true) {
-      if (!call) return;
+      if (!call || call === 'GUEST') return;
       const targetCall = call.trim().toUpperCase();
       const m = appState.members.find(x => x.call.toUpperCase() === targetCall);
 
@@ -8407,6 +8495,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       }));
 
       updateSessionHeaderUI();
+      updateDashboardUserProfile();
       updateDispatchControlsVisibility();
       updateCalendarDispatchButton();
       renderRosterGrid();
@@ -8414,19 +8503,14 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       renderCalendarEvents();
 
       if (showAlert) {
-        alert(`AUTHENTICATED & CALLSIGN CLAIMED!
-
-Welcome, ${appState.myName} (${appState.myCall})
-Role: ${appState.myRole}
-
-All tactical contact phone numbers, direct dial, and SMS alerts are now UNLOCKED.`);
+        alert(`AUTHENTICATED & CALLSIGN CLAIMED!\n\nWelcome, ${appState.myName} (${appState.myCall})\nRole: ${appState.myRole}\n\nAll tactical contact phone numbers, direct dial, and SMS alerts are now UNLOCKED.`);
       }
     }
 
     function logoutOperator() {
       appState.isLoggedIn = false;
       appState.myCall = 'GUEST';
-      appState.myName = 'Guest Responder';
+      appState.myName = 'Guest Operator';
       appState.myRole = 'Guest Viewer';
       appState.myLevel = 'Guest';
       appState.canSendAlerts = false;
@@ -8438,6 +8522,7 @@ All tactical contact phone numbers, direct dial, and SMS alerts are now UNLOCKED
       }));
 
       updateSessionHeaderUI();
+      updateDashboardUserProfile();
       updateDispatchControlsVisibility();
       renderRosterGrid();
       renderResponderTable();
@@ -8487,8 +8572,13 @@ For instant testing in offline / browser preview, your 6-digit verification code
     function verifyAuthOtp() {
       const select = document.getElementById('auth-callsign-select');
       const input = document.getElementById('auth-otp-input');
-      const call = select ? select.value : 'KG5TZT';
+      const call = (select && select.value) ? select.value : '';
       const code = input ? input.value.trim() : '';
+
+      if (!call) {
+        alert('Please select your callsign from the verified roster dropdown first.');
+        return;
+      }
 
       if (!code || code.length < 6) {
         alert('Please enter a valid 6-digit verification code (or tap "Auto-Fill: 758401").');
@@ -8589,6 +8679,7 @@ For instant testing in offline / browser preview, your 6-digit verification code
 
       closeMagicLinkModal();
       loginAsCallsign(call, true);
+      switchTab('dash');
     }
 
     function submitNewMemberRegistration() {
@@ -8923,7 +9014,9 @@ For instant testing in offline / browser preview, your 6-digit verification code
     }
 
     // Initial render
+    populateAuthCallsignSelect();
     initAuthSession();
+    updateDashboardUserProfile();
     updateDispatchControlsVisibility();
     updateSessionHeaderUI();
     populatePaceDropdowns();
