@@ -67,13 +67,14 @@ jobs:
             - **Direct APK:** Download `Freestone-ARES-Tactical-v7.4.apk` below directly on your Android phone and install.
             
             ### Included in this build:
-            - **Multi-Operator Authentication:** Clean initial state requiring verified operator selection and 6-digit OTP claim (fixes auto-login as EC).
-            - **16 Verified Operators Pre-Seeded:** All active county operators loaded with full callsign and credential mapping.
+            - **Straight Callsign & Password Login:** Replaces magic link/OTP with a clean, direct callsign and password authentication system.
+            - **Mandatory Password Setup on Update:** All users are prompted to set their initial password upon updating.
+            - **EC Authorization & User Level Desk:** Operators submit access requests that are queued for Emergency Coordinator Brian Davis (KG5TZT) to review and set their clearance level (Level 1 through Level 5).
+            - **Master EC Root Access:** Permanent master administrator clearance pre-seeded for Brian Davis (KG5TZT).
+            - **Permanent Cryptographic Signing:** APK is signed with the official permanent Freestone County ARES keystore (field.keystore) for seamless 1-tap Obtainium updates.
             - **1-Tap Share Modal:** QR code generator and native SMS/Share integration for instant field distribution.
-            - **Obtainium Auto-Update Sync:** Semantic version tracking (`v7.4.${{ github.run_number }}`) enabled for automatic over-the-air update detection.
             - **Offline Texas County Maps:** Pre-cached OpenStreetMap tile engine for field comms without internet.
             - **Tactical Field Tools:** ICS-213 form generator, APRS-IS beacon monitor, NetLogger sync, repeater directory.
-            - **Direct Dial:** One-touch `📞 CALL` and `💬 SMS` native dialer integration.
           files: Freestone-ARES-Tactical-v7.4.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
