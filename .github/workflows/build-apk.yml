@@ -71,18 +71,17 @@ jobs:
             - **Direct APK:** Download `Freestone-ARES-Tactical-v7.7.apk` below directly on your Android phone and install.
             
             ### What's New in v7.7:
+            - **First-Time & 6-Month Profile Verification:** Operators verify their credentials on first login and are prompted every 6 months to review their contact numbers, FEMA certs, power capability, and photo ID.
+            - **Assigned Operator Level Locked to Master EC:** The assigned operator clearance level is strictly locked to Master EC Brian Davis (KG5TZT) and cannot be self-modified.
+            - **FEMA Certifications Checkboxes (Check All That Apply):** Multi-select checkboxes for IS-100, IS-200, IS-300, IS-400, IS-700, and IS-800.
+            - **Power Deployment Capability Checkboxes (Check All That Apply):** Multi-select checkboxes for Commercial, Battery backup, and Emergency generator.
+            - **Web Preview & Testing Quick Bar:** Added 1-click Master EC testing bar to web preview for instant operational testing.
             - **Fixed Hamburger Menu Button:** Resolved issue where menu button did not open on installed Obtainium Android app. Implemented a zero-latency root-level viewport overlay drawer with touch optimization.
             - **Mobile Screen Optimization & 2-Line Header Fit:** The top tactical dashboard and header fit 100% cleanly on any mobile viewport without horizontal scrolling or sliding right/left.
-            - **Real Optical Night Vision Switcher:** Authentic monochrome optical color filters across the entire app interface:
-              - **NV-G:** P-43 Night Vision Phosphor Green
-              - **AMB:** Cockpit Amber Low-Light Filter
-              - **RED:** Tactical Dark-Adaptation Red Filter
-              - **DAY:** Full Standard Multi-Color Day/Night Palette
-            - **County Response Level 1-4 Controller:** Emergency Coordinator direct posture dispatch (Level 4 Normal, Level 3 Increased Readiness, Level 2 Advisory, Level 1 Full Activation) synchronized to the top status badge and command dashboard.
+            - **Real Optical Night Vision Switcher:** Authentic monochrome optical color filters across the entire app interface (NV-G, AMB, RED, DAY).
+            - **County Response Level 1-4 Controller:** Emergency Coordinator direct posture dispatch (Levels 1–4) synchronized to the top status badge and command dashboard.
             - **Storm Spotter Qualification Across All Levels:** Storm spotter certified credential can now be assigned to any operator level with a dedicated badge.
             - **Operator Deletion & Decommissioning:** EC Brian Davis can permanently decommission and remove operators from the active tactical system.
-            - **Comprehensive Operator Profiles:** Roster and accounts now manage Full Legal Name, Callsign, GMRS License, RACES Registration Number, Phone, Email, License Class, Power Deployment Capability, FEMA Certifications, and Professional Photo ID.
-            - **EC Profile Editor & Operator Self-Profile Editor:** Dedicated modals for Brian Davis to edit any volunteer profile and for operators to edit their own profile.
             - **Mandatory Professional Photo ID:** Front-facing camera capture requiring a plain white background and no hat on.
             - **Strict Master EC Login:** Master EC login strictly requires Callsign `KG5TZT` and Password `Chief@svfd1`. All auto-login bypasses removed.
             - **Permanent Cryptographic Signing:** Keystore signature preserved for seamless Obtainium updates.
