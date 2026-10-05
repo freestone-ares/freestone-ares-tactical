@@ -193,7 +193,7 @@
         </div>
 
         <!-- Active User Badge / Switcher -->
-        <button onclick="switchTab('auth')" id="session-btn" class="px-2 sm:px-2.5 py-1.5 rounded-lg bg-[#0b0e14] hover:bg-slate-800 text-xs border border-slate-700 text-slate-200 flex items-center gap-1.5 transition" title="Operator Profile & Clearance Level">
+        <button onclick="handleSessionHeaderClick()" id="session-btn" class="px-2 sm:px-2.5 py-1.5 rounded-lg bg-[#0b0e14] hover:bg-slate-800 text-xs border border-slate-700 text-slate-200 flex items-center gap-1.5 transition select-none" title="Operator Identity & Tactical Clearance Level">
           <span id="session-btn-icon" class="text-xs">🔑</span>
           <span id="current-user-call" class="font-bold text-xs truncate max-w-[90px] sm:max-w-[130px]">SIGN IN</span>
           <span id="current-user-auth-badge" class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-950 text-amber-300 border border-amber-800">GUEST</span>
@@ -232,16 +232,16 @@
           <span class="text-emerald-400 font-bold text-xs">➔</span>
         </button>
 
-        <!-- 2. PACE Channels -->
-        <button onclick="navFromMenu('pace')" id="menu-item-pace" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-slate-800/80 text-slate-200 transition border border-transparent">
+        <!-- 2. PACE Channels & Frequency Directory (Moved from Dashboard) -->
+        <button onclick="navFromMenu('pace')" id="menu-item-pace" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-emerald-950/40 text-emerald-300 transition border border-emerald-900/40 bg-emerald-950/20">
           <div class="flex items-center gap-2.5">
             <span class="text-base">📡</span>
             <div>
-              <div class="font-bold text-xs">Frequencies &amp; PACE</div>
-              <div class="text-[10px] text-slate-400">Repeater directory, simplex channels &amp; CHIRP</div>
+              <div class="font-bold text-xs text-white">PACE Channels &amp; 22 Frequencies</div>
+              <div class="text-[10px] text-slate-400">Fairfield repeaters, VHF/UHF simplex matrix &amp; CHIRP</div>
             </div>
           </div>
-          <span class="text-slate-500 text-xs">➔</span>
+          <span class="text-emerald-400 font-bold text-xs">➔</span>
         </button>
 
         <!-- 3. Roster -->
@@ -590,31 +590,60 @@
               <span class="text-[10px] text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">STANDARDS</span>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
-              <div class="p-2.5 bg-[#0b0e14] rounded border border-slate-800 space-y-1">
-                <span class="text-emerald-400 font-bold block">Level 1 - Field Operator / Spotter</span>
-                <p class="text-slate-400">Tactical communications, repeater directory, offline county maps, weather spotter logs.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-[11px]">
+              <!-- Level 1 -->
+              <div class="p-2.5 bg-[#0b0e14] rounded-lg border border-slate-800 space-y-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-slate-300 font-bold block">Level 1 - Operator</span>
+                  <span class="text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded font-bold">BASIC PRIVILEGES</span>
+                </div>
+                <p class="text-slate-400">New person with no prior experience. Can set up in a building/facility and assist an experienced operator.</p>
               </div>
-              <div class="p-2.5 bg-[#0b0e14] rounded border border-slate-800 space-y-1">
-                <span class="text-purple-400 font-bold block">Level 2 - Core Operations / Net Control (NCS)</span>
-                <p class="text-slate-400">Level 1 + NetLogger check-in sync, live net preamble prompter, logger export.</p>
-              </div>
-              <div class="p-2.5 bg-[#0b0e14] rounded border border-slate-800 space-y-1">
-                <span class="text-sky-400 font-bold block">Level 3 - Assistant EC (AEC)</span>
-                <p class="text-slate-400">Level 2 + Operational logistics, roster edits, deployment staging coordination.</p>
-              </div>
-              <div class="p-2.5 bg-[#0b0e14] rounded border border-slate-800 space-y-1">
-                <span class="text-orange-400 font-bold block">Level 4 - County Liaison / EOC Dispatch</span>
-                <p class="text-slate-400">Level 3 + Emergency runner, mutual aid dispatch, county emergency management coordination.</p>
-              </div>
-            </div>
 
-            <div class="p-2.5 bg-amber-950/40 rounded border border-amber-500/40 text-[11px] flex items-center justify-between">
-              <div>
-                <strong class="text-amber-400">Level 5 - Master EC Admin (Brian Davis - KG5TZT)</strong>
-                <p class="text-slate-400 text-[10px]">Full administrative control, operator authorization, alert dispatch, and master security.</p>
+              <!-- Level 2 -->
+              <div class="p-2.5 bg-[#0b0e14] rounded-lg border border-slate-800 space-y-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-emerald-400 font-bold block">Level 2 - Field Operator / Spotter</span>
+                  <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-1.5 py-0.5 rounded font-bold">FIELD &amp; SPOTTER</span>
+                </div>
+                <p class="text-slate-400">Certified to operate in the field independently and deploy as a mobile storm spotter during SKYWARN weather activations.</p>
               </div>
-              <span class="text-[10px] bg-amber-500 text-slate-950 font-black px-2 py-1 rounded">ROOT</span>
+
+              <!-- Level 3 -->
+              <div class="p-2.5 bg-[#0b0e14] rounded-lg border border-slate-800 space-y-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-purple-400 font-bold block">Level 3 - Net Control Station (NCS)</span>
+                  <span class="text-[9px] bg-purple-950 text-purple-300 border border-purple-800 px-1.5 py-0.5 rounded font-bold">NCS PRIVILEGES</span>
+                </div>
+                <p class="text-slate-400">Can do all of Level 1 &amp; 2 + access to all NCS features like official Net Script (ARRL preamble) and live NetLogger check-ins.</p>
+              </div>
+
+              <!-- Level 4 -->
+              <div class="p-2.5 bg-[#0b0e14] rounded-lg border border-slate-800 space-y-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-sky-400 font-bold block">Level 4 - Assistant EC (AEC)</span>
+                  <span class="text-[9px] bg-sky-950 text-sky-300 border border-sky-800 px-1.5 py-0.5 rounded font-bold">ALERT DISPATCH</span>
+                </div>
+                <p class="text-slate-400">Assists the EC in all aspects. Granted all operator permissions plus emergency page-out, siren activation, and deployment controls.</p>
+              </div>
+
+              <!-- Level 5 -->
+              <div class="p-2.5 bg-[#0b0e14] rounded-lg border border-slate-800 space-y-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-amber-400 font-bold block">Level 5 - County EMC</span>
+                  <span class="text-[9px] bg-amber-950 text-amber-300 border border-amber-800 px-1.5 py-0.5 rounded font-bold">ALL EXCEPT ALERTS</span>
+                </div>
+                <p class="text-slate-400">County Emergency Management Coordinator. Has ALL app permissions EXCEPT alert features (no ham radio page-out dispatch).</p>
+              </div>
+
+              <!-- Level 6 -->
+              <div class="p-2.5 bg-red-950/40 rounded-lg border border-red-500/50 space-y-1">
+                <div class="flex items-center justify-between">
+                  <strong class="text-red-400 font-bold block">Level 6 - Emergency Coordinator (EC)</strong>
+                  <span class="text-[9px] bg-red-900 text-red-100 font-black px-1.5 py-0.5 rounded border border-red-700">ROOT MASTER EC</span>
+                </div>
+                <p class="text-slate-300">Brian Davis (KG5TZT). Master authority with ALL app permissions (EC security desk authorizations, paging, alerts, and bypass).</p>
+              </div>
             </div>
           </div>
 
@@ -963,33 +992,27 @@
             </button>
           </div>
 
-          <!-- TACTICAL MISSION SHORTCUTS (4 CARDS) -->
+          <!-- TACTICAL MISSION SHORTCUTS (3 CARDS - PACE CHANNELS IN HAMBURGER MENU) -->
           <div class="space-y-2">
             <span class="text-[10px] text-slate-400 font-bold block">MISSION SHORTCUTS:</span>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
               
-              <button onclick="switchTab('pace')" class="p-3 bg-[#10151d] hover:bg-slate-800 border border-slate-800 rounded-xl text-left transition space-y-1">
-                <div class="text-base text-emerald-400">📡</div>
-                <div class="font-bold text-white text-[11px]">PACE CHANNELS</div>
-                <div class="text-[10px] text-slate-400">22 ICS-205 Freqs</div>
-              </button>
-
-              <button id="dash-btn-paging-2" onclick="handleDashboardAlertClick()" class="p-3 bg-[#10151d] hover:bg-slate-800 border border-slate-800 rounded-xl text-left transition space-y-1">
+              <button id="dash-btn-paging-2" onclick="handleDashboardAlertClick()" class="p-3 bg-[#10151d] hover:bg-slate-800 border border-slate-800 rounded-xl text-left transition space-y-1 cursor-pointer">
                 <div class="text-base text-red-400">🚨</div>
                 <div class="font-bold text-white text-[11px]">INCIDENT ALERTS</div>
-                <div class="text-[10px] text-slate-400">Tone Siren & Page</div>
+                <div class="text-[10px] text-slate-400">Tone Siren &amp; Page</div>
               </button>
 
-              <button onclick="switchTab('skywarn')" class="p-3 bg-[#10151d] hover:bg-slate-800 border border-slate-800 rounded-xl text-left transition space-y-1">
+              <button onclick="switchTab('skywarn')" class="p-3 bg-[#10151d] hover:bg-slate-800 border border-slate-800 rounded-xl text-left transition space-y-1 cursor-pointer">
                 <div class="text-base text-blue-400">⛈️</div>
-                <div class="font-bold text-white text-[11px]">SKYWARN</div>
-                <div class="text-[10px] text-slate-400">Storm Spotting</div>
+                <div class="font-bold text-white text-[11px]">SKYWARN WEATHER</div>
+                <div class="text-[10px] text-slate-400">Live Spotter Reports</div>
               </button>
 
-              <button onclick="switchTab('roster')" class="p-3 bg-[#10151d] hover:bg-slate-800 border border-slate-800 rounded-xl text-left transition space-y-1">
+              <button onclick="switchTab('roster')" class="p-3 bg-[#10151d] hover:bg-slate-800 border border-slate-800 rounded-xl text-left transition space-y-1 cursor-pointer">
                 <div class="text-base text-amber-400">👥</div>
                 <div class="font-bold text-white text-[11px]">ARES ROSTER</div>
-                <div class="text-[10px] text-slate-400">15 Operators</div>
+                <div class="text-[10px] text-slate-400">16 County Members</div>
               </button>
 
             </div>
@@ -4631,22 +4654,22 @@
         ]
       },
       members: [
-        { id: 1, call: 'KG5TZT', gmrs: 'WRPN302', name: 'Brian Davis', class: 'Amateur Extra', role: 'Emergency Coordinator (EC)', level: 'EC', verified: true, claimed: true, canSendAlerts: true, phone: '903-644-5856', email: 'fcares@pm.me', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800', 'ICS-300', 'ICS-400'] },
-        { id: 2, call: 'AI5OX', gmrs: 'WSEA569', name: 'Robert Cockerell', class: 'Amateur Extra', role: 'Assistant EC (AEC)', level: 'NCS', verified: true, claimed: false, canSendAlerts: false, phone: '903-394-1772', email: 'AI5OX@yahoo.com', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800', 'ICS-300'] },
-        { id: 3, call: 'KE5MIB', gmrs: 'NONE', name: 'Buzz Russell', class: 'Technician', role: 'Operator', level: 'Operator', verified: true, claimed: false, canSendAlerts: false, phone: '903-390-6967', email: 'ke5mib@fcares.org', fema: ['IS-100', 'IS-700'] },
-        { id: 4, call: 'N5BED', gmrs: 'WSDI801', name: 'Billy Bryant', class: 'General', role: 'Net Control Station (NCS)', level: 'NCS', verified: true, claimed: false, canSendAlerts: false, phone: '903-388-3470', email: 'bryant1969@yahoo.com', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800'] },
-        { id: 5, call: 'KJ5HSS', gmrs: 'WSHS425', name: 'Paul Parrish', class: 'General', role: 'Field Operator', level: 'Field Operator', verified: true, claimed: false, canSendAlerts: false, phone: '903-875-6420', email: 'paulparrish@gmail.com', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800'] },
-        { id: 6, call: 'KJ5GPK', gmrs: 'WSHH865', name: 'Leonard Smith', class: 'General', role: 'Field Operator', level: 'Field Operator', verified: true, claimed: false, canSendAlerts: false, phone: '254-488-1431', email: 'kj5gpk@gmail.com', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800'] },
-        { id: 7, call: 'KJ5GPJ', gmrs: 'NONE', name: 'Kateley Smith', class: 'Technician', role: 'Operator', level: 'Operator', verified: true, claimed: false, canSendAlerts: false, phone: '903-388-3253', email: 'kately.craig@gmail.com', fema: ['IS-100', 'IS-700'] },
-        { id: 8, call: 'KI5YIG', gmrs: 'WROJ727', name: 'Don Hall', class: 'General', role: 'Storm Spotter', level: 'Storm Spotter', verified: true, claimed: false, canSendAlerts: false, phone: '903-366-0169', email: 'houndheadjr@gmail.com', fema: ['IS-100', 'IS-700', 'NWS Storm Spotter Class'] },
-        { id: 9, call: 'KE5DFY', gmrs: 'WSHG319', name: 'Daniel Harrington', class: 'Amateur Extra', role: 'Technical Lead', level: 'Field Operator', verified: true, claimed: false, canSendAlerts: false, phone: '903-390-8828', email: 'danharringtonweldingandfabrication@outlook.com', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800'] },
-        { id: 10, call: 'KJ5JUW', gmrs: 'NONE', name: 'Jason Andrews', class: 'Technician', role: 'Operator', level: 'Operator', verified: true, canSendAlerts: false, phone: '903-392-5432', email: 'rjandrews2010@gmail.com', fema: ['IS-100', 'IS-700'] },
-        { id: 11, call: 'W5KFX', gmrs: 'WRKY482', name: 'Keath Huff', class: 'Amateur Extra', role: 'Storm Spotter', level: 'Storm Spotter', verified: true, canSendAlerts: false, phone: '360-907-5717', email: 'cybercowboy777@gmail.com', fema: ['IS-100', 'IS-700', 'NWS Storm Spotter Class'] },
-        { id: 12, call: 'KI5RZD', gmrs: 'WRUP547', name: 'Steve Bullard', class: 'General', role: 'Field Operator', level: 'Field Operator', verified: true, canSendAlerts: false, phone: '254-625-1643', email: 'bullardfarms@gmail.com', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800'] },
-        { id: 13, call: 'KJ5LMM', gmrs: 'WSFR839', name: 'Pete Harper', class: 'General', role: 'Field Operator', level: 'Field Operator', verified: true, canSendAlerts: false, phone: '408-767-0606', email: 'peteharper1@yahoo.com', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800'] },
-        { id: 14, call: 'N5WMH', gmrs: 'WSBW995', name: 'Russel Hall', class: 'General', role: 'Field Operator', level: 'Field Operator', verified: true, canSendAlerts: false, phone: '903-922-7620', email: 'n5wmh3@gmail.com', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800'] },
-        { id: 15, call: 'W5AMR', gmrs: 'NONE', name: 'William Houston', class: 'General', role: 'Digital Lead', level: 'Field Operator', verified: true, canSendAlerts: false, phone: '903-944-8870', email: 'operator@epsilonseven.com', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800'] },
-        { id: 16, call: 'FC-EMC', gmrs: 'NONE', name: 'Freestone County EMC', class: 'Liaison', role: 'County Emergency Management', level: 'EMC', verified: true, canSendAlerts: false, phone: '903-389-3335', email: 'freestone.emc@co.freestone.tx.us', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800', 'ICS-300', 'ICS-400'] }
+        { id: 1, call: 'KG5TZT', gmrs: 'WRPN302', name: 'Brian Davis', class: 'Amateur Extra', role: 'Emergency Coordinator (EC)', level: 'Level 6 - Emergency Coordinator (EC)', verified: true, claimed: true, canSendAlerts: true, phone: '903-644-5856', email: 'fcares@pm.me', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800', 'ICS-300', 'ICS-400'] },
+        { id: 2, call: 'AI5OX', gmrs: 'WSEA569', name: 'Robert Cockerell', class: 'Amateur Extra', role: 'Assistant EC (AEC)', level: 'Level 4 - Assistant EC', verified: true, claimed: false, canSendAlerts: true, phone: '903-394-1772', email: 'AI5OX@yahoo.com', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800', 'ICS-300'] },
+        { id: 3, call: 'FC-EMC', gmrs: 'NONE', name: 'Freestone County EMC', class: 'Liaison', role: 'County Emergency Management Coordinator (EMC)', level: 'Level 5 - County EMC', verified: true, claimed: false, canSendAlerts: false, phone: '903-389-3335', email: 'freestone.emc@co.freestone.tx.us', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800', 'ICS-300', 'ICS-400'] },
+        { id: 4, call: 'N5BED', gmrs: 'WSDI801', name: 'Billy Bryant', class: 'General', role: 'Net Control Station (NCS)', level: 'Level 3 - NCS', verified: true, claimed: false, canSendAlerts: false, phone: '903-388-3470', email: 'bryant1969@yahoo.com', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800'] },
+        { id: 5, call: 'KJ5HSS', gmrs: 'WSHS425', name: 'Paul Parrish', class: 'General', role: 'Field Operator / Storm Spotter', level: 'Level 2 - Field Operator / Spotter', verified: true, claimed: false, canSendAlerts: false, phone: '903-875-6420', email: 'paulparrish@gmail.com', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800'] },
+        { id: 6, call: 'KJ5GPK', gmrs: 'WSHH865', name: 'Leonard Smith', class: 'General', role: 'Field Operator / Storm Spotter', level: 'Level 2 - Field Operator / Spotter', verified: true, claimed: false, canSendAlerts: false, phone: '254-488-1431', email: 'kj5gpk@gmail.com', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800'] },
+        { id: 7, call: 'KI5YIG', gmrs: 'WROJ727', name: 'Don Hall', class: 'General', role: 'Field Operator / Storm Spotter', level: 'Level 2 - Field Operator / Spotter', verified: true, claimed: false, canSendAlerts: false, phone: '903-366-0169', email: 'houndheadjr@gmail.com', fema: ['IS-100', 'IS-700', 'NWS Storm Spotter Class'] },
+        { id: 8, call: 'W5KFX', gmrs: 'WRKY482', name: 'Keath Huff', class: 'Amateur Extra', role: 'Field Operator / Storm Spotter', level: 'Level 2 - Field Operator / Spotter', verified: true, claimed: false, canSendAlerts: false, phone: '360-907-5717', email: 'cybercowboy777@gmail.com', fema: ['IS-100', 'IS-700', 'NWS Storm Spotter Class'] },
+        { id: 9, call: 'KE5DFY', gmrs: 'WSHG319', name: 'Daniel Harrington', class: 'Amateur Extra', role: 'Field Operator / Storm Spotter', level: 'Level 2 - Field Operator / Spotter', verified: true, claimed: false, canSendAlerts: false, phone: '903-390-8828', email: 'danharringtonweldingandfabrication@outlook.com', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800'] },
+        { id: 10, call: 'KI5RZD', gmrs: 'WRUP547', name: 'Steve Bullard', class: 'General', role: 'Field Operator / Storm Spotter', level: 'Level 2 - Field Operator / Spotter', verified: true, claimed: false, canSendAlerts: false, phone: '254-625-1643', email: 'bullardfarms@gmail.com', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800'] },
+        { id: 11, call: 'KJ5LMM', gmrs: 'WSFR839', name: 'Pete Harper', class: 'General', role: 'Field Operator / Storm Spotter', level: 'Level 2 - Field Operator / Spotter', verified: true, claimed: false, canSendAlerts: false, phone: '408-767-0606', email: 'peteharper1@yahoo.com', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800'] },
+        { id: 12, call: 'N5WMH', gmrs: 'WSBW995', name: 'Russel Hall', class: 'General', role: 'Field Operator / Storm Spotter', level: 'Level 2 - Field Operator / Spotter', verified: true, claimed: false, canSendAlerts: false, phone: '903-922-7620', email: 'n5wmh3@gmail.com', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800'] },
+        { id: 13, call: 'W5AMR', gmrs: 'NONE', name: 'William Houston', class: 'General', role: 'Field Operator / Storm Spotter', level: 'Level 2 - Field Operator / Spotter', verified: true, claimed: false, canSendAlerts: false, phone: '903-944-8870', email: 'operator@epsilonseven.com', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800'] },
+        { id: 14, call: 'KE5MIB', gmrs: 'NONE', name: 'Buzz Russell', class: 'Technician', role: 'Level 1 Operator', level: 'Level 1 - Operator', verified: true, claimed: false, canSendAlerts: false, phone: '903-390-6967', email: 'ke5mib@fcares.org', fema: ['IS-100', 'IS-700'] },
+        { id: 15, call: 'KJ5GPJ', gmrs: 'NONE', name: 'Kateley Smith', class: 'Technician', role: 'Level 1 Operator', level: 'Level 1 - Operator', verified: true, claimed: false, canSendAlerts: false, phone: '903-388-3253', email: 'kately.craig@gmail.com', fema: ['IS-100', 'IS-700'] },
+        { id: 16, call: 'KJ5JUW', gmrs: 'NONE', name: 'Jason Andrews', class: 'Technician', role: 'Level 1 Operator', level: 'Level 1 - Operator', verified: true, claimed: false, canSendAlerts: false, phone: '903-392-5432', email: 'rjandrews2010@gmail.com', fema: ['IS-100', 'IS-700'] }
       ],
       votes: {
         approve: 12,
@@ -4714,9 +4737,203 @@
       switchTab(tabId);
     }
 
+    // ==========================================
+    // 6-LEVEL OPERATOR HIERARCHY & PERMISSIONS MATRIX
+    // ==========================================
+    function getOperatorClearance() {
+      const call = (appState.myCall || '').toUpperCase().trim();
+      const levelStr = (appState.myLevel || '').toString();
+
+      // Level 6: Emergency Coordinator (EC) — Brian Davis (KG5TZT)
+      if (call === 'KG5TZT' || levelStr.includes('Level 6') || levelStr === 'EC') {
+        return {
+          levelNum: 6,
+          levelTitle: 'Level 6 - Emergency Coordinator (EC)',
+          role: 'Emergency Coordinator (EC)',
+          canManageUsers: true,  // Sole authority over EC Desk & user passwords
+          canSendAlerts: true,   // Paging, Tone Sirens, Mass Dispatch
+          canRunNCS: true,       // Net Script & NetLogger prompter
+          canCommandDeploy: true,
+          hasFullAccess: true
+        };
+      }
+
+      // Level 5: County EMC — Executive oversight without ham radio alerts
+      if (levelStr.includes('Level 5') || levelStr.includes('EMC') || call === 'FC-EMC') {
+        return {
+          levelNum: 5,
+          levelTitle: 'Level 5 - County EMC',
+          role: 'County Emergency Management Coordinator (EMC)',
+          canManageUsers: false,
+          canSendAlerts: false,  // ALL APP PERMISSIONS EXCEPT ALERT FEATURES
+          canRunNCS: true,
+          canCommandDeploy: false,
+          hasFullAccess: false
+        };
+      }
+
+      // Level 4: Assistant EC (AEC) — Operations plus Alert & Siren Dispatch
+      if (levelStr.includes('Level 4') || levelStr.includes('Assistant EC') || levelStr.includes('AEC') || call === 'AI5OX') {
+        return {
+          levelNum: 4,
+          levelTitle: 'Level 4 - Assistant EC (AEC)',
+          role: 'Assistant Emergency Coordinator (AEC)',
+          canManageUsers: false,
+          canSendAlerts: true,   // ALL OPERATOR PERMISSIONS PLUS ALERT FEATURES
+          canRunNCS: true,
+          canCommandDeploy: true,
+          hasFullAccess: false
+        };
+      }
+
+      // Level 3: NCS — Net Control Station with Net Script & NetLogger
+      if (levelStr.includes('Level 3') || levelStr.includes('NCS') || levelStr.includes('Net Control') || call === 'N5BED') {
+        return {
+          levelNum: 3,
+          levelTitle: 'Level 3 - Net Control Station (NCS)',
+          role: 'Net Control Station (NCS)',
+          canManageUsers: false,
+          canSendAlerts: false,  // No emergency broadcast alerts
+          canRunNCS: true,       // Access to all NCS features like net script and NetLogger
+          canCommandDeploy: false,
+          hasFullAccess: false
+        };
+      }
+
+      // Level 2: Field Operator / Spotter — Field certified and mobile weather spotter
+      if (levelStr.includes('Level 2') || levelStr.includes('Spotter') || levelStr.includes('Field Operator') || ['KJ5HSS', 'KJ5GPK', 'KI5YIG', 'W5KFX', 'KI5RZD', 'KJ5LMM', 'N5WMH', 'W5AMR', 'KE5DFY'].includes(call)) {
+        return {
+          levelNum: 2,
+          levelTitle: 'Level 2 - Field Operator / Spotter',
+          role: 'Field Operator / Storm Spotter',
+          canManageUsers: false,
+          canSendAlerts: false,
+          canRunNCS: false,      // Basic privileges
+          canCommandDeploy: false,
+          hasFullAccess: false
+        };
+      }
+
+      // Level 1: Operator — New operator, building setup & assistant
+      if (appState.isLoggedIn && call !== 'GUEST') {
+        return {
+          levelNum: 1,
+          levelTitle: 'Level 1 - Operator',
+          role: 'Level 1 Operator',
+          canManageUsers: false,
+          canSendAlerts: false,
+          canRunNCS: false,      // Basic privileges
+          canCommandDeploy: false,
+          hasFullAccess: false
+        };
+      }
+
+      // Guest / Unauthenticated
+      return {
+        levelNum: 0,
+        levelTitle: 'Guest / Unauthenticated',
+        role: 'Guest Viewer',
+        canManageUsers: false,
+        canSendAlerts: false,
+        canRunNCS: false,
+        canCommandDeploy: false,
+        hasFullAccess: false
+      };
+    }
+
+    function handleSessionHeaderClick() {
+      if (!appState.isLoggedIn || appState.myCall === 'GUEST') {
+        switchTab('auth');
+      } else {
+        openOperatorProfileModal();
+      }
+    }
+
+    function openOperatorProfileModal() {
+      const modal = document.getElementById('operator-profile-modal');
+      if (!modal) return;
+
+      const clearance = getOperatorClearance();
+      const callEl = document.getElementById('prof-modal-call');
+      const nameEl = document.getElementById('prof-modal-name');
+      const badgeEl = document.getElementById('prof-modal-badge');
+      const roleEl = document.getElementById('prof-modal-role');
+      const descEl = document.getElementById('prof-modal-desc');
+      const permsEl = document.getElementById('prof-modal-perms');
+
+      if (callEl) callEl.textContent = appState.myCall;
+      if (nameEl) nameEl.textContent = appState.myName;
+      if (roleEl) roleEl.textContent = clearance.role;
+      if (descEl) {
+        const descs = {
+          6: 'Master tactical authority for Freestone County ARES. Has ALL app permissions (EC security desk authorizations, paging, alerts, and root bypass).',
+          5: 'County Emergency Management Coordinator. Has ALL app permissions EXCEPT alert features (no ham radio page-out dispatch).',
+          4: 'Assistant Emergency Coordinator. Granted all operator permissions plus emergency page-out, siren activation, and deployment controls.',
+          3: 'Net Control Station. Capable of all Level 1 & 2 duties, plus access to all NCS features like official Net Script (ARRL preamble) and NetLogger check-ins.',
+          2: 'Certified to operate independently in the field and serve as a mobile storm spotter during SKYWARN weather activations.',
+          1: 'New operator with no prior experience. Can set up in a building/facility and assist an experienced operator. Basic privileges.'
+        };
+        descEl.textContent = descs[clearance.levelNum] || 'Verified Freestone County ARES field operator.';
+      }
+
+      if (badgeEl) {
+        badgeEl.textContent = `LEVEL ${clearance.levelNum} • ${clearance.role.split(' ')[0].toUpperCase()}`;
+        if (clearance.levelNum === 6) {
+          badgeEl.className = 'px-2.5 py-1 rounded text-xs font-black bg-red-950 text-red-300 border border-red-800';
+        } else if (clearance.levelNum === 5) {
+          badgeEl.className = 'px-2.5 py-1 rounded text-xs font-black bg-amber-950 text-amber-300 border border-amber-800';
+        } else if (clearance.levelNum === 4) {
+          badgeEl.className = 'px-2.5 py-1 rounded text-xs font-black bg-sky-950 text-sky-300 border border-sky-800';
+        } else if (clearance.levelNum === 3) {
+          badgeEl.className = 'px-2.5 py-1 rounded text-xs font-black bg-purple-950 text-purple-300 border border-purple-800';
+        } else {
+          badgeEl.className = 'px-2.5 py-1 rounded text-xs font-black bg-emerald-950 text-emerald-300 border border-emerald-800';
+        }
+      }
+
+      if (permsEl) {
+        permsEl.innerHTML = `
+          <div class="flex items-center justify-between p-1.5 rounded bg-black/40">
+            <span class="text-slate-300">Tactical Dashboard &amp; 22 PACE Frequencies:</span>
+            <span class="text-emerald-400 font-bold">✓ GRANTED</span>
+          </div>
+          <div class="flex items-center justify-between p-1.5 rounded bg-black/40">
+            <span class="text-slate-300">Offline County Maps &amp; Spotter Reports:</span>
+            <span class="text-emerald-400 font-bold">✓ GRANTED</span>
+          </div>
+          <div class="flex items-center justify-between p-1.5 rounded bg-black/40">
+            <span class="text-slate-300">NCS Net Script &amp; NetLogger Check-Ins:</span>
+            <span class="${clearance.canRunNCS ? 'text-purple-400' : 'text-slate-500'} font-bold">
+              ${clearance.canRunNCS ? '✓ GRANTED (L3+)' : '🔒 RESTRICTED (L1/L2)'}
+            </span>
+          </div>
+          <div class="flex items-center justify-between p-1.5 rounded bg-black/40">
+            <span class="text-slate-300">Emergency Tone Sirens &amp; Mass Paging:</span>
+            <span class="${clearance.canSendAlerts ? 'text-red-400' : 'text-slate-500'} font-bold">
+              ${clearance.canSendAlerts ? '✓ AUTHORIZED (L4/L6)' : '🔒 RESTRICTED (L1/2/3/5)'}
+            </span>
+          </div>
+          <div class="flex items-center justify-between p-1.5 rounded bg-black/40">
+            <span class="text-slate-300">EC Security Desk &amp; Level Assignment:</span>
+            <span class="${clearance.canManageUsers ? 'text-amber-400' : 'text-slate-500'} font-bold">
+              ${clearance.canManageUsers ? '✓ ROOT EC (L6)' : '🔒 RESTRICTED (L1-5)'}
+            </span>
+          </div>
+        `;
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeOperatorProfileModal() {
+      const modal = document.getElementById('operator-profile-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
     function updateMenuPagingState() {
       const container = document.getElementById('menu-item-alert-wrapper');
-      const canPage = !!(appState.canSendAlerts || appState.myCall === 'KG5TZT' || appState.myLevel === 'EC' || (appState.myLevel && (appState.myLevel.includes('Level 5') || appState.myLevel.includes('Level 3'))));
+      const clearance = getOperatorClearance();
+      const canPage = clearance.canSendAlerts;
 
       if (container) {
         if (canPage) {
@@ -4727,7 +4944,7 @@
                 <div>
                   <div class="font-bold text-xs flex items-center gap-1.5 text-red-400">
                     <span>Emergency Paging &amp; Alerts</span>
-                    <span class="px-1.5 py-0.2 rounded text-[9px] bg-red-950 text-red-300 border border-red-800 font-bold">AUTHORIZED</span>
+                    <span class="px-1.5 py-0.2 rounded text-[9px] bg-red-950 text-red-300 border border-red-800 font-bold">AUTHORIZED (L${clearance.levelNum})</span>
                   </div>
                   <div class="text-[10px] text-slate-400">Dispatch sirens, SMS alerts &amp; NetLogger alert</div>
                 </div>
@@ -4737,7 +4954,7 @@
           `;
         } else {
           container.innerHTML = `
-            <div onclick="showPagingRestrictedNotice()" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 bg-slate-900/40 text-slate-500 border border-slate-800/80 cursor-not-allowed opacity-50 select-none" title="Paging Restricted: EC or AEC authorization required">
+            <div onclick="showPagingRestrictedNotice()" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 bg-slate-900/40 text-slate-500 border border-slate-800/80 cursor-not-allowed opacity-50 select-none" title="Paging Restricted: Level 4 Assistant EC or Level 6 EC required">
               <div class="flex items-center gap-2.5">
                 <span class="text-base text-slate-600">🔒</span>
                 <div>
@@ -4745,7 +4962,7 @@
                     <span>Emergency Paging &amp; Alerts</span>
                     <span class="px-1.5 py-0.2 rounded text-[9px] bg-slate-800 text-slate-400 border border-slate-700 font-bold">LOCKED</span>
                   </div>
-                  <div class="text-[10px] text-slate-500">Restricted to EC / AEC / Net Control clearance</div>
+                  <div class="text-[10px] text-slate-500">${clearance.levelNum === 5 ? 'Restricted for EMC (No Ham Paging)' : 'Restricted to Level 4 (AEC) & Level 6 (EC)'}</div>
                 </div>
               </div>
               <span class="text-slate-600 text-xs">🔒</span>
@@ -4763,7 +4980,7 @@
           dashBtn1.innerHTML = '<span>🚨</span><span>VIEW ACTIVATION CONSOLE</span>';
         } else {
           dashBtn1.className = 'px-3 py-1.5 bg-slate-900 text-slate-500 border border-slate-800 rounded text-xs font-bold opacity-50 cursor-not-allowed flex items-center gap-1.5 whitespace-nowrap';
-          dashBtn1.innerHTML = '<span>🔒</span><span>PAGING LOCKED (EC/AEC)</span>';
+          dashBtn1.innerHTML = '<span>🔒</span><span>PAGING LOCKED (L4/L6)</span>';
         }
       }
       if (dashBtn2) {
@@ -4772,26 +4989,31 @@
           dashBtn2.innerHTML = `
             <div class="text-base text-red-400">🚨</div>
             <div class="font-bold text-white text-[11px]">INCIDENT ALERTS</div>
-            <div class="text-[10px] text-slate-400">Tone Siren & Page</div>
+            <div class="text-[10px] text-slate-400">Tone Siren &amp; Page</div>
           `;
         } else {
           dashBtn2.className = 'p-3 bg-slate-900/40 border border-slate-800/80 rounded-xl text-left space-y-1 opacity-50 cursor-not-allowed';
           dashBtn2.innerHTML = `
             <div class="text-base text-slate-600">🔒</div>
             <div class="font-bold text-slate-500 text-[11px]">INCIDENT ALERTS</div>
-            <div class="text-[10px] text-slate-600">Restricted Access</div>
+            <div class="text-[10px] text-slate-600">Restricted (L4/L6)</div>
           `;
         }
       }
     }
 
     function showPagingRestrictedNotice() {
-      alert(`🔒 EMERGENCY PAGING & ALERTS RESTRICTED\n\nCounty-wide emergency paging, audio sirens, and SMS group dispatch are restricted to Authorized Net Control (NCS), Assistant EC (AEC), and Emergency Coordinator Brian Davis (KG5TZT).\n\nYour clearance level: ${appState.myLevel || 'Guest'}.\nContact EC Brian Davis to request paging authorization.`);
+      const clearance = getOperatorClearance();
+      if (clearance.levelNum === 5) {
+        alert(`🔒 EMERGENCY PAGING RESTRICTED FOR COUNTY EMC (LEVEL 5)\n\nCounty Emergency Management Coordinator has executive access across all operational logs, ICS forms, and tactical maps, but amateur radio emergency page-out broadcast and audio siren dispatch are restricted to operational amateur radio coordinators (Level 4 Assistant EC and Level 6 EC).\n\nTo request an emergency page-out, contact Emergency Coordinator Brian Davis (KG5TZT) or an Assistant EC.`);
+      } else {
+        alert(`🔒 EMERGENCY PAGING & ALERTS RESTRICTED\n\nCountywide emergency tone sirens, mass paging, and incident dispatch are restricted to Level 4 (Assistant EC) and Level 6 (Emergency Coordinator Brian Davis - KG5TZT).\n\nYour assigned clearance level: ${clearance.levelTitle}.\nContact EC Brian Davis (KG5TZT) to request paging authorization.`);
+      }
     }
 
     function handleDashboardAlertClick() {
-      const canPage = !!(appState.canSendAlerts || appState.myCall === 'KG5TZT' || appState.myLevel === 'EC' || (appState.myLevel && (appState.myLevel.includes('Level 5') || appState.myLevel.includes('Level 3'))));
-      if (!canPage) {
+      const clearance = getOperatorClearance();
+      if (!clearance.canSendAlerts) {
         showPagingRestrictedNotice();
         return;
       }
@@ -4808,11 +5030,26 @@
       }
     });
 
-
     function switchTab(tabId) {
+      const clearance = getOperatorClearance();
+
+      // Once logged in, never show the login form in the open app
+      if (tabId === 'auth' && appState.isLoggedIn && appState.myCall !== 'GUEST') {
+        openOperatorProfileModal();
+        return;
+      }
+
+      // Security Desk Access Control (Level 6 EC Brian Davis ONLY)
+      if (tabId === 'security-desk') {
+        if (clearance.levelNum !== 6 && appState.myCall !== 'KG5TZT') {
+          alert(`🔒 EC SECURITY DESK ACCESS RESTRICTED\n\nOnly County Emergency Coordinator Brian Davis (KG5TZT) holds administrative authority to authorize volunteer passwords and assign operational clearance levels (Levels 1 to 5).\n\nYour assigned level: ${clearance.levelTitle}.`);
+          return;
+        }
+      }
+
+      // Paging / Siren Access Control (Level 6 EC and Level 4 Assistant EC ONLY)
       if (tabId === 'alert') {
-        const canPage = !!(appState.canSendAlerts || appState.myCall === 'KG5TZT' || appState.myLevel === 'EC' || (appState.myLevel && (appState.myLevel.includes('Level 5') || appState.myLevel.includes('Level 3'))));
-        if (!canPage) {
+        if (!clearance.canSendAlerts) {
           showPagingRestrictedNotice();
           return;
         }
@@ -5340,8 +5577,13 @@
       }
     }
 
-    // Net Script Modal
+    // Net Script Modal (Level 3+ NCS Privileges)
     function openNetScriptModal() {
+      const clearance = getOperatorClearance();
+      if (!clearance.canRunNCS) {
+        alert(`🔒 NCS FEATURE RESTRICTED\n\nOfficial Net Control preamble scripts and live roll call prompters require Level 3 (Net Control Station), Level 4 (Assistant EC), Level 5 (County EMC), or Level 6 (EC) authorization.\n\nYour assigned level: ${clearance.levelTitle} (Basic Privileges).\nContact EC Brian Davis (KG5TZT) to obtain Net Control Station certification.`);
+        return;
+      }
       const m = document.getElementById('net-script-modal');
       const closeTimeEl = document.getElementById('ncs-script-close-time');
       const now = new Date();
@@ -6651,41 +6893,63 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
       }
     }
 
-        function updateSessionHeaderUI() {
+    function updateSessionHeaderUI() {
       updateHeaderAresStatus();
+      const clearance = getOperatorClearance();
       const callEl = document.getElementById('current-user-call');
       const authBadge = document.getElementById('current-user-auth-badge');
       const sessionBtn = document.getElementById('session-btn');
       const iconEl = document.getElementById('session-btn-icon');
+      const menuAuth = document.getElementById('menu-item-auth');
+      const menuSecDesk = document.getElementById('menu-item-security-desk');
 
       if (!appState.isLoggedIn || appState.myCall === 'GUEST') {
         if (iconEl) iconEl.textContent = '🔑';
-        if (callEl) callEl.textContent = 'SIGN IN / CLAIM CALL';
+        if (callEl) callEl.textContent = 'SIGN IN';
         if (authBadge) {
           authBadge.textContent = 'GUEST';
           authBadge.className = 'px-1.5 py-0.5 rounded text-[9px] bg-amber-950 text-amber-400 border border-amber-800 font-bold';
         }
         if (sessionBtn) {
-          sessionBtn.className = 'px-2.5 py-1.5 rounded text-xs bg-amber-950/90 text-amber-300 border border-amber-700 hover:bg-amber-900 transition font-mono-tac font-bold flex items-center gap-1.5 shadow animate-pulse';
-          sessionBtn.title = 'Guest Mode — Tap to Claim Callsign & Unlock';
+          sessionBtn.className = 'px-2.5 py-1.5 rounded text-xs bg-amber-950/90 text-amber-300 border border-amber-700 hover:bg-amber-900 transition font-mono-tac font-bold flex items-center gap-1.5 shadow animate-pulse cursor-pointer';
+          sessionBtn.title = 'Guest Mode — Tap to Sign In';
         }
+        // Show login in hamburger when logged out
+        if (menuAuth) menuAuth.classList.remove('hidden');
+        // Hide EC Security Desk when logged out
+        if (menuSecDesk) menuSecDesk.classList.add('hidden');
       } else {
-        if (iconEl) iconEl.textContent = '👤';
+        if (iconEl) iconEl.textContent = '🛡️';
         if (callEl) {
-          callEl.textContent = `${appState.myCall} (${appState.myCall === 'KG5TZT' ? 'EC' : appState.myRole.split(' ')[0]})`;
+          callEl.textContent = appState.myCall;
         }
         if (authBadge) {
-          if (appState.canSendAlerts) {
-            authBadge.textContent = 'DISPATCH';
-            authBadge.className = 'px-1 py-0.2 rounded text-[9px] bg-red-950 text-red-400 border border-red-800 font-bold';
+          authBadge.textContent = `L${clearance.levelNum} • ${clearance.role.split(' ')[0].toUpperCase()}`;
+          if (clearance.levelNum === 6) {
+            authBadge.className = 'px-1.5 py-0.5 rounded text-[9px] bg-red-950 text-red-300 border border-red-800 font-bold';
+          } else if (clearance.levelNum === 5) {
+            authBadge.className = 'px-1.5 py-0.5 rounded text-[9px] bg-amber-950 text-amber-300 border border-amber-800 font-bold';
+          } else if (clearance.levelNum === 4) {
+            authBadge.className = 'px-1.5 py-0.5 rounded text-[9px] bg-sky-950 text-sky-300 border border-sky-800 font-bold';
+          } else if (clearance.levelNum === 3) {
+            authBadge.className = 'px-1.5 py-0.5 rounded text-[9px] bg-purple-950 text-purple-300 border border-purple-800 font-bold';
           } else {
-            authBadge.textContent = 'OPERATOR';
-            authBadge.className = 'px-1 py-0.2 rounded text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold';
+            authBadge.className = 'px-1.5 py-0.5 rounded text-[9px] bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold';
           }
         }
         if (sessionBtn) {
-          sessionBtn.className = 'px-2.5 py-1.5 rounded text-xs bg-emerald-950 text-emerald-300 border border-emerald-800 hover:bg-emerald-900 transition font-mono-tac font-bold flex items-center gap-1.5 shadow';
-          sessionBtn.title = `Logged In as ${appState.myName} (${appState.myCall}) — Tap to Switch or Logout`;
+          sessionBtn.className = 'px-2.5 py-1.5 rounded text-xs bg-[#10151d] text-emerald-300 border border-emerald-800 hover:bg-slate-800 transition font-mono-tac font-bold flex items-center gap-1.5 shadow cursor-pointer';
+          sessionBtn.title = `Active Session: ${appState.myName} (${appState.myCall}) — Tap for Operator Credentials & Logout`;
+        }
+        // Once logged in, you should NOT see the login in the app while it is open
+        if (menuAuth) menuAuth.classList.add('hidden');
+        // Show EC Security Desk ONLY for Level 6 (EC Brian Davis - KG5TZT)
+        if (menuSecDesk) {
+          if (clearance.levelNum === 6) {
+            menuSecDesk.classList.remove('hidden');
+          } else {
+            menuSecDesk.classList.add('hidden');
+          }
         }
       }
     }
@@ -8716,6 +8980,11 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
 
     
     function togglePreambleDropdown() {
+      const clearance = getOperatorClearance();
+      if (!clearance.canRunNCS) {
+        alert(`🔒 NCS FEATURE RESTRICTED\n\nOfficial Net Control preamble scripts require Level 3 (Net Control Station), Level 4 (Assistant EC), Level 5 (County EMC), or Level 6 (EC) authorization.\n\nYour assigned level: ${clearance.levelTitle} (Basic Privileges).\nContact EC Brian Davis (KG5TZT) to obtain Net Control Station certification.`);
+        return;
+      }
       const dd = document.getElementById('preamble-dropdown');
       const arrow = document.getElementById('preamble-arrow');
       if (dd) {
@@ -8769,7 +9038,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         // ==========================================
     // AUTHENTICATION & EC AUTHORIZATION SUBSYSTEM
     // ==========================================
-    const AUTH_SYSTEM_REV = 'v7.5_clean_single_view_03';
+    const AUTH_SYSTEM_REV = 'v7.6_six_levels_matrix_01';
 
     function getRegisteredAccounts() {
       const raw = localStorage.getItem('fc_ares_user_accounts');
@@ -8790,7 +9059,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
           phone: '903-388-5237',
           email: 'fcares@pm.me',
           role: 'Emergency Coordinator (EC)',
-          level: 'Level 5 - Master EC Admin',
+          level: 'Level 6 - Emergency Coordinator (EC)',
           canSendAlerts: true,
           status: 'AUTHORIZED',
           isMaster: true,
@@ -8958,7 +9227,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
             call: 'KG5TZT',
             name: 'Brian Davis',
             role: 'Emergency Coordinator (EC)',
-            level: 'Level 5 - Master EC Admin',
+            level: 'Level 6 - Emergency Coordinator (EC)',
             canSendAlerts: true,
             status: 'AUTHORIZED',
             isMaster: true
@@ -9149,7 +9418,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         call: 'KG5TZT',
         name: 'Brian Davis',
         role: 'Emergency Coordinator (EC)',
-        level: 'Level 5 - Master EC Admin',
+        level: 'Level 6 - Emergency Coordinator (EC)',
         canSendAlerts: true,
         status: 'AUTHORIZED',
         isMaster: true
@@ -9163,9 +9432,18 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       appState.isLoggedIn = true;
       appState.myCall = acc.call;
       appState.myName = acc.name || 'Verified Operator';
-      appState.myRole = acc.role || 'Field Operator';
-      appState.myLevel = acc.level || 'Level 1 - Field Operator';
-      appState.canSendAlerts = (acc.call === 'KG5TZT' || acc.level === 'EC' || acc.level.includes('Level 5') || acc.level.includes('Level 3') || !!acc.canSendAlerts);
+
+      // Set target level
+      let targetLevel = acc.level || 'Level 1 - Operator';
+      if (acc.call === 'KG5TZT') {
+        targetLevel = 'Level 6 - Emergency Coordinator (EC)';
+      }
+      appState.myLevel = targetLevel;
+
+      const clearance = getOperatorClearance();
+      appState.myRole = clearance.role;
+      appState.myLevel = clearance.levelTitle;
+      appState.canSendAlerts = clearance.canSendAlerts;
 
       localStorage.setItem('fc_ares_auth_session', JSON.stringify({
         call: acc.call,
@@ -9180,13 +9458,14 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       updateDashboardUserProfile();
       updateDispatchControlsVisibility();
       updateCalendarDispatchButton();
+      updateMenuPagingState();
       renderRosterGrid();
       renderResponderTable();
       renderCalendarEvents();
       renderEcAuthorizationQueue();
 
       if (showAlert) {
-        alert(`AUTHENTICATED & CLEARANCE VERIFIED!\n\nWelcome, ${appState.myName} (${appState.myCall})\nAssigned Level: ${appState.myLevel}\nRole: ${appState.myRole}\n\nAll tactical contact phone numbers, direct dial, and field tools are now UNLOCKED.`);
+        alert(`AUTHENTICATED & CLEARANCE VERIFIED!\n\nWelcome, ${appState.myName} (${appState.myCall})\nAssigned Level: ${clearance.levelTitle}\nRole: ${clearance.role}\n\nAll tactical contact phone numbers, direct dial, and assigned operational tools are now UNLOCKED.`);
       }
       switchTab('dash');
     }
@@ -9205,24 +9484,24 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       let role = 'Field Operator';
       let canSendAlerts = false;
 
-      if (selectedLevel.includes('Level 5') || selectedLevel === 'EC') {
+      if (selectedLevel.includes('Level 6') || (selectedLevel.includes('EC') && !selectedLevel.includes('Assistant') && !selectedLevel.includes('EMC'))) {
         role = 'Emergency Coordinator (EC)';
         canSendAlerts = true;
-      } else if (selectedLevel.includes('Level 4') || selectedLevel.includes('Liaison')) {
-        role = 'County Liaison / EOC Dispatch';
-        canSendAlerts = true;
-      } else if (selectedLevel.includes('Level 3') || selectedLevel.includes('Assistant')) {
+      } else if (selectedLevel.includes('Level 5') || selectedLevel.includes('EMC')) {
+        role = 'County Emergency Management Coordinator (EMC)';
+        canSendAlerts = false; // Level 5 has all app permissions EXCEPT alert features
+      } else if (selectedLevel.includes('Level 4') || selectedLevel.includes('Assistant EC') || selectedLevel.includes('AEC')) {
         role = 'Assistant Emergency Coordinator (AEC)';
-        canSendAlerts = true;
-      } else if (selectedLevel.includes('Level 2') || selectedLevel.includes('Net Control')) {
+        canSendAlerts = true;  // Level 4 has all operator permissions PLUS alert features
+      } else if (selectedLevel.includes('Level 3') || selectedLevel.includes('NCS') || selectedLevel.includes('Net Control')) {
         role = 'Net Control Station (NCS)';
-        canSendAlerts = false;
-      } else if (selectedLevel.includes('Spotter')) {
-        role = 'Storm Spotter';
-        canSendAlerts = false;
+        canSendAlerts = false; // Level 3 has access to NCS features (net script, NetLogger)
+      } else if (selectedLevel.includes('Level 2') || selectedLevel.includes('Spotter') || selectedLevel.includes('Field')) {
+        role = 'Field Operator / Storm Spotter';
+        canSendAlerts = false; // Certified field operator & mobile storm spotter
       } else {
-        role = 'Field Operator';
-        canSendAlerts = false;
+        role = 'Level 1 Operator';
+        canSendAlerts = false; // New person with no experience, basic privileges
       }
 
       accounts[call].status = 'AUTHORIZED';
@@ -9352,11 +9631,11 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
             <div class="sm:col-span-8">
               <label class="text-[9px] text-slate-400 block mb-0.5 font-bold uppercase">SELECT AUTHORIZED OPERATOR LEVEL:</label>
               <select id="level-select-${req.call}" class="w-full bg-[#10151d] border border-slate-700 rounded p-2 text-xs text-white font-bold font-mono-tac focus:border-amber-500">
-                <option value="Level 1 - Field Operator / Spotter">Level 1 - Field Operator / Storm Spotter (Comms &amp; Spotting)</option>
-                <option value="Level 2 - Core Operations / Net Control (NCS)">Level 2 - Core Operations / Net Control Station (NCS)</option>
-                <option value="Level 3 - Assistant EC (AEC)">Level 3 - Assistant Emergency Coordinator (AEC)</option>
-                <option value="Level 4 - County Liaison / EOC Dispatch">Level 4 - County Liaison / EOC Dispatch Official</option>
-                <option value="Level 5 - Master EC Admin">Level 5 - Full EC Admin (Master Clearance)</option>
+                <option value="Level 1 - Operator">Level 1 - Operator (New operator, building setup &amp; assist)</option>
+                <option value="Level 2 - Field Operator / Spotter">Level 2 - Field Operator / Spotter (Certified field ops &amp; mobile storm spotter)</option>
+                <option value="Level 3 - NCS">Level 3 - NCS (Net Control Station, net script &amp; NetLogger)</option>
+                <option value="Level 4 - Assistant EC">Level 4 - Assistant EC (AEC, assist EC in all aspects + page out &amp; sirens)</option>
+                <option value="Level 5 - County EMC">Level 5 - County EMC (County Emergency Management, all app rights EXCEPT alert features)</option>
               </select>
             </div>
             <div class="sm:col-span-4 flex items-center gap-1.5 pt-3 sm:pt-0">
@@ -9823,6 +10102,61 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       });
     }
   </script>
+
+
+  <!-- OPERATOR IDENTITY & CLEARANCE STATUS MODAL (Shown when clicking profile badge while logged in) -->
+  <div id="operator-profile-modal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden font-mono-tac">
+    <div class="bg-[#10151d] border-2 border-emerald-500/70 rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl hud-glow">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🛡️</span>
+          <div>
+            <h4 class="text-white font-black text-sm">OPERATOR CREDENTIALS</h4>
+            <span class="text-[10px] text-emerald-400">FREESTONE COUNTY ARES ACTIVE SESSION</span>
+          </div>
+        </div>
+        <button onclick="closeOperatorProfileModal()" class="text-slate-400 hover:text-white p-1 text-sm font-bold">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div class="p-3.5 bg-[#0b0e14] rounded-xl border border-slate-800 flex items-center justify-between">
+          <div>
+            <div class="text-[10px] text-slate-500 uppercase font-bold">Callsign &amp; Name</div>
+            <div id="prof-modal-call" class="text-base font-black text-emerald-400">KG5TZT</div>
+            <div id="prof-modal-name" class="text-xs text-slate-200 font-bold">Brian Davis</div>
+          </div>
+          <div id="prof-modal-badge" class="px-2.5 py-1 rounded text-xs font-black bg-red-950 text-red-300 border border-red-800">
+            LEVEL 6 • EC
+          </div>
+        </div>
+
+        <div class="p-3 bg-[#0b0e14] rounded-xl border border-slate-800 space-y-1.5">
+          <div class="text-[10px] text-slate-500 uppercase font-bold">Assigned Tactical Role &amp; Level</div>
+          <div id="prof-modal-role" class="text-white font-bold">Emergency Coordinator (EC)</div>
+          <div id="prof-modal-desc" class="text-[11px] text-slate-400 leading-relaxed">
+            Master tactical authority for Freestone County ARES. Full app permissions, user authorization, and broadcast controls.
+          </div>
+        </div>
+
+        <!-- Permissions Matrix for Current Level -->
+        <div class="p-3 bg-[#0b0e14] rounded-xl border border-slate-800 space-y-2">
+          <span class="text-[10px] text-slate-500 uppercase font-bold block">Active App Clearance Permissions:</span>
+          <div id="prof-modal-perms" class="space-y-1 text-[11px]">
+            <!-- Populated dynamically via openOperatorProfileModal() -->
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-slate-800 flex items-center justify-between gap-2">
+          <button onclick="closeOperatorProfileModal()" class="flex-1 py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition">
+            CLOSE
+          </button>
+          <button onclick="closeOperatorProfileModal(); logoutOperator();" class="flex-1 py-2 px-3 rounded-lg bg-red-950/80 hover:bg-red-900 text-red-300 text-xs font-bold border border-red-800 flex items-center justify-center gap-1.5 transition">
+            <span>🚪</span><span>LOG OUT</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>
