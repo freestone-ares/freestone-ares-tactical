@@ -5,6 +5,9 @@ on:
     branches: [ "main", "master" ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build-android-apk:
     name: Build Android APK (.apk)
@@ -20,9 +23,6 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
@@ -33,8 +33,11 @@ jobs:
 
       - name: Build Android Debug APK
         working-directory: ./android_app
+        env:
+          ANDROID_HOME: /usr/local/lib/android/sdk
         run: |
           gradle wrapper
+          chmod +x gradlew
           ./gradlew assembleDebug --stacktrace
           cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.4.apk
 
