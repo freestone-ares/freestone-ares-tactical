@@ -66,25 +66,17 @@ jobs:
             
             ### Quick Install / Update Instructions for Android:
             - **In Obtainium:** Open Obtainium, tap **Check for updates** (or swipe down to refresh), then tap **Update**.
-            - **Direct APK:** Download `Freestone-ARES-Tactical-v7.8.1.apk` below directly on your Android phone and install.
+            - **Direct APK:** Download Freestone-ARES-Tactical-v7.8.1.apk below directly on your Android phone and install.
             
             ### What's New in v7.8.1:
-  - **Full Profile Persistence Subsystem:** Added multi-tier persistent storage engine saving operator profile edits, certifications, power capabilities, and photos directly to persistent local memory, preventing loss of edits across app restarts.
-  - **Universal Cloud Roster Sync:** Member updates automatically synchronize across all user devices via GitHub cloud endpoint ().
-  - **Official Roster Alignment & GMRS License Audit:** Strictly validated 15-operator field roster with County EMC liaison; corrected Robert Cockerell's (AI5OX) verified GMRS license to WSEA569 across all views.
-  - **Incident Counter Reset & Clear Alerts:** Reset active incident counter to 0 (Steady State / Level 4 Normal Monitoring) and cleared legacy testing dispatches.
-  - **Response Level 1-4 Dispatch Control:** Instant 1-tap posture switches between Levels 1, 2, 3, and 4 on the Command Dashboard and Security Desk.
-  - **Master EC Strict Security Lock:** Completely eliminated auto-login bypass; Master EC Brian Davis (KG5TZT) strictly authenticates with password Chief@svfd1.
-  - **Prominent Version Badging:** Added visible v7.8.1 badges across header, auth portal, hamburger drawer, and dashboard.
-  - **Hamburger Menu Navigation Fixes:** Hardened menu toggle logic with exception shielding and high touch-manipulation z-index.
-            - **Critical Login & App UI Engine Fix:** Resolved syntax issue that froze buttons on login in Obtainium Android app. All login buttons, keypad triggers, and tactical menus are 100% operational.
-            - **Active Camera & Photo Capture in Android App:** Enabled native camera and gallery file chooser in `MainActivity.java` alongside camera runtime permissions and FileProvider. Operators can now snap live photo IDs and storm photos directly.
-            - **In-App Live Camera Viewfinder Modal:** Direct front/rear camera live preview with instant snapshot and flip camera controls for instant credential photos.
-            - **Universal Roster Cloud Sync:** Profile updates made by any member automatically sync across all installed apps and instances via GitHub cloud storage (`data/roster_sync.json`), ensuring phone numbers, callsigns, FEMA certs, and photos stay identical on everyone's phone.
-            - **SKYWARN NWS Spotter Report Capture Dropdown:** Quick-capture dropdown under the weather section in SKYWARN allowing spotters to select standard NWS severe criteria (tornado, funnel cloud, rotating wall cloud, severe hail ≥ 1.00", damaging wind ≥ 58 mph, flash flooding) and immediately log, stamp, and dispatch reports.
-            - **Obtainium Semantic Versioning:** Explicit v7.8.0 release tagging and naming for clean, seamless tracking in Obtainium.
-            - **FEMA Checkboxes & Power Capability:** Multi-select checkboxes for IS-100, 200, 300, 400, 700, 800 and Commercial/Battery/Generator power.
-            - **Master EC Security Lock:** Assigned clearance levels strictly locked to Emergency Coordinator Brian Davis (KG5TZT) with password `Chief@svfd1`.
+            - **Full Profile Persistence Subsystem:** Added multi-tier persistent storage engine saving operator profile edits, certifications, power capabilities, and photos directly to persistent local memory, preventing loss of edits across app restarts.
+            - **Universal Cloud Roster Sync:** Member updates automatically synchronize across all user devices via GitHub cloud endpoint.
+            - **Official Roster Alignment & GMRS License Audit:** Strictly validated 15-operator field roster with County EMC liaison; corrected Robert Cockerell's (AI5OX) verified GMRS license to WSEA569 across all views.
+            - **Incident Counter Reset & Clear Alerts:** Reset active incident counter to 0 (Steady State / Level 4 Normal Monitoring) and cleared legacy testing dispatches.
+            - **Response Level 1-4 Dispatch Control:** Instant 1-tap posture switches between Levels 1, 2, 3, and 4 on the Command Dashboard and Security Desk.
+            - **Master EC Strict Security Lock:** Completely eliminated auto-login bypass; Master EC Brian Davis (KG5TZT) strictly authenticates with password Chief@svfd1.
+            - **Prominent Version Badging:** Added visible v7.8.1 badges across header, auth portal, hamburger drawer, and dashboard.
+            - **Hamburger Menu Navigation Fixes:** Hardened menu toggle logic with exception shielding and high touch-manipulation z-index.
           files: |
             Freestone-ARES-Tactical-v7.8.1.apk
             Freestone-ARES-Tactical-v7.7.apk
