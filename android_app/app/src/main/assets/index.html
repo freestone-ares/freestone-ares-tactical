@@ -192,6 +192,12 @@
             <button onclick="setTheme('red')" class="px-2 py-1 rounded text-xs text-red-400 hover:bg-slate-800 transition font-mono-tac font-bold" title="Red Night-Vision">RED</button>
           </div>
 
+          <!-- Share App & Download Modal Trigger -->
+          <button onclick="openShareAppModal()" class="px-2.5 py-1.5 rounded text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition font-mono-tac font-bold flex items-center gap-1.5 shadow" title="Share App Link & QR Code">
+            <span>📲</span>
+            <span class="hidden sm:inline">SHARE APP</span>
+          </button>
+
           <!-- Operator Profile & Login / Callsign Claim Chip -->
           <button onclick="handleSessionButtonClick()" id="session-btn" class="px-2.5 py-1.5 rounded text-xs bg-amber-950/90 text-amber-300 border border-amber-700 hover:bg-amber-900 transition font-mono-tac font-bold flex items-center gap-1.5 shadow" title="Sign In or Claim Callsign">
             <span id="session-btn-icon">🔑</span>
@@ -3409,6 +3415,70 @@
         <button onclick="closeSessionModal()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-lg text-xs">
           CLOSE
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: SHARE APP & DOWNLOADS -->
+  <div id="share-app-modal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
+    <div class="bg-[#10151d] border-2 border-emerald-500/70 rounded-2xl max-w-md w-full p-5 space-y-4 font-mono-tac text-xs hud-glow max-h-[95vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">📲</span>
+          <div>
+            <h4 class="text-white font-bold text-sm tracking-wide">SHARE FREESTONE ARES APP</h4>
+            <p class="text-[10px] text-slate-400">Install Links, Direct APK, &amp; Field QR Code</p>
+          </div>
+        </div>
+        <button onclick="closeShareAppModal()" class="text-slate-400 hover:text-white text-base">✕</button>
+      </div>
+
+      <!-- SMS Tip Alert -->
+      <div class="p-3 bg-emerald-950/40 border border-emerald-500/40 rounded-xl space-y-1">
+        <div class="text-emerald-400 font-bold flex items-center gap-1.5 text-xs">
+          <span>💡</span> <span>SMS / TEXTING TIP:</span>
+        </div>
+        <p class="text-[11px] text-slate-300">
+          Cell carriers (AT&T, Verizon) often block texts containing <code class="text-amber-400 font-mono">.apk</code> links. Forward the <strong>clean web link</strong> below, which is 100% carrier-safe and allows members to download the APK or install to their home screen!
+        </p>
+      </div>
+
+      <!-- QR Code Display -->
+      <div class="bg-white p-3 rounded-xl flex flex-col items-center justify-center space-y-2 shadow-lg">
+        <img src="qr_web_app.svg" alt="Scan to Install" class="w-48 h-48 object-contain">
+        <span class="text-black font-bold text-[10px] tracking-wider uppercase">Scan with Phone Camera to Install</span>
+      </div>
+
+      <!-- Sharing Action Buttons -->
+      <div class="space-y-2">
+        <!-- 1. Native Share via SMS / Email -->
+        <button onclick="triggerNativeShare()" class="w-full py-2.5 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 text-slate-950 font-black rounded-lg text-xs shadow flex items-center justify-center gap-2 transition">
+          <span>💬</span>
+          <span>SHARE VIA TEXT / SMS / EMAIL</span>
+        </button>
+
+        <!-- 2. Copy Clean Web Link -->
+        <button onclick="copyCleanWebLink()" id="btn-copy-web-link" class="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-emerald-400 border border-emerald-500/50 font-bold rounded-lg text-xs flex items-center justify-center gap-2 transition">
+          <span>📋</span>
+          <span>COPY CLEAN LINK (CARRIER SAFE)</span>
+        </button>
+
+        <!-- 3. Direct Android APK Download -->
+        <a href="https://github.com/freestone-ares/freestone-ares-tactical/releases/download/v7.4-field-build/Freestone-ARES-Tactical-v7.4.apk" download="Freestone-ARES-Tactical-v7.4.apk" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-600/50 font-bold rounded-lg text-xs flex items-center justify-center gap-2 transition text-center block">
+          <span>📥</span>
+          <span>DOWNLOAD STANDALONE APK (19.5 MB)</span>
+        </a>
+
+        <!-- 4. Obtainium 1-Tap Link -->
+        <a href="obtainium://app/https://github.com/freestone-ares/freestone-ares-tactical" class="w-full py-2 bg-[#0b0e14] hover:bg-slate-900 text-cyan-400 border border-cyan-800/50 font-bold rounded-lg text-[11px] flex items-center justify-center gap-2 transition text-center block">
+          <span>🛰️</span>
+          <span>OPEN IN OBTAINIUM AUTO-UPDATER</span>
+        </a>
+      </div>
+
+      <div class="pt-1 flex justify-between items-center text-[10px] text-slate-500 border-t border-slate-800">
+        <span>Freestone County ARES</span>
+        <button onclick="closeShareAppModal()" class="text-slate-400 hover:text-white">Close</button>
       </div>
     </div>
   </div>
@@ -8622,6 +8692,44 @@ For instant testing in offline / browser preview, your 6-digit verification code
     function closeMagicLinkModal() {
       const modal = document.getElementById('magic-link-modal');
       if (modal) modal.classList.add('hidden');
+    }
+
+    function openShareAppModal() {
+      const modal = document.getElementById('share-app-modal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeShareAppModal() {
+      const modal = document.getElementById('share-app-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function copyCleanWebLink() {
+      const url = 'https://freestone-ares.github.io/freestone-ares-tactical/';
+      navigator.clipboard.writeText(url).then(() => {
+        const btn = document.getElementById('btn-copy-web-link');
+        if (btn) btn.innerHTML = '<span>✓</span><span>LINK COPIED TO CLIPBOARD!</span>';
+        setTimeout(() => {
+          if (btn) btn.innerHTML = '<span>📋</span><span>COPY CLEAN LINK (CARRIER SAFE)</span>';
+        }, 3000);
+      }).catch(() => {
+        prompt('Copy Clean Link:', url);
+      });
+    }
+
+    function triggerNativeShare() {
+      const shareData = {
+        title: 'Freestone County ARES Tactical App',
+        text: 'Freestone County ARES Tactical Mobile Operations App. Install or download for Android & iOS:',
+        url: 'https://freestone-ares.github.io/freestone-ares-tactical/'
+      };
+
+      if (navigator.share) {
+        navigator.share(shareData).catch((err) => console.log('Share canceled:', err));
+      } else {
+        const smsUrl = 'sms:?body=' + encodeURIComponent('Freestone County ARES Tactical App: https://freestone-ares.github.io/freestone-ares-tactical/');
+        window.location.href = smsUrl;
+      }
     }
 
     function onModalMagicLinkCallChange() {
