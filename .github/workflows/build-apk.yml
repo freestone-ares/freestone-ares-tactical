@@ -40,46 +40,48 @@ jobs:
           gradle wrapper --gradle-version 8.5
           chmod +x gradlew
           ./gradlew assembleDebug --stacktrace
+          cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.8.2.apk
           cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.8.1.apk
-          cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.7.apk
           cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical.apk
 
       - name: Upload APK as Workflow Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Freestone-ARES-Tactical-v7.8.1-APK
-          path: Freestone-ARES-Tactical-v7.8.1.apk
+          name: Freestone-ARES-Tactical-v7.8.2-APK
+          path: Freestone-ARES-Tactical-v7.8.2.apk
           retention-days: 30
 
       - name: Publish GitHub Release with APK
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v7.8.1
+          tag_name: v7.8.2
           target_commitish: ${{ github.sha }}
-          name: "Freestone ARES Tactical v7.8.1 (Field APK)"
+          name: "Freestone ARES Tactical v7.8.2 (Field APK)"
           make_latest: true
           body: |
-            ## Freestone County ARES - Tactical Operations Field Build (v7.8.1)
+            ## Freestone County ARES - Tactical Operations Field Build (v7.8.2)
             
-            This is the official v7.8.1 standalone Android APK release for Freestone County ARES field operations.
+            This is the official v7.8.2 standalone Android APK release for Freestone County ARES field operations.
             
             ### Quick Install / Update Instructions for Android:
             - **In Obtainium:** Open Obtainium, tap **Check for updates** (or swipe down to refresh), then tap **Update**.
-            - **Direct APK:** Download Freestone-ARES-Tactical-v7.8.1.apk below directly on your Android phone and install.
+            - **Direct APK:** Download Freestone-ARES-Tactical-v7.8.2.apk below directly on your Android phone and install.
             
-            ### What's New in v7.8.1:
+            ### What's New in v7.8.2:
+            - **Operational Calendar Event Editor:** Emergency Coordinator (KG5TZT) and Net Control Stations (NCS Level 3+) can now directly edit, reschedule, update channels, and publish tactical operational sessions directly from the calendar interface.
+            - **Persistent Calendar Storage:** All calendar edits, additions, and RSVP responses persist in device storage (`safeStorage`) across restarts and reloads.
             - **Full Profile Persistence Subsystem:** Added multi-tier persistent storage engine saving operator profile edits, certifications, power capabilities, and photos directly to persistent local memory, preventing loss of edits across app restarts.
             - **Universal Cloud Roster Sync:** Member updates automatically synchronize across all user devices via GitHub cloud endpoint.
             - **Official Roster Alignment & GMRS License Audit:** Strictly validated 15-operator field roster with County EMC liaison; corrected Robert Cockerell's (AI5OX) verified GMRS license to WSEA569 across all views.
             - **Incident Counter Reset & Clear Alerts:** Reset active incident counter to 0 (Steady State / Level 4 Normal Monitoring) and cleared legacy testing dispatches.
             - **Response Level 1-4 Dispatch Control:** Instant 1-tap posture switches between Levels 1, 2, 3, and 4 on the Command Dashboard and Security Desk.
             - **Master EC Strict Security Lock:** Completely eliminated auto-login bypass; Master EC Brian Davis (KG5TZT) strictly authenticates with password Chief@svfd1.
-            - **Prominent Version Badging:** Added visible v7.8.1 badges across header, auth portal, hamburger drawer, and dashboard.
+            - **Prominent Version Badging:** Added visible v7.8.2 badges across header, auth portal, hamburger drawer, and dashboard.
             - **Hamburger Menu Navigation Fixes:** Hardened menu toggle logic with exception shielding and high touch-manipulation z-index.
           files: |
+            Freestone-ARES-Tactical-v7.8.2.apk
             Freestone-ARES-Tactical-v7.8.1.apk
-            Freestone-ARES-Tactical-v7.7.apk
             Freestone-ARES-Tactical.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

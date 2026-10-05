@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Freestone County ARES Tactical Mobile v7.8.1</title>
+  <title>Freestone County ARES Tactical Mobile v7.8.2</title>
   <meta name="description" content="Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES">
   <meta name="theme-color" content="#0b0e14">
   <meta name="mobile-web-app-capable" content="yes">
@@ -169,7 +169,7 @@
           <div class="min-w-0">
             <div class="flex items-center gap-1 sm:gap-1.5">
               <span class="text-xs sm:text-sm font-black tracking-wider text-white whitespace-nowrap">FREESTONE ARES</span>
-              <span class="px-1.5 py-0.5 rounded text-[8px] sm:text-[9px] font-mono-tac font-bold bg-emerald-950 text-emerald-300 border border-emerald-800 whitespace-nowrap">v7.8.1</span>
+              <span class="px-1.5 py-0.5 rounded text-[8px] sm:text-[9px] font-mono-tac font-bold bg-emerald-950 text-emerald-300 border border-emerald-800 whitespace-nowrap">v7.8.2</span>
               <span id="header-status-badge" class="px-1.5 py-0.2 rounded text-[8px] sm:text-[9px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800 whitespace-nowrap">
                 ● DASHBOARD
               </span>
@@ -228,7 +228,7 @@
     <div class="flex items-center gap-2">
       <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
       <span class="text-emerald-300 font-bold text-[11px]">FREESTONE COUNTY ARES:</span>
-      <span class="text-slate-300 text-[10px]">v7.8.1 Operations Platform</span>
+      <span class="text-slate-300 text-[10px]">v7.8.2 Operations Platform</span>
     </div>
     <div class="flex items-center gap-1.5">
       <button type="button" onclick="switchTab('auth')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-[10px] font-bold cursor-pointer flex items-center gap-1 shadow">
@@ -248,7 +248,7 @@
             <div>
               <div class="text-emerald-400 font-black text-xs uppercase tracking-wider flex items-center gap-1.5">
                 <span>TACTICAL NAVIGATION</span>
-                <span class="px-1.5 py-0.2 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 text-[9px] font-bold">v7.8.1</span>
+                <span class="px-1.5 py-0.2 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 text-[9px] font-bold">v7.8.2</span>
               </div>
               <div class="text-[10px] text-slate-400">Freestone County ARES</div>
             </div>
@@ -424,7 +424,7 @@
             <span>🚪</span><span>LOG OUT</span>
           </button>
         </div>
-        <div class="text-[9px] text-center text-slate-500 font-mono-tac pt-1">Freestone County ARES Tactical Mobile v7.8.1 (Build 29)</div>
+        <div class="text-[9px] text-center text-slate-500 font-mono-tac pt-1">Freestone County ARES Tactical Mobile v7.8.2 (Build 30)</div>
       </div>
 
     </div>
@@ -444,9 +444,9 @@
             </div>
             <h3 class="text-lg font-black text-white tracking-wider font-mono-tac flex items-center justify-center gap-2">
               <span>FREESTONE COUNTY ARES</span>
-              <span class="px-1.5 py-0.5 rounded text-[10px] font-mono-tac font-bold bg-emerald-950 text-emerald-300 border border-emerald-800">v7.8.1</span>
+              <span class="px-1.5 py-0.5 rounded text-[10px] font-mono-tac font-bold bg-emerald-950 text-emerald-300 border border-emerald-800">v7.8.2</span>
             </h3>
-            <p class="text-xs text-emerald-400 font-mono-tac font-bold">TACTICAL COMMUNICATIONS CONSOLE (FIELD RELEASE v7.8.1)</p>
+            <p class="text-xs text-emerald-400 font-mono-tac font-bold">TACTICAL COMMUNICATIONS CONSOLE (FIELD RELEASE v7.8.2)</p>
           </div>
 
           <!-- Mandatory Password Update Notice Banner -->
@@ -4149,6 +4149,113 @@
       </div>
     </div>
   </div>
+  <!-- MODAL: EDIT OPERATIONAL EVENT (ROLE-GATED) -->
+  <div id="event-edit-modal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden font-mono-tac text-xs">
+    <div class="bg-[#10151d] border-2 border-amber-500/70 rounded-xl max-w-lg w-full p-4 sm:p-5 space-y-3 hud-glow max-h-[92vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+        <div class="flex items-center gap-2">
+          <span class="text-amber-400 text-base">✏️</span>
+          <div>
+            <h4 class="text-amber-400 font-bold text-sm">EDIT OPERATIONAL EVENT</h4>
+            <span class="text-[10px] text-slate-400">EC &amp; NET CONTROL DISPATCH AUTHORITY</span>
+          </div>
+        </div>
+        <button type="button" onclick="closeEditEventModal()" class="text-slate-400 hover:text-white text-base cursor-pointer">✕</button>
+      </div>
+
+      <input type="hidden" id="edit-event-id" value="">
+
+      <div class="space-y-3">
+        <div>
+          <label class="text-slate-300 block font-bold mb-1">EVENT TITLE / MISSION NAME</label>
+          <input type="text" id="edit-event-title" placeholder="e.g. Countywide Simplex Relay Drill" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2.5 text-white font-mono-tac text-xs focus:border-amber-500 outline-none">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="text-slate-300 block font-bold mb-1">EVENT CATEGORY</label>
+            <select id="edit-event-category" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-white font-mono-tac text-xs focus:border-amber-500 outline-none">
+              <option value="WEEKLY NET">WEEKLY NET</option>
+              <option value="MEETING / TRAINING">MEETING / TRAINING</option>
+              <option value="SKYWARN / WEATHER">SKYWARN / WEATHER</option>
+              <option value="FIELD EXERCISE">FIELD EXERCISE (SET)</option>
+              <option value="PUBLIC SERVICE">PUBLIC SERVICE</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-slate-300 block font-bold mb-1">RECURRENCE</label>
+            <select id="edit-event-recurrence" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-white font-mono-tac text-xs focus:border-amber-500 outline-none">
+              <option value="ONE-TIME OPERATION">ONE-TIME OPERATION</option>
+              <option value="EVERY SUNDAY @ 2000 LOCAL">EVERY SUNDAY @ 2000 LOCAL</option>
+              <option value="MONTHLY (1ST THURSDAY)">MONTHLY (1ST THURSDAY)</option>
+              <option value="QUARTERLY DRILL">QUARTERLY DRILL</option>
+              <option value="ANNUAL SET">ANNUAL SET</option>
+              <option value="COMMUNITY SERVICE">COMMUNITY SERVICE</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          <div>
+            <label class="text-slate-300 block font-bold mb-1">DATE (YYYY-MM-DD)</label>
+            <input type="date" id="edit-event-date" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-white font-mono-tac text-xs focus:border-amber-500 outline-none">
+          </div>
+          <div>
+            <label class="text-slate-300 block font-bold mb-1">LOCAL TIME (24-HR)</label>
+            <input type="text" id="edit-event-time" placeholder="20:00" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-white font-mono-tac text-xs focus:border-amber-500 outline-none">
+          </div>
+          <div>
+            <label class="text-slate-300 block font-bold mb-1">ZULU / UTC TIME</label>
+            <input type="text" id="edit-event-zulu" placeholder="01:00Z" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-amber-400 font-bold font-mono-tac text-xs focus:border-amber-500 outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="text-slate-300 block font-bold mb-1">PRIMARY CHANNEL / FREQUENCY (ICS-205)</label>
+          <input type="text" id="edit-event-channel" placeholder="e.g. Ch 01 - FF 110 (145.110 -0.600 TSQ 146.2)" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-emerald-300 font-mono-tac text-xs focus:border-amber-500 outline-none">
+        </div>
+
+        <div>
+          <label class="text-slate-300 block font-bold mb-1">ALTERNATE CHANNEL (OPTIONAL)</label>
+          <input type="text" id="edit-event-alt-channel" placeholder="e.g. Ch 02 - WRTM 760 (146.760 -0.600 T136.5)" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-slate-200 font-mono-tac text-xs focus:border-amber-500 outline-none">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="text-slate-300 block font-bold mb-1">NET CONTROL STATION (NCS) / LEAD</label>
+            <input type="text" id="edit-event-ncs" placeholder="e.g. AI5OX - Robert Cockerell" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-white font-mono-tac text-xs focus:border-amber-500 outline-none">
+          </div>
+          <div>
+            <label class="text-slate-300 block font-bold mb-1">LOCATION / VENUE</label>
+            <input type="text" id="edit-event-loc" placeholder="e.g. Fairfield VHF Repeater &amp; EchoLink" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-white font-mono-tac text-xs focus:border-amber-500 outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="text-slate-300 block font-bold mb-1">OPERATIONAL DESCRIPTION &amp; OBJECTIVES</label>
+          <textarea id="edit-event-desc" rows="3" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-white font-mono-tac text-xs focus:border-amber-500 outline-none" placeholder="Provide mission goals, check-in instructions, roll call sequence..."></textarea>
+        </div>
+
+        <div class="p-2.5 rounded-lg bg-amber-950/40 border border-amber-500/40 flex items-center gap-2">
+          <input type="checkbox" id="edit-event-push-alert" class="accent-amber-500 w-4 h-4 rounded">
+          <label for="edit-event-push-alert" class="text-slate-200 text-[11px] cursor-pointer">
+            <strong class="text-amber-300">Push Update Alert to Roster:</strong> Send instant tactical notification to all active county operators regarding this change.
+          </label>
+        </div>
+      </div>
+
+      <div class="flex gap-2 pt-2 border-t border-slate-800">
+        <button type="button" onclick="closeEditEventModal()" class="w-1/3 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-lg transition cursor-pointer">
+          CANCEL
+        </button>
+        <button type="button" onclick="saveEditedEvent()" class="w-2/3 py-2.5 bg-amber-600 hover:bg-amber-500 text-slate-950 font-black rounded-lg transition flex items-center justify-center gap-2 shadow-lg cursor-pointer">
+          <span>💾</span>
+          <span>SAVE EVENT CHANGES</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
 
   <!-- MODAL: OFFICIAL NET CONTROL SCRIPT & PREAMBLE -->
   <div id="net-script-modal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
@@ -5929,12 +6036,18 @@ function getOperatorClearance() {
           myStatusBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-950 text-rose-400 border border-rose-800">✕ YOU: UNAVAILABLE</span>';
         }
 
-        // Delete button for EC
-        const canDelete = (appState.canSendAlerts || appState.myLevel === 'EC');
-        const deleteBtn = canDelete ? `
-          <button onclick="deleteEvent('${ev.id}')" class="p-1.5 text-slate-500 hover:text-rose-400 hover:bg-rose-950/40 rounded transition" title="Cancel/Delete Event (EC Master)">
-            🗑️
-          </button>
+        // Edit & Delete buttons for EC / Net Control
+        const clearance = getOperatorClearance();
+        const canManage = (appState.canSendAlerts || clearance.canRunNCS || clearance.levelNum >= 3 || appState.myCall === 'KG5TZT');
+        const manageBtns = canManage ? `
+          <div class="flex items-center gap-1.5">
+            <button type="button" onclick="openEditEventModal('${ev.id}')" class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-950/90 hover:bg-amber-900 text-amber-300 border border-amber-600 transition flex items-center gap-1 shadow cursor-pointer" title="Edit Operational Event Details">
+              <span>✏️</span><span>EDIT</span>
+            </button>
+            <button type="button" onclick="deleteEvent('${ev.id}')" class="p-1 text-slate-500 hover:text-rose-400 hover:bg-rose-950/40 rounded transition cursor-pointer" title="Cancel/Delete Event">
+              🗑️
+            </button>
+          </div>
         ` : '';
 
         return `
@@ -5948,7 +6061,7 @@ function getOperatorClearance() {
               <div class="flex items-center gap-2">
                 <span class="text-xs font-bold text-amber-400">${ev.date} @ ${ev.time24} LOCAL</span>
                 <span class="text-xs font-bold text-slate-400">(${ev.zuluTime})</span>
-                ${deleteBtn}
+                ${manageBtns}
               </div>
             </div>
 
@@ -5998,6 +6111,12 @@ function getOperatorClearance() {
               </div>
 
               <div class="flex items-center gap-2">
+                ${canManage ? `
+                  <button type="button" onclick="openEditEventModal('${ev.id}')" class="px-2.5 py-1.5 rounded bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold text-xs transition flex items-center gap-1 shadow-sm cursor-pointer" title="Edit this operational event">
+                    <span>✏️</span>
+                    <span>EDIT EVENT</span>
+                  </button>
+                ` : ''}
                 <button onclick="openRsvpModal('${ev.id}')" class="px-3 py-1.5 rounded bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs transition flex items-center gap-1 shadow-sm">
                   <span>✍️</span>
                   <span>RSVP / CHECK-IN</span>
@@ -6254,6 +6373,7 @@ function getOperatorClearance() {
       };
 
       appState.events.unshift(newEventObj);
+      saveCalendarEvents();
       renderCalendar();
       closeEventCreateModal();
 
@@ -6269,7 +6389,119 @@ function getOperatorClearance() {
       if (!ev) return;
       if (confirm(`CANCEL & REMOVE OPERATION:\n\nAre you sure you want to remove "${ev.title}" from the county schedule?`)) {
         appState.events = appState.events.filter(e => e.id !== eventId);
+        saveCalendarEvents();
         renderCalendar();
+      }
+    }
+
+    // ==========================================
+    // OPERATIONAL CALENDAR EVENT EDITOR
+    // ==========================================
+    function openEditEventModal(eventId) {
+      const clearance = getOperatorClearance();
+      if (!clearance.canRunNCS && !appState.canSendAlerts && clearance.levelNum < 3 && appState.myCall !== 'KG5TZT') {
+        alert('OPERATIONAL RESTRICTION:\n\nOnly the Emergency Coordinator (Brian Davis, KG5TZT) or designated Net Control Stations (NCS) can edit official ARES operational events.');
+        return;
+      }
+
+      const ev = appState.events.find(e => e.id === eventId);
+      if (!ev) {
+        alert('Event not found.');
+        return;
+      }
+
+      document.getElementById('edit-event-id').value = ev.id;
+      document.getElementById('edit-event-title').value = ev.title || '';
+      document.getElementById('edit-event-category').value = ev.category || 'WEEKLY NET';
+      
+      const recSelect = document.getElementById('edit-event-recurrence');
+      if (recSelect) {
+        let found = false;
+        for (let i = 0; i < recSelect.options.length; i++) {
+          if (recSelect.options[i].value === ev.recurrence) {
+            recSelect.selectedIndex = i;
+            found = true;
+            break;
+          }
+        }
+        if (!found && ev.recurrence) {
+          const opt = document.createElement('option');
+          opt.value = ev.recurrence;
+          opt.textContent = ev.recurrence;
+          recSelect.appendChild(opt);
+          recSelect.value = ev.recurrence;
+        }
+      }
+
+      document.getElementById('edit-event-date').value = ev.date || '';
+      document.getElementById('edit-event-time').value = ev.time24 || '20:00';
+      document.getElementById('edit-event-zulu').value = ev.zuluTime || '01:00Z';
+      document.getElementById('edit-event-channel').value = ev.channel || '';
+      document.getElementById('edit-event-alt-channel').value = ev.altChannel || '';
+      document.getElementById('edit-event-ncs').value = ev.ncs || '';
+      document.getElementById('edit-event-loc').value = ev.location || '';
+      document.getElementById('edit-event-desc').value = ev.description || '';
+      document.getElementById('edit-event-push-alert').checked = false;
+
+      const m = document.getElementById('event-edit-modal');
+      if (m) m.classList.remove('hidden');
+    }
+
+    function closeEditEventModal() {
+      const m = document.getElementById('event-edit-modal');
+      if (m) m.classList.add('hidden');
+    }
+
+    function saveEditedEvent() {
+      const eventId = document.getElementById('edit-event-id').value;
+      const ev = appState.events.find(e => e.id === eventId);
+      if (!ev) {
+        alert('Error: Event not found.');
+        return;
+      }
+
+      const title = document.getElementById('edit-event-title').value.trim();
+      const category = document.getElementById('edit-event-category').value;
+      const recurrence = document.getElementById('edit-event-recurrence').value;
+      const date = document.getElementById('edit-event-date').value;
+      const time24 = document.getElementById('edit-event-time').value.trim() || '20:00';
+      const zuluTime = document.getElementById('edit-event-zulu').value.trim() || '01:00Z';
+      const channel = document.getElementById('edit-event-channel').value.trim();
+      const altChannel = document.getElementById('edit-event-alt-channel').value.trim();
+      const ncs = document.getElementById('edit-event-ncs').value.trim();
+      const loc = document.getElementById('edit-event-loc').value.trim() || 'Freestone County';
+      const desc = document.getElementById('edit-event-desc').value.trim();
+      const pushAlert = document.getElementById('edit-event-push-alert').checked;
+
+      if (!title) {
+        alert('ERROR: Please enter an event title / mission name.');
+        return;
+      }
+
+      const icsDate = date.replace(/-/g, '') + 'T' + time24.replace(/:/g, '') + '00';
+
+      ev.title = title;
+      ev.category = category;
+      ev.recurrence = recurrence;
+      ev.date = date;
+      ev.time24 = time24;
+      ev.zuluTime = zuluTime;
+      ev.channel = channel;
+      ev.altChannel = altChannel;
+      ev.ncs = ncs;
+      ev.location = loc;
+      ev.description = desc;
+      ev.icsStart = icsDate;
+      ev.icsEnd = icsDate;
+
+      saveCalendarEvents();
+      renderCalendar();
+      closeEditEventModal();
+
+      if (pushAlert) {
+        alert(`TACTICAL ALERT BROADCAST SENT!\n\nUpdated Event: ${title}\nCategory: ${category}\nDate/Time: ${date} @ ${time24} Local (${zuluTime})\nChannel: ${channel}\nLead: ${ncs}\n\nUpdate notification dispatched to all registered Freestone County ARES responders.`);
+      } else {
+        alert(`✅ EVENT UPDATED!\n\n"${title}" has been successfully updated on the tactical schedule.`);
       }
     }
 
@@ -6472,6 +6704,7 @@ D. Out-of-County stations and visitors.
       else if (newStatus === 'unavailable') ev.rsvps.unavailable.push(appState.myCall);
 
       renderRsvpModalRosters(ev);
+      saveCalendarEvents();
       renderCalendarEvents();
     }
 
@@ -9808,9 +10041,37 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
     }
 
     // ==========================================
+    // CALENDAR EVENTS PERSISTENCE SUBSYSTEM
+    // ==========================================
+    function loadCalendarEvents() {
+      try {
+        const raw = safeStorage.getItem('fc_ares_calendar_events');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            appState.events = parsed;
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn('loadCalendarEvents error:', e);
+      }
+    }
+
+    function saveCalendarEvents() {
+      try {
+        if (appState && Array.isArray(appState.events)) {
+          safeStorage.setItem('fc_ares_calendar_events', JSON.stringify(appState.events));
+        }
+      } catch (e) {
+        console.warn('saveCalendarEvents error:', e);
+      }
+    }
+
+    // ==========================================
     // AUTHENTICATION & EC AUTHORIZATION SUBSYSTEM
     // ==========================================
-    const AUTH_SYSTEM_REV = 'v7.8.1_persistence_roster_audit_01';
+    const AUTH_SYSTEM_REV = 'v7.8.2_persistence_roster_audit_01';
 
     function getRegisteredAccounts() {
       const raw = safeStorage.getItem('fc_ares_user_accounts');
@@ -10787,7 +11048,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         });
 
         const syncPayload = {
-          version: '7.8.0',
+          version: '7.8.2',
           lastUpdated: Date.now(),
           updatedBy: appState.myCall,
           members: payloadMembers
@@ -12079,6 +12340,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
 
     // Initial render
     loadRosterMembers();
+    loadCalendarEvents();
     populateAuthCallsignSelect();
     // Restore saved Night Vision Optical Theme
     const savedTheme = safeStorage.getItem('fc_ares_nv_theme') || 'normal';
