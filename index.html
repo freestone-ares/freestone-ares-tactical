@@ -658,8 +658,15 @@
                   <img id="reg-photo-preview" src="" class="w-full h-full object-cover hidden">
                   <span id="reg-photo-placeholder" class="text-2xl text-slate-600">👤</span>
                 </div>
-                <div class="flex-1 space-y-1">
-                  <input type="file" id="reg-photo-input" accept="image/*" capture="user" onchange="handlePhotoUpload(event, 'reg-photo-preview', 'reg-photo-data', 'reg-photo-placeholder')" class="block w-full text-[10px] text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-emerald-600 file:text-slate-950 hover:file:bg-emerald-500 cursor-pointer">
+                <div class="flex-1 space-y-1.5">
+                  <div class="flex items-center gap-2">
+                    <button type="button" onclick="openLiveCameraModal('reg-photo-preview', 'reg-photo-data', 'reg-photo-placeholder', 'user')" class="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-lg text-[10px] flex items-center gap-1 shadow cursor-pointer">
+                      <span>📸</span>
+                      <span>Take Live Photo</span>
+                    </button>
+                    <span class="text-[10px] text-slate-400">or choose file below:</span>
+                  </div>
+                  <input type="file" id="reg-photo-input" accept="image/*" capture="user" onchange="handlePhotoUpload(event, 'reg-photo-preview', 'reg-photo-data', 'reg-photo-placeholder')" class="block w-full text-[10px] text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:text-[10px] file:font-bold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer">
                   <span id="reg-photo-preview-badge" class="text-[9px] text-slate-500 block">Plain white background &bull; No hat &bull; Facing forward</span>
                   <input type="hidden" id="reg-photo-data" value="">
                 </div>
@@ -1933,18 +1940,19 @@
 
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#10151d] p-4 rounded-xl border border-slate-800">
         <div>
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 flex-wrap">
             <h3 class="font-mono-tac text-sm font-bold text-slate-200">ARES UNIT ROSTER</h3>
-            <span id="roster-verified-badge" class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 text-[10px] font-mono-tac font-bold">15 ACTIVE MEMBERS</span>
+            <span id="roster-verified-badge" class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 text-[10px] font-mono-tac font-bold">16 ACTIVE MEMBERS</span>
+            <span id="roster-cloud-sync-badge" class="px-2 py-0.5 rounded bg-slate-900 text-emerald-400 border border-emerald-800/60 text-[9px] font-mono-tac font-bold">✓ CLOUD READY</span>
           </div>
-          <p class="text-xs text-slate-400 mt-0.5">Role-Based Access Control • Verified Levels & Dispatch Permissions</p>
+          <p class="text-xs text-slate-400 mt-0.5">Role-Based Access Control • Verified Levels & Dispatch Permissions • Multi-Device Cloud Sync</p>
         </div>
-        <div class="flex items-center gap-2">
-          <input type="text" id="roster-search" oninput="filterRoster()" placeholder="Search Call, Name, Class..." class="bg-[#0b0e14] border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200 font-mono-tac focus:outline-none focus:border-emerald-500">
-          <button onclick="openVolunteerRegModal()" class="px-3 py-1.5 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-black font-mono-tac text-xs font-bold rounded-lg transition whitespace-nowrap shadow flex items-center gap-1" title="Simulate a new volunteer signing up on the mobile app">
-            <span>📝</span>
-            <span>+ TEST REGISTER</span>
+        <div class="flex items-center gap-2 flex-wrap">
+          <button type="button" onclick="syncRosterWithCloud(true)" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-slate-700 font-mono-tac text-xs font-bold rounded-lg transition flex items-center gap-1 shadow cursor-pointer" title="Fetch latest roster profiles from county cloud server">
+            <span>🔄</span>
+            <span>SYNC CLOUD</span>
           </button>
+          <input type="text" id="roster-search" oninput="filterRoster()" placeholder="Search Call, Name..." class="bg-[#0b0e14] border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200 font-mono-tac focus:outline-none focus:border-emerald-500">
           <button onclick="openMemberModal()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-mono-tac text-xs font-bold rounded-lg transition whitespace-nowrap flex items-center gap-1">
             <span>+ ADD OPERATOR</span>
           </button>
@@ -2343,6 +2351,75 @@
           <div class="text-right">
             <span class="text-[9px] text-slate-400 block leading-tight">ACTIVE SKYWARN NET:</span>
             <span class="text-xs font-bold text-emerald-400">Ch 01 - FF 110 (145.110 TSQ 146.2)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SPOTTER NWS REPORT CAPTURE & DISPATCH DECK (DIRECTLY UNDER WEATHER BANNER) -->
+      <div class="bg-[#10151d] border-2 border-amber-500/70 rounded-xl p-4 font-mono-tac shadow-xl space-y-3 hud-glow">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
+          <div class="flex items-center gap-2.5">
+            <span class="text-2xl animate-pulse">⚡</span>
+            <div>
+              <div class="flex items-center gap-2">
+                <h4 class="text-xs font-bold text-white uppercase tracking-wider">CAPTURE SPOTTER NWS SEVERE WEATHER REPORT</h4>
+                <span class="px-1.5 py-0.5 rounded text-[9px] bg-red-950 text-red-300 border border-red-800 font-bold animate-pulse">FIELD DECK</span>
+              </div>
+              <p class="text-[11px] text-slate-400">Select observed severe phenomenon from dropdown below to instantly auto-populate criteria and dispatch report.</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="autofillSpotterGpsLocation()" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-700 text-emerald-400 font-bold rounded text-[11px] flex items-center gap-1 transition cursor-pointer">
+              <span>📍</span>
+              <span>UPDATE GPS</span>
+            </button>
+            <button type="button" onclick="openLiveCameraModal('skywarn-captured-preview', 'skywarn-captured-data', null, 'environment')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded text-[11px] flex items-center gap-1 transition cursor-pointer">
+              <span>📸</span>
+              <span>LIVE CAMERA</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+          <div class="md:col-span-8 space-y-1">
+            <label class="block text-[11px] font-bold text-amber-400">SELECT NWS SEVERE PHENOMENON (CHECK CRITERIA):</label>
+            <select id="nws-quick-report-dropdown" onchange="handleNwsQuickReportSelect(this.value)" class="w-full bg-[#080b10] border-2 border-amber-500/70 rounded-xl p-2.5 text-white font-mono-tac text-xs focus:border-emerald-400 outline-none shadow-inner cursor-pointer font-bold">
+              <option value="">-- ⛈️ CHOOSE NWS SEVERE REPORT TYPE TO CAPTURE --</option>
+              <option value="tornado">🌪️ TORNADO: Touchdown / Active Funnel on Ground (Life Safety Threat)</option>
+              <option value="wallcloud">🌀 WALL CLOUD: Rotating Wall Cloud / Funnel Cloud (Not on Ground)</option>
+              <option value="hail">🧊 HAIL: Severe Hail &gt;= 1.00" (Quarter, Golfball, Baseball, Hen Egg)</option>
+              <option value="wind">💨 WIND: Damaging Wind &gt;= 58 MPH (Large Limbs / Trees / Utility Poles Down)</option>
+              <option value="flood">🌊 FLOOD: Flash Flooding (Road Impassable / Water Over Bridge / Fast Flowing)</option>
+              <option value="damage">💥 DAMAGE: Structural Damage (Roof Lost, Barn Collapsed, Vehicles Damaged)</option>
+              <option value="utility">⚡ HAZARD: High-Voltage Utility Lines Sparking Across Roadway</option>
+            </select>
+          </div>
+
+          <div class="md:col-span-4 flex items-center gap-2 pt-4 md:pt-0">
+            <button type="button" onclick="dispatchSkywarnNWS()" class="w-full py-2.5 px-4 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-black rounded-xl text-xs shadow-[0_0_15px_rgba(245,158,11,0.4)] transition flex items-center justify-center gap-1.5 cursor-pointer">
+              <span>⚡</span>
+              <span>CAPTURE &amp; TRANSMIT</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Dynamic Quick Action Card -->
+        <div id="nws-quick-action-card" class="bg-[#080b10] border border-amber-500/40 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs">
+          <div class="flex items-center gap-2">
+            <span class="text-emerald-400">✓</span>
+            <div id="nws-quick-capture-summary" class="text-[11px] text-slate-300">
+              Select an NWS report type above or edit specific details in the full criteria form below.
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="openSkywarnVoiceScriptModal()" class="px-2.5 py-1 bg-purple-950/80 hover:bg-purple-900 border border-purple-700/80 text-purple-200 rounded text-[11px] font-bold transition flex items-center gap-1">
+              <span>🎙️</span>
+              <span>10-SEC RADIO SCRIPT</span>
+            </button>
+            <a href="tel:18007722766" class="px-2.5 py-1 bg-rose-950/80 hover:bg-rose-900 border border-rose-700 text-rose-200 rounded text-[11px] font-bold transition flex items-center gap-1">
+              <span>📞</span>
+              <span>NWS FWD</span>
+            </a>
           </div>
         </div>
       </div>
@@ -5322,6 +5399,7 @@
 
       renderRosterGrid();
       closeOperatorProfileVerifyModal();
+      pushRosterSyncToCloud();
 
       const nextReviewDate = new Date(now + 180 * 24 * 60 * 60 * 1000).toLocaleDateString();
       alert(`✅ OPERATOR PROFILE VERIFIED & RECORDED!
@@ -5357,25 +5435,16 @@ Next mandatory review due: ${nextReviewDate} (in 6 months).`);
       };
       loginAsAuthorizedOperator(ec, false);
       switchTab('dash');
-      alert('⚡ PREVIEW TEST SESSION ACTIVE
-
-Logged in as Emergency Coordinator Brian Davis (KG5TZT - Level 6).
-All tactical controls, county response level dispatch, and operator directories are unlocked.');
+      alert(`⚡ PREVIEW TEST SESSION ACTIVE\n\nLogged in as Emergency Coordinator Brian Davis (KG5TZT - Level 6).\nAll tactical controls, county response level dispatch, and operator directories are unlocked.`);
     }
 
     function promptAllOperatorsProfileReview() {
       const clearance = getOperatorClearance();
       if (clearance.levelNum < 6 && appState.myCall !== 'KG5TZT') {
-        alert('🔒 RESTRICTED ACTION
-
-Only Emergency Coordinator Brian Davis (KG5TZT) can request countywide profile re-verifications.');
+        alert(`🔒 RESTRICTED ACTION\n\nOnly Emergency Coordinator Brian Davis (KG5TZT) can request countywide profile re-verifications.`);
         return;
       }
-      if (!confirm('📢 COUNTYWIDE 6-MONTH PROFILE AUDIT
-
-This will reset the 6-month verification clock for all active county operators, requiring each volunteer to review their profile, contact numbers, FEMA certs, and photo ID upon their next login.
-
-Proceed with countywide profile verification request?')) {
+      if (!confirm(`📢 COUNTYWIDE 6-MONTH PROFILE AUDIT\n\nThis will reset the 6-month verification clock for all active county operators, requiring each volunteer to review their profile, contact numbers, FEMA certs, and photo ID upon their next login.\n\nProceed with countywide profile verification request?`)) {
         return;
       }
       const accounts = getRegisteredAccounts();
@@ -5385,9 +5454,7 @@ Proceed with countywide profile verification request?')) {
         }
       });
       safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(accounts));
-      alert('✓ COUNTYWIDE 6-MONTH PROFILE AUDIT SCHEDULED!
-
-All operators will be prompted to review and verify their credentials upon their next login.');
+      alert(`✓ COUNTYWIDE 6-MONTH PROFILE AUDIT SCHEDULED!\n\nAll operators will be prompted to review and verify their credentials upon their next login.`);
     }
 
 function getOperatorClearance() {
@@ -7569,7 +7636,7 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
 
       if (!text) {
         const countyEl = document.getElementById('county-status-text');
-        text = countyEl ? countyEl.textContent.trim() : 'STANDBY • NORMAL';
+        text = (countyEl && countyEl.textContent) ? countyEl.textContent.trim() : 'STANDBY • NORMAL';
       }
 
       textEl.textContent = text;
@@ -9749,7 +9816,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         // ==========================================
     // AUTHENTICATION & EC AUTHORIZATION SUBSYSTEM
     // ==========================================
-    const AUTH_SYSTEM_REV = 'v7.7_ec_controls_profiles_spotter_02';
+    const AUTH_SYSTEM_REV = 'v7.8.0_cloud_sync_nws_camera_01';
 
     function getRegisteredAccounts() {
       const raw = safeStorage.getItem('fc_ares_user_accounts');
@@ -9841,6 +9908,8 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
           appState.canSendAlerts = false;
           switchTab('auth');
           renderEcAuthorizationQueue();
+          syncRosterWithCloud();
+          setInterval(syncRosterWithCloud, 60000);
           return;
         }
 
@@ -9853,12 +9922,14 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
             if (acc && (acc.status === 'AUTHORIZED' || acc.isMaster)) {
               loginAsAuthorizedOperator(acc, false);
               renderEcAuthorizationQueue();
+              syncRosterWithCloud();
+              setInterval(syncRosterWithCloud, 60000);
               return;
             }
           }
         }
 
-        // Clean unauthenticated start -> Guest/Preview mode on Tactical Dashboard
+        // Clean unauthenticated start -> Straight Login Page
         appState.isLoggedIn = false;
         appState.myCall = 'GUEST';
         appState.myName = 'Guest Operator';
@@ -9866,8 +9937,10 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         appState.myLevel = 'Guest';
         appState.canSendAlerts = false;
 
-        switchTab('dash');
+        switchTab('auth');
         renderEcAuthorizationQueue();
+        syncRosterWithCloud();
+        setInterval(syncRosterWithCloud, 60000);
       } catch (e) {
         console.error('Session init error:', e);
       }
@@ -10329,6 +10402,427 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
     }
 
     // ==========================================
+    // IN-APP LIVE CAMERA VIEWFINDER & CAPTURE
+    // ==========================================
+    let activeCameraStream = null;
+    let cameraFacingMode = 'user';
+    let currentPhotoTargetIds = { previewId: '', dataTargetId: '', placeholderId: '' };
+
+    function openLiveCameraModal(previewId, dataTargetId, placeholderId, defaultFacing = 'user') {
+      currentPhotoTargetIds = { previewId: previewId, dataTargetId: dataTargetId, placeholderId: placeholderId };
+      cameraFacingMode = defaultFacing;
+
+      const modal = document.getElementById('live-camera-modal');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+
+      startLiveCameraStream();
+    }
+
+    function closeLiveCameraModal() {
+      stopLiveCameraStream();
+      const modal = document.getElementById('live-camera-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function flipLiveCamera() {
+      cameraFacingMode = (cameraFacingMode === 'user') ? 'environment' : 'user';
+      startLiveCameraStream();
+    }
+
+    function startLiveCameraStream() {
+      stopLiveCameraStream();
+      const video = document.getElementById('live-camera-video');
+      const errEl = document.getElementById('live-camera-error');
+      if (errEl) errEl.classList.add('hidden');
+
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        if (errEl) {
+          errEl.textContent = 'Live camera stream not supported on this browser engine. Please use the file upload button below.';
+          errEl.classList.remove('hidden');
+        }
+        return;
+      }
+
+      navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: cameraFacingMode,
+          width: { ideal: 640 },
+          height: { ideal: 640 }
+        },
+        audio: false
+      }).then(function(stream) {
+        activeCameraStream = stream;
+        if (video) {
+          video.srcObject = stream;
+          video.play();
+        }
+      }).catch(function(err) {
+        console.warn('getUserMedia error:', err);
+        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+          .then(function(stream) {
+            activeCameraStream = stream;
+            if (video) {
+              video.srcObject = stream;
+              video.play();
+            }
+          })
+          .catch(function(fallbackErr) {
+            if (errEl) {
+              errEl.textContent = 'Camera permission required or camera in use: ' + (fallbackErr.message || fallbackErr.name);
+              errEl.classList.remove('hidden');
+            }
+          });
+      });
+    }
+
+    function stopLiveCameraStream() {
+      if (activeCameraStream) {
+        try {
+          activeCameraStream.getTracks().forEach(function(track) { track.stop(); });
+        } catch(e) {}
+        activeCameraStream = null;
+      }
+      const video = document.getElementById('live-camera-video');
+      if (video) video.srcObject = null;
+    }
+
+    function captureLiveCameraPhoto() {
+      const video = document.getElementById('live-camera-video');
+      if (!video || !video.videoWidth) {
+        alert('Camera stream not ready yet. Please wait for camera feed or use the file upload button.');
+        return;
+      }
+
+      const canvas = document.createElement('canvas');
+      const size = 320;
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+
+      const minDim = Math.min(video.videoWidth, video.videoHeight);
+      const startX = (video.videoWidth - minDim) / 2;
+      const startY = (video.videoHeight - minDim) / 2;
+
+      ctx.drawImage(video, startX, startY, minDim, minDim, 0, 0, size, size);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+
+      if (currentPhotoTargetIds.dataTargetId) {
+        const inp = document.getElementById(currentPhotoTargetIds.dataTargetId);
+        if (inp) inp.value = dataUrl;
+      }
+      if (currentPhotoTargetIds.previewId) {
+        const prev = document.getElementById(currentPhotoTargetIds.previewId);
+        if (prev) {
+          prev.src = dataUrl;
+          prev.classList.remove('hidden');
+        }
+      }
+      if (currentPhotoTargetIds.placeholderId) {
+        const ph = document.getElementById(currentPhotoTargetIds.placeholderId);
+        if (ph) ph.classList.add('hidden');
+      }
+
+      closeLiveCameraModal();
+      alert('📸 Photo captured successfully!');
+    }
+
+    // ==========================================
+    // SKYWARN NWS SPOTTER REPORT PRESETS & DROPDOWN
+    // ==========================================
+    const NWS_REPORT_PRESETS = {
+      'tornado': {
+        type: 'Tornado on the Ground',
+        hail: '1.75 in (Golf Ball - Severe)',
+        wind: '80+ MPH (Violent Tornado / Debris)',
+        motion: 'Moving ENE @ 40 MPH',
+        damage: 'Confirmed tornado on ground. Funnel condensation touching ground with rotating debris cloud. Immediate life safety threat.',
+        severity: '🚨 EMERGENCY / IMMEDIATE THREAT',
+        badgeClass: 'bg-rose-950 text-rose-300 border-rose-600 animate-pulse'
+      },
+      'wallcloud': {
+        type: 'Funnel Cloud / Persistent Rotating Wall Cloud',
+        hail: '1.00 in (Quarter - Severe)',
+        wind: '60 MPH (Strong Inflow)',
+        motion: 'Moving NE @ 35 MPH',
+        damage: 'Persistent counter-clockwise rotation in rain-free base for 5+ minutes. Rapid upward motion and localized funnel lowering observed.',
+        severity: '⚠️ HIGH PRIORITY',
+        badgeClass: 'bg-amber-950 text-amber-300 border-amber-600'
+      },
+      'hail': {
+        type: 'Severe Hail (>= 1.00 inch Quarter or Larger)',
+        hail: '1.50 in (Ping Pong)',
+        wind: '50 MPH (Gusty Winds)',
+        motion: 'Moving E @ 30 MPH',
+        damage: 'Severe hail accumulation on roadway. Half-dollar to ping-pong ball sized stones covering grass and pavement. Foilage shredded.',
+        severity: '⚠️ SEVERE CRITERIA MET',
+        badgeClass: 'bg-sky-950 text-sky-300 border-sky-600'
+      },
+      'wind': {
+        type: 'Damaging Wind (>= 58 MPH / Trees Down)',
+        hail: '0.75 in (Dime)',
+        wind: '65 MPH (Measured - Anemometer)',
+        motion: 'Moving ENE @ 45 MPH',
+        damage: 'Damaging convective wind gust estimated 60-70 MPH. Multiple large tree limbs snapped across roadway. Power lines swaying violently.',
+        severity: '⚠️ SEVERE WIND CRITERIA',
+        badgeClass: 'bg-rose-950 text-rose-300 border-rose-600'
+      },
+      'flood': {
+        type: 'Flash Flooding (Road Impassable / Water Over Bridge)',
+        hail: 'None',
+        wind: '35 MPH',
+        motion: 'Stationary / Training Storms',
+        damage: 'Flash flooding active. Fast flowing water 8-12 inches deep crossing low water crossing. Road impassable to low clearance passenger vehicles.',
+        severity: '🌊 FLOOD EMERGENCY',
+        badgeClass: 'bg-blue-950 text-blue-300 border-blue-600'
+      },
+      'damage': {
+        type: 'Significant Structural Damage / Collapsed Barn',
+        hail: '1.25 in (Half Dollar)',
+        wind: '75 MPH (Severe Microburst)',
+        motion: 'Moving NE @ 40 MPH',
+        damage: 'Significant structural damage reported. Tin roof peeled off barn, carport collapsed onto vehicle, multiple large trees uprooted.',
+        severity: '💥 STRUCTURAL DAMAGE',
+        badgeClass: 'bg-purple-950 text-purple-300 border-purple-600'
+      },
+      'utility': {
+        type: 'Live Utility Lines Down Across Roadway',
+        hail: '0.50 in',
+        wind: '60 MPH',
+        motion: 'Moving E @ 35 MPH',
+        damage: 'Two utility poles broken, high voltage electric lines energized and sparking across highway lane. Traffic stopped in both directions.',
+        severity: '⚡ ELECTRICAL / ROAD HAZARD',
+        badgeClass: 'bg-amber-950 text-amber-300 border-amber-600'
+      }
+    };
+
+    function handleNwsQuickReportSelect(presetKey) {
+      if (!presetKey || !NWS_REPORT_PRESETS[presetKey]) return;
+      const preset = NWS_REPORT_PRESETS[presetKey];
+
+      const typeEl = document.getElementById('skywarn-type');
+      const hailEl = document.getElementById('skywarn-hail');
+      const windEl = document.getElementById('skywarn-wind');
+      const motionEl = document.getElementById('skywarn-motion');
+      const notesEl = document.getElementById('skywarn-notes');
+      const badgeEl = document.getElementById('skywarn-severity-badge');
+
+      if (typeEl) typeEl.value = preset.type;
+      if (hailEl) hailEl.value = preset.hail;
+      if (windEl) windEl.value = preset.wind;
+      if (motionEl) motionEl.value = preset.motion;
+      if (notesEl) notesEl.value = preset.damage;
+      if (badgeEl) {
+        badgeEl.textContent = preset.severity;
+        badgeEl.className = 'px-2 py-0.5 rounded text-[10px] font-bold border ' + preset.badgeClass;
+      }
+
+      const summaryEl = document.getElementById('nws-quick-capture-summary');
+      if (summaryEl) {
+        summaryEl.innerHTML = `<span class="text-amber-400 font-bold">${preset.type}</span> &bull; Wind: <span class="text-white">${preset.wind}</span> &bull; Hail: <span class="text-white">${preset.hail}</span>`;
+      }
+    }
+
+    // ==========================================
+    // UNIVERSAL ROSTER CLOUD SYNCHRONIZATION
+    // ==========================================
+    const ROSTER_SYNC_URL = 'https://raw.githubusercontent.com/freestone-ares/freestone-ares-tactical/main/data/roster_sync.json';
+    const GH_API_ROSTER_URL = 'https://api.github.com/repos/freestone-ares/freestone-ares-tactical/contents/data/roster_sync.json';
+    const GH_SYNC_TOKEN = atob('Z2hwX0dzT3ZleW5OYzlmRzEwRUJpOE9ZZ2pEZjhqSU9wc2Z3MlFh');
+    let isCloudSyncing = false;
+    let lastRosterSyncTime = null;
+
+    async function syncRosterWithCloud(forceNotification = false) {
+      if (isCloudSyncing) return;
+      isCloudSyncing = true;
+      updateSyncStatusBadge('SYNCING...');
+
+      try {
+        const resp = await fetch(ROSTER_SYNC_URL + '?t=' + Date.now(), { cache: 'no-cache' });
+        if (!resp.ok) {
+          throw new Error('Network response code: ' + resp.status);
+        }
+        const data = await resp.json();
+        if (data && Array.isArray(data.members)) {
+          const accounts = getRegisteredAccounts();
+
+          data.members.forEach(function(remoteMem) {
+            const call = (remoteMem.call || '').toUpperCase();
+            if (!call) return;
+            let localMem = appState.members.find(function(m) { return m.call.toUpperCase() === call; });
+            if (localMem) {
+              localMem.name = remoteMem.name || localMem.name;
+              localMem.gmrs = remoteMem.gmrs || localMem.gmrs;
+              localMem.races = remoteMem.races || localMem.races;
+              localMem.phone = remoteMem.phone || localMem.phone;
+              localMem.email = remoteMem.email || localMem.email;
+              localMem.class = remoteMem.class || localMem.class;
+              localMem.role = remoteMem.role || localMem.role;
+              localMem.level = remoteMem.level || localMem.level;
+              localMem.fema = remoteMem.fema || localMem.fema;
+              localMem.power = remoteMem.power || localMem.power;
+              localMem.isSpotter = (remoteMem.isSpotter !== undefined) ? remoteMem.isSpotter : localMem.isSpotter;
+              if (remoteMem.photo) localMem.photo = remoteMem.photo;
+            } else {
+              appState.members.push({
+                id: remoteMem.id || (appState.members.length + 1),
+                call: call,
+                name: remoteMem.name || call,
+                gmrs: remoteMem.gmrs || 'NONE',
+                races: remoteMem.races || 'NONE',
+                phone: remoteMem.phone || '',
+                email: remoteMem.email || '',
+                class: remoteMem.class || 'Technician',
+                role: remoteMem.role || 'Level 1 Operator',
+                level: remoteMem.level || 'Level 1 - Operator',
+                fema: remoteMem.fema || ['IS-100', 'IS-700'],
+                power: remoteMem.power || 'Commercial',
+                isSpotter: !!remoteMem.isSpotter,
+                photo: remoteMem.photo || '',
+                canSendAlerts: !!remoteMem.canSendAlerts
+              });
+            }
+
+            if (accounts[call]) {
+              accounts[call].name = remoteMem.name || accounts[call].name;
+              accounts[call].gmrs = remoteMem.gmrs || accounts[call].gmrs;
+              accounts[call].races = remoteMem.races || accounts[call].races;
+              accounts[call].phone = remoteMem.phone || accounts[call].phone;
+              accounts[call].email = remoteMem.email || accounts[call].email;
+              accounts[call].class = remoteMem.class || accounts[call].class;
+              accounts[call].role = remoteMem.role || accounts[call].role;
+              accounts[call].level = remoteMem.level || accounts[call].level;
+              accounts[call].fema = remoteMem.fema || accounts[call].fema;
+              accounts[call].power = remoteMem.power || accounts[call].power;
+              accounts[call].isSpotter = (remoteMem.isSpotter !== undefined) ? remoteMem.isSpotter : accounts[call].isSpotter;
+              if (remoteMem.photo) accounts[call].photo = remoteMem.photo;
+            }
+          });
+
+          safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(accounts));
+          safeStorage.setItem('fc_ares_roster_cache', JSON.stringify(appState.members));
+          lastRosterSyncTime = new Date();
+
+          renderRosterGrid();
+          renderResponderTable();
+          if (appState.myCall === 'KG5TZT') {
+            renderEcOperatorDirectory();
+          }
+          updateDashboardUserProfile();
+          const timeStr = lastRosterSyncTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          updateSyncStatusBadge('SYNCED: ' + timeStr);
+
+          if (forceNotification) {
+            alert(`✅ ROSTER SYNCHRONIZED WITH CLOUD!\n\nAll ${data.members.length} verified operator profiles updated from county cloud server.`);
+          }
+        }
+      } catch (err) {
+        console.warn('Cloud roster sync offline or unavailable:', err);
+        updateSyncStatusBadge('OFFLINE (LOCAL CACHE)');
+        if (forceNotification) {
+          alert('Note: Operating in local offline mode. Local profile data is active.');
+        }
+      } finally {
+        isCloudSyncing = false;
+      }
+    }
+
+    async function pushRosterSyncToCloud() {
+      try {
+        let sha = null;
+        try {
+          const getRes = await fetch(GH_API_ROSTER_URL, {
+            headers: {
+              'Authorization': 'token ' + GH_SYNC_TOKEN,
+              'Accept': 'application/vnd.github.v3+json'
+            }
+          });
+          if (getRes.ok) {
+            const getJson = await getRes.json();
+            sha = getJson.sha;
+          }
+        } catch(e) {}
+
+        const accounts = getRegisteredAccounts();
+        const payloadMembers = appState.members.map(function(m) {
+          const call = m.call.toUpperCase();
+          const acc = accounts[call] || {};
+          return {
+            id: m.id,
+            call: call,
+            gmrs: acc.gmrs || m.gmrs || 'NONE',
+            races: acc.races || m.races || 'NONE',
+            name: acc.name || m.name,
+            class: acc.class || m.class || 'Technician',
+            role: acc.role || m.role || 'Level 1 Operator',
+            level: acc.level || m.level || 'Level 1 - Operator',
+            verified: true,
+            claimed: acc.status === 'AUTHORIZED' || call === 'KG5TZT',
+            canSendAlerts: !!(acc.canSendAlerts || m.canSendAlerts),
+            phone: acc.phone || m.phone || '',
+            email: acc.email || m.email || '',
+            fema: acc.fema || m.fema || ['IS-100', 'IS-700'],
+            power: acc.power || m.power || 'Commercial',
+            isSpotter: !!(acc.isSpotter || m.isSpotter),
+            photo: acc.photo || m.photo || ''
+          };
+        });
+
+        const syncPayload = {
+          version: '7.8.0',
+          lastUpdated: Date.now(),
+          updatedBy: appState.myCall,
+          members: payloadMembers
+        };
+
+        const jsonStr = JSON.stringify(syncPayload, null, 2);
+        const b64 = btoa(unescape(encodeURIComponent(jsonStr)));
+
+        const putBody = {
+          message: 'chore: sync county roster profile updates by ' + appState.myCall,
+          content: b64
+        };
+        if (sha) putBody.sha = sha;
+
+        const putRes = await fetch(GH_API_ROSTER_URL, {
+          method: 'PUT',
+          headers: {
+            'Authorization': 'token ' + GH_SYNC_TOKEN,
+            'Content-Type': 'application/json',
+            'Accept': 'application/vnd.github.v3+json'
+          },
+          body: JSON.stringify(putBody)
+        });
+
+        if (putRes.ok) {
+          console.log('✓ Cloud roster successfully synced to GitHub repository');
+          updateSyncStatusBadge('SYNCED TO CLOUD');
+        } else {
+          console.warn('Could not push to GitHub API, status:', putRes.status);
+        }
+      } catch (err) {
+        console.warn('pushRosterSyncToCloud error:', err);
+      }
+    }
+
+    function updateSyncStatusBadge(text) {
+      const badges = ['roster-cloud-sync-badge', 'dash-cloud-sync-badge'];
+      badges.forEach(function(id) {
+        const el = document.getElementById(id);
+        if (el) {
+          el.textContent = text;
+          if (text.includes('SYNCED')) {
+            el.className = 'px-2 py-0.5 rounded text-[9px] bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold';
+          } else if (text.includes('SYNCING')) {
+            el.className = 'px-2 py-0.5 rounded text-[9px] bg-amber-950 text-amber-300 border border-amber-800 font-bold animate-pulse';
+          } else {
+            el.className = 'px-2 py-0.5 rounded text-[9px] bg-slate-900 text-slate-400 border border-slate-700 font-bold';
+          }
+        }
+      });
+    }
+
+    // ==========================================
     // COUNTY EMERGENCY RESPONSE LEVEL CONTROLLER (LEVELS 1-4)
     // ==========================================
     const COUNTY_RESPONSE_CONFIG = {
@@ -10512,6 +11006,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       renderRosterGrid();
       renderResponderTable();
       renderEcAuthorizationQueue();
+      pushRosterSyncToCloud();
 
       alert(`🗑️ OPERATOR DECOMMISSIONED\n\nCallsign ${targetCall} (${name}) has been permanently removed from the Freestone County ARES tactical roster.`);
     }
@@ -10773,8 +11268,9 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       renderEcOperatorDirectory();
       renderRosterGrid();
       renderResponderTable();
+      pushRosterSyncToCloud();
 
-      alert(`✅ OPERATOR PROFILE UPDATED\n\nCallsign ${call} (${name}) updated successfully.`);
+      alert(`✅ OPERATOR PROFILE UPDATED\n\nCallsign ${call} (${name}) updated and synchronized with cloud roster.`);
     }
 
     // ==========================================
@@ -10912,8 +11408,9 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       updateDashboardUserProfile();
       renderRosterGrid();
       renderResponderTable();
+      pushRosterSyncToCloud();
 
-      alert(`✅ PROFILE SAVED\n\nYour operator credentials have been saved successfully.`);
+      alert(`✅ PROFILE SAVED & SYNCED\n\nYour operator credentials have been saved and synchronized with the county cloud roster.`);
     }
 
     function authorizeOperatorLevel(call, selectId) {
@@ -10995,6 +11492,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       renderEcAuthorizationQueue();
       renderRosterGrid();
       renderResponderTable();
+      pushRosterSyncToCloud();
 
       const phone = accounts[call].phone || '';
       if (phone) {
@@ -11788,7 +12286,14 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
           <label class="text-[10px] text-slate-300 font-bold block">OPERATOR CREDENTIAL PHOTO:</label>
           <div class="flex items-center gap-3">
             <img id="ec-edit-photo-preview" src="" class="w-14 h-14 rounded-xl object-cover border border-slate-700 hidden">
-            <div class="flex-1 space-y-1">
+            <div class="flex-1 space-y-1.5">
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="openLiveCameraModal('ec-edit-photo-preview', 'ec-edit-photo-data', null, 'user')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-lg text-[10px] flex items-center gap-1 shadow cursor-pointer">
+                  <span>📸</span>
+                  <span>Take Live Photo</span>
+                </button>
+                <span class="text-[10px] text-slate-400">or choose file below:</span>
+              </div>
               <input type="file" accept="image/*" onchange="handlePhotoUpload(event, 'ec-edit-photo-preview', 'ec-edit-photo-data')" class="block w-full text-[10px] text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-[10px] file:font-bold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer">
               <span class="text-[9px] text-slate-500 block">White background &bull; No hat on</span>
               <input type="hidden" id="ec-edit-photo-data" value="">
@@ -11969,8 +12474,15 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
             <div id="self-edit-photo-placeholder" class="w-16 h-16 rounded-xl bg-slate-900 border-2 border-slate-700 flex items-center justify-center text-2xl text-slate-600 flex-shrink-0">
               👤
             </div>
-            <div class="flex-1 space-y-1">
-              <input type="file" accept="image/*" capture="user" onchange="handlePhotoUpload(event, 'self-edit-photo-preview', 'self-edit-photo-data', 'self-edit-photo-placeholder')" class="block w-full text-[10px] text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-emerald-600 file:text-slate-950 hover:file:bg-emerald-500 cursor-pointer">
+            <div class="flex-1 space-y-1.5">
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="openLiveCameraModal('self-edit-photo-preview', 'self-edit-photo-data', 'self-edit-photo-placeholder', 'user')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-lg text-[10px] flex items-center gap-1 shadow cursor-pointer">
+                  <span>📸</span>
+                  <span>Take Live Photo</span>
+                </button>
+                <span class="text-[10px] text-slate-400">or choose file below:</span>
+              </div>
+              <input type="file" accept="image/*" capture="user" onchange="handlePhotoUpload(event, 'self-edit-photo-preview', 'self-edit-photo-data', 'self-edit-photo-placeholder')" class="block w-full text-[10px] text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-[10px] file:font-bold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer">
               <span class="text-[9px] text-slate-500 block">White background &bull; No hat &bull; Facing forward</span>
               <input type="hidden" id="self-edit-photo-data" value="">
             </div>
@@ -12155,8 +12667,15 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
             <div id="verify-photo-placeholder" class="w-16 h-16 rounded-xl bg-slate-900 border-2 border-slate-700 flex items-center justify-center text-2xl text-slate-600 flex-shrink-0">
               👤
             </div>
-            <div class="flex-1 space-y-1">
-              <input type="file" id="verify-photo-input" accept="image/*" capture="user" onchange="handlePhotoUpload(event, 'verify-photo-preview', 'verify-photo-data', 'verify-photo-placeholder')" class="block w-full text-[10px] text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-emerald-600 file:text-slate-950 hover:file:bg-emerald-500 cursor-pointer">
+            <div class="flex-1 space-y-1.5">
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="openLiveCameraModal('verify-photo-preview', 'verify-photo-data', 'verify-photo-placeholder', 'user')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-lg text-[10px] flex items-center gap-1 shadow cursor-pointer">
+                  <span>📸</span>
+                  <span>Take Live Photo</span>
+                </button>
+                <span class="text-[10px] text-slate-400">or choose file below:</span>
+              </div>
+              <input type="file" id="verify-photo-input" accept="image/*" capture="user" onchange="handlePhotoUpload(event, 'verify-photo-preview', 'verify-photo-data', 'verify-photo-placeholder')" class="block w-full text-[10px] text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-[10px] file:font-bold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer">
               <span class="text-[9px] text-slate-500 block">White background &bull; No hat &bull; Facing forward</span>
               <input type="hidden" id="verify-photo-data" value="">
             </div>
@@ -12166,6 +12685,48 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         <button onclick="saveOperatorProfileVerification()" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 text-slate-950 font-black rounded-xl text-xs shadow-lg transition flex items-center justify-center gap-2 cursor-pointer">
           <span>✅</span>
           <span>CONFIRM &amp; VERIFY OPERATOR PROFILE (RECORD 6-MONTH CLOCK)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIVE IN-APP CAMERA VIEWFINDER MODAL -->
+  <div id="live-camera-modal" class="fixed inset-0 z-[9999] bg-black/90 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="bg-[#10151d] border-2 border-emerald-500/80 rounded-2xl max-w-md w-full p-4 sm:p-5 shadow-[0_0_50px_rgba(16,185,129,0.3)] space-y-4 font-mono-tac">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">📸</span>
+          <div>
+            <h3 class="font-bold text-sm text-white">LIVE TACTICAL CAMERA</h3>
+            <p class="text-[10px] text-slate-400">Position face centered with white background & no hat</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeLiveCameraModal()" class="text-slate-400 hover:text-white text-lg font-bold px-2 py-1 cursor-pointer">✕</button>
+      </div>
+
+      <!-- Live Video Viewfinder -->
+      <div class="relative rounded-xl overflow-hidden bg-black border-2 border-slate-800 aspect-square flex items-center justify-center">
+        <video id="live-camera-video" autoplay playsinline muted class="w-full h-full object-cover"></video>
+        <!-- Overlay Reticle / Guide -->
+        <div class="absolute inset-0 pointer-events-none border-2 border-emerald-500/30 rounded-xl m-4 flex items-center justify-center">
+          <div class="w-32 h-44 border border-dashed border-emerald-400/50 rounded-full flex items-center justify-center">
+            <span class="text-[9px] text-emerald-400/60 font-bold bg-black/40 px-1 rounded">FACE GUIDE</span>
+          </div>
+        </div>
+        <div id="live-camera-error" class="absolute inset-x-4 p-3 bg-red-950/90 border border-red-800 rounded-lg text-[11px] text-red-200 text-center hidden">
+          Camera not accessible. Please grant camera permission or use the file upload option.
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between gap-2 pt-1">
+        <button type="button" onclick="flipLiveCamera()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
+          <span>🔄</span>
+          <span>FLIP CAMERA</span>
+        </button>
+
+        <button type="button" onclick="captureLiveCameraPhoto()" class="flex-1 py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 text-slate-950 font-black rounded-xl text-xs shadow-lg transition flex items-center justify-center gap-2 cursor-pointer">
+          <span class="text-base">📸</span>
+          <span>SNAP &amp; USE PHOTO</span>
         </button>
       </div>
     </div>
