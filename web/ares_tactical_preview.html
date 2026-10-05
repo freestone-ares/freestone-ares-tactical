@@ -157,7 +157,7 @@
 <body id="app-body" class="mode-nv-green bg-[#0a0d12] text-slate-100 min-h-screen flex flex-col antialiased">
 
     <!-- TACTICAL APP HEADER BAR -->
-  <header class="sticky top-0 z-40 bg-[#070a0f]/95 backdrop-blur-md border-b border-emerald-500/30 shadow-lg font-mono-tac overflow-x-hidden">
+  <header class="sticky top-0 z-40 bg-[#070a0f]/95 backdrop-blur-md border-b border-emerald-500/30 shadow-lg font-mono-tac ">
     <div class="max-w-7xl mx-auto px-2 sm:px-4 py-1.5 sm:py-2">
       <!-- LINE 1: Brand & Emblem on Left; User Profile & Menu on Right -->
       <div class="flex items-center justify-between gap-1.5 sm:gap-3 w-full">
@@ -204,7 +204,7 @@
           </button>
 
           <!-- HAMBURGER MENU BUTTON -->
-          <button id="btn-hamburger" onclick="toggleHamburgerMenu()" class="px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black text-xs shadow-md transition flex items-center gap-1 sm:gap-1.5 select-none cursor-pointer" title="Open Tactical Navigation Menu" aria-label="Open Navigation Menu">
+          <button id="btn-hamburger" type="button" onclick="toggleHamburgerMenu(event)" class="px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-400 text-slate-950 font-black text-xs shadow-md transition flex items-center gap-1 sm:gap-1.5 select-none cursor-pointer touch-manipulation z-30" title="Open Tactical Navigation Menu" aria-label="Open Navigation Menu">
             <span class="text-sm font-black">☰</span>
             <span class="font-bold">MENU</span>
           </button>
@@ -213,178 +213,205 @@
 
       <!-- LINE 2: ARES LIVE OPERATIONAL STATUS PILL (Fits 100% full width, centered, no horizontal scrolling!) -->
       <div id="header-ares-status-container" class="mt-1 sm:mt-1.5 flex items-center justify-center w-full">
-        <div id="header-ares-status-badge" class="flex items-center justify-center gap-1.5 px-3 py-0.5 sm:py-1 rounded-full bg-emerald-950/90 border border-emerald-500/60 text-emerald-300 font-bold text-[10px] sm:text-xs shadow-[0_0_15px_rgba(16,185,129,0.3)] select-none w-full max-w-xl text-center">
+        <div id="header-ares-status-badge" onclick="handleHeaderStatusClick()" class="flex items-center justify-center gap-1.5 px-3 py-0.5 sm:py-1 rounded-full bg-emerald-950/90 border border-emerald-500/60 text-emerald-300 font-bold text-[10px] sm:text-xs shadow-[0_0_15px_rgba(16,185,129,0.3)] select-none w-full max-w-xl text-center cursor-pointer" title="County Emergency Status — EC Brian Davis can tap to set Response Level 1-4">
           <span id="header-ares-status-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0"></span>
           <span class="text-[9px] sm:text-[10px] text-slate-400 font-normal">ARES STATUS:</span>
           <strong id="header-ares-status-text" class="text-emerald-300 tracking-wider truncate">LEVEL 4 &bull; NORMAL MONITORING</strong>
         </div>
       </div>
     </div>
+  </header>
 
-    <!-- HAMBURGER DROPDOWN DRAWER -->
-    <div id="hamburger-menu-dropdown" class="hidden absolute right-3 sm:right-4 top-full mt-2 w-80 max-w-[94vw] bg-[#0c1017] border-2 border-emerald-500/60 rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.9)] z-50 p-3 space-y-2 text-xs backdrop-blur-xl">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-2 px-1">
-        <div class="flex items-center gap-1.5">
-          <span class="text-emerald-400 font-bold text-xs uppercase tracking-wider">TACTICAL CONSOLE NAVIGATION</span>
-        </div>
-        <button onclick="toggleHamburgerMenu(false)" class="text-slate-400 hover:text-white p-1 text-sm font-bold">✕</button>
-      </div>
-
-      <!-- Navigation Grid / List -->
-      <div class="space-y-1 max-h-[72vh] overflow-y-auto pr-1">
-        
-        <!-- 1. Dashboard -->
-        <button onclick="navFromMenu('dash')" id="menu-item-dash" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-slate-800/80 text-white transition border border-transparent bg-emerald-500/20 border-emerald-500/50">
-          <div class="flex items-center gap-2.5">
+  <!-- TACTICAL NAVIGATION DRAWER (Full Viewport Fixed Overlay - Never Clipped) -->
+  <div id="hamburger-menu-dropdown" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex justify-end font-mono-tac" onclick="if(event.target===this) toggleHamburgerMenu(false);">
+    <div class="w-80 max-w-[85vw] h-full bg-[#0c1017] border-l-2 border-emerald-500/70 shadow-[-15px_0_40px_rgba(0,0,0,0.9)] p-4 space-y-3 text-xs overflow-y-auto flex flex-col justify-between" onclick="event.stopPropagation()">
+      <div class="space-y-3">
+        <!-- Drawer Header -->
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div class="flex items-center gap-2">
             <span class="text-base">⚡</span>
             <div>
-              <div class="font-bold text-xs text-white">Tactical Dashboard</div>
-              <div class="text-[10px] text-slate-400">Master status, clocks, and operational feed</div>
+              <div class="text-emerald-400 font-black text-xs uppercase tracking-wider">TACTICAL NAVIGATION</div>
+              <div class="text-[10px] text-slate-400">Freestone County ARES</div>
             </div>
           </div>
-          <span class="text-emerald-400 font-bold text-xs">➔</span>
-        </button>
-
-        <!-- 2. PACE Channels & Frequency Directory (Moved from Dashboard) -->
-        <button onclick="navFromMenu('pace')" id="menu-item-pace" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-emerald-950/40 text-emerald-300 transition border border-emerald-900/40 bg-emerald-950/20">
-          <div class="flex items-center gap-2.5">
-            <span class="text-base">📡</span>
-            <div>
-              <div class="font-bold text-xs text-white">PACE Channels &amp; 22 Frequencies</div>
-              <div class="text-[10px] text-slate-400">Fairfield repeaters, VHF/UHF simplex matrix &amp; CHIRP</div>
-            </div>
-          </div>
-          <span class="text-emerald-400 font-bold text-xs">➔</span>
-        </button>
-
-        <!-- 3. Roster -->
-        <button onclick="navFromMenu('roster')" id="menu-item-roster" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-slate-800/80 text-slate-200 transition border border-transparent">
-          <div class="flex items-center gap-2.5">
-            <span class="text-base">👥</span>
-            <div>
-              <div class="font-bold text-xs">Verified Member Roster</div>
-              <div class="text-[10px] text-slate-400">County operators, contact masking &amp; levels</div>
-            </div>
-          </div>
-          <span class="text-slate-500 text-xs">➔</span>
-        </button>
-
-        <!-- 4. Paging & Alerts (GRAYED OUT IF NOT AUTHORIZED) -->
-        <div id="menu-item-alert-wrapper">
-          <!-- Populated dynamically via updateMenuPagingState() -->
+          <button type="button" onclick="toggleHamburgerMenu(false)" class="p-1.5 px-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-bold text-xs transition cursor-pointer" aria-label="Close menu">
+            ✕ CLOSE
+          </button>
         </div>
 
-        <!-- 5. ICS Forms -->
-        <button onclick="navFromMenu('ics')" id="menu-item-ics" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-slate-800/80 text-slate-200 transition border border-transparent">
-          <div class="flex items-center gap-2.5">
-            <span class="text-base">📋</span>
-            <div>
-              <div class="font-bold text-xs">ICS Incident Forms</div>
-              <div class="text-[10px] text-slate-400">ICS-213, ICS-214 unit log, Winlink forms</div>
-            </div>
-          </div>
-          <span class="text-slate-500 text-xs">➔</span>
-        </button>
-
-        <!-- 6. Severe Weather Spotter -->
-        <button onclick="navFromMenu('skywarn')" id="menu-item-skywarn" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-slate-800/80 text-slate-200 transition border border-transparent">
-          <div class="flex items-center gap-2.5">
-            <span class="text-base">⛈️</span>
-            <div>
-              <div class="font-bold text-xs">SKYWARN Severe Weather</div>
-              <div class="text-[10px] text-slate-400">Live storm spotting reports &amp; NWS radar</div>
-            </div>
-          </div>
-          <span class="text-slate-500 text-xs">➔</span>
-        </button>
-
-        <!-- 7. Operations Calendar -->
-        <button onclick="navFromMenu('calendar')" id="menu-item-calendar" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-slate-800/80 text-slate-200 transition border border-transparent">
-          <div class="flex items-center gap-2.5">
-            <span class="text-base">📅</span>
-            <div>
-              <div class="font-bold text-xs">Calendar &amp; Training Nets</div>
-              <div class="text-[10px] text-slate-400">Weekly net schedules &amp; training exercises</div>
-            </div>
-          </div>
-          <span class="text-slate-500 text-xs">➔</span>
-        </button>
-
-        <!-- 8. Off-Grid County Maps -->
-        <button onclick="navFromMenu('map')" id="menu-item-map" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-slate-800/80 text-slate-200 transition border border-transparent">
-          <div class="flex items-center gap-2.5">
-            <span class="text-base">🗺️</span>
-            <div>
-              <div class="font-bold text-xs">Off-Grid Maps &amp; APRS</div>
-              <div class="text-[10px] text-slate-400">County tile caching &amp; APRS packet overlay</div>
-            </div>
-          </div>
-          <span class="text-slate-500 text-xs">➔</span>
-        </button>
-
-        <!-- 9. Voting & Polls -->
-        <button onclick="navFromMenu('voting')" id="menu-item-voting" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-slate-800/80 text-slate-200 transition border border-transparent">
-          <div class="flex items-center gap-2.5">
-            <span class="text-base">🗳️</span>
-            <div>
-              <div class="font-bold text-xs">Operational Polls</div>
-              <div class="text-[10px] text-slate-400">Net check-in surveys &amp; equipment readiness</div>
-            </div>
-          </div>
-          <span class="text-slate-500 text-xs">➔</span>
-        </button>
-
-        <!-- 10. EC Security Clearance Desk -->
-        <button onclick="navFromMenu('security-desk')" id="menu-item-security-desk" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-slate-800/80 text-amber-300 transition border border-amber-900/40 bg-amber-950/20">
-          <div class="flex items-center gap-2.5">
-            <span class="text-base">🛡️</span>
-            <div>
-              <div class="font-bold text-xs flex items-center gap-1.5">
-                <span>EC Security Clearance Desk</span>
-                <span id="menu-pending-badge" class="px-1.5 py-0.2 rounded text-[9px] bg-amber-950 text-amber-400 border border-amber-800 font-bold hidden">0</span>
+        <!-- Navigation List -->
+        <div class="space-y-1 max-h-[70vh] overflow-y-auto pr-1">
+          <!-- 1. Dashboard -->
+          <button onclick="navFromMenu('dash')" id="menu-item-dash" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-slate-800/80 text-white transition border border-transparent bg-emerald-500/20 border-emerald-500/50 cursor-pointer">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">⚡</span>
+              <div>
+                <div class="font-bold text-xs text-white">Tactical Dashboard</div>
+                <div class="text-[10px] text-slate-400">Master status, clocks, and operational feed</div>
               </div>
-              <div class="text-[10px] text-slate-400">Authorize operator passwords &amp; assign levels 1-5</div>
             </div>
-          </div>
-          <span class="text-amber-500 text-xs">➔</span>
-        </button>
+            <span class="text-emerald-400 font-bold text-xs">➔</span>
+          </button>
 
-        <!-- 11. Auth / Operator Account -->
-        <button onclick="navFromMenu('auth')" id="menu-item-auth" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-slate-800/80 text-slate-200 transition border border-transparent">
-          <div class="flex items-center gap-2.5">
-            <span class="text-base">🔑</span>
-            <div>
-              <div class="font-bold text-xs">Operator Account / Login</div>
-              <div class="text-[10px] text-slate-400">Switch user, login, or reset password</div>
+          <!-- 2. PACE Channels & Frequencies -->
+          <button onclick="navFromMenu('pace')" id="menu-item-pace" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-emerald-950/40 text-emerald-300 transition border border-emerald-900/40 bg-emerald-950/20 cursor-pointer">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">📡</span>
+              <div>
+                <div class="font-bold text-xs text-white">PACE Channels &amp; 22 Frequencies</div>
+                <div class="text-[10px] text-slate-400">Fairfield repeaters, VHF/UHF simplex &amp; CHIRP</div>
+              </div>
             </div>
-          </div>
-          <span class="text-slate-500 text-xs">➔</span>
-        </button>
+            <span class="text-emerald-400 font-bold text-xs">➔</span>
+          </button>
 
+          <!-- 3. Roster -->
+          <button onclick="navFromMenu('roster')" id="menu-item-roster" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-slate-800/80 text-slate-200 transition border border-transparent cursor-pointer">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">👥</span>
+              <div>
+                <div class="font-bold text-xs">Verified Member Roster</div>
+                <div class="text-[10px] text-slate-400">County operators, contact masking &amp; levels</div>
+              </div>
+            </div>
+            <span class="text-slate-500 text-xs">➔</span>
+          </button>
+
+          <!-- 4. Paging & Alerts (GRAYED OUT IF NOT AUTHORIZED) -->
+          <div id="menu-item-alert-wrapper">
+            <!-- Populated dynamically via updateMenuPagingState() -->
+          </div>
+
+          <!-- 5. ICS Forms -->
+          <button onclick="navFromMenu('ics')" id="menu-item-ics" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-slate-800/80 text-slate-200 transition border border-transparent cursor-pointer">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">📋</span>
+              <div>
+                <div class="font-bold text-xs">ICS Incident Forms</div>
+                <div class="text-[10px] text-slate-400">ICS-213, ICS-214 unit log, Winlink forms</div>
+              </div>
+            </div>
+            <span class="text-slate-500 text-xs">➔</span>
+          </button>
+
+          <!-- 6. Severe Weather Spotter -->
+          <button onclick="navFromMenu('skywarn')" id="menu-item-skywarn" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-slate-800/80 text-slate-200 transition border border-transparent cursor-pointer">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">⛈️</span>
+              <div>
+                <div class="font-bold text-xs">SKYWARN Severe Weather</div>
+                <div class="text-[10px] text-slate-400">Live storm spotting reports &amp; NWS radar</div>
+              </div>
+            </div>
+            <span class="text-slate-500 text-xs">➔</span>
+          </button>
+
+          <!-- 7. Operations Calendar -->
+          <button onclick="navFromMenu('calendar')" id="menu-item-calendar" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-slate-800/80 text-slate-200 transition border border-transparent cursor-pointer">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">📅</span>
+              <div>
+                <div class="font-bold text-xs">Calendar &amp; Training Nets</div>
+                <div class="text-[10px] text-slate-400">Weekly net schedules &amp; training exercises</div>
+              </div>
+            </div>
+            <span class="text-slate-500 text-xs">➔</span>
+          </button>
+
+          <!-- 8. Off-Grid County Maps -->
+          <button onclick="navFromMenu('map')" id="menu-item-map" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-slate-800/80 text-slate-200 transition border border-transparent cursor-pointer">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">🗺️</span>
+              <div>
+                <div class="font-bold text-xs">Off-Grid Maps &amp; APRS</div>
+                <div class="text-[10px] text-slate-400">County tile caching &amp; APRS packet overlay</div>
+              </div>
+            </div>
+            <span class="text-slate-500 text-xs">➔</span>
+          </button>
+
+          <!-- 9. Voting & Polls -->
+          <button onclick="navFromMenu('voting')" id="menu-item-voting" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-slate-800/80 text-slate-200 transition border border-transparent cursor-pointer">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">🗳️</span>
+              <div>
+                <div class="font-bold text-xs">Operational Polls</div>
+                <div class="text-[10px] text-slate-400">Net check-in surveys &amp; equipment readiness</div>
+              </div>
+            </div>
+            <span class="text-slate-500 text-xs">➔</span>
+          </button>
+
+          <!-- 10. EC Security Clearance Desk -->
+          <button onclick="navFromMenu('security-desk')" id="menu-item-security-desk" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-amber-950/40 text-amber-300 transition border border-amber-900/40 bg-amber-950/20 cursor-pointer">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">🛡️</span>
+              <div>
+                <div class="font-bold text-xs flex items-center gap-1.5">
+                  <span>EC Security Clearance Desk</span>
+                  <span id="menu-pending-badge" class="px-1.5 py-0.2 rounded text-[9px] bg-amber-950 text-amber-400 border border-amber-700 font-bold">EC ONLY</span>
+                </div>
+                <div class="text-[10px] text-slate-400">Authorize operator passwords &amp; assign levels 1-6</div>
+              </div>
+            </div>
+            <span class="text-amber-500 text-xs">➔</span>
+          </button>
+
+          <!-- 11. Auth / Operator Account -->
+          <button onclick="navFromMenu('auth')" id="menu-item-auth" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-slate-800/80 text-slate-200 transition border border-transparent cursor-pointer">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">🔑</span>
+              <div>
+                <div class="font-bold text-xs">Operator Account / Login</div>
+                <div class="text-[10px] text-slate-400">Switch user, login, or reset password</div>
+              </div>
+            </div>
+            <span class="text-slate-500 text-xs">➔</span>
+          </button>
+
+          <!-- 12. My Profile & Photo ID -->
+          <button type="button" onclick="toggleHamburgerMenu(false); openOperatorSelfEditModal();" id="menu-item-self-profile" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-emerald-950/60 text-emerald-300 transition border border-emerald-900/50 bg-emerald-950/20 cursor-pointer">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">📸</span>
+              <div>
+                <div class="font-bold text-xs">My Profile &amp; Photo ID</div>
+                <div class="text-[10px] text-slate-400">Update contact info, GMRS/RACES &amp; photo</div>
+              </div>
+            </div>
+            <span class="text-emerald-500 text-xs">➔</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Drawer Footer: Night Vision & Utilities -->
+      <div class="space-y-2 pt-2 border-t border-slate-800">
         <!-- Night Vision Quick Mode Row -->
-        <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] px-1">
+        <div class="flex items-center justify-between text-[11px] px-1">
           <span class="text-slate-400 font-bold">NIGHT VISION:</span>
           <div class="flex items-center gap-1 flex-wrap">
-            <button id="nv-btn-green" onclick="setTheme('green')" class="px-2 py-0.5 rounded text-emerald-400 bg-slate-900 hover:bg-slate-800 border border-slate-700 font-bold text-[10px]" title="Night Vision Green (P-43 Phosphor)">NV-G</button>
-            <button id="nv-btn-amber" onclick="setTheme('amber')" class="px-2 py-0.5 rounded text-amber-400 bg-slate-900 hover:bg-slate-800 border border-slate-700 font-bold text-[10px]" title="Amber Cockpit Low-Light">AMB</button>
-            <button id="nv-btn-red" onclick="setTheme('red')" class="px-2 py-0.5 rounded text-red-400 bg-slate-900 hover:bg-slate-800 border border-slate-700 font-bold text-[10px]" title="Tactical Red Dark Adaptation">RED</button>
-            <button id="nv-btn-normal" onclick="setTheme('normal')" class="px-2 py-0.5 rounded text-slate-300 bg-slate-900 hover:bg-slate-800 border border-slate-700 font-bold text-[10px]" title="Full Standard Color Day/Night Mode">DAY</button>
+            <button id="nv-btn-green" onclick="setTheme('green')" class="px-2 py-0.5 rounded text-emerald-400 bg-slate-900 hover:bg-slate-800 border border-slate-700 font-bold text-[10px] cursor-pointer" title="Night Vision Green (P-43 Phosphor)">NV-G</button>
+            <button id="nv-btn-amber" onclick="setTheme('amber')" class="px-2 py-0.5 rounded text-amber-400 bg-slate-900 hover:bg-slate-800 border border-slate-700 font-bold text-[10px] cursor-pointer" title="Amber Cockpit Low-Light">AMB</button>
+            <button id="nv-btn-red" onclick="setTheme('red')" class="px-2 py-0.5 rounded text-red-400 bg-slate-900 hover:bg-slate-800 border border-slate-700 font-bold text-[10px] cursor-pointer" title="Tactical Red Dark Adaptation">RED</button>
+            <button id="nv-btn-normal" onclick="setTheme('normal')" class="px-2 py-0.5 rounded text-slate-300 bg-slate-900 hover:bg-slate-800 border border-slate-700 font-bold text-[10px] cursor-pointer" title="Full Standard Color Day/Night Mode">DAY</button>
           </div>
         </div>
 
         <!-- Utilities divider -->
-        <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between gap-2">
-          <button onclick="openShareAppModal(); toggleHamburgerMenu(false);" class="flex-1 py-2 px-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 text-[11px] font-bold border border-slate-700 flex items-center justify-center gap-1.5">
+        <div class="flex items-center justify-between gap-2">
+          <button onclick="openShareAppModal(); toggleHamburgerMenu(false);" class="flex-1 py-2 px-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 text-[11px] font-bold border border-slate-700 flex items-center justify-center gap-1.5 cursor-pointer">
             <span>📲</span><span>SHARE APP</span>
           </button>
-          <button onclick="logoutOperator(); toggleHamburgerMenu(false);" class="flex-1 py-2 px-2 rounded-lg bg-red-950/60 hover:bg-red-900 text-red-300 text-[11px] font-bold border border-red-800 flex items-center justify-center gap-1.5">
+          <button onclick="logoutOperator(); toggleHamburgerMenu(false);" class="flex-1 py-2 px-2 rounded-lg bg-red-950/60 hover:bg-red-900 text-red-300 text-[11px] font-bold border border-red-800 flex items-center justify-center gap-1.5 cursor-pointer">
             <span>🚪</span><span>LOG OUT</span>
           </button>
         </div>
-
       </div>
+
     </div>
-  </header>
+  </div>
+
+
 
   <!-- MAIN VIEWPORT CONTAINER -->
   <main id="main-container" class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 transition-all duration-300">
@@ -1158,24 +1185,44 @@
             </div>
           </div>
 
-          <!-- COUNTY READINESS LEVEL & ESCALATION BAR -->
-          <div class="p-4 bg-[#10151d] border border-slate-800 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-            <div>
-              <div class="flex items-center gap-2">
-                <span id="county-status-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span class="text-slate-400 text-[11px]">COUNTY EMERGENCY STATUS:</span>
-                <strong id="county-status-text" class="text-emerald-400 font-black">LEVEL 4 &bull; NORMAL MONITORING</strong>
+          <!-- COUNTY READINESS LEVEL & ESCALATION BAR (WITH DIRECT LEVEL 1-4 BUTTONS) -->
+          <div class="p-4 bg-[#10151d] border-2 border-emerald-500/40 rounded-xl space-y-3 text-xs shadow-lg">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span id="county-status-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span class="text-slate-400 text-[11px]">COUNTY EMERGENCY STATUS:</span>
+                  <strong id="county-status-text" class="text-emerald-400 font-black">LEVEL 4 &bull; NORMAL MONITORING</strong>
+                </div>
+                <p id="county-status-subtext" class="text-[11px] text-slate-400 mt-0.5">No active countywide disasters. Routine weekly readiness monitoring.</p>
               </div>
-              <p id="county-status-subtext" class="text-[11px] text-slate-400 mt-0.5">No active countywide disasters. Routine weekly readiness monitoring.</p>
+              <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                <button id="dash-btn-paging-1" onclick="handleDashboardAlertClick()" class="px-3 py-1.5 bg-red-950 hover:bg-red-900 text-red-300 border border-red-800 rounded text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+                  🚨 VIEW ACTIVATION CONSOLE
+                </button>
+              </div>
             </div>
-            <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-              <!-- EC Response Level Switcher Button (Visible to Level 6 EC) -->
-              <button id="dash-btn-set-response-lvl" onclick="switchTab('security-desk')" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded text-xs transition flex items-center gap-1.5 whitespace-nowrap shadow cursor-pointer hidden" title="Emergency Coordinator: Update County Response Level 1-4">
-                <span>⚙️</span><span>SET RESPONSE LEVEL (1-4)</span>
-              </button>
-              <button id="dash-btn-paging-1" onclick="handleDashboardAlertClick()" class="px-3 py-1.5 bg-red-950 hover:bg-red-900 text-red-300 border border-red-800 rounded text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap">
-                🚨 VIEW ACTIVATION CONSOLE
-              </button>
+
+            <!-- DIRECT 1-TAP RESPONSE LEVEL 1-4 DISPATCH (DIRECT EC BRIAN DAVIS CONTROL) -->
+            <div id="dash-ec-response-controls" class="pt-2.5 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs">🚨</span>
+                <span class="text-[10px] text-amber-400 font-black uppercase tracking-wider">EC RESPONSE POSTURE (LEVELS 1 - 4):</span>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 w-full sm:w-auto">
+                <button type="button" onclick="setCountyResponseLevel(4)" id="dash-resp-btn-4" class="px-2.5 py-1.5 rounded-lg bg-emerald-950/70 hover:bg-emerald-900 border border-emerald-500/80 text-emerald-300 text-[10px] font-black text-center transition cursor-pointer flex items-center justify-center gap-1">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400"></span><span>LVL 4: NORMAL</span>
+                </button>
+                <button type="button" onclick="setCountyResponseLevel(3)" id="dash-resp-btn-3" class="px-2.5 py-1.5 rounded-lg bg-sky-950/70 hover:bg-sky-900 border border-sky-500/80 text-sky-300 text-[10px] font-black text-center transition cursor-pointer flex items-center justify-center gap-1">
+                  <span class="w-2 h-2 rounded-full bg-sky-400"></span><span>LVL 3: WATCH</span>
+                </button>
+                <button type="button" onclick="setCountyResponseLevel(2)" id="dash-resp-btn-2" class="px-2.5 py-1.5 rounded-lg bg-amber-950/70 hover:bg-amber-900 border border-amber-500/80 text-amber-300 text-[10px] font-black text-center transition cursor-pointer flex items-center justify-center gap-1">
+                  <span class="w-2 h-2 rounded-full bg-amber-400"></span><span>LVL 2: ADVISORY</span>
+                </button>
+                <button type="button" onclick="setCountyResponseLevel(1)" id="dash-resp-btn-1" class="px-2.5 py-1.5 rounded-lg bg-red-950/70 hover:bg-red-900 border border-red-500/80 text-red-300 text-[10px] font-black text-center transition cursor-pointer flex items-center justify-center gap-1">
+                  <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span><span>LVL 1: ACTIVATE</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -3546,23 +3593,23 @@
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="text-slate-400 block mb-1">AMATEUR CALL SIGN *</label>
-            <input type="text" id="reg-call" placeholder="e.g. W5XYZ" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-emerald-400 font-bold uppercase">
+            <input type="text" id="vreg-call" placeholder="e.g. W5XYZ" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-emerald-400 font-bold uppercase">
           </div>
           <div>
             <label class="text-slate-400 block mb-1">GMRS CALL SIGN (IF ANY)</label>
-            <input type="text" id="reg-gmrs" placeholder="e.g. WROX123 or NONE" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-amber-400 font-bold uppercase">
+            <input type="text" id="vreg-gmrs" placeholder="e.g. WROX123 or NONE" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-amber-400 font-bold uppercase">
           </div>
         </div>
 
         <div>
           <label class="text-slate-400 block mb-1">FULL LEGAL NAME *</label>
-          <input type="text" id="reg-name" placeholder="First and Last Name" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-100 font-semibold">
+          <input type="text" id="vreg-name" placeholder="First and Last Name" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-100 font-semibold">
         </div>
 
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="text-slate-400 block mb-1">FCC LICENSE CLASS *</label>
-            <select id="reg-class" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
+            <select id="vreg-class" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
               <option>Technician</option>
               <option>General</option>
               <option>Amateur Extra</option>
@@ -3570,13 +3617,13 @@
           </div>
           <div>
             <label class="text-slate-400 block mb-1">CELL PHONE (ALERT SMS) *</label>
-            <input type="tel" id="reg-phone" placeholder="903-555-0199" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-100">
+            <input type="tel" id="vreg-phone" placeholder="903-555-0199" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-100">
           </div>
         </div>
 
         <div>
           <label class="text-slate-400 block mb-1">EMAIL ADDRESS *</label>
-          <input type="email" id="reg-email" placeholder="volunteer@example.com" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-100">
+          <input type="email" id="vreg-email" placeholder="volunteer@example.com" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-100">
         </div>
 
         <div>
@@ -4897,25 +4944,52 @@
     // ==========================================
     // HAMBURGER NAVIGATION & RESTRICTED PAGING
     // ==========================================
-    function toggleHamburgerMenu(forceState = null) {
+    function toggleHamburgerMenu(eventOrState = null) {
+      if (eventOrState && eventOrState.preventDefault) {
+        eventOrState.preventDefault();
+        eventOrState.stopPropagation();
+      }
+
       const menu = document.getElementById('hamburger-menu-dropdown');
       if (!menu) return;
 
-      if (forceState !== null) {
-        if (forceState) {
-          updateMenuPagingState();
-          menu.classList.remove('hidden');
-        } else {
-          menu.classList.add('hidden');
+      let shouldOpen;
+      if (typeof eventOrState === 'boolean') {
+        shouldOpen = eventOrState;
+      } else {
+        shouldOpen = menu.classList.contains('hidden');
+      }
+
+      if (shouldOpen) {
+        updateMenuPagingState();
+        menu.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      } else {
+        menu.classList.add('hidden');
+        document.body.style.overflow = '';
+      }
+    }
+
+    function handleHeaderStatusClick() {
+      const clearance = getOperatorClearance();
+      if (clearance.levelNum === 6 || appState.myCall === 'KG5TZT') {
+        const cur = getCountyResponseLevel();
+        const pick = prompt(
+          `🚨 FREESTONE COUNTY ARES: RESPONSE LEVEL CONTROL\n\nCurrent Active Posture: Level ${cur}\n\nEnter new County Response Level number (1-4):\n\n1 = LEVEL 1: FULL COUNTY DISASTER ACTIVATION\n2 = LEVEL 2: ESCALATED / ADVISORY (Directed Net Active)\n3 = LEVEL 3: INCREASED READINESS (Weather Watch)\n4 = LEVEL 4: NORMAL MONITORING (Steady State)`,
+          cur
+        );
+        if (pick !== null) {
+          const num = parseInt(pick.trim(), 10);
+          if (num >= 1 && num <= 4) {
+            setCountyResponseLevel(num);
+          } else {
+            alert('Invalid level. Please enter 1, 2, 3, or 4.');
+          }
         }
       } else {
-        const isHidden = menu.classList.contains('hidden');
-        if (isHidden) {
-          updateMenuPagingState();
-          menu.classList.remove('hidden');
-        } else {
-          menu.classList.add('hidden');
-        }
+        const cur = getCountyResponseLevel();
+        const cfg = COUNTY_RESPONSE_CONFIG[cur] || COUNTY_RESPONSE_CONFIG[4];
+        alert(`COUNTY EMERGENCY STATUS\n\nActive Level: ${cfg.badgeText}\nPosture: ${cfg.dashSubtext}\n\nOnly Emergency Coordinator Brian Davis (KG5TZT) can change the county emergency posture.`);
       }
     }
 
@@ -6721,13 +6795,19 @@ D. Out-of-County stations and visitors.
           `;
 
           const canEditPerms = appState.canSendAlerts || appState.myCall === 'KG5TZT';
+          const isEC = appState.myCall === 'KG5TZT';
           actionButtonsHtml = `
             <a href="tel:${m.phone}" class="flex-1 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-center rounded text-[11px] font-bold transition">📞 CALL</a>
             <a href="sms:${m.phone}" class="flex-1 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-center rounded text-[11px] font-bold transition">💬 SMS</a>
             ${canEditPerms ? `
-              <button onclick="openPermissionsModal(${m.id})" class="px-2.5 py-1.5 bg-slate-800 hover:bg-amber-600 text-slate-300 hover:text-white rounded text-[11px] font-bold transition flex items-center gap-1" title="EC Permission & Level Assignment">
-                <span>⚙️</span>
-                <span>PERMS</span>
+              <button onclick="openEcEditOperatorModal('${m.call}')" class="px-2.5 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white rounded text-[11px] font-bold transition flex items-center gap-1 cursor-pointer" title="EC Edit Profile & Level">
+                <span>✏️</span>
+                <span>EDIT</span>
+              </button>
+            ` : ''}
+            ${isEC && m.call !== 'KG5TZT' ? `
+              <button onclick="deleteOperator('${m.call}')" class="px-2 py-1.5 bg-red-950/80 hover:bg-red-900 text-red-300 border border-red-800 rounded text-[11px] font-bold transition flex items-center gap-1 cursor-pointer" title="Permanently decommission & remove ${m.call}">
+                <span>🗑️</span>
               </button>
             ` : ''}
           `;
@@ -9942,12 +10022,23 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       }
 
       for (let i = 1; i <= 4; i++) {
+        // Security desk buttons
         const btn = document.getElementById(`btn-resp-lvl-${i}`);
         if (btn) {
           if (i === lvl) {
             btn.classList.add('ring-2', 'ring-white', 'scale-[1.01]');
           } else {
             btn.classList.remove('ring-2', 'ring-white', 'scale-[1.01]');
+          }
+        }
+
+        // Direct Dashboard bar buttons
+        const dashBtn = document.getElementById(`dash-resp-btn-${i}`);
+        if (dashBtn) {
+          if (i === lvl) {
+            dashBtn.classList.add('ring-2', 'ring-white', 'font-black', 'scale-[1.02]');
+          } else {
+            dashBtn.classList.remove('ring-2', 'ring-white', 'font-black', 'scale-[1.02]');
           }
         }
       }
@@ -11229,10 +11320,13 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         </div>
 
         <div class="pt-2 border-t border-slate-800 flex items-center justify-between gap-2">
-          <button onclick="closeEcEditOperatorModal()" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-lg transition">
+          <button type="button" onclick="closeEcEditOperatorModal()" class="py-2 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-lg transition cursor-pointer">
             CANCEL
           </button>
-          <button onclick="saveEcOperatorEdit()" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-slate-950 text-xs font-black rounded-lg transition shadow">
+          <button type="button" onclick="deleteOperator(document.getElementById('ec-edit-call').value); closeEcEditOperatorModal();" class="py-2 px-3 bg-red-950/80 hover:bg-red-900 text-red-300 border border-red-800 text-xs font-bold rounded-lg transition cursor-pointer">
+            🗑️ REMOVE OPERATOR
+          </button>
+          <button type="button" onclick="saveEcOperatorEdit()" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-slate-950 text-xs font-black rounded-lg transition shadow cursor-pointer">
             SAVE CHANGES
           </button>
         </div>

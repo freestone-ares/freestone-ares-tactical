@@ -43,6 +43,8 @@ jobs:
           cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.7.apk
           cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.6.apk
           cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.5.apk
+          cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.4.apk
+          cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical.apk
 
       - name: Upload APK as Workflow Artifact
         uses: actions/upload-artifact@v4
@@ -69,6 +71,7 @@ jobs:
             - **Direct APK:** Download `Freestone-ARES-Tactical-v7.7.apk` below directly on your Android phone and install.
             
             ### What's New in v7.7:
+            - **Fixed Hamburger Menu Button:** Resolved issue where menu button did not open on installed Obtainium Android app. Implemented a zero-latency root-level viewport overlay drawer with touch optimization.
             - **Mobile Screen Optimization & 2-Line Header Fit:** The top tactical dashboard and header fit 100% cleanly on any mobile viewport without horizontal scrolling or sliding right/left.
             - **Real Optical Night Vision Switcher:** Authentic monochrome optical color filters across the entire app interface:
               - **NV-G:** P-43 Night Vision Phosphor Green
@@ -87,5 +90,7 @@ jobs:
             Freestone-ARES-Tactical-v7.7.apk
             Freestone-ARES-Tactical-v7.6.apk
             Freestone-ARES-Tactical-v7.5.apk
+            Freestone-ARES-Tactical-v7.4.apk
+            Freestone-ARES-Tactical.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
