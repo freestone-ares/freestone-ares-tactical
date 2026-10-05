@@ -67,14 +67,13 @@ jobs:
             - **Direct APK:** Download `Freestone-ARES-Tactical-v7.4.apk` below directly on your Android phone and install.
             
             ### Included in this build:
+            - **Professional UI Overhaul & Hamburger Navigation:** Clean top app bar with dedicated Hamburger Menu (☰) providing one-tap navigation across all 10 tactical views without screen-crowding tabs.
+            - **Direct Dashboard Login:** Authenticated operators land immediately on the live Tactical Command Dashboard.
+            - **Role-Based Paging Access Control:** Incident paging and sirens are automatically grayed out and locked with visual security indicators for operators without Level 3 (AEC) or Level 5 (EC) clearance.
             - **Straight Callsign & Password Login:** Replaces magic link/OTP with a clean, direct callsign and password authentication system.
-            - **Mandatory Password Setup on Update:** All users are prompted to set their initial password upon updating.
-            - **EC Authorization & User Level Desk:** Operators submit access requests that are queued for Emergency Coordinator Brian Davis (KG5TZT) to review and set their clearance level (Level 1 through Level 5).
-            - **Master EC Root Access:** Permanent master administrator clearance pre-seeded for Brian Davis (KG5TZT).
-            - **Permanent Cryptographic Signing:** APK is signed with the official permanent Freestone County ARES keystore (field.keystore) for seamless 1-tap Obtainium updates.
-            - **1-Tap Share Modal:** QR code generator and native SMS/Share integration for instant field distribution.
-            - **Offline Texas County Maps:** Pre-cached OpenStreetMap tile engine for field comms without internet.
-            - **Tactical Field Tools:** ICS-213 form generator, APRS-IS beacon monitor, NetLogger sync, repeater directory.
+            - **EC Authorization & User Level Desk:** Emergency Coordinator Brian Davis (KG5TZT) can review pending operator requests and assign User Levels (Level 1 to Level 5).
+            - **Master EC Root Access:** Guaranteed permanent administrator bypass pre-seeded for Brian Davis (KG5TZT).
+            - **Permanent Cryptographic Signing:** Signed with the official permanent Freestone County ARES keystore (field.keystore) for seamless Obtainium updates.
           files: Freestone-ARES-Tactical-v7.4.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
