@@ -40,43 +40,41 @@ jobs:
           gradle wrapper --gradle-version 8.5
           chmod +x gradlew
           ./gradlew assembleDebug --stacktrace
-          cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.8.4.apk
-          cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.8.3.apk
+          cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.8.5.apk
           cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical.apk
 
       - name: Upload APK as Workflow Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Freestone-ARES-Tactical-v7.8.4-APK
-          path: Freestone-ARES-Tactical-v7.8.4.apk
+          name: Freestone-ARES-Tactical-v7.8.5-APK
+          path: Freestone-ARES-Tactical-v7.8.5.apk
           retention-days: 30
 
       - name: Publish GitHub Release with APK
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v7.8.4
+          tag_name: v7.8.5
           target_commitish: ${{ github.sha }}
-          name: "Freestone ARES Tactical v7.8.4 (Field APK)"
+          name: "Freestone ARES Tactical v7.8.5 (Field APK)"
           make_latest: true
           body: |
-            ## Freestone County ARES - Tactical Operations Field Build (v7.8.4)
+            ## Freestone County ARES - Tactical Operations Field Build (v7.8.5)
             
-            This is the official v7.8.4 standalone Android APK release for Freestone County ARES field operations.
+            This is the official v7.8.5 standalone Android APK release for Freestone County ARES field operations.
             
             ### Quick Install / Update Instructions for Android:
             - **In Obtainium:** Open Obtainium, tap **Check for updates** (or swipe down to refresh), then tap **Update**.
-            - **Direct APK:** Download Freestone-ARES-Tactical-v7.8.4.apk below directly on your Android phone and install.
+            - **Direct APK:** Download Freestone-ARES-Tactical-v7.8.5.apk below directly on your Android phone and install.
             
-            ### What's New in v7.8.4:
-            - **Official Top Banner Layout Alignment:** Re-architected top banner with App Logo on the top left, prominent "Freestone County ARES" across the top, and the interactive Activation Level bar directly underneath.
-            - **Eliminated Blinking Guest Sign-In:** Completely removed the pulsing guest sign-in button from the top banner to keep the header clean, calm, and professional.
-            - **Restored Full Menu Button:** Dedicated top-right corner placement with unconstrained touch targets ensures the Menu button is 100% visible, fully padded, and never clipped on any Android device.
-            - **App Version in Menu Dropdown Bottom:** Placed prominent official version and build badging directly at the bottom of the navigation drawer.
-            - **Cleaned Steady State & Security Hardening:** Verified 16-operator active roster, purged test dispatches, steady-state standby posture, and strict Master EC authentication.
+            ### What's New in v7.8.5:
+            - **Top Banner Layout Alignment:** Positioned FREESTONE COUNTY ARES centered in the top row with App Logo on the left and full unconstrained Menu button on the right; slim full-width Activation Level bar stretched across the entire length of the banner directly underneath.
+            - **Removed Front Page Ver Badges & Added About Modal:** Cleaned front entrance view and added interactive About Tactical Mobile in the slide-out menu drawer and footer detailing version 7.8.5, build 33, EC contact info, and net frequencies.
+            - **Centered Tactical Sign-In:** Centered emblem, centered FREESTONE COUNTY ARES, centered TACTICAL COMMUNICATIONS, removed CAD Dispatch Console, and eliminated the ROSTER button for a clean callsign input.
+            - **County Generic Password (ARES2026):** All 15 volunteer operators can log in using county standard password ARES2026 or their custom password. Master EC KG5TZT remains strictly Chief@svfd1.
+            - **Mandatory Profile Verification & Onboarding:** Pre-filled operator profile prompt on login allows operators to review/edit emergency phone, email, license class, GMRS/RACES (AI5OX verified as WSEA569), FEMA certs, power capability, spotter toggle, and photo ID.
           files: |
-            Freestone-ARES-Tactical-v7.8.4.apk
-            Freestone-ARES-Tactical-v7.8.3.apk
+            Freestone-ARES-Tactical-v7.8.5.apk
             Freestone-ARES-Tactical.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
