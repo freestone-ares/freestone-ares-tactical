@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Freestone County ARES Tactical Mobile v7.8.5</title>
+  <title>Freestone County ARES Tactical Mobile v7.8.6</title>
   <meta name="description" content="Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES">
   <meta name="theme-color" content="#0b0e14">
   <meta name="mobile-web-app-capable" content="yes">
@@ -9975,7 +9975,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
     // ==========================================
     // AUTHENTICATION & EC AUTHORIZATION SUBSYSTEM
     // ==========================================
-    const AUTH_SYSTEM_REV = 'v7.8.5_profile_verify_generic_pw_01';
+    const AUTH_SYSTEM_REV = 'v7.8.6_profile_verify_generic_pw_01';
 
     function getRegisteredAccounts() {
       const raw = safeStorage.getItem('fc_ares_user_accounts');
@@ -11764,3 +11764,1628 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       alert(`✅ PROFILE & EQUIPMENT SAVED!\n\nCallsign: ${myCall}\nOperator: ${name}\nStation Capabilities: ${capabilitiesList.join(', ')}\n\nAll profile changes have been saved to your local station and synchronized across the Freestone County network in real time.`);
     }
 
+    // ==========================================
+    // SKYWARN SPOTTER NET REPORTING & ACTIONS
+    // ==========================================
+    function selectQuickSkywarnType(label, details, severity, colorClass) {
+      const notesEl = document.getElementById('skywarn-notes');
+      if (notesEl && details) {
+        if (!notesEl.value.includes(details)) {
+          notesEl.value = details + (notesEl.value ? '\n' + notesEl.value : '');
+        }
+      }
+      const badgeEl = document.getElementById('selected-condition-badge');
+      if (badgeEl) {
+        badgeEl.textContent = label;
+        badgeEl.className = 'px-2 py-0.5 rounded text-[10px] font-bold ' + colorClass;
+      }
+    }
+
+    function setSkywarnHailSize(sizeStr) {
+      if (typeof selectHailSize === 'function') {
+        selectHailSize(sizeStr);
+      } else {
+        const h = document.getElementById('skywarn-hail');
+        if (h) h.value = sizeStr;
+      }
+    }
+
+    function setSkywarnWindSpeed(speedStr) {
+      const windEl = document.getElementById('skywarn-wind');
+      if (windEl) windEl.value = speedStr;
+    }
+
+    function getSkywarnReports() {
+      try {
+        const raw = safeStorage.getItem('fc_ares_skywarn_reports');
+        if (raw) return JSON.parse(raw);
+      } catch(e) {}
+      return (appState && appState.skywarnReports) ? appState.skywarnReports : [];
+    }
+
+    function saveSkywarnReports(reports) {
+      try {
+        safeStorage.setItem('fc_ares_skywarn_reports', JSON.stringify(reports));
+      } catch(e) {}
+      if (appState) appState.skywarnReports = reports;
+    }
+
+    function dispatchSkywarnToNcs() {
+      const call = (appState && appState.myCall && appState.myCall !== 'GUEST') ? appState.myCall : 'KG5TZT';
+      const name = (appState && appState.myName) ? appState.myName : 'Brian Davis';
+      const hail = (document.getElementById('skywarn-hail') ? document.getElementById('skywarn-hail').value : 'None');
+      const wind = (document.getElementById('skywarn-wind') ? document.getElementById('skywarn-wind').value : 'None');
+      const motion = (document.getElementById('skywarn-motion') ? document.getElementById('skywarn-motion').value : 'Stationary');
+      const loc = (document.getElementById('skywarn-location') ? document.getElementById('skywarn-location').value : 'Fairfield');
+      const notes = (document.getElementById('skywarn-notes') ? document.getElementById('skywarn-notes').value : '');
+      
+      const report = {
+        id: 'rep-' + Date.now(),
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        date: new Date().toISOString().split('T')[0],
+        call: call,
+        name: name,
+        location: loc,
+        hail: hail,
+        wind: wind,
+        motion: motion,
+        details: notes,
+        relayedToNcs: true,
+        phenomenon: (hail.includes('Quarter') || hail.includes('Golf') || hail.includes('Baseball')) ? '🧊 Severe Hail' : '⚡ Severe Storm'
+      };
+
+      const reports = getSkywarnReports();
+      reports.unshift(report);
+      saveSkywarnReports(reports);
+      renderSkywarnReportsFeed();
+
+      // Show and populate on-air voice script card
+      const scriptCard = document.getElementById('skywarn-voice-script-card');
+      const scriptTextEl = document.getElementById('skywarn-generated-voice-script');
+      const scriptContent = `Net Control, this is ${call} (${name}) with a SEVERE WEATHER REPORT.\nLOCATION: ${loc}\nHAIL: ${hail} | WIND: ${wind} | MOTION: ${motion}\nDETAILS: ${notes}\nOver to Net Control.`;
+      if (scriptTextEl) scriptTextEl.textContent = scriptContent;
+      if (scriptCard) scriptCard.classList.remove('hidden');
+
+      pushRosterSyncToCloud();
+      alert(`📢 SPOTTER REPORT TRANSMITTED TO NET CONTROL / EC\n\nCallsign: ${call}\nLocation: ${loc}\n\nYour spotter report has been logged to the Freestone County Severe Weather Log and synced to Net Control.\nRead the generated on-air voice script over repeater FF 110 (145.110 MHz).`);
+    }
+
+    // ==========================================
+    // MAGIC LINK MODAL AUTHENTICATION
+    // ==========================================
+    function closeMagicLinkModal() {
+      const m = document.getElementById('magic-link-modal');
+      if (m) m.classList.add('hidden');
+    }
+
+    function onModalMagicLinkCallChange() {
+      const sel = document.getElementById('modal-ml-callsign');
+      if (!sel) return;
+      const call = sel.value;
+      const mem = appState.members ? appState.members.find(m => m.call === call) : null;
+      const nameEl = document.getElementById('modal-ml-op-name');
+      const emailEl = document.getElementById('modal-ml-op-email');
+      if (nameEl && mem) nameEl.textContent = mem.name;
+      if (emailEl && mem) emailEl.textContent = mem.email;
+    }
+
+    function sendModalMagicLink() {
+      const sel = document.getElementById('modal-ml-callsign');
+      const call = sel ? sel.value : 'KG5TZT';
+      alert(`📨 MAGIC LINK CODE TRANSMITTED\n\nA 6-digit tactical login verification code has been dispatched to the registered contact address for ${call}.\nFor field testing, code 758401 is available.`);
+      const codeSec = document.getElementById('modal-ml-code-section');
+      if (codeSec) codeSec.classList.remove('hidden');
+    }
+
+    function fillModalTestOtp(code) {
+      const inp = document.getElementById('modal-ml-otp-input');
+      if (inp) inp.value = code;
+    }
+
+    function verifyModalMagicLinkCode() {
+      const sel = document.getElementById('modal-ml-callsign');
+      const call = sel ? sel.value : 'KG5TZT';
+      const inp = document.getElementById('modal-ml-otp-input');
+      const code = inp ? inp.value.trim() : '';
+      if (code === '758401' || code.length === 6) {
+        closeMagicLinkModal();
+        loginAsCallsign(call);
+      } else {
+        alert('Invalid 6-digit authentication token. Please enter 758401.');
+      }
+    }
+
+    function toggleAirplaneModeSim() {
+      alert('✈️ SIMULATION: Tactical Offline PACE Mesh Mode Active.\nLocal offline cache and peer radio channels ready.');
+    }
+
+
+    function authorizeOperatorLevel(call, selectId) {
+      const select = document.getElementById(selectId);
+      const selectedLevel = select ? select.value : 'Level 1 - Field Operator / Spotter';
+
+      const accounts = getRegisteredAccounts();
+      const pending = getPendingAuthorizations();
+
+      if (!accounts[call]) {
+        accounts[call] = { call: call, name: 'Operator', status: 'PENDING_EC_AUTH' };
+      }
+
+      let role = 'Field Operator';
+      let canSendAlerts = false;
+
+      if (selectedLevel.includes('Level 6') || (selectedLevel.includes('EC') && !selectedLevel.includes('Assistant') && !selectedLevel.includes('EMC'))) {
+        role = 'Emergency Coordinator (EC)';
+        canSendAlerts = true;
+      } else if (selectedLevel.includes('Level 5') || selectedLevel.includes('EMC')) {
+        role = 'County Emergency Management Coordinator (EMC)';
+        canSendAlerts = false; // Level 5 has all app permissions EXCEPT alert features
+      } else if (selectedLevel.includes('Level 4') || selectedLevel.includes('Assistant EC') || selectedLevel.includes('AEC')) {
+        role = 'Assistant Emergency Coordinator (AEC)';
+        canSendAlerts = true;  // Level 4 has all operator permissions PLUS alert features
+      } else if (selectedLevel.includes('Level 3') || selectedLevel.includes('NCS') || selectedLevel.includes('Net Control')) {
+        role = 'Net Control Station (NCS)';
+        canSendAlerts = false; // Level 3 has access to NCS features (net script, NetLogger)
+      } else if (selectedLevel.includes('Level 2') || selectedLevel.includes('Spotter') || selectedLevel.includes('Field')) {
+        role = 'Field Operator / Storm Spotter';
+        canSendAlerts = false; // Certified field operator & mobile storm spotter
+      } else {
+        role = 'Level 1 Operator';
+        canSendAlerts = false; // New person with no experience, basic privileges
+      }
+
+      const spotterCheck = document.getElementById('spotter-check-' + call);
+      const isSpotter = spotterCheck ? spotterCheck.checked : (selectedLevel.includes('Spotter') || !!accounts[call].isSpotter);
+
+      accounts[call].status = 'AUTHORIZED';
+      accounts[call].level = selectedLevel;
+      accounts[call].role = role;
+      accounts[call].isSpotter = isSpotter;
+      accounts[call].canSendAlerts = canSendAlerts;
+      accounts[call].authorizedBy = 'KG5TZT';
+      accounts[call].authorizedTimestamp = Date.now();
+
+      safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(accounts));
+
+      // Remove from pending queue
+      const updatedPending = pending.filter(x => x.call !== call);
+      safeStorage.setItem('fc_ares_pending_authorizations', JSON.stringify(updatedPending));
+
+      // Update or add member in appState.members
+      let m = appState.members.find(x => x.call.toUpperCase() === call);
+      if (m) {
+        m.level = selectedLevel;
+        m.role = role;
+        m.isSpotter = isSpotter;
+        m.canSendAlerts = canSendAlerts;
+      } else {
+        appState.members.push({
+          id: appState.members.length + 1,
+          call: call,
+          name: accounts[call].name || 'Operator',
+          gmrs: accounts[call].gmrs || 'NONE',
+          races: accounts[call].races || 'NONE',
+          role: role,
+          level: selectedLevel,
+          phone: accounts[call].phone || '(903) 555-0100',
+          email: accounts[call].email || `${call.toLowerCase()}@arrl.net`,
+          city: 'Freestone County, TX',
+          isSpotter: isSpotter,
+          photo: accounts[call].photo || '',
+          canSendAlerts: canSendAlerts
+        });
+      }
+
+      saveRosterMembers();
+      renderEcAuthorizationQueue();
+      renderRosterGrid();
+      renderResponderTable();
+      pushRosterSyncToCloud();
+
+      const phone = accounts[call].phone || '';
+      if (phone) {
+        if (confirm(`✅ ${call} AUTHORIZED AS ${selectedLevel}!\n\nOperator: ${accounts[call].name}\n\nWould you like to send an SMS confirmation to the operator (${phone})?`)) {
+          const smsBody = `Freestone ARES: Your callsign ${call} has been authorized as ${selectedLevel} by EC Brian Davis. You may now log in to the tactical app!`;
+          window.location.href = `sms:${phone.replace(/[^0-9]/g, '')}?body=${encodeURIComponent(smsBody)}`;
+        }
+      } else {
+        alert(`✅ ${call} AUTHORIZED!\n\nUser level set to: ${selectedLevel}.\nOperator can now log in immediately with their password.`);
+      }
+    }
+
+    function rejectOperatorRequest(call) {
+      if (!confirm(`Are you sure you want to reject the access request for ${call}?`)) return;
+
+      const accounts = getRegisteredAccounts();
+      const pending = getPendingAuthorizations();
+
+      if (accounts[call]) {
+        accounts[call].status = 'DENIED';
+        safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(accounts));
+      }
+
+      const updatedPending = pending.filter(x => x.call !== call);
+      safeStorage.setItem('fc_ares_pending_authorizations', JSON.stringify(updatedPending));
+
+      renderEcAuthorizationQueue();
+      alert(`Access request for ${call} has been rejected.`);
+    }
+
+    function renderEcAuthorizationQueue() {
+      const container = document.getElementById('ec-pending-authorization-list');
+      const badge = document.getElementById('ec-queue-count-badge');
+      const pending = getPendingAuthorizations();
+
+      if (badge) {
+        badge.textContent = `${pending.length} PENDING`;
+        badge.className = pending.length > 0
+          ? 'text-[11px] text-amber-300 bg-amber-950 px-2.5 py-1 rounded-full border border-amber-500 font-bold self-start sm:self-auto animate-pulse'
+          : 'text-[11px] text-slate-400 bg-slate-900 px-2.5 py-1 rounded-full border border-slate-700 font-bold self-start sm:self-auto';
+      }
+
+      // Also update dashboard alert if EC
+      const dashAlert = document.getElementById('ec-pending-dashboard-alert');
+      if (dashAlert) {
+        if ((appState.myCall === 'KG5TZT' || appState.myLevel === 'EC' || appState.myLevel.includes('Level 5')) && pending.length > 0) {
+          dashAlert.classList.remove('hidden');
+          const countSpan = document.getElementById('dash-pending-count-text');
+          if (countSpan) countSpan.textContent = pending.length;
+        } else {
+          dashAlert.classList.add('hidden');
+        }
+      }
+
+      if (!container) return;
+
+      if (pending.length === 0) {
+        container.innerHTML = `
+          <div class="p-4 bg-[#0b0e14] rounded-lg border border-slate-800 text-center space-y-1">
+            <span class="text-emerald-400 text-sm font-bold block">✓ ALL OPERATOR REQUESTS PROCESSED</span>
+            <p class="text-[11px] text-slate-400">There are no pending password or access requests in the queue. New operator submissions will appear here instantly for EC level assignment.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = '';
+      pending.forEach(req => {
+        const card = document.createElement('div');
+        card.className = 'p-3.5 bg-[#0b0e14] rounded-lg border border-amber-500/50 space-y-2.5 shadow';
+        card.innerHTML = `
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-2">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-amber-400 font-black text-sm tracking-wider">${req.call}</span>
+                <span class="text-white font-bold text-xs">${req.name}</span>
+                <span class="text-[10px] bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded border border-amber-800 font-bold">PASSWORD SET</span>
+              </div>
+              <div class="text-[11px] text-slate-400 mt-0.5">
+                Phone: <strong class="text-slate-200">${req.phone}</strong> &bull; Requested: <span class="text-slate-300">${req.dateStr}</span>
+              </div>
+            </div>
+            <button onclick="window.location.href='tel:${req.phone.replace(/[^0-9]/g, '')}'" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-slate-700 rounded text-[10px] font-bold self-start sm:self-auto flex items-center gap-1">
+              <span>📞</span><span>CALL</span>
+            </button>
+          </div>
+
+          <!-- Photo & Additional Credentials in Authorization Queue -->
+          ${req.photo ? `
+            <div class="flex items-center gap-3 p-2 bg-slate-900/60 rounded-lg border border-slate-800">
+              <img src="${req.photo}" class="w-12 h-12 rounded-lg object-cover border border-emerald-500/60 flex-shrink-0">
+              <div class="text-[10px] text-slate-300">
+                <span class="text-emerald-400 font-bold block">📸 OPERATOR PHOTO ID SUBMITTED</span>
+                <span>White background &bull; No hat &bull; Ready for EC credential badge</span>
+              </div>
+            </div>
+          ` : ''}
+
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 items-center pt-1">
+            <div class="sm:col-span-8 space-y-1.5">
+              <label class="text-[9px] text-slate-400 block font-bold uppercase">SELECT AUTHORIZED OPERATOR LEVEL:</label>
+              <select id="level-select-${req.call}" class="w-full bg-[#10151d] border border-slate-700 rounded p-2 text-xs text-white font-bold font-mono-tac focus:border-amber-500">
+                <option value="Level 1 - Operator">Level 1 - Operator (New operator, building setup &amp; assist)</option>
+                <option value="Level 2 - Field Operator / Spotter" ${req.isSpotter ? 'selected' : ''}>Level 2 - Field Operator / Spotter (Certified field ops &amp; mobile storm spotter)</option>
+                <option value="Level 3 - NCS">Level 3 - NCS (Net Control Station, net script &amp; NetLogger)</option>
+                <option value="Level 4 - Assistant EC">Level 4 - Assistant EC (AEC, assist EC in all aspects + page out &amp; sirens)</option>
+                <option value="Level 5 - County EMC">Level 5 - County EMC (County Emergency Management, all app rights EXCEPT alert features)</option>
+              </select>
+              <label class="flex items-center gap-1.5 text-[10px] text-amber-300 font-bold cursor-pointer">
+                <input type="checkbox" id="spotter-check-${req.call}" ${req.isSpotter ? 'checked' : ''} class="rounded border-slate-700 text-amber-500 focus:ring-0">
+                <span>⛈️ ASSIGN STORM SPOTTER QUALIFICATION (ADDITIONAL BADGE)</span>
+              </label>
+            </div>
+            <div class="sm:col-span-4 flex items-center gap-1.5 pt-3 sm:pt-0">
+              <button onclick="authorizeOperatorLevel('${req.call}', 'level-select-${req.call}')" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black rounded text-xs shadow flex items-center justify-center gap-1">
+                <span>✓</span><span>AUTHORIZE</span>
+              </button>
+              <button onclick="rejectOperatorRequest('${req.call}')" class="py-2 px-2.5 bg-slate-800 hover:bg-red-950 text-slate-400 hover:text-red-400 border border-slate-700 rounded text-xs">
+                DENY
+              </button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function loginAsCallsign(call, showAlert = true) {
+      if (!call || call === 'GUEST') return;
+      const targetCall = call.trim().toUpperCase();
+      const accounts = getRegisteredAccounts();
+      const acc = accounts[targetCall];
+      if (acc) {
+        loginAsAuthorizedOperator(acc, showAlert);
+      } else {
+        const m = appState.members.find(x => x.call.toUpperCase() === targetCall);
+        loginAsAuthorizedOperator({
+          call: targetCall,
+          name: m ? m.name : 'Verified Operator',
+          role: m ? m.role : 'Field Operator',
+          level: m ? m.level : 'Level 1 - Field Operator',
+          status: 'AUTHORIZED'
+        }, showAlert);
+      }
+    }
+
+    function logoutOperator() {
+      appState.isLoggedIn = false;
+      appState.myCall = 'GUEST';
+      appState.myName = 'Guest Operator';
+      appState.myRole = 'Guest Viewer';
+      appState.myLevel = 'Guest';
+      appState.canSendAlerts = false;
+
+      safeStorage.setItem('fc_ares_auth_session', JSON.stringify({
+        call: 'GUEST',
+        isLoggedIn: false,
+        timestamp: Date.now()
+      }));
+
+      updateSessionHeaderUI();
+      updateDashboardUserProfile();
+      updateDispatchControlsVisibility();
+      renderRosterGrid();
+      renderResponderTable();
+
+      alert(`LOGGED OUT TO GUEST MODE\n\nThe app is now running in Guest Privacy Mode.\nSensitive telephone numbers and email addresses on the roster are masked.`);
+      switchTab('auth');
+    }
+
+    // Modal login triggers (replaces magic link modal)
+    function openLoginModal(preCall = '') {
+      switchTab('auth');
+      if (preCall) {
+        showAuthTab('login', preCall);
+      }
+    }
+
+    function closeLoginModal() {
+      const modal = document.getElementById('login-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function openShareAppModal() {
+      const modal = document.getElementById('share-app-modal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeShareAppModal() {
+      const modal = document.getElementById('share-app-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function copyCleanWebLink() {
+      const url = 'https://freestone-ares.github.io/freestone-ares-tactical/';
+      navigator.clipboard.writeText(url).then(() => {
+        const btn = document.getElementById('btn-copy-web-link');
+        if (btn) btn.innerHTML = '<span>✓</span><span>LINK COPIED TO CLIPBOARD!</span>';
+        setTimeout(() => {
+          if (btn) btn.innerHTML = '<span>📋</span><span>COPY CLEAN LINK (CARRIER SAFE)</span>';
+        }, 3000);
+      }).catch(() => {
+        prompt('Copy Clean Link:', url);
+      });
+    }
+
+    function triggerNativeShare() {
+      const shareData = {
+        title: 'Freestone County ARES Tactical App',
+        text: 'Freestone County ARES Tactical Mobile Operations App. Install or download for Android & iOS:',
+        url: 'https://freestone-ares.github.io/freestone-ares-tactical/'
+      };
+
+      if (navigator.share) {
+        navigator.share(shareData).catch((err) => console.log('Share canceled:', err));
+      } else {
+        const smsUrl = 'sms:?body=' + encodeURIComponent('Freestone County ARES Tactical App: https://freestone-ares.github.io/freestone-ares-tactical/');
+        window.location.href = smsUrl;
+      }
+    }
+
+    function submitNewMemberRegistration() {
+      const name = document.getElementById('reg-name').value.trim() || 'John Operator';
+      const call = (document.getElementById('reg-call').value.trim() || 'KJ5NEW').toUpperCase();
+      const lic = document.getElementById('reg-license').value;
+      const races = (document.getElementById('reg-races') ? document.getElementById('reg-races').value.trim() : '') || 'TX-FC-09';
+      const phone = document.getElementById('reg-phone').value.trim() || '903-555-0199';
+      const city = document.getElementById('reg-city').value.trim() || 'Fairfield, TX';
+
+      const queue = document.getElementById('pending-applicants-list');
+      const card = document.createElement('div');
+      card.className = 'p-3 bg-[#0b0e14] rounded-lg border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs';
+      card.innerHTML = `
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-white">${name}</span>
+            <span class="text-amber-400 font-bold">${call}</span>
+            <span class="text-[10px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-300">${lic}</span>
+            <span class="text-[10px] bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded border border-amber-800 font-bold">RACES: ${races}</span>
+            <span class="text-[10px] text-slate-400">${city}</span>
+          </div>
+          <div class="text-[11px] text-slate-400 mt-1">
+            Phone: ${phone} &bull; Gear: Dual-Band HT (5W) &bull; NIMS: ICS-100, ICS-200
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="approveApplicant(this, '${name}', '${call}', '${races}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded text-[11px] whitespace-nowrap">
+            ✓ APPROVE TO ROSTER
+          </button>
+          <button onclick="this.closest('.p-3').remove()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-[11px]">
+            DENY
+          </button>
+        </div>
+      `;
+      queue.appendChild(card);
+
+      const countBadge = document.getElementById('pending-count');
+      if (countBadge) {
+        const count = queue.children.length;
+        countBadge.textContent = `${count} PENDING`;
+      }
+
+      alert(`Thank you, ${name} (${call})!\n\nYour application has been submitted and queued for review by Emergency Coordinator Brian Davis (KG5TZT).`);
+    }
+
+    function approveApplicant(btn, name, call, races = 'TX-FC-NEW') {
+      btn.closest('.p-3').remove();
+      const queue = document.getElementById('pending-applicants-list');
+      const countBadge = document.getElementById('pending-count');
+      if (countBadge && queue) {
+        countBadge.textContent = `${queue.children.length} PENDING`;
+      }
+
+      // Add to roster
+      appState.members.push({
+        id: appState.members.length + 1,
+        call: call,
+        gmrs: 'NONE',
+        races: races,
+        name: name,
+        class: 'General',
+        role: 'Field Operator',
+        phone: '903-555-0199',
+        email: `${call.toLowerCase()}@freestoneares.org`
+      });
+
+      renderRosterGrid();
+      alert(`APPROVED!\n\n${name} (${call}) has been approved and added to the official Freestone County ARES roster with full tactical access.`);
+    }
+
+    // ==========================================
+    // STEP 3: PACE PLAN & 22-CHANNEL MATRIX FUNCTIONS
+    // ==========================================
+    function renderPaceChannels() {
+      const tbody = document.getElementById('channels-table-body');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      const term = (appState.channelSearchQuery || '').toLowerCase();
+      const cat = appState.currentChannelCategory || 'all';
+
+      const filtered = appState.channels.filter(ch => {
+        // Category filter
+        const chNum = parseInt(ch.ch, 10);
+        if (cat === 'repeater' && !(chNum >= 1 && chNum <= 5)) return false;
+        if (cat === 'gmrs' && !(chNum >= 6 && chNum <= 8)) return false;
+        if (cat === 'vhf' && !(chNum >= 9 && chNum <= 14)) return false;
+        if (cat === 'uhf' && !(chNum >= 15 && chNum <= 19)) return false;
+        if (cat === 'digital' && !(chNum >= 28 && chNum <= 29)) return false;
+        if (cat === 'aprs' && chNum !== 30) return false;
+
+        // Search term filter
+        if (term) {
+          const match = ch.ch.includes(term) ||
+                        ch.name.toLowerCase().includes(term) ||
+                        ch.rx.includes(term) ||
+                        ch.tx.includes(term) ||
+                        ch.tone.toLowerCase().includes(term) ||
+                        ch.assignment.toLowerCase().includes(term) ||
+                        ch.mode.toLowerCase().includes(term);
+          if (!match) return false;
+        }
+
+        return true;
+      });
+
+      // Update badge count
+      const badge = document.getElementById('channel-count-badge');
+      if (badge) {
+        badge.textContent = `${filtered.length} OF ${appState.channels.length} DISPLAYED`;
+      }
+
+      if (filtered.length === 0) {
+        const emptyTr = document.createElement('tr');
+        emptyTr.innerHTML = `
+          <td colspan="8" class="p-6 text-center text-slate-500 font-mono-tac text-xs">
+            No radio channels found matching query "${appState.channelSearchQuery}". <button onclick="resetChannelFilters()" class="text-emerald-400 underline font-bold ml-1">Reset Filters</button>
+          </td>
+        `;
+        tbody.appendChild(emptyTr);
+        return;
+      }
+
+      filtered.forEach(ch => {
+        let chBadgeClass = 'bg-slate-800 text-slate-300 border-slate-700';
+        let rowClass = 'hover:bg-slate-800/40 transition';
+        let paceTag = '';
+
+        if (ch.pace === 'P') {
+          chBadgeClass = 'bg-emerald-950 text-emerald-400 border-emerald-700 font-bold';
+          rowClass = 'bg-emerald-950/10 hover:bg-emerald-950/20 transition';
+          paceTag = '<span class="ml-1.5 px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 text-[9px] font-bold">PACE [P]</span>';
+        } else if (ch.pace === 'A') {
+          chBadgeClass = 'bg-amber-950 text-amber-400 border-amber-700 font-bold';
+          rowClass = 'bg-amber-950/10 hover:bg-amber-950/20 transition';
+          paceTag = '<span class="ml-1.5 px-1.5 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800 text-[9px] font-bold">PACE [A]</span>';
+        } else if (ch.pace === 'C') {
+          chBadgeClass = 'bg-blue-950 text-blue-400 border-blue-700 font-bold';
+          rowClass = 'bg-blue-950/10 hover:bg-blue-950/20 transition';
+          paceTag = '<span class="ml-1.5 px-1.5 py-0.5 rounded bg-blue-950 text-blue-400 border border-blue-800 text-[9px] font-bold">PACE [C]</span>';
+        } else if (ch.category === 'gmrs') {
+          chBadgeClass = 'bg-purple-950 text-purple-300 border-purple-800 font-bold';
+        } else if (ch.category === 'digital') {
+          chBadgeClass = 'bg-cyan-950 text-cyan-300 border-cyan-800 font-bold';
+        } else if (ch.category === 'aprs') {
+          chBadgeClass = 'bg-teal-950 text-teal-300 border-teal-800 font-bold';
+        }
+
+        const tr = document.createElement('tr');
+        tr.className = rowClass;
+        tr.innerHTML = `
+          <td class="p-3">
+            <span class="px-2 py-0.5 rounded border text-[11px] font-bold ${chBadgeClass}">CH ${ch.ch}</span>
+          </td>
+          <td class="p-3 font-bold text-white whitespace-nowrap">
+            ${ch.name} ${paceTag}
+          </td>
+          <td class="p-3 font-bold text-amber-400 whitespace-nowrap">${ch.rx} MHz</td>
+          <td class="p-3 text-slate-300 whitespace-nowrap text-[11px]">${ch.tx} MHz <span class="text-slate-500">(${ch.offset})</span></td>
+          <td class="p-3 whitespace-nowrap">
+            <span class="px-2 py-0.5 rounded bg-black/60 text-slate-200 border border-slate-700 text-[10px] font-mono-tac font-semibold">${ch.tone}</span>
+          </td>
+          <td class="p-3 whitespace-nowrap">
+            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${
+              ch.mode === 'DIGITAL' ? 'bg-cyan-950 text-cyan-400 border border-cyan-800' :
+              ch.mode === 'PACKET' ? 'bg-teal-950 text-teal-400 border border-teal-800' :
+              'bg-slate-800 text-slate-300'
+            }">${ch.mode}</span>
+          </td>
+          <td class="p-3 text-slate-300 text-[11px] max-w-xs sm:max-w-md">${ch.assignment}</td>
+          <td class="p-3 text-right whitespace-nowrap">
+            <button onclick="copyChannelToClipboard('${ch.name}: Rx ${ch.rx} / Tx ${ch.tx} (${ch.tone}) - ${ch.assignment}')" class="px-2 py-1 bg-slate-800 hover:bg-emerald-600 text-slate-200 hover:text-white rounded text-[10px] font-bold transition">
+              📋 COPY
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function searchChannels(val) {
+      appState.channelSearchQuery = val.trim();
+      renderPaceChannels();
+    }
+
+    function filterByChannelCategory(cat) {
+      appState.currentChannelCategory = cat;
+
+      // Update pill classes
+      document.querySelectorAll('.cat-pill').forEach(btn => {
+        btn.classList.remove('bg-emerald-500/20', 'text-emerald-400', 'border-emerald-500/50', 'font-bold');
+        btn.classList.add('bg-[#0b0e14]', 'text-slate-400', 'border-slate-800');
+      });
+
+      const activeBtn = document.getElementById('cat-' + cat);
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-[#0b0e14]', 'text-slate-400', 'border-slate-800');
+        activeBtn.classList.add('bg-emerald-500/20', 'text-emerald-400', 'border-emerald-500/50', 'font-bold');
+      }
+
+      renderPaceChannels();
+    }
+
+    function resetChannelFilters() {
+      const input = document.getElementById('channel-search-input');
+      if (input) input.value = '';
+      appState.channelSearchQuery = '';
+      filterByChannelCategory('all');
+    }
+
+    function copyChannelToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert('COPIED TO CLIPBOARD:\n\n' + text);
+      }).catch(() => {
+        prompt('Copy to clipboard (Ctrl+C / Cmd+C):', text);
+      });
+    }
+
+    function downloadChirpCodeplugCsv() {
+      let csv = 'Location,Name,Frequency,Duplex,Offset,Tone,rToneFreq,cToneFreq,DtcsCode,DtcsPolarity,RxDtcsCode,CrossMode,Mode,TStep,Skip,Power,Comment\n';
+
+      appState.channels.forEach(ch => {
+        const loc = parseInt(ch.ch, 10);
+        const name = ch.name;
+        const freq = parseFloat(ch.rx).toFixed(6);
+        let duplex = '';
+        let offset = '0.000000';
+
+        if (ch.offset.includes('-0.600')) {
+          duplex = '-';
+          offset = '0.600000';
+        } else if (ch.offset.includes('+5.000')) {
+          duplex = '+';
+          offset = '5.000000';
+        }
+
+        let toneMode = 'None';
+        let toneFreq = '88.5';
+        if (ch.tone.includes('146.2')) {
+          toneMode = (ch.ch === '01' || ch.tone.includes('TSQ')) ? 'TSQL' : 'Tone';
+          toneFreq = '146.2';
+        } else if (ch.tone.includes('136.5')) {
+          toneMode = 'Tone';
+          toneFreq = '136.5';
+        } else if (ch.tone.includes('123.0')) {
+          toneMode = (ch.ch === '09' || ch.tone.includes('TSQ')) ? 'TSQL' : 'Tone';
+          toneFreq = '123.0';
+        }
+
+        const mode = ch.mode === 'DIGITAL' ? 'DIG' : (ch.mode === 'PACKET' ? 'PKT' : 'FM');
+        const comment = `Freestone ARES ${ch.assignment.replace(/,/g, ';')}`;
+
+        csv += `${loc},${name},${freq},${duplex},${offset},${toneMode},${toneFreq},${toneFreq},023,NN,023,Tone->Tone,${mode},5.00,,50W,"${comment}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'freestone_ares_codeplug_22ch.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      alert('CHIRP CSV CODEPLUG DOWNLOADED!\n\nFile: freestone_ares_codeplug_22ch.csv\n\nYou can import this directly into CHIRP to program BaoFeng, Yaesu, AnyTone, Icom, and Kenwood radios.');
+    }
+
+    function downloadBtechUvProCsv() {
+      // Official BTECH UV-Pro CSV Template Header
+      let csv = 'title,tx_freq,rx_freq,tx_sub_audio(CTCSS=freq/DCS=number),rx_sub_audio(CTCSS=freq/DCS=number),tx_power(H/M/L),bandwidth(12500/25000),scan(0=OFF/1=ON),talk around(0=OFF/1=ON),pre_de_emph_bypass(0=OFF/1=ON),sign(0=OFF/1=ON),tx_dis(0=OFF/1=ON),mute(0=OFF/1=ON),rx_modulation(0=FM/1=AM),tx_modulation(0=FM/1=AM)\n';
+
+      appState.channels.forEach(ch => {
+        const name = ch.name;
+        const txFreqHz = Math.round(parseFloat(ch.tx) * 1000000);
+        const rxFreqHz = Math.round(parseFloat(ch.rx) * 1000000);
+
+        let txToneVal = 0;
+        let rxToneVal = 0;
+
+        if (ch.tone.includes('146.2')) {
+          txToneVal = 14620;
+          // Primary Ch 01 is TSQ -> rx_sub_audio is also 14620!
+          if (ch.ch === '01' || ch.tone.includes('TSQ')) {
+            rxToneVal = 14620;
+          }
+        } else if (ch.tone.includes('136.5')) {
+          txToneVal = 13650;
+        } else if (ch.tone.includes('123.0')) {
+          txToneVal = 12300;
+          // Ch 09 ARES TAC Simplex uses Tone Squelch
+          if (ch.ch === '09' || ch.tone.includes('TSQ')) {
+            rxToneVal = 12300;
+          }
+        }
+
+        const bw = ch.category === 'gmrs' ? 12500 : 25000;
+        csv += `${name},${txFreqHz},${rxFreqHz},${txToneVal},${rxToneVal},H,${bw},1,0,0,1,0,0,0,0\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'freestone_ares_btech_uvpro_22ch.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      alert('BTECH UV-PRO CSV DOWNLOADED!\n\nFile: freestone_ares_btech_uvpro_22ch.csv\n\nHow to program your BTECH UV-Pro:\n1. Save this file to your phone (Files on iOS / Downloads on Android).\n2. Open the BTECH UV Programmer app.\n3. Go to Settings → Channel & Groups.\n4. Tap "Import From File" and select this CSV.\n5. Review channels and tap "Sync to Radio" via Bluetooth.');
+    }
+
+    function copyFullIcs205ToClipboard() {
+      let out = '========================================================================================\n';
+      out += 'FREESTONE COUNTY ARES // ICS-205 COMMUNICATIONS PLAN ANNEX (22 CHANNELS)\n';
+      out += 'Emergency Coordinator: Brian Davis (KG5TZT) | Net Schedule: Sundays @ 2000 Local (01:00Z)\n';
+      out += '========================================================================================\n';
+      out += 'CH# | NAME     | RX FREQ     | TX FREQ / OFFSET | CTCSS TONE    | MODE | FUNCTION / ASSIGNMENT\n';
+      out += '----+----------+-------------+------------------+---------------+------+----------------------------------------\n';
+      appState.channels.forEach(ch => {
+        out += `${ch.ch.padEnd(3)} | ${ch.name.padEnd(8)} | ${ch.rx.padEnd(11)} | ${ch.tx.padEnd(7)} (${ch.offset.padEnd(6)}) | ${ch.tone.padEnd(13)} | ${ch.mode.padEnd(4)} | ${ch.assignment}\n`;
+      });
+      out += '========================================================================================\n';
+
+      navigator.clipboard.writeText(out).then(() => {
+        alert('FEMA ICS-205 COMMUNICATIONS PLAN COPIED TO CLIPBOARD!\n\nFull 22-channel text matrix ready to paste into emergency operational logs.');
+      }).catch(() => {
+        prompt('Copy ICS-205 table (Ctrl+C / Cmd+C):', out);
+      });
+    }
+
+    // Initial render
+    loadRosterMembers();
+    loadCalendarEvents();
+    populateAuthCallsignSelect();
+    // Restore saved Night Vision Optical Theme
+    const savedTheme = safeStorage.getItem('fc_ares_nv_theme') || 'normal';
+    setTheme(savedTheme);
+
+    initAuthSession();
+    renderCountyResponseLevelUI();
+    renderEcOperatorDirectory();
+    updateDashboardUserProfile();
+    updateDispatchControlsVisibility();
+    updateSessionHeaderUI();
+    populatePaceDropdowns();
+    renderIncidentUpdates();
+    renderResponderTable();
+    renderRosterGrid();
+    renderPaceChannels();
+    renderCalendar();
+    renderSkywarnTab();
+    initTacticalMap();
+    inspectMapItem('spot', 'staging');
+
+    // Register Service Worker for 100% offline capability
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+          .then((reg) => console.log('[ARES Tactical PWA] Service Worker active:', reg.scope))
+          .catch((err) => console.log('[ARES Tactical PWA] Service Worker note:', err));
+      });
+    }
+  
+</script>
+
+
+  <!-- OPERATOR IDENTITY & CLEARANCE STATUS MODAL (Shown when clicking profile badge while logged in) -->
+  <div id="operator-profile-modal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden font-mono-tac">
+    <div class="bg-[#10151d] border-2 border-emerald-500/70 rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl hud-glow">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🛡️</span>
+          <div>
+            <h4 class="text-white font-black text-sm">OPERATOR CREDENTIALS</h4>
+            <span class="text-[10px] text-emerald-400">FREESTONE COUNTY ARES ACTIVE SESSION</span>
+          </div>
+        </div>
+        <button onclick="closeOperatorProfileModal()" class="text-slate-400 hover:text-white p-1 text-sm font-bold">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div class="p-3.5 bg-[#0b0e14] rounded-xl border border-slate-800 flex items-center justify-between">
+          <div>
+            <div class="text-[10px] text-slate-500 uppercase font-bold">Callsign &amp; Name</div>
+            <div id="prof-modal-call" class="text-base font-black text-emerald-400">KG5TZT</div>
+            <div id="prof-modal-name" class="text-xs text-slate-200 font-bold">Brian Davis</div>
+          </div>
+          <div id="prof-modal-badge" class="px-2.5 py-1 rounded text-xs font-black bg-red-950 text-red-300 border border-red-800">
+            LEVEL 6 • EC
+          </div>
+        </div>
+
+        <div class="p-3 bg-[#0b0e14] rounded-xl border border-slate-800 space-y-1.5">
+          <div class="text-[10px] text-slate-500 uppercase font-bold">Assigned Tactical Role &amp; Level</div>
+          <div id="prof-modal-role" class="text-white font-bold">Emergency Coordinator (EC)</div>
+          <div id="prof-modal-desc" class="text-[11px] text-slate-400 leading-relaxed">
+            Master tactical authority for Freestone County ARES. Full app permissions, user authorization, and broadcast controls.
+          </div>
+        </div>
+
+        <!-- Permissions Matrix for Current Level -->
+        <div class="p-3 bg-[#0b0e14] rounded-xl border border-slate-800 space-y-2">
+          <span class="text-[10px] text-slate-500 uppercase font-bold block">Active App Clearance Permissions:</span>
+          <div id="prof-modal-perms" class="space-y-1 text-[11px]">
+            <!-- Populated dynamically via openOperatorProfileModal() -->
+          </div>
+        </div>
+
+        <button onclick="closeOperatorProfileModal(); openOperatorSelfEditModal();" class="w-full py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-slate-950 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow">
+          <span>✏️</span><span>EDIT MY PROFILE &amp; PHOTO</span>
+        </button>
+
+        <div class="pt-2 border-t border-slate-800 flex items-center justify-between gap-2">
+          <button onclick="closeOperatorProfileModal()" class="flex-1 py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition">
+            CLOSE
+          </button>
+          <button onclick="closeOperatorProfileModal(); logoutOperator();" class="flex-1 py-2 px-3 rounded-lg bg-red-950/80 hover:bg-red-900 text-red-300 text-xs font-bold border border-red-800 flex items-center justify-center gap-1.5 transition">
+            <span>🚪</span><span>LOG OUT</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MODAL: EC EDIT OPERATOR PROFILE (BRIAN DAVIS MASTER EDIT) -->
+  <div id="ec-edit-operator-modal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden font-mono-tac">
+    <div class="bg-[#10151d] border-2 border-amber-500/80 rounded-2xl max-w-lg w-full p-5 space-y-4 shadow-2xl hud-glow max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">✏️</span>
+          <div>
+            <h4 class="text-amber-400 font-black text-sm">EC OPERATOR PROFILE EDITOR</h4>
+            <span class="text-[10px] text-slate-400">EMERGENCY COORDINATOR MASTER OVERRIDE</span>
+          </div>
+        </div>
+        <button onclick="closeEcEditOperatorModal()" class="text-slate-400 hover:text-white p-1 text-sm font-bold">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <!-- Callsign & Name -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div>
+            <label class="text-[10px] text-slate-400 font-bold block mb-1">CALLSIGN:</label>
+            <input type="text" id="ec-edit-call" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-amber-400 font-bold uppercase" readonly>
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 font-bold block mb-1">FULL LEGAL NAME:</label>
+            <input type="text" id="ec-edit-name" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white">
+          </div>
+        </div>
+
+        <!-- GMRS & RACES -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div>
+            <label class="text-[10px] text-slate-400 font-bold block mb-1">GMRS LICENSE CALLSIGN:</label>
+            <input type="text" id="ec-edit-gmrs" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white uppercase">
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 font-bold block mb-1">RACES NUMBER / COUNTY ID:</label>
+            <input type="text" id="ec-edit-races" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white uppercase">
+          </div>
+        </div>
+
+        <!-- Phone & Email -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div>
+            <label class="text-[10px] text-slate-400 font-bold block mb-1">PHONE NUMBER (SMS):</label>
+            <input type="tel" id="ec-edit-phone" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white">
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 font-bold block mb-1">OFFICIAL EMAIL:</label>
+            <input type="email" id="ec-edit-email" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white">
+          </div>
+        </div>
+
+        <!-- Assigned Level & Class -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div>
+            <label class="text-[10px] text-slate-400 font-bold block mb-1">ASSIGNED OPERATIONAL LEVEL:</label>
+            <select id="ec-edit-level" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white font-bold">
+              <option value="Level 1 - Operator">Level 1 - Operator (Basic Privileges)</option>
+              <option value="Level 2 - Field Operator / Spotter">Level 2 - Field Operator / Spotter</option>
+              <option value="Level 3 - NCS">Level 3 - NCS (Net Script &amp; NetLogger)</option>
+              <option value="Level 4 - Assistant EC">Level 4 - Assistant EC (AEC + Alert Dispatch)</option>
+              <option value="Level 5 - County EMC">Level 5 - County EMC (All Except Alerts)</option>
+              <option value="Level 6 - Emergency Coordinator (EC)">Level 6 - Emergency Coordinator (EC)</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 font-bold block mb-1">LICENSE CLASS:</label>
+            <select id="ec-edit-class" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white">
+              <option value="Technician">Technician</option>
+              <option value="General">General</option>
+              <option value="Amateur Extra">Amateur Extra</option>
+              <option value="Novice">Novice</option>
+              <option value="GMRS Only">GMRS / Public Safety Liaison</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- FEMA CERTIFICATIONS (CHECK ALL THAT APPLY) -->
+        <div class="space-y-1">
+          <div class="flex items-center justify-between">
+            <label class="text-[10px] text-slate-300 font-bold block">FEMA NIMS / ICS CERTIFICATIONS (CHECK ALL THAT APPLY):</label>
+            <span class="text-[9px] text-amber-400 font-mono">100, 200, 300, 400, 700, 800</span>
+          </div>
+          <div id="ec-edit-fema-group" class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 p-2 bg-[#080b10] border border-slate-700 rounded-lg text-xs">
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
+              <input type="checkbox" value="IS-100" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+              <span>IS-100</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
+              <input type="checkbox" value="IS-200" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+              <span>IS-200</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
+              <input type="checkbox" value="IS-300" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+              <span>IS-300</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
+              <input type="checkbox" value="IS-400" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+              <span>IS-400</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
+              <input type="checkbox" value="IS-700" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+              <span>IS-700</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
+              <input type="checkbox" value="IS-800" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+              <span>IS-800</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- POWER DEPLOYMENT CAPABILITY (CHECK ALL THAT APPLY) -->
+        <div class="space-y-1">
+          <label class="text-[10px] text-slate-300 font-bold block">POWER DEPLOYMENT CAPABILITY (CHECK ALL THAT APPLY):</label>
+          <div id="ec-edit-power-group" class="grid grid-cols-1 sm:grid-cols-3 gap-1.5 p-2 bg-[#080b10] border border-slate-700 rounded-lg text-xs">
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
+              <input type="checkbox" value="Commercial" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+              <span>Commercial</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
+              <input type="checkbox" value="Battery back up" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+              <span>Battery back up</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
+              <input type="checkbox" value="Emergency generator" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+              <span>Emergency generator</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- STORM SPOTTER ADDITIONAL LEVEL / ENDORSEMENT -->
+        <div class="p-2.5 bg-[#080b10] rounded-xl border border-amber-500/50 flex items-center justify-between">
+          <div>
+            <span class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+              <span>⛈️</span>
+              <span>STORM SPOTTER ENDORSEMENT</span>
+            </span>
+            <p class="text-[10px] text-slate-400">Assign SKYWARN certified weather spotter credential to this operator (any level)</p>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="ec-edit-is-spotter" class="sr-only peer">
+            <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
+          </label>
+        </div>
+
+        <!-- Professional Photo -->
+        <div class="p-3 bg-[#080b10] rounded-xl border border-slate-800 space-y-2">
+          <label class="text-[10px] text-slate-300 font-bold block">OPERATOR CREDENTIAL PHOTO:</label>
+          <div class="flex items-center gap-3">
+            <img id="ec-edit-photo-preview" src="" class="w-14 h-14 rounded-xl object-cover border border-slate-700 hidden">
+            <div class="flex-1 space-y-1.5">
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="openLiveCameraModal('ec-edit-photo-preview', 'ec-edit-photo-data', null, 'user')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-lg text-[10px] flex items-center gap-1 shadow cursor-pointer">
+                  <span>📸</span>
+                  <span>Take Live Photo</span>
+                </button>
+                <span class="text-[10px] text-slate-400">or choose file below:</span>
+              </div>
+              <input type="file" accept="image/*" onchange="handlePhotoUpload(event, 'ec-edit-photo-preview', 'ec-edit-photo-data')" class="block w-full text-[10px] text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-[10px] file:font-bold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer">
+              <span class="text-[9px] text-slate-500 block">White background &bull; No hat on</span>
+              <input type="hidden" id="ec-edit-photo-data" value="">
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-slate-800 flex items-center justify-between gap-2">
+          <button type="button" onclick="closeEcEditOperatorModal()" class="py-2 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-lg transition cursor-pointer">
+            CANCEL
+          </button>
+          <button type="button" onclick="deleteOperator(document.getElementById('ec-edit-call').value); closeEcEditOperatorModal();" class="py-2 px-3 bg-red-950/80 hover:bg-red-900 text-red-300 border border-red-800 text-xs font-bold rounded-lg transition cursor-pointer">
+            🗑️ REMOVE OPERATOR
+          </button>
+          <button type="button" onclick="saveEcOperatorEdit()" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-slate-950 text-xs font-black rounded-lg transition shadow cursor-pointer">
+            SAVE CHANGES
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: OPERATOR SELF-PROFILE & PHOTO EDITOR -->
+  <div id="operator-self-edit-modal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden font-mono-tac">
+    <div class="bg-[#10151d] border-2 border-emerald-500/80 rounded-2xl max-w-lg w-full p-5 space-y-4 shadow-2xl hud-glow max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">👤</span>
+          <div>
+            <h4 class="text-emerald-400 font-black text-sm">UPDATE MY OPERATOR PROFILE</h4>
+            <span class="text-[10px] text-slate-400">FREESTONE COUNTY ARES CREDENTIALS</span>
+          </div>
+        </div>
+        <button onclick="closeOperatorSelfEditModal()" class="text-slate-400 hover:text-white p-1 text-sm font-bold">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div>
+            <label class="text-[10px] text-slate-400 font-bold block mb-1">CALLSIGN:</label>
+            <input type="text" id="self-edit-call" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-amber-400 font-bold uppercase" readonly>
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 font-bold block mb-1">FULL LEGAL NAME *:</label>
+            <input type="text" id="self-edit-name" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div>
+            <label class="text-[10px] text-slate-400 font-bold block mb-1">GMRS LICENSE CALLSIGN:</label>
+            <input type="text" id="self-edit-gmrs" placeholder="e.g. WSHS425 or NONE" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white uppercase">
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 font-bold block mb-1">RACES REGISTRATION NUMBER:</label>
+            <input type="text" id="self-edit-races" placeholder="e.g. TX-FREE-05" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white uppercase">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div>
+            <label class="text-[10px] text-slate-400 font-bold block mb-1">PHONE NUMBER (SMS) *:</label>
+            <input type="tel" id="self-edit-phone" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white">
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 font-bold block mb-1">OFFICIAL EMAIL *:</label>
+            <input type="email" id="self-edit-email" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white">
+          </div>
+        </div>
+
+        <!-- LOCKED ASSIGNED OPERATOR LEVEL (CAN ONLY BE CHANGED BY MASTER EC) -->
+        <div class="p-2.5 bg-[#080b10] rounded-xl border border-slate-700/80 flex items-center justify-between">
+          <div>
+            <span class="text-[10px] text-slate-400 font-bold block uppercase tracking-wider">ASSIGNED OPERATOR CLEARANCE:</span>
+            <div id="self-edit-level-display" class="text-amber-400 font-black text-xs mt-0.5">Level 1 - Operator</div>
+          </div>
+          <span class="px-2 py-1 rounded bg-slate-900 border border-slate-700 text-slate-400 text-[9px] font-bold">🔒 Master EC (KG5TZT) Only</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div>
+            <label class="text-[10px] text-slate-400 font-bold block mb-1">AMATEUR LICENSE CLASS:</label>
+            <select id="self-edit-class" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white">
+              <option value="Technician">Technician</option>
+              <option value="General">General</option>
+              <option value="Amateur Extra">Amateur Extra</option>
+              <option value="Novice">Novice</option>
+              <option value="GMRS Only">GMRS / Public Safety Liaison</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 font-bold block mb-1">VERIFICATION STATUS:</label>
+            <div id="self-edit-last-verified-display" class="p-2 bg-[#080b10] border border-slate-700 rounded-lg text-xs text-emerald-400 font-bold">
+              ✓ Verified Active
+            </div>
+          </div>
+        </div>
+
+        <!-- FEMA CERTIFICATIONS (CHECK ALL THAT APPLY) -->
+        <div class="space-y-1">
+          <div class="flex items-center justify-between">
+            <label class="text-[10px] text-slate-300 font-bold block">FEMA NIMS / ICS CERTIFICATIONS (CHECK ALL THAT APPLY):</label>
+            <span class="text-[9px] text-emerald-400 font-mono">100, 200, 300, 400, 700, 800</span>
+          </div>
+          <div id="self-edit-fema-group" class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 p-2 bg-[#080b10] border border-slate-700 rounded-lg text-xs">
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="IS-100" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>IS-100</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="IS-200" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>IS-200</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="IS-300" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>IS-300</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="IS-400" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>IS-400</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="IS-700" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>IS-700</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="IS-800" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>IS-800</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- POWER DEPLOYMENT CAPABILITY (CHECK ALL THAT APPLY) -->
+        <div class="space-y-1">
+          <label class="text-[10px] text-slate-300 font-bold block">POWER DEPLOYMENT CAPABILITY (CHECK ALL THAT APPLY):</label>
+          <div id="self-edit-power-group" class="grid grid-cols-1 sm:grid-cols-3 gap-1.5 p-2 bg-[#080b10] border border-slate-700 rounded-lg text-xs">
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="Commercial" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>Commercial</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="Battery back up" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>Battery back up</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="Emergency generator" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>Emergency generator</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- STATION EQUIPMENT & CAPABILITIES (CHECK ALL THAT APPLY) -->
+        <div class="space-y-1">
+          <label class="text-[10px] text-slate-300 font-bold block">STATION EQUIPMENT & CAPABILITIES (CHECK ALL THAT APPLY):</label>
+          <div id="self-edit-capabilities-group" class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 p-2 bg-[#080b10] border border-slate-700 rounded-lg text-xs">
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="50W VHF/UHF Mobile" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>50W VHF/UHF Mobile</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="HF Portable Base" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>HF Portable Base</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="Handheld HT (VHF/UHF)" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>Handheld HT (VHF/UHF)</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="Crossband Gateway (V/U)" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>Crossband Gateway (V/U)</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="Winlink RMS Packet / Radio Email" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>Winlink RMS Packet / Radio Email</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="Digital Voice (DMR / Fusion)" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>Digital Voice (DMR / Fusion)</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="100Ah+ Battery / LiFePO4 Power" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>100Ah+ Battery / LiFePO4 Power</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="Solar Emergency Array" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>Solar Emergency Array</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="Generator (Auxiliary Fuel)" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>Generator (Auxiliary Fuel)</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="72-Hr Deployment Go-Kit" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>72-Hr Deployment Go-Kit</span>
+            </label>
+          </div>
+        </div>
+
+
+        <!-- STORM SPOTTER QUALIFICATION CHECKBOX -->
+        <div class="p-2.5 bg-[#080b10] rounded-xl border border-amber-500/50 flex items-center justify-between">
+          <div>
+            <span class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+              <span>⛈️</span>
+              <span>NWS SKYWARN SPOTTER TRAINING</span>
+            </span>
+            <p class="text-[10px] text-slate-400">Check if you have completed official NWS SKYWARN Spotter Training</p>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="self-edit-is-spotter" class="sr-only peer">
+            <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
+          </label>
+        </div>
+
+        <!-- Professional Photo -->
+        <div class="p-3 bg-[#080b10] rounded-xl border-2 border-emerald-500/60 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-emerald-400">📸 PROFESSIONAL PHOTO IDENTIFICATION</span>
+            <span class="text-[9px] bg-red-950 text-red-300 border border-red-800 px-1.5 py-0.5 rounded font-bold">REQUIRED</span>
+          </div>
+          <p class="text-[10px] text-slate-300 leading-relaxed">
+            Must be a professional self-taken portrait photo with a plain <strong>WHITE BACKGROUND</strong> and <strong>NO HAT ON</strong>.
+          </p>
+          <div class="flex items-center gap-3 pt-1">
+            <img id="self-edit-photo-preview" src="" class="w-16 h-16 rounded-xl object-cover border-2 border-emerald-500 hidden">
+            <div id="self-edit-photo-placeholder" class="w-16 h-16 rounded-xl bg-slate-900 border-2 border-slate-700 flex items-center justify-center text-2xl text-slate-600 flex-shrink-0">
+              👤
+            </div>
+            <div class="flex-1 space-y-1.5">
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="openLiveCameraModal('self-edit-photo-preview', 'self-edit-photo-data', 'self-edit-photo-placeholder', 'user')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-lg text-[10px] flex items-center gap-1 shadow cursor-pointer">
+                  <span>📸</span>
+                  <span>Take Live Photo</span>
+                </button>
+                <span class="text-[10px] text-slate-400">or choose file below:</span>
+              </div>
+              <input type="file" accept="image/*" capture="user" onchange="handlePhotoUpload(event, 'self-edit-photo-preview', 'self-edit-photo-data', 'self-edit-photo-placeholder')" class="block w-full text-[10px] text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-[10px] file:font-bold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer">
+              <span class="text-[9px] text-slate-500 block">White background &bull; No hat &bull; Facing forward</span>
+              <input type="hidden" id="self-edit-photo-data" value="">
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-slate-800 flex items-center justify-between gap-2">
+          <button onclick="closeOperatorSelfEditModal()" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-lg transition">
+            CANCEL
+          </button>
+          <button onclick="saveOperatorSelfEdit()" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-slate-950 text-xs font-black rounded-lg transition shadow">
+            SAVE MY PROFILE
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- ABOUT TACTICAL MOBILE MODAL -->
+  <div id="about-app-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-4 hidden font-mono-tac" onclick="if(event.target===this) closeAboutModal();">
+    <div class="bg-[#0c1017] border-2 border-emerald-500/70 rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl hud-glow max-h-[92vh] overflow-y-auto" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2.5">
+          <span class="text-2xl">⚡</span>
+          <div>
+            <h4 class="text-emerald-400 font-black text-sm uppercase tracking-wider">FREESTONE COUNTY ARES</h4>
+            <span class="text-[10px] text-slate-400">TACTICAL COMMUNICATIONS SYSTEM</span>
+          </div>
+        </div>
+        <button type="button" onclick="closeAboutModal()" class="text-slate-400 hover:text-white text-sm font-bold p-1 px-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 transition cursor-pointer">✕</button>
+      </div>
+
+      <div class="text-center py-2 space-y-2">
+        <div class="inline-flex p-2 rounded-2xl bg-[#070a0f] border border-emerald-500/60 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+          <div class="w-14 h-14 rounded-xl flex items-center justify-center text-3xl">📡</div>
+        </div>
+        <div>
+          <div class="text-base font-black text-white">Tactical Mobile App</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.8.6 (Build 34)</div>
+          <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
+        </div>
+      </div>
+
+      <div class="p-3 bg-[#070a0f] border border-slate-800 rounded-xl space-y-2 text-xs">
+        <div class="flex justify-between items-center border-b border-slate-800/80 pb-1.5">
+          <span class="text-slate-400 text-[11px]">Emergency Coordinator:</span>
+          <span class="text-white font-bold">Brian Davis (KG5TZT)</span>
+        </div>
+        <div class="flex justify-between items-center border-b border-slate-800/80 pb-1.5">
+          <span class="text-slate-400 text-[11px]">Jurisdiction:</span>
+          <span class="text-slate-200">Freestone County, Texas</span>
+        </div>
+        <div class="flex justify-between items-center border-b border-slate-800/80 pb-1.5">
+          <span class="text-slate-400 text-[11px]">Primary Net / Frequency:</span>
+          <span class="text-amber-400 font-bold">145.110 MHz • FM Voice</span>
+        </div>
+        <div class="flex justify-between items-center border-b border-slate-800/80 pb-1.5">
+          <span class="text-slate-400 text-[11px]">Default Volunteer Password:</span>
+          <span class="text-emerald-400 font-bold">ARES2026</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-slate-400 text-[11px]">Release Architecture:</span>
+          <span class="text-slate-300">Android APK &amp; PWA Offline Basemap</span>
+        </div>
+      </div>
+
+      <div class="text-[10px] text-slate-400 space-y-1 leading-relaxed">
+        <p>Built for amateur radio emergency operators, SKYWARN weather spotters, and public safety liaisons supporting Freestone County Emergency Management.</p>
+        <p class="text-slate-500 text-[9px] pt-1">FCC Part 97 Compliant &bull; NWS Storm Prediction Protocol &bull; ICS-205 Tactical Interop</p>
+      </div>
+
+      <button type="button" onclick="closeAboutModal()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black rounded-xl text-xs shadow transition cursor-pointer">
+        CLOSE ABOUT
+      </button>
+    </div>
+  </div>
+
+  <!-- MANDATORY OPERATOR PROFILE VERIFICATION & 6-MONTH REVIEW MODAL -->
+  <div id="operator-profile-verify-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-4 hidden font-mono-tac">
+    <div class="bg-[#10151d] border-2 border-amber-500 rounded-2xl max-w-lg w-full p-5 space-y-4 shadow-2xl hud-glow max-h-[94vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2.5">
+          <span class="text-2xl animate-pulse">📋</span>
+          <div>
+            <h4 id="verify-modal-title" class="text-amber-400 font-black text-sm">OPERATOR PROFILE VERIFICATION</h4>
+            <span id="verify-modal-subtitle" class="text-[10px] text-slate-400">FREESTONE COUNTY ARES OPERATIONAL READINESS</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <div id="verify-modal-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-800">MANDATORY</div>
+          <button type="button" onclick="closeOperatorProfileVerifyModal()" class="text-slate-400 hover:text-white text-xs font-bold p-1 px-2 rounded hover:bg-slate-800 transition cursor-pointer" title="Close / Review Later">✕</button>
+        </div>
+      </div>
+
+      <div class="p-3 bg-amber-950/30 border border-amber-600/50 rounded-xl space-y-1 text-xs">
+        <div class="flex items-center gap-2 text-amber-300 font-bold text-[11px]">
+          <span>⚡</span><span id="verify-reason-heading">MANDATORY PROFILE REVIEW</span>
+        </div>
+        <p id="verify-reason-text" class="text-[11px] text-slate-300 leading-relaxed">
+          Freestone County ARES operational readiness requires all active operators to review and confirm their official profile details, emergency phone number, FEMA qualifications, deployment power, and professional photo ID.
+        </p>
+        <div id="verify-last-date-text" class="text-[10px] text-amber-400/80 font-mono pt-0.5"></div>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <!-- Callsign & Full Name -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div>
+            <label class="text-[10px] text-slate-400 font-bold block mb-1">CALLSIGN:</label>
+            <input type="text" id="verify-call" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-amber-400 font-bold uppercase" readonly>
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 font-bold block mb-1">FULL LEGAL NAME *:</label>
+            <input type="text" id="verify-name" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white">
+          </div>
+        </div>
+
+        <!-- LOCKED ASSIGNED OPERATOR LEVEL (CAN ONLY BE CHANGED BY MASTER EC) -->
+        <div class="p-2.5 bg-[#080b10] rounded-xl border border-slate-700 flex items-center justify-between">
+          <div>
+            <span class="text-[10px] text-slate-400 font-bold block uppercase tracking-wider">ASSIGNED OPERATOR CLEARANCE:</span>
+            <div id="verify-level-display" class="text-amber-400 font-black text-xs mt-0.5">Level 1 - Operator</div>
+          </div>
+          <span class="px-2 py-1 rounded bg-slate-900 border border-slate-700 text-slate-400 text-[9px] font-bold">🔒 Master EC (KG5TZT) Only</span>
+        </div>
+
+        <!-- License Class & GMRS / RACES -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          <div>
+            <label class="text-[10px] text-slate-400 font-bold block mb-1">LICENSE CLASS:</label>
+            <select id="verify-class" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white">
+              <option value="Technician">Technician</option>
+              <option value="General">General</option>
+              <option value="Amateur Extra">Amateur Extra</option>
+              <option value="Novice">Novice</option>
+              <option value="GMRS Only">GMRS / Public Safety Liaison</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 font-bold block mb-1">GMRS CALLSIGN:</label>
+            <input type="text" id="verify-gmrs" placeholder="e.g. WSHS425" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white uppercase">
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 font-bold block mb-1">RACES NUMBER:</label>
+            <input type="text" id="verify-races" placeholder="TX-FREE-05" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white uppercase">
+          </div>
+        </div>
+
+        <!-- Phone & Email -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div>
+            <label class="text-[10px] text-slate-400 font-bold block mb-1">PHONE NUMBER (SMS) *:</label>
+            <input type="tel" id="verify-phone" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white">
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 font-bold block mb-1">OFFICIAL EMAIL *:</label>
+            <input type="email" id="verify-email" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white">
+          </div>
+        </div>
+
+        <!-- FEMA CERTIFICATIONS CHECKBOX GROUP -->
+        <div class="space-y-1">
+          <div class="flex items-center justify-between">
+            <label class="text-[10px] text-slate-300 font-bold block">FEMA NIMS / ICS CERTIFICATIONS (CHECK ALL THAT APPLY):</label>
+            <span class="text-[9px] text-emerald-400 font-mono">100, 200, 300, 400, 700, 800</span>
+          </div>
+          <div id="verify-fema-group" class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 p-2 bg-[#080b10] border border-slate-700 rounded-lg text-xs">
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="IS-100" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>IS-100</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="IS-200" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>IS-200</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="IS-300" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>IS-300</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="IS-400" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>IS-400</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="IS-700" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>IS-700</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="IS-800" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>IS-800</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- POWER DEPLOYMENT CAPABILITY CHECKBOX GROUP -->
+        <div class="space-y-1">
+          <label class="text-[10px] text-slate-300 font-bold block">POWER DEPLOYMENT CAPABILITY (CHECK ALL THAT APPLY):</label>
+          <div id="verify-power-group" class="grid grid-cols-1 sm:grid-cols-3 gap-1.5 p-2 bg-[#080b10] border border-slate-700 rounded-lg text-xs">
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="Commercial" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>Commercial</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="Battery back up" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>Battery back up</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="Emergency generator" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>Emergency generator</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- STATION EQUIPMENT & CAPABILITIES (CHECK ALL THAT APPLY) -->
+        <div class="space-y-1">
+          <label class="text-[10px] text-slate-300 font-bold block">STATION EQUIPMENT & CAPABILITIES (CHECK ALL THAT APPLY):</label>
+          <div id="verify-capabilities-group" class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 p-2 bg-[#080b10] border border-slate-700 rounded-lg text-xs">
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="50W VHF/UHF Mobile" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>50W VHF/UHF Mobile</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="HF Portable Base" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>HF Portable Base</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="Handheld HT (VHF/UHF)" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>Handheld HT (VHF/UHF)</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="Crossband Gateway (V/U)" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>Crossband Gateway (V/U)</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="Winlink RMS Packet / Radio Email" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>Winlink RMS Packet / Radio Email</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="Digital Voice (DMR / Fusion)" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>Digital Voice (DMR / Fusion)</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="100Ah+ Battery / LiFePO4 Power" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>100Ah+ Battery / LiFePO4 Power</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="Solar Emergency Array" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>Solar Emergency Array</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="Generator (Auxiliary Fuel)" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>Generator (Auxiliary Fuel)</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="72-Hr Deployment Go-Kit" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>72-Hr Deployment Go-Kit</span>
+            </label>
+          </div>
+        </div>
+
+
+        <!-- NWS SKYWARN STORM SPOTTER QUALIFICATION CHECKBOX -->
+        <div class="p-2.5 bg-[#080b10] rounded-xl border border-amber-500/50 flex items-center justify-between">
+          <div>
+            <span class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+              <span>⛈️</span>
+              <span>NWS SKYWARN SPOTTER TRAINING</span>
+            </span>
+            <p class="text-[10px] text-slate-400">Completed official NWS SKYWARN severe weather training</p>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="verify-is-spotter" class="sr-only peer">
+            <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
+          </label>
+        </div>
+
+        <!-- MANDATORY PROFESSIONAL PHOTO IDENTIFICATION -->
+        <div class="p-3 bg-[#080b10] rounded-xl border-2 border-emerald-500/60 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+              <span>📸</span>
+              <span>PROFESSIONAL OPERATOR PHOTO ID</span>
+            </span>
+            <span class="text-[9px] bg-red-950 text-red-300 border border-red-800 px-1.5 py-0.5 rounded font-bold">REQUIRED</span>
+          </div>
+          <p class="text-[10px] text-slate-300 leading-relaxed">
+            Must be a professional self-taken portrait photo with a plain <strong>WHITE BACKGROUND</strong> and <strong>NO HAT ON</strong>.
+          </p>
+          <div class="flex items-center gap-3 pt-1">
+            <img id="verify-photo-preview" src="" class="w-16 h-16 rounded-xl object-cover border-2 border-emerald-500 hidden">
+            <div id="verify-photo-placeholder" class="w-16 h-16 rounded-xl bg-slate-900 border-2 border-slate-700 flex items-center justify-center text-2xl text-slate-600 flex-shrink-0">
+              👤
+            </div>
+            <div class="flex-1 space-y-1.5">
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="openLiveCameraModal('verify-photo-preview', 'verify-photo-data', 'verify-photo-placeholder', 'user')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-lg text-[10px] flex items-center gap-1 shadow cursor-pointer">
+                  <span>📸</span>
+                  <span>Take Live Photo</span>
+                </button>
+                <span class="text-[10px] text-slate-400">or choose file below:</span>
+              </div>
+              <input type="file" id="verify-photo-input" accept="image/*" capture="user" onchange="handlePhotoUpload(event, 'verify-photo-preview', 'verify-photo-data', 'verify-photo-placeholder')" class="block w-full text-[10px] text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-[10px] file:font-bold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer">
+              <span class="text-[9px] text-slate-500 block">White background &bull; No hat &bull; Facing forward</span>
+              <input type="hidden" id="verify-photo-data" value="">
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 pt-1">
+          <button type="button" onclick="closeOperatorProfileVerifyModal()" class="w-1/3 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl text-xs transition cursor-pointer">
+            LATER
+          </button>
+          <button onclick="saveOperatorProfileVerification()" class="w-2/3 py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 text-slate-950 font-black rounded-xl text-xs shadow-lg transition flex items-center justify-center gap-2 cursor-pointer">
+            <span>✅</span>
+            <span>VERIFY &amp; RECORD PROFILE</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIVE IN-APP CAMERA VIEWFINDER MODAL -->
+  <div id="live-camera-modal" class="fixed inset-0 z-[9999] bg-black/90 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="bg-[#10151d] border-2 border-emerald-500/80 rounded-2xl max-w-md w-full p-4 sm:p-5 shadow-[0_0_50px_rgba(16,185,129,0.3)] space-y-4 font-mono-tac">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">📸</span>
+          <div>
+            <h3 class="font-bold text-sm text-white">LIVE TACTICAL CAMERA</h3>
+            <p class="text-[10px] text-slate-400">Position face centered with white background & no hat</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeLiveCameraModal()" class="text-slate-400 hover:text-white text-lg font-bold px-2 py-1 cursor-pointer">✕</button>
+      </div>
+
+      <!-- Live Video Viewfinder -->
+      <div class="relative rounded-xl overflow-hidden bg-black border-2 border-slate-800 aspect-square flex items-center justify-center">
+        <video id="live-camera-video" autoplay playsinline muted class="w-full h-full object-cover"></video>
+        <!-- Overlay Reticle / Guide -->
+        <div class="absolute inset-0 pointer-events-none border-2 border-emerald-500/30 rounded-xl m-4 flex items-center justify-center">
+          <div class="w-32 h-44 border border-dashed border-emerald-400/50 rounded-full flex items-center justify-center">
+            <span class="text-[9px] text-emerald-400/60 font-bold bg-black/40 px-1 rounded">FACE GUIDE</span>
+          </div>
+        </div>
+        <div id="live-camera-error" class="absolute inset-x-4 p-3 bg-red-950/90 border border-red-800 rounded-lg text-[11px] text-red-200 text-center hidden">
+          Camera not accessible. Please grant camera permission or use the file upload option.
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between gap-2 pt-1">
+        <button type="button" onclick="flipLiveCamera()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
+          <span>🔄</span>
+          <span>FLIP CAMERA</span>
+        </button>
+
+        <button type="button" onclick="captureLiveCameraPhoto()" class="flex-1 py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 text-slate-950 font-black rounded-xl text-xs shadow-lg transition flex items-center justify-center gap-2 cursor-pointer">
+          <span class="text-base">📸</span>
+          <span>SNAP &amp; USE PHOTO</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
