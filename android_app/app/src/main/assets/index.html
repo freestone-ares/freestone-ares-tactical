@@ -206,7 +206,6 @@
             <div>
               <div class="text-emerald-400 font-black text-xs uppercase tracking-wider flex items-center gap-1.5">
                 <span>TACTICAL NAVIGATION</span>
-                <span class="px-1.5 py-0.2 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 text-[9px] font-bold">v7.8.5</span>
               </div>
               <div class="text-[10px] text-slate-400">Freestone County ARES</div>
             </div>
@@ -394,7 +393,7 @@
               <span class="text-base">ℹ️</span>
               <div>
                 <div class="font-bold text-xs text-white">About Tactical Mobile</div>
-                <div class="text-[10px] text-slate-400">Version 7.8.5, build details &amp; EC contacts</div>
+                <div class="text-[10px] text-slate-400">Official system release &amp; EC contacts</div>
               </div>
             </div>
             <span class="text-emerald-500 text-xs">➔</span>
@@ -424,11 +423,11 @@
             <span>🚪</span><span>LOG OUT</span>
           </button>
         </div>
-        <!-- Prominent App Version in Bottom of Menu Drop Down (Clickable to open About modal) -->
+        <!-- System & Build Info in Bottom of Menu Drop Down (Clickable to open About modal) -->
         <div class="pt-3 border-t border-slate-800 text-center font-mono-tac space-y-1">
           <div onclick="openAboutModal(); toggleHamburgerMenu(false);" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-800/80 text-[10px] font-bold cursor-pointer transition" title="Tap to view About & System details">
-            <span class="text-slate-400">APP VERSION:</span>
-            <span class="text-white font-extrabold">v7.8.5 (Build 33)</span>
+            <span class="text-emerald-400">ℹ️</span>
+            <span class="text-white font-extrabold tracking-wider">ABOUT &amp; SYSTEM INFO</span>
           </div>
           <div class="text-[9px] text-slate-500">Official Freestone County ARES Tactical Field Release</div>
         </div>
@@ -826,24 +825,39 @@
                 <span id="dash-user-call" class="text-sm font-black text-amber-400">GUEST</span>
               </div>
               <p id="dash-user-role-text" class="text-[11px] text-slate-400">Unauthenticated Guest &bull; Masked View</p>
-              <div class="flex flex-wrap items-center gap-1.5 mt-1.5 text-[10px]">
-                <span class="bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded border border-amber-800 font-bold">RACES: TX-FC-01</span>
+              <div id="dash-user-meta-badges" class="flex flex-wrap items-center gap-1.5 mt-1.5 text-[10px]">
+                <span class="bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded border border-amber-800 font-bold">RACES: TX-FREE-01</span>
                 <span class="bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded">GMRS: WRPN302</span>
                 <span class="bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded">Fairfield, TX</span>
               </div>
             </div>
           </div>
 
-          <!-- Station Capability Tags -->
+          <!-- Station Capability Tags (Dynamically Populated from Member Profile) -->
           <div class="space-y-1.5">
-            <span class="text-[10px] text-slate-400 block font-bold">DEPLOYED STATION CAPABILITIES:</span>
-            <div class="flex flex-wrap gap-1.5 text-[10px] text-slate-300">
-              <span class="p-1 px-2 bg-slate-900 rounded border border-slate-800">50W VHF/UHF Mobile</span>
-              <span class="p-1 px-2 bg-slate-900 rounded border border-slate-800">HF Portable Base</span>
-              <span class="p-1 px-2 bg-slate-900 rounded border border-slate-800">Winlink RMS Packet</span>
-              <span class="p-1 px-2 bg-slate-900 rounded border border-slate-800">100Ah LiFePO4 Battery</span>
-              <span class="p-1 px-2 bg-slate-900 rounded border border-slate-800">NIMS ICS 100/200/700/800</span>
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] text-slate-400 block font-bold uppercase tracking-wider">DEPLOYED STATION CAPABILITIES:</span>
+              <button type="button" onclick="openOperatorSelfEditModal()" class="text-[10px] text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-1 cursor-pointer">
+                <span>✏️</span><span>EDIT GEAR</span>
+              </button>
             </div>
+            <div id="dash-user-capabilities" class="flex flex-wrap gap-1.5 text-[10px] text-slate-300">
+              <span class="p-1 px-2 bg-emerald-950/70 text-emerald-300 rounded border border-emerald-800/80 font-bold flex items-center gap-1 text-[10px]">
+                <span class="text-emerald-400">✓</span><span>50W VHF/UHF Mobile</span>
+              </span>
+              <span class="p-1 px-2 bg-emerald-950/70 text-emerald-300 rounded border border-emerald-800/80 font-bold flex items-center gap-1 text-[10px]">
+                <span class="text-emerald-400">✓</span><span>HF Portable Base</span>
+              </span>
+              <span class="p-1 px-2 bg-emerald-950/70 text-emerald-300 rounded border border-emerald-800/80 font-bold flex items-center gap-1 text-[10px]">
+                <span class="text-emerald-400">✓</span><span>Winlink RMS Packet / Radio Email</span>
+              </span>
+              <span class="p-1 px-2 bg-emerald-950/70 text-emerald-300 rounded border border-emerald-800/80 font-bold flex items-center gap-1 text-[10px]">
+                <span class="text-emerald-400">✓</span><span>100Ah+ Battery / LiFePO4 Power</span>
+              </span>
+            </div>
+            <button type="button" onclick="openOperatorSelfEditModal()" class="w-full mt-2 py-1.5 px-3 bg-slate-900 hover:bg-slate-800 border border-emerald-500/50 text-emerald-300 font-bold text-[11px] rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer shadow">
+              <span>✏️</span><span>EDIT MY PROFILE &amp; STATION CAPABILITIES</span>
+            </button>
           </div>
 
           <!-- Interactive One-Touch Availability Status -->
@@ -2145,75 +2159,188 @@
         </div>
       </div>
 
-      <!-- SPOTTER NWS REPORT CAPTURE & DISPATCH DECK (DIRECTLY UNDER WEATHER BANNER) -->
-      <div class="bg-[#10151d] border-2 border-amber-500/70 rounded-xl p-4 font-mono-tac shadow-xl space-y-3 hud-glow">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
-          <div class="flex items-center gap-2.5">
-            <span class="text-2xl animate-pulse">⚡</span>
+      <!-- TACTICAL SPOTTER REPORTING CONSOLE (HIGH-STRESS STREAMLINED REPORTING TO NCS/EC) -->
+      <div class="bg-[#10151d] border-2 border-amber-500/80 rounded-2xl p-4 sm:p-5 font-mono-tac shadow-2xl space-y-4 hud-glow">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/60 flex items-center justify-center text-2xl animate-pulse">
+              ⚡
+            </div>
             <div>
               <div class="flex items-center gap-2">
-                <h4 class="text-xs font-bold text-white uppercase tracking-wider">CAPTURE SPOTTER NWS SEVERE WEATHER REPORT</h4>
-                <span class="px-1.5 py-0.5 rounded text-[9px] bg-red-950 text-red-300 border border-red-800 font-bold animate-pulse">FIELD DECK</span>
+                <h4 class="text-sm font-black text-white tracking-wider uppercase">TACTICAL SPOTTER REPORTING CONSOLE</h4>
+                <span class="px-2 py-0.5 rounded text-[9px] bg-red-950 text-red-300 border border-red-800 font-bold animate-pulse">DIRECT NET</span>
               </div>
-              <p class="text-[11px] text-slate-400">Select observed severe phenomenon from dropdown below to instantly auto-populate criteria and dispatch report.</p>
+              <p class="text-[11px] text-slate-300 mt-0.5">
+                Reports transmit strictly to Net Control Station (NCS) or EC Brian Davis (KG5TZT) on repeater FF 110 (145.110 MHz). No direct reporting to NWS by individual operators.
+              </p>
             </div>
           </div>
-          <div class="flex items-center gap-2">
-            <button type="button" onclick="autofillSpotterGpsLocation()" class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-700 text-emerald-400 font-bold rounded text-[11px] flex items-center gap-1 transition cursor-pointer">
-              <span>📍</span>
-              <span>UPDATE GPS</span>
-            </button>
-            <button type="button" onclick="openLiveCameraModal('skywarn-captured-preview', 'skywarn-captured-data', null, 'environment')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded text-[11px] flex items-center gap-1 transition cursor-pointer">
-              <span>📸</span>
-              <span>LIVE CAMERA</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
-          <div class="md:col-span-8 space-y-1">
-            <label class="block text-[11px] font-bold text-amber-400">SELECT NWS SEVERE PHENOMENON (CHECK CRITERIA):</label>
-            <select id="nws-quick-report-dropdown" onchange="handleNwsQuickReportSelect(this.value)" class="w-full bg-[#080b10] border-2 border-amber-500/70 rounded-xl p-2.5 text-white font-mono-tac text-xs focus:border-emerald-400 outline-none shadow-inner cursor-pointer font-bold">
-              <option value="">-- ⛈️ CHOOSE NWS SEVERE REPORT TYPE TO CAPTURE --</option>
-              <option value="tornado">🌪️ TORNADO: Touchdown / Active Funnel on Ground (Life Safety Threat)</option>
-              <option value="wallcloud">🌀 WALL CLOUD: Rotating Wall Cloud / Funnel Cloud (Not on Ground)</option>
-              <option value="hail">🧊 HAIL: Severe Hail &gt;= 1.00" (Quarter, Golfball, Baseball, Hen Egg)</option>
-              <option value="wind">💨 WIND: Damaging Wind &gt;= 58 MPH (Large Limbs / Trees / Utility Poles Down)</option>
-              <option value="flood">🌊 FLOOD: Flash Flooding (Road Impassable / Water Over Bridge / Fast Flowing)</option>
-              <option value="damage">💥 DAMAGE: Structural Damage (Roof Lost, Barn Collapsed, Vehicles Damaged)</option>
-              <option value="utility">⚡ HAZARD: High-Voltage Utility Lines Sparking Across Roadway</option>
-            </select>
-          </div>
-
-          <div class="md:col-span-4 flex items-center gap-2 pt-4 md:pt-0">
-            <button type="button" onclick="dispatchSkywarnNWS()" class="w-full py-2.5 px-4 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-black rounded-xl text-xs shadow-[0_0_15px_rgba(245,158,11,0.4)] transition flex items-center justify-center gap-1.5 cursor-pointer">
-              <span>⚡</span>
-              <span>CAPTURE &amp; TRANSMIT</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Dynamic Quick Action Card -->
-        <div id="nws-quick-action-card" class="bg-[#080b10] border border-amber-500/40 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs">
-          <div class="flex items-center gap-2">
-            <span class="text-emerald-400">✓</span>
-            <div id="nws-quick-capture-summary" class="text-[11px] text-slate-300">
-              Select an NWS report type above or edit specific details in the full criteria form below.
-            </div>
-          </div>
-          <div class="flex items-center gap-2">
-            <button type="button" onclick="openSkywarnVoiceScriptModal()" class="px-2.5 py-1 bg-purple-950/80 hover:bg-purple-900 border border-purple-700/80 text-purple-200 rounded text-[11px] font-bold transition flex items-center gap-1">
-              <span>🎙️</span>
-              <span>10-SEC RADIO SCRIPT</span>
-            </button>
-            <a href="tel:18007722766" class="px-2.5 py-1 bg-rose-950/80 hover:bg-rose-900 border border-rose-700 text-rose-200 rounded text-[11px] font-bold transition flex items-center gap-1">
-              <span>📞</span>
-              <span>NWS FWD</span>
+          <div class="flex items-center gap-2 flex-wrap">
+            <a href="tel:9036445856" class="px-3 py-1.5 bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-600 text-emerald-300 font-bold rounded-lg text-xs flex items-center gap-1.5 transition shadow" title="Direct Phone to EC Brian Davis">
+              <span>📞</span><span>CALL EC BRIAN (903-644-5856)</span>
             </a>
           </div>
         </div>
+
+        <!-- STRESS-RESISTANT 1-TAP SEVERE PHENOMENON SELECTOR -->
+        <div class="space-y-2">
+          <label class="text-xs font-black text-amber-400 block uppercase tracking-wider">
+            STEP 1: SELECT OBSERVED SEVERE CONDITION (1-TAP QUICK SELECT):
+          </label>
+          <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
+            <!-- 1. Tornado -->
+            <button type="button" onclick="selectQuickSkywarnType('🌪️ TORNADO / FUNNEL', 'TORNADO: Touchdown / Active Funnel on Ground', 'CRITICAL / LIFE SAFETY', 'bg-red-950 text-red-300 border-red-600')" class="p-3 rounded-xl bg-red-950/50 hover:bg-red-900 border-2 border-red-600/70 text-left transition space-y-1 cursor-pointer">
+              <span class="text-2xl block">🌪️</span>
+              <div class="font-black text-xs text-red-300 leading-tight">TORNADO / WALL CLOUD</div>
+              <div class="text-[9px] text-red-400 font-bold">Funnel / Rotation</div>
+            </button>
+
+            <!-- 2. Large Hail -->
+            <button type="button" onclick="selectQuickSkywarnType('🧊 LARGE HAIL', 'HAIL: Severe Hail >= 1.00 inch', 'SEVERE CRITERIA', 'bg-sky-950 text-sky-300 border-sky-600')" class="p-3 rounded-xl bg-sky-950/50 hover:bg-sky-900 border-2 border-sky-600/70 text-left transition space-y-1 cursor-pointer">
+              <span class="text-2xl block">🧊</span>
+              <div class="font-black text-xs text-sky-300 leading-tight">LARGE HAIL</div>
+              <div class="text-[9px] text-sky-400 font-bold">Quarter, Golf Ball, Baseball</div>
+            </button>
+
+            <!-- 3. Damaging Wind -->
+            <button type="button" onclick="selectQuickSkywarnType('💨 DAMAGING WIND', 'WIND: Damaging Wind >= 58 MPH', 'SEVERE CRITERIA', 'bg-amber-950 text-amber-300 border-amber-600')" class="p-3 rounded-xl bg-amber-950/50 hover:bg-amber-900 border-2 border-amber-600/70 text-left transition space-y-1 cursor-pointer">
+              <span class="text-2xl block">💨</span>
+              <div class="font-black text-xs text-amber-300 leading-tight">DAMAGING WIND</div>
+              <div class="text-[9px] text-amber-400 font-bold">58+ MPH / Trees Down</div>
+            </button>
+
+            <!-- 4. Flash Flood -->
+            <button type="button" onclick="selectQuickSkywarnType('🌊 FLASH FLOOD', 'FLOOD: Flash Flooding / Road Impassable', 'FLASH FLOOD', 'bg-blue-950 text-blue-300 border-blue-600')" class="p-3 rounded-xl bg-blue-950/50 hover:bg-blue-900 border-2 border-blue-600/70 text-left transition space-y-1 cursor-pointer">
+              <span class="text-2xl block">🌊</span>
+              <div class="font-black text-xs text-blue-300 leading-tight">FLASH FLOOD</div>
+              <div class="text-[9px] text-blue-400 font-bold">Water Over Road / Bridges</div>
+            </button>
+
+            <!-- 5. Damage / Hazard -->
+            <button type="button" onclick="selectQuickSkywarnType('💥 STRUCTURAL DAMAGE', 'DAMAGE: Structural Roof / Power Outage', 'LOCAL EMERGENCY', 'bg-purple-950 text-purple-300 border-purple-600')" class="p-3 rounded-xl bg-purple-950/50 hover:bg-purple-900 border-2 border-purple-600/70 text-left transition space-y-1 cursor-pointer">
+              <span class="text-2xl block">💥</span>
+              <div class="font-black text-xs text-purple-300 leading-tight">DAMAGE / HAZARD</div>
+              <div class="text-[9px] text-purple-400 font-bold">Roof Loss / Power Lines</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- SPECIFIC QUICK MEASUREMENTS & SUB-CRITERIA -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 p-3 bg-[#080b10] rounded-xl border border-slate-800">
+          <!-- Hail Sizes -->
+          <div class="space-y-1.5">
+            <span class="text-[10px] text-slate-400 font-bold block uppercase">QUICK HAIL SIZE SELECTOR (VISUAL OBJECT):</span>
+            <div class="flex flex-wrap gap-1.5 text-xs">
+              <button type="button" onclick="setSkywarnHailSize('Penny (0.75 in)')" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded text-slate-200 font-bold">Penny 0.75"</button>
+              <button type="button" onclick="setSkywarnHailSize('Quarter (1.00 in) - SEVERE')" class="px-2 py-1 bg-sky-950 hover:bg-sky-900 border border-sky-700 rounded text-sky-300 font-bold">Quarter 1.00" ★</button>
+              <button type="button" onclick="setSkywarnHailSize('Half Dollar (1.25 in)')" class="px-2 py-1 bg-sky-950 hover:bg-sky-900 border border-sky-700 rounded text-sky-300 font-bold">Half Dollar 1.25"</button>
+              <button type="button" onclick="setSkywarnHailSize('Golf Ball (1.75 in) - DANGEROUS')" class="px-2 py-1 bg-amber-950 hover:bg-amber-900 border border-amber-700 rounded text-amber-300 font-bold">Golf Ball 1.75" ⚠️</button>
+              <button type="button" onclick="setSkywarnHailSize('Tennis Ball (2.50 in)')" class="px-2 py-1 bg-rose-950 hover:bg-rose-900 border border-rose-700 rounded text-rose-300 font-bold">Tennis Ball 2.50"</button>
+              <button type="button" onclick="setSkywarnHailSize('Baseball (2.75 in+) - DESTRUCTIVE')" class="px-2 py-1 bg-red-950 hover:bg-red-900 border border-red-700 rounded text-red-300 font-bold">Baseball 2.75"+ 🚨</button>
+            </div>
+          </div>
+
+          <!-- Wind Speed -->
+          <div class="space-y-1.5">
+            <span class="text-[10px] text-slate-400 font-bold block uppercase">QUICK WIND SPEED SELECTOR:</span>
+            <div class="flex flex-wrap gap-1.5 text-xs">
+              <button type="button" onclick="setSkywarnWindSpeed('50-59 MPH (Estimated - Large Limbs Down)')" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded text-slate-200 font-bold">50-59 MPH</button>
+              <button type="button" onclick="setSkywarnWindSpeed('60-69 MPH (Severe - Trees Snapped / Utility Poles)')" class="px-2 py-1 bg-amber-950 hover:bg-amber-900 border border-amber-700 rounded text-amber-300 font-bold">60-69 MPH ★</button>
+              <button type="button" onclick="setSkywarnWindSpeed('70+ MPH (Extreme Hurricane-Force Winds)')" class="px-2 py-1 bg-red-950 hover:bg-red-900 border border-red-700 rounded text-red-300 font-bold">70+ MPH 🚨</button>
+              <button type="button" onclick="setSkywarnWindSpeed('Trees Down Across Roadway')" class="px-2 py-1 bg-amber-950 hover:bg-amber-900 border border-amber-700 rounded text-amber-300 font-bold">Trees on Road</button>
+              <button type="button" onclick="setSkywarnWindSpeed('Power Lines Down / Sparking')" class="px-2 py-1 bg-rose-950 hover:bg-rose-900 border border-rose-700 rounded text-rose-300 font-bold">Power Lines Down</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- LOCATION & CROSSROADS (STEP 2) -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 p-3 bg-[#080b10] rounded-xl border border-slate-800">
+          <div class="md:col-span-6 space-y-1">
+            <div class="flex items-center justify-between">
+              <label class="text-[11px] font-bold text-slate-300 uppercase">LOCATION / CROSSROADS:</label>
+              <button type="button" onclick="autofillSpotterGpsLocation()" class="text-[10px] text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-1 cursor-pointer">
+                <span>📍</span><span>GPS AUTOFILL</span>
+              </button>
+            </div>
+            <input type="text" id="skywarn-location" placeholder="e.g. FM 488 &amp; FM 416, Fairfield, TX" class="w-full bg-[#05080c] border border-slate-700 focus:border-emerald-500 rounded-lg p-2.5 text-xs text-white font-mono-tac outline-none font-bold">
+          </div>
+
+          <div class="md:col-span-6 space-y-1">
+            <label class="text-[11px] font-bold text-slate-300 uppercase">COUNTY CROSSROADS PRESETS:</label>
+            <select id="skywarn-preset-crossroads" onchange="applyCrossroadsPreset(this.value)" class="w-full bg-[#05080c] border border-slate-700 focus:border-emerald-500 rounded-lg p-2 text-xs text-slate-200 font-mono-tac outline-none cursor-pointer">
+              <option value="">-- Choose Key Freestone Crossroads --</option>
+              <option value="Fairfield - US 84 & TX 75 (Courthouse Square)">Fairfield - US 84 &amp; TX 75 (Courthouse Square)</option>
+              <option value="Fairfield - I-45 & US 84 Interchange">Fairfield - I-45 &amp; US 84 Interchange</option>
+              <option value="Teague - Main St & US 84">Teague - Main St &amp; US 84</option>
+              <option value="Wortham - TX 14 & Main St">Wortham - TX 14 &amp; Main St</option>
+              <option value="Streetman - I-45 & FM 416">Streetman - I-45 &amp; FM 416</option>
+              <option value="Butler - US 84 & FM 489">Butler - US 84 &amp; FM 489</option>
+              <option value="Oakwood - US 79 & Trinity River Bridge">Oakwood - US 79 &amp; Trinity River Bridge</option>
+              <option value="Dew - I-45 & FM 489">Dew - I-45 &amp; FM 489</option>
+              <option value="Kirvin - FM 80 & FM 1449">Kirvin - FM 80 &amp; FM 1449</option>
+              <option value="Richland Chambers Lake - FM 488 & FM 416">Richland Chambers Lake - FM 488 &amp; FM 416</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- ACTIVE DETAILS SUMMARY & TRANSMIT BUTTON (STEP 3) -->
+        <div class="p-3 bg-gradient-to-r from-amber-950/40 via-slate-900 to-[#080b10] border-2 border-amber-500/60 rounded-xl space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <span class="text-[10px] text-slate-400 font-bold block uppercase">CURRENT REPORT SUMMARY:</span>
+              <div id="skywarn-active-summary-text" class="text-sm font-black text-amber-300">
+                ⚡ Ready to report: Tap a severe condition above
+              </div>
+            </div>
+            <div id="skywarn-active-severity-badge" class="px-2.5 py-1 rounded text-xs font-black bg-slate-900 text-slate-400 border border-slate-700 self-start sm:self-auto">
+              STANDBY
+            </div>
+          </div>
+
+          <!-- Hidden storage fields for selected parameters -->
+          <input type="hidden" id="skywarn-type" value="THUNDERSTORM">
+          <input type="hidden" id="skywarn-hail" value="None">
+          <input type="hidden" id="skywarn-wind" value="Calm">
+          <input type="hidden" id="skywarn-motion" value="Moving East @ 25 MPH">
+          <input type="hidden" id="skywarn-notes" value="">
+
+          <!-- BIG HIGH-CONTRAST ACTION BUTTON -->
+          <button type="button" onclick="dispatchSkywarnToNcs()" class="w-full py-3.5 px-4 bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-600 hover:from-emerald-500 hover:to-emerald-400 text-slate-950 font-black rounded-xl text-sm shadow-[0_0_20px_rgba(16,185,129,0.5)] transition flex items-center justify-center gap-2 cursor-pointer tracking-wider font-mono-tac uppercase">
+            <span>📢</span>
+            <span>TRANSMIT REPORT TO NET CONTROL / EC</span>
+          </button>
+        </div>
+
+        <!-- GENERATED ON-AIR NET SCRIPT (READ OVER REPEATER) -->
+        <div id="skywarn-voice-script-card" class="p-3 bg-[#080b10] border border-emerald-500/50 rounded-xl space-y-2 hidden">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+              <span>🎙️</span><span>ON-AIR VOICE SCRIPT (READ OVER REPEATER FF 110):</span>
+            </span>
+            <button type="button" onclick="copySkywarnVoiceScript()" class="px-2 py-0.5 bg-emerald-950 hover:bg-emerald-900 border border-emerald-700 text-emerald-300 rounded text-[10px] font-bold transition cursor-pointer">
+              📋 COPY SCRIPT
+            </button>
+          </div>
+          <p id="skywarn-voice-script-text" class="text-xs text-white p-2.5 bg-black rounded-lg border border-slate-800 font-mono-tac leading-relaxed select-all">
+            "KG5TZT to NET CONTROL, I have a severe weather report..."
+          </p>
+        </div>
       </div>
 
+      <!-- COUNTY ACTIVE SEVERE WEATHER LOG TABLE (REAL-TIME ACROSS ALL OPERATORS) -->
+      <div class="bg-[#10151d] border border-slate-800 rounded-xl p-4 font-mono-tac space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <h4 class="text-xs font-bold text-white uppercase tracking-wider">COUNTY ACTIVE SEVERE WEATHER LOG</h4>
+          </div>
+          <span class="text-[10px] text-slate-400">Reports Logged to NCS / EC</span>
+        </div>
+        <div id="skywarn-reports-table-container" class="space-y-2 max-h-72 overflow-y-auto">
+          <!-- Populated by renderSkywarnReportsTable() -->
+        </div>
+      </div>
       <!-- Main Spotter Grid: Left = HUD Viewfinder & Photo Lab, Right = NWS Criteria Form -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <!-- LEFT: Real-time Tactical Viewfinder HUD & Stamped Storm Photos -->
@@ -3943,15 +4070,41 @@
           <input type="text" id="edit-event-alt-channel" placeholder="e.g. Ch 02 - WRTM 760 (146.760 -0.600 T136.5)" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-slate-200 font-mono-tac text-xs focus:border-amber-500 outline-none">
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="text-slate-300 block font-bold mb-1">NET CONTROL STATION (NCS) / LEAD</label>
-            <input type="text" id="edit-event-ncs" placeholder="e.g. AI5OX - Robert Cockerell" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-white font-mono-tac text-xs focus:border-amber-500 outline-none">
+        <!-- NET CONTROL STATION (NCS) ASSIGNMENT MODULE -->
+        <div class="space-y-2 p-3 bg-[#080b10] rounded-xl border border-amber-500/60">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+              <span>🎙️</span><span>NET CONTROL STATION (NCS) ASSIGNMENT</span>
+            </label>
+            <span class="text-[10px] text-slate-400 font-mono">Official Roster Operators</span>
           </div>
-          <div>
-            <label class="text-slate-300 block font-bold mb-1">LOCATION / VENUE</label>
-            <input type="text" id="edit-event-loc" placeholder="e.g. Fairfield VHF Repeater &amp; EchoLink" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-white font-mono-tac text-xs focus:border-amber-500 outline-none">
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label class="text-[10px] text-slate-400 block mb-0.5 font-bold">SELECT ROSTER NCS:</label>
+              <select id="edit-event-ncs-select" onchange="handleNcsSelectDropdown(this.value)" class="w-full bg-[#05080c] border border-slate-700 focus:border-amber-500 rounded-lg p-2 text-white text-xs font-mono-tac outline-none cursor-pointer font-bold">
+                <option value="">-- Choose Roster Operator --</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-400 block mb-0.5 font-bold">ASSIGNED NCS DISPLAY:</label>
+              <input type="text" id="edit-event-ncs" placeholder="e.g. AI5OX - Robert Cockerell" class="w-full bg-[#05080c] border border-slate-700 focus:border-amber-500 rounded-lg p-2 text-amber-300 font-bold font-mono-tac text-xs outline-none">
+            </div>
           </div>
+
+          <div class="flex items-center gap-2 pt-1 flex-wrap">
+            <button type="button" onclick="setNcsToCurrentUser()" class="px-2.5 py-1 bg-emerald-950 hover:bg-emerald-900 border border-emerald-700 text-emerald-300 rounded text-[10px] font-bold transition flex items-center gap-1 cursor-pointer">
+              <span>👤</span><span>ASSIGN ME AS NCS</span>
+            </button>
+            <button type="button" onclick="clearEventNcs()" class="px-2.5 py-1 bg-red-950/60 hover:bg-red-900 border border-red-800 text-red-300 rounded text-[10px] font-bold transition flex items-center gap-1 cursor-pointer">
+              <span>✕</span><span>CLEAR / REMOVE NCS</span>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label class="text-slate-300 block font-bold mb-1">LOCATION / VENUE</label>
+          <input type="text" id="edit-event-loc" placeholder="e.g. Fairfield VHF Repeater &amp; EchoLink" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-white font-mono-tac text-xs focus:border-amber-500 outline-none">
         </div>
 
         <div>
@@ -4591,6 +4744,27 @@
       });
     }
 
+
+    // ==========================================
+    // CAPABILITIES CHECKBOX HELPERS
+    // ==========================================
+    function getSelectedCapabilitiesCheckboxes(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return [];
+      const boxes = container.querySelectorAll('input[type="checkbox"]:checked');
+      return Array.from(boxes).map(b => b.value);
+    }
+
+    function setSelectedCapabilitiesCheckboxes(containerId, list) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      const arr = Array.isArray(list) ? list : (typeof list === 'string' ? list.split(',').map(s => s.trim()) : []);
+      const boxes = container.querySelectorAll('input[type="checkbox"]');
+      boxes.forEach(b => {
+        b.checked = arr.some(item => item && (item.toLowerCase() === b.value.toLowerCase() || b.value.toLowerCase().includes(item.toLowerCase()) || item.toLowerCase().includes(b.value.toLowerCase())));
+      });
+    }
+
     function getSelectedPowerCheckboxes(containerId) {
       const container = document.getElementById(containerId);
       if (!container) return ['Commercial & Battery Backup'];
@@ -4966,7 +5140,7 @@ assignedSpots: [
 
       document.getElementById('verify-call').value = targetCall;
       document.getElementById('verify-name').value = acc.name || mem.name || appState.myName || '';
-      document.getElementById('verify-gmrs').value = acc.gmrs || mem.gmrs || '';
+      document.getElementById('verify-gmrs').value = (targetCall === 'AI5OX' ? 'WSEA569' : (acc.gmrs || mem.gmrs || ''));
       document.getElementById('verify-races').value = acc.races || mem.races || '';
       document.getElementById('verify-phone').value = acc.phone || mem.phone || '';
       document.getElementById('verify-email').value = acc.email || mem.email || '';
@@ -4982,6 +5156,15 @@ assignedSpots: [
 
       // Power Checkboxes
       setSelectedPowerCheckboxes('verify-power-group', acc.power || mem.power || 'Commercial & Battery Backup');
+
+      // Capabilities Checkboxes
+      const caps = acc.capabilities || mem.capabilities || [
+        '50W VHF/UHF Mobile',
+        'HF Portable Base',
+        'Winlink RMS Packet / Radio Email',
+        '100Ah+ Battery / LiFePO4 Power'
+      ];
+      setSelectedCapabilitiesCheckboxes('verify-capabilities-group', caps);
 
       // Storm Spotter
       const spotterCheck = document.getElementById('verify-is-spotter');
@@ -5016,8 +5199,8 @@ assignedSpots: [
       const lastDateText = document.getElementById('verify-last-date-text');
 
       if (reason === 'first_time') {
-        if (reasonHeading) reasonHeading.textContent = 'INITIAL PROFILE VERIFICATION REQUIRED';
-        if (reasonText) reasonText.textContent = 'Welcome to Freestone County ARES! Because your operator profile is active in our tactical roster, county emergency standards require you to review and complete your contact numbers, FEMA qualifications, deployment power capabilities, and front-facing photo ID before full deployment.';
+        if (reasonHeading) reasonHeading.textContent = 'INITIAL PROFILE & EQUIPMENT VERIFICATION REQUIRED';
+        if (reasonText) reasonText.textContent = 'Welcome to Freestone County ARES! Please review and verify your contact information, equipment capabilities, FEMA credentials, and photo ID.';
         if (lastDateText) lastDateText.textContent = 'Status: Initial Login Verification Pending';
       } else {
         const lastV = acc.lastProfileVerified || 0;
@@ -5029,7 +5212,6 @@ assignedSpots: [
 
       modal.classList.remove('hidden');
     }
-
     function closeOperatorProfileVerifyModal() {
       const modal = document.getElementById('operator-profile-verify-modal');
       if (modal) modal.classList.add('hidden');
@@ -5038,7 +5220,7 @@ assignedSpots: [
     function saveOperatorProfileVerification() {
       const targetCall = document.getElementById('verify-call').value.trim().toUpperCase();
       const name = document.getElementById('verify-name').value.trim();
-      const gmrs = document.getElementById('verify-gmrs').value.trim().toUpperCase();
+      const gmrs = (targetCall === 'AI5OX' ? 'WSEA569' : document.getElementById('verify-gmrs').value.trim().toUpperCase());
       const races = document.getElementById('verify-races').value.trim().toUpperCase();
       const phone = document.getElementById('verify-phone').value.trim();
       const email = document.getElementById('verify-email').value.trim();
@@ -5048,6 +5230,7 @@ assignedSpots: [
 
       const femaList = getSelectedFemaCheckboxes('verify-fema-group');
       const powerList = getSelectedPowerCheckboxes('verify-power-group');
+      const capabilitiesList = getSelectedCapabilitiesCheckboxes('verify-capabilities-group');
 
       if (!name) {
         alert('Please enter your full legal name.');
@@ -5076,6 +5259,7 @@ assignedSpots: [
       accounts[targetCall].class = licClass;
       accounts[targetCall].fema = femaList;
       accounts[targetCall].power = powerList.join(' & ');
+      accounts[targetCall].capabilities = capabilitiesList;
       accounts[targetCall].isSpotter = isSpotter;
       accounts[targetCall].lastProfileVerified = now;
       if (photo) accounts[targetCall].photo = photo;
@@ -5093,6 +5277,7 @@ assignedSpots: [
         mem.class = licClass;
         mem.fema = femaList;
         mem.power = powerList.join(' & ');
+        mem.capabilities = capabilitiesList;
         mem.isSpotter = isSpotter;
         mem.lastProfileVerified = now;
         if (photo) mem.photo = photo;
@@ -5110,17 +5295,8 @@ assignedSpots: [
       pushRosterSyncToCloud();
 
       const nextReviewDate = new Date(now + 180 * 24 * 60 * 60 * 1000).toLocaleDateString();
-      alert(`✅ OPERATOR PROFILE VERIFIED & RECORDED!
-
-Operator: ${name} (${targetCall})
-FEMA Certs: ${femaList.join(', ')}
-Power: ${powerList.join(' & ')}
-Photo ID: ${photo ? 'Verified & On File' : 'Pending'}
-
-Your profile verification has been recorded in the Freestone County ARES tactical system.
-Next mandatory review due: ${nextReviewDate} (in 6 months).`);
+      alert(`✅ OPERATOR PROFILE & CAPABILITIES VERIFIED!\n\nOperator: ${name} (${targetCall})\nCapabilities: ${capabilitiesList.join(', ')}\nFEMA Certs: ${femaList.join(', ')}\nPhoto ID: ${photo ? 'Verified & On File' : 'Pending'}\n\nYour profile verification has been recorded in the Freestone County ARES tactical system.\nNext mandatory review due: ${nextReviewDate} (in 6 months).`);
     }
-
     function quickPreviewLoginAsEC() {
       switchTab('auth');
       alert('🔒 STRICT SECURITY ENFORCED\n\nMaster Emergency Coordinator Brian Davis (KG5TZT) must authenticate with password Chief@svfd1.');
@@ -6014,6 +6190,26 @@ function getOperatorClearance() {
     // ==========================================
     // OPERATIONAL CALENDAR EVENT EDITOR
     // ==========================================
+
+    // ==========================================
+    // CALENDAR NET CONTROL (NCS) HELPERS
+    // ==========================================
+    function handleNcsSelectDropdown(val) {
+      if (!val) return;
+      const ncsInput = document.getElementById('edit-event-ncs');
+      if (ncsInput) ncsInput.value = val;
+    }
+
+    function setNcsToCurrentUser() {
+      const ncsInput = document.getElementById('edit-event-ncs');
+      if (ncsInput) ncsInput.value = `${appState.myCall} - ${appState.myName}`;
+    }
+
+    function clearEventNcs() {
+      const ncsInput = document.getElementById('edit-event-ncs');
+      if (ncsInput) ncsInput.value = 'TBD / Rotating Net Control';
+    }
+
     function openEditEventModal(eventId) {
       const clearance = getOperatorClearance();
       if (!clearance.canRunNCS && !appState.canSendAlerts && clearance.levelNum < 3 && appState.myCall !== 'KG5TZT') {
@@ -6058,12 +6254,20 @@ function getOperatorClearance() {
       document.getElementById('edit-event-ncs').value = ev.ncs || '';
       document.getElementById('edit-event-loc').value = ev.location || '';
       document.getElementById('edit-event-desc').value = ev.description || '';
-      document.getElementById('edit-event-push-alert').checked = false;
+      if (document.getElementById('edit-event-push-alert')) {
+        document.getElementById('edit-event-push-alert').checked = false;
+      }
+
+      // Populate NCS select dropdown with official roster members
+      const ncsSelect = document.getElementById('edit-event-ncs-select');
+      if (ncsSelect && appState.members) {
+        ncsSelect.innerHTML = '<option value="">-- Choose Roster Operator --</option>' +
+          appState.members.map(m => `<option value="${m.call} - ${m.name}">${m.call} - ${m.name} (${m.role})</option>`).join('');
+      }
 
       const m = document.getElementById('event-edit-modal');
       if (m) m.classList.remove('hidden');
     }
-
     function closeEditEventModal() {
       const m = document.getElementById('event-edit-modal');
       if (m) m.classList.add('hidden');
@@ -7352,6 +7556,8 @@ D. Out-of-County stations and visitors.
       const avatarEl = document.getElementById('dash-user-avatar');
       const authBadge = document.getElementById('dash-auth-badge');
       const guestBanner = document.getElementById('dash-guest-banner');
+      const metaBadgesEl = document.getElementById('dash-user-meta-badges');
+      const capabilitiesEl = document.getElementById('dash-user-capabilities');
 
       if (!appState.isLoggedIn || appState.myCall === 'GUEST') {
         if (nameEl) nameEl.textContent = 'Guest Operator';
@@ -7361,34 +7567,86 @@ D. Out-of-County stations and visitors.
         }
         if (roleTextEl) roleTextEl.innerHTML = 'Unauthenticated Guest &bull; Masked View';
         if (avatarEl) {
-          avatarEl.textContent = '🔒';
-          avatarEl.className = 'w-12 h-12 rounded-xl bg-amber-950/60 border border-amber-500/60 flex items-center justify-center text-amber-400 font-bold text-base shadow-[0_0_12px_rgba(245,158,11,0.3)]';
+          avatarEl.innerHTML = '<span class="text-xl">🔒</span>';
+          avatarEl.className = 'w-12 h-12 rounded-xl bg-amber-950/60 border border-amber-500/60 flex items-center justify-center text-amber-400 font-bold shadow-[0_0_12px_rgba(245,158,11,0.3)] flex-shrink-0';
         }
         if (authBadge) {
           authBadge.textContent = 'GUEST (LOCKED)';
           authBadge.className = 'text-[10px] text-amber-400 bg-amber-950 px-2 py-0.5 rounded border border-amber-800 font-bold';
         }
         if (guestBanner) guestBanner.classList.remove('hidden');
+        if (metaBadgesEl) {
+          metaBadgesEl.innerHTML = `
+            <span class="bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded border border-amber-800 font-bold">RACES: LOCKED</span>
+            <span class="bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded">GMRS: LOCKED</span>
+            <span class="bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded">Freestone Co.</span>
+          `;
+        }
+        if (capabilitiesEl) {
+          capabilitiesEl.innerHTML = '<span class="p-1 px-2 bg-slate-900 text-slate-400 rounded border border-slate-800 text-[10px]">Sign in to load station equipment</span>';
+        }
       } else {
-        if (nameEl) nameEl.textContent = appState.myName;
+        const accounts = getRegisteredAccounts();
+        const acc = accounts[appState.myCall] || {};
+        const mem = appState.members ? (appState.members.find(m => m.call.toUpperCase() === appState.myCall.toUpperCase()) || {}) : {};
+
+        const displayName = acc.name || mem.name || appState.myName;
+        const gmrs = (appState.myCall === 'AI5OX' ? 'WSEA569' : (acc.gmrs || mem.gmrs || 'NONE'));
+        const races = acc.races || mem.races || 'TX-FREE-01';
+        const photo = acc.photo || mem.photo || '';
+        const caps = acc.capabilities || mem.capabilities || [
+          '50W VHF/UHF Mobile',
+          'HF Portable Base',
+          'Winlink RMS Packet / Radio Email',
+          '100Ah+ Battery / LiFePO4 Power'
+        ];
+
+        if (nameEl) nameEl.textContent = displayName;
         if (callEl) {
           callEl.textContent = appState.myCall;
           callEl.className = 'text-sm font-black text-emerald-400';
         }
         if (roleTextEl) roleTextEl.innerHTML = `${appState.myRole} &bull; ${appState.myLevel}`;
+
         if (avatarEl) {
-          const initials = appState.myCall === 'KG5TZT' ? 'EC' : appState.myCall.substring(0, 2);
-          avatarEl.textContent = initials;
-          avatarEl.className = 'w-12 h-12 rounded-xl bg-black border border-emerald-500/60 flex items-center justify-center text-emerald-400 font-bold text-base shadow-[0_0_12px_rgba(16,185,129,0.3)]';
+          if (photo) {
+            avatarEl.innerHTML = `<img src="${photo}" class="w-full h-full object-cover rounded-xl">`;
+            avatarEl.className = 'w-12 h-12 rounded-xl bg-black border-2 border-emerald-500 overflow-hidden shadow-[0_0_12px_rgba(16,185,129,0.3)] flex-shrink-0';
+          } else {
+            const initials = appState.myCall === 'KG5TZT' ? 'EC' : appState.myCall.substring(0, 2);
+            avatarEl.innerHTML = `<span class="text-base font-black text-emerald-400">${initials}</span>`;
+            avatarEl.className = 'w-12 h-12 rounded-xl bg-black border border-emerald-500/60 flex items-center justify-center font-bold text-base shadow-[0_0_12px_rgba(16,185,129,0.3)] flex-shrink-0';
+          }
         }
+
         if (authBadge) {
           authBadge.textContent = 'AUTHENTICATED';
           authBadge.className = 'text-[10px] text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800 font-bold';
         }
         if (guestBanner) guestBanner.classList.add('hidden');
+
+        if (metaBadgesEl) {
+          metaBadgesEl.innerHTML = `
+            <span class="bg-emerald-950 text-emerald-300 px-1.5 py-0.5 rounded border border-emerald-800 font-bold">RACES: ${races}</span>
+            <span class="bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded font-bold">GMRS: ${gmrs}</span>
+            <span class="bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded">${acc.class || mem.class || 'Technician'}</span>
+            <span class="bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded">Fairfield, TX</span>
+          `;
+        }
+
+        if (capabilitiesEl) {
+          if (caps && caps.length > 0) {
+            capabilitiesEl.innerHTML = caps.map(c => `
+              <span class="p-1 px-2 bg-emerald-950/70 text-emerald-300 rounded border border-emerald-800/80 font-bold flex items-center gap-1 text-[10px]">
+                <span class="text-emerald-400">✓</span><span>${c}</span>
+              </span>
+            `).join('');
+          } else {
+            capabilitiesEl.innerHTML = '<span class="p-1 px-2 bg-slate-900 text-amber-400 rounded border border-amber-800/80 text-[10px]">⚠️ No gear selected — tap Edit to check equipment</span>';
+          }
+        }
       }
     }
-
     function switchOperator(callsign, showAlert = true) {
       if (!callsign || callsign === 'GUEST') {
         logoutOperator();
@@ -10644,11 +10902,35 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       updateSyncStatusBadge('SYNCING...');
 
       try {
-        const resp = await fetch(ROSTER_SYNC_URL + '?t=' + Date.now(), { cache: 'no-cache' });
-        if (!resp.ok) {
-          throw new Error('Network response code: ' + resp.status);
+        let data = null;
+        // Direct GitHub API read (ZERO CDN CACHING!)
+        try {
+          const apiResp = await fetch(GH_API_ROSTER_URL, {
+            headers: {
+              'Authorization': 'token ' + GH_SYNC_TOKEN,
+              'Accept': 'application/vnd.github.v3+json'
+            },
+            cache: 'no-cache'
+          });
+          if (apiResp.ok) {
+            const apiJson = await apiResp.json();
+            if (apiJson && apiJson.content) {
+              const rawStr = decodeURIComponent(escape(atob(apiJson.content)));
+              data = JSON.parse(rawStr);
+            }
+          }
+        } catch(e) {
+          console.warn('API sync fallback to raw URL:', e);
         }
-        const data = await resp.json();
+
+        // Fallback to raw URL with cachebuster if API failed
+        if (!data) {
+          const resp = await fetch(ROSTER_SYNC_URL + '?t=' + Date.now(), { cache: 'no-cache' });
+          if (resp.ok) {
+            data = await resp.json();
+          }
+        }
+
         if (data && Array.isArray(data.members)) {
           const accounts = getRegisteredAccounts();
 
@@ -10656,9 +10938,11 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
             const call = (remoteMem.call || '').toUpperCase();
             if (!call) return;
             let localMem = appState.members.find(function(m) { return m.call.toUpperCase() === call; });
+            const gmrsVal = (call === 'AI5OX' ? 'WSEA569' : (remoteMem.gmrs || 'NONE'));
+
             if (localMem) {
               localMem.name = remoteMem.name || localMem.name;
-              localMem.gmrs = remoteMem.gmrs || localMem.gmrs;
+              localMem.gmrs = gmrsVal;
               localMem.races = remoteMem.races || localMem.races;
               localMem.phone = remoteMem.phone || localMem.phone;
               localMem.email = remoteMem.email || localMem.email;
@@ -10667,6 +10951,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
               localMem.level = remoteMem.level || localMem.level;
               localMem.fema = remoteMem.fema || localMem.fema;
               localMem.power = remoteMem.power || localMem.power;
+              localMem.capabilities = remoteMem.capabilities || localMem.capabilities;
               localMem.isSpotter = (remoteMem.isSpotter !== undefined) ? remoteMem.isSpotter : localMem.isSpotter;
               if (remoteMem.photo) localMem.photo = remoteMem.photo;
             } else {
@@ -10674,7 +10959,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
                 id: remoteMem.id || (appState.members.length + 1),
                 call: call,
                 name: remoteMem.name || call,
-                gmrs: remoteMem.gmrs || 'NONE',
+                gmrs: gmrsVal,
                 races: remoteMem.races || 'NONE',
                 phone: remoteMem.phone || '',
                 email: remoteMem.email || '',
@@ -10682,7 +10967,8 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
                 role: remoteMem.role || 'Level 1 Operator',
                 level: remoteMem.level || 'Level 1 - Operator',
                 fema: remoteMem.fema || ['IS-100', 'IS-700'],
-                power: remoteMem.power || 'Commercial',
+                power: remoteMem.power || 'Commercial & Battery Backup',
+                capabilities: remoteMem.capabilities || ['50W VHF/UHF Mobile', 'HF Portable Base'],
                 isSpotter: !!remoteMem.isSpotter,
                 photo: remoteMem.photo || '',
                 canSendAlerts: !!remoteMem.canSendAlerts
@@ -10691,7 +10977,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
 
             if (accounts[call]) {
               accounts[call].name = remoteMem.name || accounts[call].name;
-              accounts[call].gmrs = remoteMem.gmrs || accounts[call].gmrs;
+              accounts[call].gmrs = gmrsVal;
               accounts[call].races = remoteMem.races || accounts[call].races;
               accounts[call].phone = remoteMem.phone || accounts[call].phone;
               accounts[call].email = remoteMem.email || accounts[call].email;
@@ -10700,10 +10986,45 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
               accounts[call].level = remoteMem.level || accounts[call].level;
               accounts[call].fema = remoteMem.fema || accounts[call].fema;
               accounts[call].power = remoteMem.power || accounts[call].power;
+              accounts[call].capabilities = remoteMem.capabilities || accounts[call].capabilities;
               accounts[call].isSpotter = (remoteMem.isSpotter !== undefined) ? remoteMem.isSpotter : accounts[call].isSpotter;
               if (remoteMem.photo) accounts[call].photo = remoteMem.photo;
             }
           });
+
+          // Sync pending authorizations & notify EC Brian Davis in real time!
+          if (Array.isArray(data.pendingAuthorizations)) {
+            safeStorage.setItem('fc_ares_pending_authorizations', JSON.stringify(data.pendingAuthorizations));
+            appState.pendingMembers = data.pendingAuthorizations;
+            
+            // Check if EC Brian Davis needs an alert
+            const pendingCountEl = document.getElementById('dash-pending-count-text');
+            const alertBanner = document.getElementById('ec-pending-dashboard-alert');
+            if (pendingCountEl) pendingCountEl.textContent = data.pendingAuthorizations.length;
+            if (alertBanner) {
+              if (appState.myCall === 'KG5TZT' && data.pendingAuthorizations.length > 0) {
+                alertBanner.classList.remove('hidden');
+              } else {
+                alertBanner.classList.add('hidden');
+              }
+            }
+            renderEcAuthorizationQueue();
+          }
+
+          // Sync calendar events
+          if (Array.isArray(data.calendarEvents) && data.calendarEvents.length > 0) {
+            appState.events = data.calendarEvents;
+            safeStorage.setItem('fc_ares_calendar_events', JSON.stringify(appState.events));
+            renderCalendarEvents();
+            renderCalendarMonthGrid();
+            updateDashboardSundayNetWidget();
+          }
+
+          // Sync skywarn reports
+          if (Array.isArray(data.skywarnReports)) {
+            saveSkywarnReports(data.skywarnReports);
+            renderSkywarnReportsTable();
+          }
 
           safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(accounts));
           safeStorage.setItem('fc_ares_roster_cache', JSON.stringify(appState.members));
@@ -10718,22 +11039,17 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
           updateDashboardUserProfile();
           const timeStr = lastRosterSyncTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
           updateSyncStatusBadge('SYNCED: ' + timeStr);
-
-          if (forceNotification) {
-            alert(`✅ ROSTER SYNCHRONIZED WITH CLOUD!\n\nAll ${data.members.length} verified operator profiles updated from county cloud server.`);
-          }
         }
       } catch (err) {
         console.warn('Cloud roster sync offline or unavailable:', err);
         updateSyncStatusBadge('OFFLINE (LOCAL CACHE)');
         if (forceNotification) {
-          alert('Note: Operating in local offline mode. Local profile data is active.');
+          alert('Operating in local offline cache mode.');
         }
       } finally {
         isCloudSyncing = false;
       }
     }
-
     async function pushRosterSyncToCloud() {
       try {
         let sha = null;
@@ -10757,8 +11073,8 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
           return {
             id: m.id,
             call: call,
-            gmrs: acc.gmrs || m.gmrs || 'NONE',
-            races: acc.races || m.races || 'NONE',
+            gmrs: (call === 'AI5OX' ? 'WSEA569' : (acc.gmrs || m.gmrs || 'NONE')),
+            races: acc.races || m.races || 'TX-FREE-01',
             name: acc.name || m.name,
             class: acc.class || m.class || 'Technician',
             role: acc.role || m.role || 'Level 1 Operator',
@@ -10769,7 +11085,8 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
             phone: acc.phone || m.phone || '',
             email: acc.email || m.email || '',
             fema: acc.fema || m.fema || ['IS-100', 'IS-700'],
-            power: acc.power || m.power || 'Commercial',
+            power: acc.power || m.power || 'Commercial & Battery Backup',
+            capabilities: acc.capabilities || m.capabilities || ['50W VHF/UHF Mobile', 'HF Portable Base', 'Winlink RMS Packet / Radio Email', '100Ah+ Battery / LiFePO4 Power'],
             isSpotter: !!(acc.isSpotter || m.isSpotter),
             photo: acc.photo || m.photo || ''
           };
@@ -10779,14 +11096,18 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
           version: '7.8.5',
           lastUpdated: Date.now(),
           updatedBy: appState.myCall,
-          members: payloadMembers
+          members: payloadMembers,
+          pendingAuthorizations: getPendingAuthorizations(),
+          calendarEvents: appState.events || [],
+          skywarnReports: getSkywarnReports(),
+          countyResponseLevel: getCountyResponseLevel()
         };
 
         const jsonStr = JSON.stringify(syncPayload, null, 2);
         const b64 = btoa(unescape(encodeURIComponent(jsonStr)));
 
         const putBody = {
-          message: 'chore: sync county roster profile updates by ' + appState.myCall,
+          message: 'chore: real-time tactical sync update by ' + appState.myCall,
           content: b64
         };
         if (sha) putBody.sha = sha;
@@ -10802,7 +11123,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         });
 
         if (putRes.ok) {
-          console.log('✓ Cloud roster successfully synced to GitHub repository');
+          console.log('✓ Tactical cloud sync complete across all devices');
           updateSyncStatusBadge('SYNCED TO CLOUD');
         } else {
           console.warn('Could not push to GitHub API, status:', putRes.status);
@@ -10811,7 +11132,6 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         console.warn('pushRosterSyncToCloud error:', err);
       }
     }
-
     function updateSyncStatusBadge(text) {
       const badges = ['roster-cloud-sync-badge', 'dash-cloud-sync-badge'];
       badges.forEach(function(id) {
@@ -11303,12 +11623,12 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
 
       document.getElementById('self-edit-call').value = myCall;
       document.getElementById('self-edit-name').value = acc.name || mem.name || appState.myName;
-      document.getElementById('self-edit-gmrs').value = acc.gmrs || mem.gmrs || '';
+      document.getElementById('self-edit-gmrs').value = (myCall === 'AI5OX' ? 'WSEA569' : (acc.gmrs || mem.gmrs || ''));
       document.getElementById('self-edit-races').value = acc.races || mem.races || '';
       document.getElementById('self-edit-phone').value = acc.phone || mem.phone || '';
       document.getElementById('self-edit-email').value = acc.email || mem.email || '';
       document.getElementById('self-edit-class').value = acc.class || mem.class || 'Technician';
-      
+
       // Display locked assigned operational level (Master EC Only)
       const curLevel = acc.level || mem.level || 'Level 1 - Operator';
       const lvlDisp = document.getElementById('self-edit-level-display');
@@ -11323,6 +11643,15 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
 
       setSelectedFemaCheckboxes('self-edit-fema-group', acc.fema || mem.fema || ['IS-100', 'IS-700']);
       setSelectedPowerCheckboxes('self-edit-power-group', acc.power || mem.power || 'Commercial & Battery Backup');
+      
+      // Load capabilities checkboxes
+      const caps = acc.capabilities || mem.capabilities || [
+        '50W VHF/UHF Mobile',
+        'HF Portable Base',
+        'Winlink RMS Packet / Radio Email',
+        '100Ah+ Battery / LiFePO4 Power'
+      ];
+      setSelectedCapabilitiesCheckboxes('self-edit-capabilities-group', caps);
 
       const spotterCheck = document.getElementById('self-edit-is-spotter');
       if (spotterCheck) {
@@ -11349,7 +11678,6 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
 
       modal.classList.remove('hidden');
     }
-
     function closeOperatorSelfEditModal() {
       const modal = document.getElementById('operator-self-edit-modal');
       if (modal) modal.classList.add('hidden');
@@ -11358,7 +11686,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
     function saveOperatorSelfEdit() {
       const myCall = document.getElementById('self-edit-call').value.trim().toUpperCase();
       const name = document.getElementById('self-edit-name').value.trim();
-      const gmrs = document.getElementById('self-edit-gmrs').value.trim().toUpperCase();
+      const gmrs = (myCall === 'AI5OX' ? 'WSEA569' : document.getElementById('self-edit-gmrs').value.trim().toUpperCase());
       const races = document.getElementById('self-edit-races').value.trim().toUpperCase();
       const phone = document.getElementById('self-edit-phone').value.trim();
       const email = document.getElementById('self-edit-email').value.trim();
@@ -11366,6 +11694,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       const femaList = getSelectedFemaCheckboxes('self-edit-fema-group');
       const powerList = getSelectedPowerCheckboxes('self-edit-power-group');
       const power = powerList.join(' & ');
+      const capabilitiesList = getSelectedCapabilitiesCheckboxes('self-edit-capabilities-group');
       const isSpotter = document.getElementById('self-edit-is-spotter') ? document.getElementById('self-edit-is-spotter').checked : false;
       const photo = document.getElementById('self-edit-photo-data') ? document.getElementById('self-edit-photo-data').value : '';
 
@@ -11401,6 +11730,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       accounts[myCall].class = licClass;
       accounts[myCall].fema = femaList;
       accounts[myCall].power = power;
+      accounts[myCall].capabilities = capabilitiesList;
       accounts[myCall].isSpotter = isSpotter;
       accounts[myCall].lastProfileVerified = accounts[myCall].lastProfileVerified || Date.now();
       if (photo) accounts[myCall].photo = photo;
@@ -11416,6 +11746,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         mem.class = licClass;
         mem.fema = femaList;
         mem.power = power;
+        mem.capabilities = capabilitiesList;
         mem.isSpotter = isSpotter;
         if (photo) mem.photo = photo;
       }
@@ -11430,1398 +11761,6 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       renderResponderTable();
       pushRosterSyncToCloud();
 
-      alert(`✅ PROFILE SAVED & SYNCED\n\nYour operator credentials have been saved and synchronized with the county cloud roster.`);
+      alert(`✅ PROFILE & EQUIPMENT SAVED!\n\nCallsign: ${myCall}\nOperator: ${name}\nStation Capabilities: ${capabilitiesList.join(', ')}\n\nAll profile changes have been saved to your local station and synchronized across the Freestone County network in real time.`);
     }
 
-    function authorizeOperatorLevel(call, selectId) {
-      const select = document.getElementById(selectId);
-      const selectedLevel = select ? select.value : 'Level 1 - Field Operator / Spotter';
-
-      const accounts = getRegisteredAccounts();
-      const pending = getPendingAuthorizations();
-
-      if (!accounts[call]) {
-        accounts[call] = { call: call, name: 'Operator', status: 'PENDING_EC_AUTH' };
-      }
-
-      let role = 'Field Operator';
-      let canSendAlerts = false;
-
-      if (selectedLevel.includes('Level 6') || (selectedLevel.includes('EC') && !selectedLevel.includes('Assistant') && !selectedLevel.includes('EMC'))) {
-        role = 'Emergency Coordinator (EC)';
-        canSendAlerts = true;
-      } else if (selectedLevel.includes('Level 5') || selectedLevel.includes('EMC')) {
-        role = 'County Emergency Management Coordinator (EMC)';
-        canSendAlerts = false; // Level 5 has all app permissions EXCEPT alert features
-      } else if (selectedLevel.includes('Level 4') || selectedLevel.includes('Assistant EC') || selectedLevel.includes('AEC')) {
-        role = 'Assistant Emergency Coordinator (AEC)';
-        canSendAlerts = true;  // Level 4 has all operator permissions PLUS alert features
-      } else if (selectedLevel.includes('Level 3') || selectedLevel.includes('NCS') || selectedLevel.includes('Net Control')) {
-        role = 'Net Control Station (NCS)';
-        canSendAlerts = false; // Level 3 has access to NCS features (net script, NetLogger)
-      } else if (selectedLevel.includes('Level 2') || selectedLevel.includes('Spotter') || selectedLevel.includes('Field')) {
-        role = 'Field Operator / Storm Spotter';
-        canSendAlerts = false; // Certified field operator & mobile storm spotter
-      } else {
-        role = 'Level 1 Operator';
-        canSendAlerts = false; // New person with no experience, basic privileges
-      }
-
-      const spotterCheck = document.getElementById('spotter-check-' + call);
-      const isSpotter = spotterCheck ? spotterCheck.checked : (selectedLevel.includes('Spotter') || !!accounts[call].isSpotter);
-
-      accounts[call].status = 'AUTHORIZED';
-      accounts[call].level = selectedLevel;
-      accounts[call].role = role;
-      accounts[call].isSpotter = isSpotter;
-      accounts[call].canSendAlerts = canSendAlerts;
-      accounts[call].authorizedBy = 'KG5TZT';
-      accounts[call].authorizedTimestamp = Date.now();
-
-      safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(accounts));
-
-      // Remove from pending queue
-      const updatedPending = pending.filter(x => x.call !== call);
-      safeStorage.setItem('fc_ares_pending_authorizations', JSON.stringify(updatedPending));
-
-      // Update or add member in appState.members
-      let m = appState.members.find(x => x.call.toUpperCase() === call);
-      if (m) {
-        m.level = selectedLevel;
-        m.role = role;
-        m.isSpotter = isSpotter;
-        m.canSendAlerts = canSendAlerts;
-      } else {
-        appState.members.push({
-          id: appState.members.length + 1,
-          call: call,
-          name: accounts[call].name || 'Operator',
-          gmrs: accounts[call].gmrs || 'NONE',
-          races: accounts[call].races || 'NONE',
-          role: role,
-          level: selectedLevel,
-          phone: accounts[call].phone || '(903) 555-0100',
-          email: accounts[call].email || `${call.toLowerCase()}@arrl.net`,
-          city: 'Freestone County, TX',
-          isSpotter: isSpotter,
-          photo: accounts[call].photo || '',
-          canSendAlerts: canSendAlerts
-        });
-      }
-
-      saveRosterMembers();
-      renderEcAuthorizationQueue();
-      renderRosterGrid();
-      renderResponderTable();
-      pushRosterSyncToCloud();
-
-      const phone = accounts[call].phone || '';
-      if (phone) {
-        if (confirm(`✅ ${call} AUTHORIZED AS ${selectedLevel}!\n\nOperator: ${accounts[call].name}\n\nWould you like to send an SMS confirmation to the operator (${phone})?`)) {
-          const smsBody = `Freestone ARES: Your callsign ${call} has been authorized as ${selectedLevel} by EC Brian Davis. You may now log in to the tactical app!`;
-          window.location.href = `sms:${phone.replace(/[^0-9]/g, '')}?body=${encodeURIComponent(smsBody)}`;
-        }
-      } else {
-        alert(`✅ ${call} AUTHORIZED!\n\nUser level set to: ${selectedLevel}.\nOperator can now log in immediately with their password.`);
-      }
-    }
-
-    function rejectOperatorRequest(call) {
-      if (!confirm(`Are you sure you want to reject the access request for ${call}?`)) return;
-
-      const accounts = getRegisteredAccounts();
-      const pending = getPendingAuthorizations();
-
-      if (accounts[call]) {
-        accounts[call].status = 'DENIED';
-        safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(accounts));
-      }
-
-      const updatedPending = pending.filter(x => x.call !== call);
-      safeStorage.setItem('fc_ares_pending_authorizations', JSON.stringify(updatedPending));
-
-      renderEcAuthorizationQueue();
-      alert(`Access request for ${call} has been rejected.`);
-    }
-
-    function renderEcAuthorizationQueue() {
-      const container = document.getElementById('ec-pending-authorization-list');
-      const badge = document.getElementById('ec-queue-count-badge');
-      const pending = getPendingAuthorizations();
-
-      if (badge) {
-        badge.textContent = `${pending.length} PENDING`;
-        badge.className = pending.length > 0
-          ? 'text-[11px] text-amber-300 bg-amber-950 px-2.5 py-1 rounded-full border border-amber-500 font-bold self-start sm:self-auto animate-pulse'
-          : 'text-[11px] text-slate-400 bg-slate-900 px-2.5 py-1 rounded-full border border-slate-700 font-bold self-start sm:self-auto';
-      }
-
-      // Also update dashboard alert if EC
-      const dashAlert = document.getElementById('ec-pending-dashboard-alert');
-      if (dashAlert) {
-        if ((appState.myCall === 'KG5TZT' || appState.myLevel === 'EC' || appState.myLevel.includes('Level 5')) && pending.length > 0) {
-          dashAlert.classList.remove('hidden');
-          const countSpan = document.getElementById('dash-pending-count-text');
-          if (countSpan) countSpan.textContent = pending.length;
-        } else {
-          dashAlert.classList.add('hidden');
-        }
-      }
-
-      if (!container) return;
-
-      if (pending.length === 0) {
-        container.innerHTML = `
-          <div class="p-4 bg-[#0b0e14] rounded-lg border border-slate-800 text-center space-y-1">
-            <span class="text-emerald-400 text-sm font-bold block">✓ ALL OPERATOR REQUESTS PROCESSED</span>
-            <p class="text-[11px] text-slate-400">There are no pending password or access requests in the queue. New operator submissions will appear here instantly for EC level assignment.</p>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = '';
-      pending.forEach(req => {
-        const card = document.createElement('div');
-        card.className = 'p-3.5 bg-[#0b0e14] rounded-lg border border-amber-500/50 space-y-2.5 shadow';
-        card.innerHTML = `
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-2">
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="text-amber-400 font-black text-sm tracking-wider">${req.call}</span>
-                <span class="text-white font-bold text-xs">${req.name}</span>
-                <span class="text-[10px] bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded border border-amber-800 font-bold">PASSWORD SET</span>
-              </div>
-              <div class="text-[11px] text-slate-400 mt-0.5">
-                Phone: <strong class="text-slate-200">${req.phone}</strong> &bull; Requested: <span class="text-slate-300">${req.dateStr}</span>
-              </div>
-            </div>
-            <button onclick="window.location.href='tel:${req.phone.replace(/[^0-9]/g, '')}'" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-slate-700 rounded text-[10px] font-bold self-start sm:self-auto flex items-center gap-1">
-              <span>📞</span><span>CALL</span>
-            </button>
-          </div>
-
-          <!-- Photo & Additional Credentials in Authorization Queue -->
-          ${req.photo ? `
-            <div class="flex items-center gap-3 p-2 bg-slate-900/60 rounded-lg border border-slate-800">
-              <img src="${req.photo}" class="w-12 h-12 rounded-lg object-cover border border-emerald-500/60 flex-shrink-0">
-              <div class="text-[10px] text-slate-300">
-                <span class="text-emerald-400 font-bold block">📸 OPERATOR PHOTO ID SUBMITTED</span>
-                <span>White background &bull; No hat &bull; Ready for EC credential badge</span>
-              </div>
-            </div>
-          ` : ''}
-
-          <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 items-center pt-1">
-            <div class="sm:col-span-8 space-y-1.5">
-              <label class="text-[9px] text-slate-400 block font-bold uppercase">SELECT AUTHORIZED OPERATOR LEVEL:</label>
-              <select id="level-select-${req.call}" class="w-full bg-[#10151d] border border-slate-700 rounded p-2 text-xs text-white font-bold font-mono-tac focus:border-amber-500">
-                <option value="Level 1 - Operator">Level 1 - Operator (New operator, building setup &amp; assist)</option>
-                <option value="Level 2 - Field Operator / Spotter" ${req.isSpotter ? 'selected' : ''}>Level 2 - Field Operator / Spotter (Certified field ops &amp; mobile storm spotter)</option>
-                <option value="Level 3 - NCS">Level 3 - NCS (Net Control Station, net script &amp; NetLogger)</option>
-                <option value="Level 4 - Assistant EC">Level 4 - Assistant EC (AEC, assist EC in all aspects + page out &amp; sirens)</option>
-                <option value="Level 5 - County EMC">Level 5 - County EMC (County Emergency Management, all app rights EXCEPT alert features)</option>
-              </select>
-              <label class="flex items-center gap-1.5 text-[10px] text-amber-300 font-bold cursor-pointer">
-                <input type="checkbox" id="spotter-check-${req.call}" ${req.isSpotter ? 'checked' : ''} class="rounded border-slate-700 text-amber-500 focus:ring-0">
-                <span>⛈️ ASSIGN STORM SPOTTER QUALIFICATION (ADDITIONAL BADGE)</span>
-              </label>
-            </div>
-            <div class="sm:col-span-4 flex items-center gap-1.5 pt-3 sm:pt-0">
-              <button onclick="authorizeOperatorLevel('${req.call}', 'level-select-${req.call}')" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black rounded text-xs shadow flex items-center justify-center gap-1">
-                <span>✓</span><span>AUTHORIZE</span>
-              </button>
-              <button onclick="rejectOperatorRequest('${req.call}')" class="py-2 px-2.5 bg-slate-800 hover:bg-red-950 text-slate-400 hover:text-red-400 border border-slate-700 rounded text-xs">
-                DENY
-              </button>
-            </div>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    function loginAsCallsign(call, showAlert = true) {
-      if (!call || call === 'GUEST') return;
-      const targetCall = call.trim().toUpperCase();
-      const accounts = getRegisteredAccounts();
-      const acc = accounts[targetCall];
-      if (acc) {
-        loginAsAuthorizedOperator(acc, showAlert);
-      } else {
-        const m = appState.members.find(x => x.call.toUpperCase() === targetCall);
-        loginAsAuthorizedOperator({
-          call: targetCall,
-          name: m ? m.name : 'Verified Operator',
-          role: m ? m.role : 'Field Operator',
-          level: m ? m.level : 'Level 1 - Field Operator',
-          status: 'AUTHORIZED'
-        }, showAlert);
-      }
-    }
-
-    function logoutOperator() {
-      appState.isLoggedIn = false;
-      appState.myCall = 'GUEST';
-      appState.myName = 'Guest Operator';
-      appState.myRole = 'Guest Viewer';
-      appState.myLevel = 'Guest';
-      appState.canSendAlerts = false;
-
-      safeStorage.setItem('fc_ares_auth_session', JSON.stringify({
-        call: 'GUEST',
-        isLoggedIn: false,
-        timestamp: Date.now()
-      }));
-
-      updateSessionHeaderUI();
-      updateDashboardUserProfile();
-      updateDispatchControlsVisibility();
-      renderRosterGrid();
-      renderResponderTable();
-
-      alert(`LOGGED OUT TO GUEST MODE\n\nThe app is now running in Guest Privacy Mode.\nSensitive telephone numbers and email addresses on the roster are masked.`);
-      switchTab('auth');
-    }
-
-    // Modal login triggers (replaces magic link modal)
-    function openLoginModal(preCall = '') {
-      switchTab('auth');
-      if (preCall) {
-        showAuthTab('login', preCall);
-      }
-    }
-
-    function closeLoginModal() {
-      const modal = document.getElementById('login-modal');
-      if (modal) modal.classList.add('hidden');
-    }
-
-    function openShareAppModal() {
-      const modal = document.getElementById('share-app-modal');
-      if (modal) modal.classList.remove('hidden');
-    }
-
-    function closeShareAppModal() {
-      const modal = document.getElementById('share-app-modal');
-      if (modal) modal.classList.add('hidden');
-    }
-
-    function copyCleanWebLink() {
-      const url = 'https://freestone-ares.github.io/freestone-ares-tactical/';
-      navigator.clipboard.writeText(url).then(() => {
-        const btn = document.getElementById('btn-copy-web-link');
-        if (btn) btn.innerHTML = '<span>✓</span><span>LINK COPIED TO CLIPBOARD!</span>';
-        setTimeout(() => {
-          if (btn) btn.innerHTML = '<span>📋</span><span>COPY CLEAN LINK (CARRIER SAFE)</span>';
-        }, 3000);
-      }).catch(() => {
-        prompt('Copy Clean Link:', url);
-      });
-    }
-
-    function triggerNativeShare() {
-      const shareData = {
-        title: 'Freestone County ARES Tactical App',
-        text: 'Freestone County ARES Tactical Mobile Operations App. Install or download for Android & iOS:',
-        url: 'https://freestone-ares.github.io/freestone-ares-tactical/'
-      };
-
-      if (navigator.share) {
-        navigator.share(shareData).catch((err) => console.log('Share canceled:', err));
-      } else {
-        const smsUrl = 'sms:?body=' + encodeURIComponent('Freestone County ARES Tactical App: https://freestone-ares.github.io/freestone-ares-tactical/');
-        window.location.href = smsUrl;
-      }
-    }
-
-    function submitNewMemberRegistration() {
-      const name = document.getElementById('reg-name').value.trim() || 'John Operator';
-      const call = (document.getElementById('reg-call').value.trim() || 'KJ5NEW').toUpperCase();
-      const lic = document.getElementById('reg-license').value;
-      const races = (document.getElementById('reg-races') ? document.getElementById('reg-races').value.trim() : '') || 'TX-FC-09';
-      const phone = document.getElementById('reg-phone').value.trim() || '903-555-0199';
-      const city = document.getElementById('reg-city').value.trim() || 'Fairfield, TX';
-
-      const queue = document.getElementById('pending-applicants-list');
-      const card = document.createElement('div');
-      card.className = 'p-3 bg-[#0b0e14] rounded-lg border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs';
-      card.innerHTML = `
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="font-bold text-white">${name}</span>
-            <span class="text-amber-400 font-bold">${call}</span>
-            <span class="text-[10px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-300">${lic}</span>
-            <span class="text-[10px] bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded border border-amber-800 font-bold">RACES: ${races}</span>
-            <span class="text-[10px] text-slate-400">${city}</span>
-          </div>
-          <div class="text-[11px] text-slate-400 mt-1">
-            Phone: ${phone} &bull; Gear: Dual-Band HT (5W) &bull; NIMS: ICS-100, ICS-200
-          </div>
-        </div>
-        <div class="flex items-center gap-2">
-          <button onclick="approveApplicant(this, '${name}', '${call}', '${races}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded text-[11px] whitespace-nowrap">
-            ✓ APPROVE TO ROSTER
-          </button>
-          <button onclick="this.closest('.p-3').remove()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-[11px]">
-            DENY
-          </button>
-        </div>
-      `;
-      queue.appendChild(card);
-
-      const countBadge = document.getElementById('pending-count');
-      if (countBadge) {
-        const count = queue.children.length;
-        countBadge.textContent = `${count} PENDING`;
-      }
-
-      alert(`Thank you, ${name} (${call})!\n\nYour application has been submitted and queued for review by Emergency Coordinator Brian Davis (KG5TZT).`);
-    }
-
-    function approveApplicant(btn, name, call, races = 'TX-FC-NEW') {
-      btn.closest('.p-3').remove();
-      const queue = document.getElementById('pending-applicants-list');
-      const countBadge = document.getElementById('pending-count');
-      if (countBadge && queue) {
-        countBadge.textContent = `${queue.children.length} PENDING`;
-      }
-
-      // Add to roster
-      appState.members.push({
-        id: appState.members.length + 1,
-        call: call,
-        gmrs: 'NONE',
-        races: races,
-        name: name,
-        class: 'General',
-        role: 'Field Operator',
-        phone: '903-555-0199',
-        email: `${call.toLowerCase()}@freestoneares.org`
-      });
-
-      renderRosterGrid();
-      alert(`APPROVED!\n\n${name} (${call}) has been approved and added to the official Freestone County ARES roster with full tactical access.`);
-    }
-
-    // ==========================================
-    // STEP 3: PACE PLAN & 22-CHANNEL MATRIX FUNCTIONS
-    // ==========================================
-    function renderPaceChannels() {
-      const tbody = document.getElementById('channels-table-body');
-      if (!tbody) return;
-      tbody.innerHTML = '';
-
-      const term = (appState.channelSearchQuery || '').toLowerCase();
-      const cat = appState.currentChannelCategory || 'all';
-
-      const filtered = appState.channels.filter(ch => {
-        // Category filter
-        const chNum = parseInt(ch.ch, 10);
-        if (cat === 'repeater' && !(chNum >= 1 && chNum <= 5)) return false;
-        if (cat === 'gmrs' && !(chNum >= 6 && chNum <= 8)) return false;
-        if (cat === 'vhf' && !(chNum >= 9 && chNum <= 14)) return false;
-        if (cat === 'uhf' && !(chNum >= 15 && chNum <= 19)) return false;
-        if (cat === 'digital' && !(chNum >= 28 && chNum <= 29)) return false;
-        if (cat === 'aprs' && chNum !== 30) return false;
-
-        // Search term filter
-        if (term) {
-          const match = ch.ch.includes(term) ||
-                        ch.name.toLowerCase().includes(term) ||
-                        ch.rx.includes(term) ||
-                        ch.tx.includes(term) ||
-                        ch.tone.toLowerCase().includes(term) ||
-                        ch.assignment.toLowerCase().includes(term) ||
-                        ch.mode.toLowerCase().includes(term);
-          if (!match) return false;
-        }
-
-        return true;
-      });
-
-      // Update badge count
-      const badge = document.getElementById('channel-count-badge');
-      if (badge) {
-        badge.textContent = `${filtered.length} OF ${appState.channels.length} DISPLAYED`;
-      }
-
-      if (filtered.length === 0) {
-        const emptyTr = document.createElement('tr');
-        emptyTr.innerHTML = `
-          <td colspan="8" class="p-6 text-center text-slate-500 font-mono-tac text-xs">
-            No radio channels found matching query "${appState.channelSearchQuery}". <button onclick="resetChannelFilters()" class="text-emerald-400 underline font-bold ml-1">Reset Filters</button>
-          </td>
-        `;
-        tbody.appendChild(emptyTr);
-        return;
-      }
-
-      filtered.forEach(ch => {
-        let chBadgeClass = 'bg-slate-800 text-slate-300 border-slate-700';
-        let rowClass = 'hover:bg-slate-800/40 transition';
-        let paceTag = '';
-
-        if (ch.pace === 'P') {
-          chBadgeClass = 'bg-emerald-950 text-emerald-400 border-emerald-700 font-bold';
-          rowClass = 'bg-emerald-950/10 hover:bg-emerald-950/20 transition';
-          paceTag = '<span class="ml-1.5 px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 text-[9px] font-bold">PACE [P]</span>';
-        } else if (ch.pace === 'A') {
-          chBadgeClass = 'bg-amber-950 text-amber-400 border-amber-700 font-bold';
-          rowClass = 'bg-amber-950/10 hover:bg-amber-950/20 transition';
-          paceTag = '<span class="ml-1.5 px-1.5 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800 text-[9px] font-bold">PACE [A]</span>';
-        } else if (ch.pace === 'C') {
-          chBadgeClass = 'bg-blue-950 text-blue-400 border-blue-700 font-bold';
-          rowClass = 'bg-blue-950/10 hover:bg-blue-950/20 transition';
-          paceTag = '<span class="ml-1.5 px-1.5 py-0.5 rounded bg-blue-950 text-blue-400 border border-blue-800 text-[9px] font-bold">PACE [C]</span>';
-        } else if (ch.category === 'gmrs') {
-          chBadgeClass = 'bg-purple-950 text-purple-300 border-purple-800 font-bold';
-        } else if (ch.category === 'digital') {
-          chBadgeClass = 'bg-cyan-950 text-cyan-300 border-cyan-800 font-bold';
-        } else if (ch.category === 'aprs') {
-          chBadgeClass = 'bg-teal-950 text-teal-300 border-teal-800 font-bold';
-        }
-
-        const tr = document.createElement('tr');
-        tr.className = rowClass;
-        tr.innerHTML = `
-          <td class="p-3">
-            <span class="px-2 py-0.5 rounded border text-[11px] font-bold ${chBadgeClass}">CH ${ch.ch}</span>
-          </td>
-          <td class="p-3 font-bold text-white whitespace-nowrap">
-            ${ch.name} ${paceTag}
-          </td>
-          <td class="p-3 font-bold text-amber-400 whitespace-nowrap">${ch.rx} MHz</td>
-          <td class="p-3 text-slate-300 whitespace-nowrap text-[11px]">${ch.tx} MHz <span class="text-slate-500">(${ch.offset})</span></td>
-          <td class="p-3 whitespace-nowrap">
-            <span class="px-2 py-0.5 rounded bg-black/60 text-slate-200 border border-slate-700 text-[10px] font-mono-tac font-semibold">${ch.tone}</span>
-          </td>
-          <td class="p-3 whitespace-nowrap">
-            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${
-              ch.mode === 'DIGITAL' ? 'bg-cyan-950 text-cyan-400 border border-cyan-800' :
-              ch.mode === 'PACKET' ? 'bg-teal-950 text-teal-400 border border-teal-800' :
-              'bg-slate-800 text-slate-300'
-            }">${ch.mode}</span>
-          </td>
-          <td class="p-3 text-slate-300 text-[11px] max-w-xs sm:max-w-md">${ch.assignment}</td>
-          <td class="p-3 text-right whitespace-nowrap">
-            <button onclick="copyChannelToClipboard('${ch.name}: Rx ${ch.rx} / Tx ${ch.tx} (${ch.tone}) - ${ch.assignment}')" class="px-2 py-1 bg-slate-800 hover:bg-emerald-600 text-slate-200 hover:text-white rounded text-[10px] font-bold transition">
-              📋 COPY
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function searchChannels(val) {
-      appState.channelSearchQuery = val.trim();
-      renderPaceChannels();
-    }
-
-    function filterByChannelCategory(cat) {
-      appState.currentChannelCategory = cat;
-
-      // Update pill classes
-      document.querySelectorAll('.cat-pill').forEach(btn => {
-        btn.classList.remove('bg-emerald-500/20', 'text-emerald-400', 'border-emerald-500/50', 'font-bold');
-        btn.classList.add('bg-[#0b0e14]', 'text-slate-400', 'border-slate-800');
-      });
-
-      const activeBtn = document.getElementById('cat-' + cat);
-      if (activeBtn) {
-        activeBtn.classList.remove('bg-[#0b0e14]', 'text-slate-400', 'border-slate-800');
-        activeBtn.classList.add('bg-emerald-500/20', 'text-emerald-400', 'border-emerald-500/50', 'font-bold');
-      }
-
-      renderPaceChannels();
-    }
-
-    function resetChannelFilters() {
-      const input = document.getElementById('channel-search-input');
-      if (input) input.value = '';
-      appState.channelSearchQuery = '';
-      filterByChannelCategory('all');
-    }
-
-    function copyChannelToClipboard(text) {
-      navigator.clipboard.writeText(text).then(() => {
-        alert('COPIED TO CLIPBOARD:\n\n' + text);
-      }).catch(() => {
-        prompt('Copy to clipboard (Ctrl+C / Cmd+C):', text);
-      });
-    }
-
-    function downloadChirpCodeplugCsv() {
-      let csv = 'Location,Name,Frequency,Duplex,Offset,Tone,rToneFreq,cToneFreq,DtcsCode,DtcsPolarity,RxDtcsCode,CrossMode,Mode,TStep,Skip,Power,Comment\n';
-
-      appState.channels.forEach(ch => {
-        const loc = parseInt(ch.ch, 10);
-        const name = ch.name;
-        const freq = parseFloat(ch.rx).toFixed(6);
-        let duplex = '';
-        let offset = '0.000000';
-
-        if (ch.offset.includes('-0.600')) {
-          duplex = '-';
-          offset = '0.600000';
-        } else if (ch.offset.includes('+5.000')) {
-          duplex = '+';
-          offset = '5.000000';
-        }
-
-        let toneMode = 'None';
-        let toneFreq = '88.5';
-        if (ch.tone.includes('146.2')) {
-          toneMode = (ch.ch === '01' || ch.tone.includes('TSQ')) ? 'TSQL' : 'Tone';
-          toneFreq = '146.2';
-        } else if (ch.tone.includes('136.5')) {
-          toneMode = 'Tone';
-          toneFreq = '136.5';
-        } else if (ch.tone.includes('123.0')) {
-          toneMode = (ch.ch === '09' || ch.tone.includes('TSQ')) ? 'TSQL' : 'Tone';
-          toneFreq = '123.0';
-        }
-
-        const mode = ch.mode === 'DIGITAL' ? 'DIG' : (ch.mode === 'PACKET' ? 'PKT' : 'FM');
-        const comment = `Freestone ARES ${ch.assignment.replace(/,/g, ';')}`;
-
-        csv += `${loc},${name},${freq},${duplex},${offset},${toneMode},${toneFreq},${toneFreq},023,NN,023,Tone->Tone,${mode},5.00,,50W,"${comment}"\n`;
-      });
-
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'freestone_ares_codeplug_22ch.csv';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-
-      alert('CHIRP CSV CODEPLUG DOWNLOADED!\n\nFile: freestone_ares_codeplug_22ch.csv\n\nYou can import this directly into CHIRP to program BaoFeng, Yaesu, AnyTone, Icom, and Kenwood radios.');
-    }
-
-    function downloadBtechUvProCsv() {
-      // Official BTECH UV-Pro CSV Template Header
-      let csv = 'title,tx_freq,rx_freq,tx_sub_audio(CTCSS=freq/DCS=number),rx_sub_audio(CTCSS=freq/DCS=number),tx_power(H/M/L),bandwidth(12500/25000),scan(0=OFF/1=ON),talk around(0=OFF/1=ON),pre_de_emph_bypass(0=OFF/1=ON),sign(0=OFF/1=ON),tx_dis(0=OFF/1=ON),mute(0=OFF/1=ON),rx_modulation(0=FM/1=AM),tx_modulation(0=FM/1=AM)\n';
-
-      appState.channels.forEach(ch => {
-        const name = ch.name;
-        const txFreqHz = Math.round(parseFloat(ch.tx) * 1000000);
-        const rxFreqHz = Math.round(parseFloat(ch.rx) * 1000000);
-
-        let txToneVal = 0;
-        let rxToneVal = 0;
-
-        if (ch.tone.includes('146.2')) {
-          txToneVal = 14620;
-          // Primary Ch 01 is TSQ -> rx_sub_audio is also 14620!
-          if (ch.ch === '01' || ch.tone.includes('TSQ')) {
-            rxToneVal = 14620;
-          }
-        } else if (ch.tone.includes('136.5')) {
-          txToneVal = 13650;
-        } else if (ch.tone.includes('123.0')) {
-          txToneVal = 12300;
-          // Ch 09 ARES TAC Simplex uses Tone Squelch
-          if (ch.ch === '09' || ch.tone.includes('TSQ')) {
-            rxToneVal = 12300;
-          }
-        }
-
-        const bw = ch.category === 'gmrs' ? 12500 : 25000;
-        csv += `${name},${txFreqHz},${rxFreqHz},${txToneVal},${rxToneVal},H,${bw},1,0,0,1,0,0,0,0\n`;
-      });
-
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'freestone_ares_btech_uvpro_22ch.csv';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-
-      alert('BTECH UV-PRO CSV DOWNLOADED!\n\nFile: freestone_ares_btech_uvpro_22ch.csv\n\nHow to program your BTECH UV-Pro:\n1. Save this file to your phone (Files on iOS / Downloads on Android).\n2. Open the BTECH UV Programmer app.\n3. Go to Settings → Channel & Groups.\n4. Tap "Import From File" and select this CSV.\n5. Review channels and tap "Sync to Radio" via Bluetooth.');
-    }
-
-    function copyFullIcs205ToClipboard() {
-      let out = '========================================================================================\n';
-      out += 'FREESTONE COUNTY ARES // ICS-205 COMMUNICATIONS PLAN ANNEX (22 CHANNELS)\n';
-      out += 'Emergency Coordinator: Brian Davis (KG5TZT) | Net Schedule: Sundays @ 2000 Local (01:00Z)\n';
-      out += '========================================================================================\n';
-      out += 'CH# | NAME     | RX FREQ     | TX FREQ / OFFSET | CTCSS TONE    | MODE | FUNCTION / ASSIGNMENT\n';
-      out += '----+----------+-------------+------------------+---------------+------+----------------------------------------\n';
-      appState.channels.forEach(ch => {
-        out += `${ch.ch.padEnd(3)} | ${ch.name.padEnd(8)} | ${ch.rx.padEnd(11)} | ${ch.tx.padEnd(7)} (${ch.offset.padEnd(6)}) | ${ch.tone.padEnd(13)} | ${ch.mode.padEnd(4)} | ${ch.assignment}\n`;
-      });
-      out += '========================================================================================\n';
-
-      navigator.clipboard.writeText(out).then(() => {
-        alert('FEMA ICS-205 COMMUNICATIONS PLAN COPIED TO CLIPBOARD!\n\nFull 22-channel text matrix ready to paste into emergency operational logs.');
-      }).catch(() => {
-        prompt('Copy ICS-205 table (Ctrl+C / Cmd+C):', out);
-      });
-    }
-
-    // Initial render
-    loadRosterMembers();
-    loadCalendarEvents();
-    populateAuthCallsignSelect();
-    // Restore saved Night Vision Optical Theme
-    const savedTheme = safeStorage.getItem('fc_ares_nv_theme') || 'normal';
-    setTheme(savedTheme);
-
-    initAuthSession();
-    renderCountyResponseLevelUI();
-    renderEcOperatorDirectory();
-    updateDashboardUserProfile();
-    updateDispatchControlsVisibility();
-    updateSessionHeaderUI();
-    populatePaceDropdowns();
-    renderIncidentUpdates();
-    renderResponderTable();
-    renderRosterGrid();
-    renderPaceChannels();
-    renderCalendar();
-    renderSkywarnTab();
-    initTacticalMap();
-    inspectMapItem('spot', 'staging');
-
-    // Register Service Worker for 100% offline capability
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./service-worker.js')
-          .then((reg) => console.log('[ARES Tactical PWA] Service Worker active:', reg.scope))
-          .catch((err) => console.log('[ARES Tactical PWA] Service Worker note:', err));
-      });
-    }
-  </script>
-
-
-  <!-- OPERATOR IDENTITY & CLEARANCE STATUS MODAL (Shown when clicking profile badge while logged in) -->
-  <div id="operator-profile-modal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden font-mono-tac">
-    <div class="bg-[#10151d] border-2 border-emerald-500/70 rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl hud-glow">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <div class="flex items-center gap-2">
-          <span class="text-xl">🛡️</span>
-          <div>
-            <h4 class="text-white font-black text-sm">OPERATOR CREDENTIALS</h4>
-            <span class="text-[10px] text-emerald-400">FREESTONE COUNTY ARES ACTIVE SESSION</span>
-          </div>
-        </div>
-        <button onclick="closeOperatorProfileModal()" class="text-slate-400 hover:text-white p-1 text-sm font-bold">✕</button>
-      </div>
-
-      <div class="space-y-3 text-xs">
-        <div class="p-3.5 bg-[#0b0e14] rounded-xl border border-slate-800 flex items-center justify-between">
-          <div>
-            <div class="text-[10px] text-slate-500 uppercase font-bold">Callsign &amp; Name</div>
-            <div id="prof-modal-call" class="text-base font-black text-emerald-400">KG5TZT</div>
-            <div id="prof-modal-name" class="text-xs text-slate-200 font-bold">Brian Davis</div>
-          </div>
-          <div id="prof-modal-badge" class="px-2.5 py-1 rounded text-xs font-black bg-red-950 text-red-300 border border-red-800">
-            LEVEL 6 • EC
-          </div>
-        </div>
-
-        <div class="p-3 bg-[#0b0e14] rounded-xl border border-slate-800 space-y-1.5">
-          <div class="text-[10px] text-slate-500 uppercase font-bold">Assigned Tactical Role &amp; Level</div>
-          <div id="prof-modal-role" class="text-white font-bold">Emergency Coordinator (EC)</div>
-          <div id="prof-modal-desc" class="text-[11px] text-slate-400 leading-relaxed">
-            Master tactical authority for Freestone County ARES. Full app permissions, user authorization, and broadcast controls.
-          </div>
-        </div>
-
-        <!-- Permissions Matrix for Current Level -->
-        <div class="p-3 bg-[#0b0e14] rounded-xl border border-slate-800 space-y-2">
-          <span class="text-[10px] text-slate-500 uppercase font-bold block">Active App Clearance Permissions:</span>
-          <div id="prof-modal-perms" class="space-y-1 text-[11px]">
-            <!-- Populated dynamically via openOperatorProfileModal() -->
-          </div>
-        </div>
-
-        <button onclick="closeOperatorProfileModal(); openOperatorSelfEditModal();" class="w-full py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-slate-950 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow">
-          <span>✏️</span><span>EDIT MY PROFILE &amp; PHOTO</span>
-        </button>
-
-        <div class="pt-2 border-t border-slate-800 flex items-center justify-between gap-2">
-          <button onclick="closeOperatorProfileModal()" class="flex-1 py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition">
-            CLOSE
-          </button>
-          <button onclick="closeOperatorProfileModal(); logoutOperator();" class="flex-1 py-2 px-3 rounded-lg bg-red-950/80 hover:bg-red-900 text-red-300 text-xs font-bold border border-red-800 flex items-center justify-center gap-1.5 transition">
-            <span>🚪</span><span>LOG OUT</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- MODAL: EC EDIT OPERATOR PROFILE (BRIAN DAVIS MASTER EDIT) -->
-  <div id="ec-edit-operator-modal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden font-mono-tac">
-    <div class="bg-[#10151d] border-2 border-amber-500/80 rounded-2xl max-w-lg w-full p-5 space-y-4 shadow-2xl hud-glow max-h-[92vh] overflow-y-auto">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <div class="flex items-center gap-2">
-          <span class="text-xl">✏️</span>
-          <div>
-            <h4 class="text-amber-400 font-black text-sm">EC OPERATOR PROFILE EDITOR</h4>
-            <span class="text-[10px] text-slate-400">EMERGENCY COORDINATOR MASTER OVERRIDE</span>
-          </div>
-        </div>
-        <button onclick="closeEcEditOperatorModal()" class="text-slate-400 hover:text-white p-1 text-sm font-bold">✕</button>
-      </div>
-
-      <div class="space-y-3 text-xs">
-        <!-- Callsign & Name -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold block mb-1">CALLSIGN:</label>
-            <input type="text" id="ec-edit-call" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-amber-400 font-bold uppercase" readonly>
-          </div>
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold block mb-1">FULL LEGAL NAME:</label>
-            <input type="text" id="ec-edit-name" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white">
-          </div>
-        </div>
-
-        <!-- GMRS & RACES -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold block mb-1">GMRS LICENSE CALLSIGN:</label>
-            <input type="text" id="ec-edit-gmrs" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white uppercase">
-          </div>
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold block mb-1">RACES NUMBER / COUNTY ID:</label>
-            <input type="text" id="ec-edit-races" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white uppercase">
-          </div>
-        </div>
-
-        <!-- Phone & Email -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold block mb-1">PHONE NUMBER (SMS):</label>
-            <input type="tel" id="ec-edit-phone" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white">
-          </div>
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold block mb-1">OFFICIAL EMAIL:</label>
-            <input type="email" id="ec-edit-email" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white">
-          </div>
-        </div>
-
-        <!-- Assigned Level & Class -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold block mb-1">ASSIGNED OPERATIONAL LEVEL:</label>
-            <select id="ec-edit-level" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white font-bold">
-              <option value="Level 1 - Operator">Level 1 - Operator (Basic Privileges)</option>
-              <option value="Level 2 - Field Operator / Spotter">Level 2 - Field Operator / Spotter</option>
-              <option value="Level 3 - NCS">Level 3 - NCS (Net Script &amp; NetLogger)</option>
-              <option value="Level 4 - Assistant EC">Level 4 - Assistant EC (AEC + Alert Dispatch)</option>
-              <option value="Level 5 - County EMC">Level 5 - County EMC (All Except Alerts)</option>
-              <option value="Level 6 - Emergency Coordinator (EC)">Level 6 - Emergency Coordinator (EC)</option>
-            </select>
-          </div>
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold block mb-1">LICENSE CLASS:</label>
-            <select id="ec-edit-class" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white">
-              <option value="Technician">Technician</option>
-              <option value="General">General</option>
-              <option value="Amateur Extra">Amateur Extra</option>
-              <option value="Novice">Novice</option>
-              <option value="GMRS Only">GMRS / Public Safety Liaison</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- FEMA CERTIFICATIONS (CHECK ALL THAT APPLY) -->
-        <div class="space-y-1">
-          <div class="flex items-center justify-between">
-            <label class="text-[10px] text-slate-300 font-bold block">FEMA NIMS / ICS CERTIFICATIONS (CHECK ALL THAT APPLY):</label>
-            <span class="text-[9px] text-amber-400 font-mono">100, 200, 300, 400, 700, 800</span>
-          </div>
-          <div id="ec-edit-fema-group" class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 p-2 bg-[#080b10] border border-slate-700 rounded-lg text-xs">
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
-              <input type="checkbox" value="IS-100" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
-              <span>IS-100</span>
-            </label>
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
-              <input type="checkbox" value="IS-200" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
-              <span>IS-200</span>
-            </label>
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
-              <input type="checkbox" value="IS-300" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
-              <span>IS-300</span>
-            </label>
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
-              <input type="checkbox" value="IS-400" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
-              <span>IS-400</span>
-            </label>
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
-              <input type="checkbox" value="IS-700" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
-              <span>IS-700</span>
-            </label>
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
-              <input type="checkbox" value="IS-800" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
-              <span>IS-800</span>
-            </label>
-          </div>
-        </div>
-
-        <!-- POWER DEPLOYMENT CAPABILITY (CHECK ALL THAT APPLY) -->
-        <div class="space-y-1">
-          <label class="text-[10px] text-slate-300 font-bold block">POWER DEPLOYMENT CAPABILITY (CHECK ALL THAT APPLY):</label>
-          <div id="ec-edit-power-group" class="grid grid-cols-1 sm:grid-cols-3 gap-1.5 p-2 bg-[#080b10] border border-slate-700 rounded-lg text-xs">
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
-              <input type="checkbox" value="Commercial" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
-              <span>Commercial</span>
-            </label>
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
-              <input type="checkbox" value="Battery back up" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
-              <span>Battery back up</span>
-            </label>
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
-              <input type="checkbox" value="Emergency generator" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
-              <span>Emergency generator</span>
-            </label>
-          </div>
-        </div>
-
-        <!-- STORM SPOTTER ADDITIONAL LEVEL / ENDORSEMENT -->
-        <div class="p-2.5 bg-[#080b10] rounded-xl border border-amber-500/50 flex items-center justify-between">
-          <div>
-            <span class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
-              <span>⛈️</span>
-              <span>STORM SPOTTER ENDORSEMENT</span>
-            </span>
-            <p class="text-[10px] text-slate-400">Assign SKYWARN certified weather spotter credential to this operator (any level)</p>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" id="ec-edit-is-spotter" class="sr-only peer">
-            <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
-          </label>
-        </div>
-
-        <!-- Professional Photo -->
-        <div class="p-3 bg-[#080b10] rounded-xl border border-slate-800 space-y-2">
-          <label class="text-[10px] text-slate-300 font-bold block">OPERATOR CREDENTIAL PHOTO:</label>
-          <div class="flex items-center gap-3">
-            <img id="ec-edit-photo-preview" src="" class="w-14 h-14 rounded-xl object-cover border border-slate-700 hidden">
-            <div class="flex-1 space-y-1.5">
-              <div class="flex items-center gap-2">
-                <button type="button" onclick="openLiveCameraModal('ec-edit-photo-preview', 'ec-edit-photo-data', null, 'user')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-lg text-[10px] flex items-center gap-1 shadow cursor-pointer">
-                  <span>📸</span>
-                  <span>Take Live Photo</span>
-                </button>
-                <span class="text-[10px] text-slate-400">or choose file below:</span>
-              </div>
-              <input type="file" accept="image/*" onchange="handlePhotoUpload(event, 'ec-edit-photo-preview', 'ec-edit-photo-data')" class="block w-full text-[10px] text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-[10px] file:font-bold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer">
-              <span class="text-[9px] text-slate-500 block">White background &bull; No hat on</span>
-              <input type="hidden" id="ec-edit-photo-data" value="">
-            </div>
-          </div>
-        </div>
-
-        <div class="pt-2 border-t border-slate-800 flex items-center justify-between gap-2">
-          <button type="button" onclick="closeEcEditOperatorModal()" class="py-2 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-lg transition cursor-pointer">
-            CANCEL
-          </button>
-          <button type="button" onclick="deleteOperator(document.getElementById('ec-edit-call').value); closeEcEditOperatorModal();" class="py-2 px-3 bg-red-950/80 hover:bg-red-900 text-red-300 border border-red-800 text-xs font-bold rounded-lg transition cursor-pointer">
-            🗑️ REMOVE OPERATOR
-          </button>
-          <button type="button" onclick="saveEcOperatorEdit()" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-slate-950 text-xs font-black rounded-lg transition shadow cursor-pointer">
-            SAVE CHANGES
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: OPERATOR SELF-PROFILE & PHOTO EDITOR -->
-  <div id="operator-self-edit-modal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden font-mono-tac">
-    <div class="bg-[#10151d] border-2 border-emerald-500/80 rounded-2xl max-w-lg w-full p-5 space-y-4 shadow-2xl hud-glow max-h-[92vh] overflow-y-auto">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <div class="flex items-center gap-2">
-          <span class="text-xl">👤</span>
-          <div>
-            <h4 class="text-emerald-400 font-black text-sm">UPDATE MY OPERATOR PROFILE</h4>
-            <span class="text-[10px] text-slate-400">FREESTONE COUNTY ARES CREDENTIALS</span>
-          </div>
-        </div>
-        <button onclick="closeOperatorSelfEditModal()" class="text-slate-400 hover:text-white p-1 text-sm font-bold">✕</button>
-      </div>
-
-      <div class="space-y-3 text-xs">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold block mb-1">CALLSIGN:</label>
-            <input type="text" id="self-edit-call" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-amber-400 font-bold uppercase" readonly>
-          </div>
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold block mb-1">FULL LEGAL NAME *:</label>
-            <input type="text" id="self-edit-name" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white">
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold block mb-1">GMRS LICENSE CALLSIGN:</label>
-            <input type="text" id="self-edit-gmrs" placeholder="e.g. WSHS425 or NONE" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white uppercase">
-          </div>
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold block mb-1">RACES REGISTRATION NUMBER:</label>
-            <input type="text" id="self-edit-races" placeholder="e.g. TX-FREE-05" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white uppercase">
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold block mb-1">PHONE NUMBER (SMS) *:</label>
-            <input type="tel" id="self-edit-phone" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white">
-          </div>
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold block mb-1">OFFICIAL EMAIL *:</label>
-            <input type="email" id="self-edit-email" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white">
-          </div>
-        </div>
-
-        <!-- LOCKED ASSIGNED OPERATOR LEVEL (CAN ONLY BE CHANGED BY MASTER EC) -->
-        <div class="p-2.5 bg-[#080b10] rounded-xl border border-slate-700/80 flex items-center justify-between">
-          <div>
-            <span class="text-[10px] text-slate-400 font-bold block uppercase tracking-wider">ASSIGNED OPERATOR CLEARANCE:</span>
-            <div id="self-edit-level-display" class="text-amber-400 font-black text-xs mt-0.5">Level 1 - Operator</div>
-          </div>
-          <span class="px-2 py-1 rounded bg-slate-900 border border-slate-700 text-slate-400 text-[9px] font-bold">🔒 Master EC (KG5TZT) Only</span>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold block mb-1">AMATEUR LICENSE CLASS:</label>
-            <select id="self-edit-class" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white">
-              <option value="Technician">Technician</option>
-              <option value="General">General</option>
-              <option value="Amateur Extra">Amateur Extra</option>
-              <option value="Novice">Novice</option>
-              <option value="GMRS Only">GMRS / Public Safety Liaison</option>
-            </select>
-          </div>
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold block mb-1">VERIFICATION STATUS:</label>
-            <div id="self-edit-last-verified-display" class="p-2 bg-[#080b10] border border-slate-700 rounded-lg text-xs text-emerald-400 font-bold">
-              ✓ Verified Active
-            </div>
-          </div>
-        </div>
-
-        <!-- FEMA CERTIFICATIONS (CHECK ALL THAT APPLY) -->
-        <div class="space-y-1">
-          <div class="flex items-center justify-between">
-            <label class="text-[10px] text-slate-300 font-bold block">FEMA NIMS / ICS CERTIFICATIONS (CHECK ALL THAT APPLY):</label>
-            <span class="text-[9px] text-emerald-400 font-mono">100, 200, 300, 400, 700, 800</span>
-          </div>
-          <div id="self-edit-fema-group" class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 p-2 bg-[#080b10] border border-slate-700 rounded-lg text-xs">
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
-              <input type="checkbox" value="IS-100" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
-              <span>IS-100</span>
-            </label>
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
-              <input type="checkbox" value="IS-200" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
-              <span>IS-200</span>
-            </label>
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
-              <input type="checkbox" value="IS-300" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
-              <span>IS-300</span>
-            </label>
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
-              <input type="checkbox" value="IS-400" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
-              <span>IS-400</span>
-            </label>
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
-              <input type="checkbox" value="IS-700" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
-              <span>IS-700</span>
-            </label>
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
-              <input type="checkbox" value="IS-800" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
-              <span>IS-800</span>
-            </label>
-          </div>
-        </div>
-
-        <!-- POWER DEPLOYMENT CAPABILITY (CHECK ALL THAT APPLY) -->
-        <div class="space-y-1">
-          <label class="text-[10px] text-slate-300 font-bold block">POWER DEPLOYMENT CAPABILITY (CHECK ALL THAT APPLY):</label>
-          <div id="self-edit-power-group" class="grid grid-cols-1 sm:grid-cols-3 gap-1.5 p-2 bg-[#080b10] border border-slate-700 rounded-lg text-xs">
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
-              <input type="checkbox" value="Commercial" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
-              <span>Commercial</span>
-            </label>
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
-              <input type="checkbox" value="Battery back up" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
-              <span>Battery back up</span>
-            </label>
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
-              <input type="checkbox" value="Emergency generator" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
-              <span>Emergency generator</span>
-            </label>
-          </div>
-        </div>
-
-        <!-- STORM SPOTTER QUALIFICATION CHECKBOX -->
-        <div class="p-2.5 bg-[#080b10] rounded-xl border border-amber-500/50 flex items-center justify-between">
-          <div>
-            <span class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
-              <span>⛈️</span>
-              <span>NWS SKYWARN SPOTTER TRAINING</span>
-            </span>
-            <p class="text-[10px] text-slate-400">Check if you have completed official NWS SKYWARN Spotter Training</p>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" id="self-edit-is-spotter" class="sr-only peer">
-            <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
-          </label>
-        </div>
-
-        <!-- Professional Photo -->
-        <div class="p-3 bg-[#080b10] rounded-xl border-2 border-emerald-500/60 space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-emerald-400">📸 PROFESSIONAL PHOTO IDENTIFICATION</span>
-            <span class="text-[9px] bg-red-950 text-red-300 border border-red-800 px-1.5 py-0.5 rounded font-bold">REQUIRED</span>
-          </div>
-          <p class="text-[10px] text-slate-300 leading-relaxed">
-            Must be a professional self-taken portrait photo with a plain <strong>WHITE BACKGROUND</strong> and <strong>NO HAT ON</strong>.
-          </p>
-          <div class="flex items-center gap-3 pt-1">
-            <img id="self-edit-photo-preview" src="" class="w-16 h-16 rounded-xl object-cover border-2 border-emerald-500 hidden">
-            <div id="self-edit-photo-placeholder" class="w-16 h-16 rounded-xl bg-slate-900 border-2 border-slate-700 flex items-center justify-center text-2xl text-slate-600 flex-shrink-0">
-              👤
-            </div>
-            <div class="flex-1 space-y-1.5">
-              <div class="flex items-center gap-2">
-                <button type="button" onclick="openLiveCameraModal('self-edit-photo-preview', 'self-edit-photo-data', 'self-edit-photo-placeholder', 'user')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-lg text-[10px] flex items-center gap-1 shadow cursor-pointer">
-                  <span>📸</span>
-                  <span>Take Live Photo</span>
-                </button>
-                <span class="text-[10px] text-slate-400">or choose file below:</span>
-              </div>
-              <input type="file" accept="image/*" capture="user" onchange="handlePhotoUpload(event, 'self-edit-photo-preview', 'self-edit-photo-data', 'self-edit-photo-placeholder')" class="block w-full text-[10px] text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-[10px] file:font-bold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer">
-              <span class="text-[9px] text-slate-500 block">White background &bull; No hat &bull; Facing forward</span>
-              <input type="hidden" id="self-edit-photo-data" value="">
-            </div>
-          </div>
-        </div>
-
-        <div class="pt-2 border-t border-slate-800 flex items-center justify-between gap-2">
-          <button onclick="closeOperatorSelfEditModal()" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-lg transition">
-            CANCEL
-          </button>
-          <button onclick="saveOperatorSelfEdit()" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-slate-950 text-xs font-black rounded-lg transition shadow">
-            SAVE MY PROFILE
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-
-  <!-- ABOUT TACTICAL MOBILE MODAL -->
-  <div id="about-app-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-4 hidden font-mono-tac" onclick="if(event.target===this) closeAboutModal();">
-    <div class="bg-[#0c1017] border-2 border-emerald-500/70 rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl hud-glow max-h-[92vh] overflow-y-auto" onclick="event.stopPropagation()">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <div class="flex items-center gap-2.5">
-          <span class="text-2xl">⚡</span>
-          <div>
-            <h4 class="text-emerald-400 font-black text-sm uppercase tracking-wider">FREESTONE COUNTY ARES</h4>
-            <span class="text-[10px] text-slate-400">TACTICAL COMMUNICATIONS SYSTEM</span>
-          </div>
-        </div>
-        <button type="button" onclick="closeAboutModal()" class="text-slate-400 hover:text-white text-sm font-bold p-1 px-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 transition cursor-pointer">✕</button>
-      </div>
-
-      <div class="text-center py-2 space-y-2">
-        <div class="inline-flex p-2 rounded-2xl bg-[#070a0f] border border-emerald-500/60 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
-          <div class="w-14 h-14 rounded-xl flex items-center justify-center text-3xl">📡</div>
-        </div>
-        <div>
-          <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.8.5 (Build 33)</div>
-          <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
-        </div>
-      </div>
-
-      <div class="p-3 bg-[#070a0f] border border-slate-800 rounded-xl space-y-2 text-xs">
-        <div class="flex justify-between items-center border-b border-slate-800/80 pb-1.5">
-          <span class="text-slate-400 text-[11px]">Emergency Coordinator:</span>
-          <span class="text-white font-bold">Brian Davis (KG5TZT)</span>
-        </div>
-        <div class="flex justify-between items-center border-b border-slate-800/80 pb-1.5">
-          <span class="text-slate-400 text-[11px]">Jurisdiction:</span>
-          <span class="text-slate-200">Freestone County, Texas</span>
-        </div>
-        <div class="flex justify-between items-center border-b border-slate-800/80 pb-1.5">
-          <span class="text-slate-400 text-[11px]">Primary Net / Frequency:</span>
-          <span class="text-amber-400 font-bold">145.110 MHz • FM Voice</span>
-        </div>
-        <div class="flex justify-between items-center border-b border-slate-800/80 pb-1.5">
-          <span class="text-slate-400 text-[11px]">Default Volunteer Password:</span>
-          <span class="text-emerald-400 font-bold">ARES2026</span>
-        </div>
-        <div class="flex justify-between items-center">
-          <span class="text-slate-400 text-[11px]">Release Architecture:</span>
-          <span class="text-slate-300">Android APK &amp; PWA Offline Basemap</span>
-        </div>
-      </div>
-
-      <div class="text-[10px] text-slate-400 space-y-1 leading-relaxed">
-        <p>Built for amateur radio emergency operators, SKYWARN weather spotters, and public safety liaisons supporting Freestone County Emergency Management.</p>
-        <p class="text-slate-500 text-[9px] pt-1">FCC Part 97 Compliant &bull; NWS Storm Prediction Protocol &bull; ICS-205 Tactical Interop</p>
-      </div>
-
-      <button type="button" onclick="closeAboutModal()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black rounded-xl text-xs shadow transition cursor-pointer">
-        CLOSE ABOUT
-      </button>
-    </div>
-  </div>
-
-  <!-- MANDATORY OPERATOR PROFILE VERIFICATION & 6-MONTH REVIEW MODAL -->
-  <div id="operator-profile-verify-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-4 hidden font-mono-tac">
-    <div class="bg-[#10151d] border-2 border-amber-500 rounded-2xl max-w-lg w-full p-5 space-y-4 shadow-2xl hud-glow max-h-[94vh] overflow-y-auto">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <div class="flex items-center gap-2.5">
-          <span class="text-2xl animate-pulse">📋</span>
-          <div>
-            <h4 id="verify-modal-title" class="text-amber-400 font-black text-sm">OPERATOR PROFILE VERIFICATION</h4>
-            <span id="verify-modal-subtitle" class="text-[10px] text-slate-400">FREESTONE COUNTY ARES OPERATIONAL READINESS</span>
-          </div>
-        </div>
-        <div class="flex items-center gap-2">
-          <div id="verify-modal-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-800">MANDATORY</div>
-          <button type="button" onclick="closeOperatorProfileVerifyModal()" class="text-slate-400 hover:text-white text-xs font-bold p-1 px-2 rounded hover:bg-slate-800 transition cursor-pointer" title="Close / Review Later">✕</button>
-        </div>
-      </div>
-
-      <div class="p-3 bg-amber-950/30 border border-amber-600/50 rounded-xl space-y-1 text-xs">
-        <div class="flex items-center gap-2 text-amber-300 font-bold text-[11px]">
-          <span>⚡</span><span id="verify-reason-heading">MANDATORY PROFILE REVIEW</span>
-        </div>
-        <p id="verify-reason-text" class="text-[11px] text-slate-300 leading-relaxed">
-          Freestone County ARES operational readiness requires all active operators to review and confirm their official profile details, emergency phone number, FEMA qualifications, deployment power, and professional photo ID.
-        </p>
-        <div id="verify-last-date-text" class="text-[10px] text-amber-400/80 font-mono pt-0.5"></div>
-      </div>
-
-      <div class="space-y-3 text-xs">
-        <!-- Callsign & Full Name -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold block mb-1">CALLSIGN:</label>
-            <input type="text" id="verify-call" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-amber-400 font-bold uppercase" readonly>
-          </div>
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold block mb-1">FULL LEGAL NAME *:</label>
-            <input type="text" id="verify-name" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white">
-          </div>
-        </div>
-
-        <!-- LOCKED ASSIGNED OPERATOR LEVEL (CAN ONLY BE CHANGED BY MASTER EC) -->
-        <div class="p-2.5 bg-[#080b10] rounded-xl border border-slate-700 flex items-center justify-between">
-          <div>
-            <span class="text-[10px] text-slate-400 font-bold block uppercase tracking-wider">ASSIGNED OPERATOR CLEARANCE:</span>
-            <div id="verify-level-display" class="text-amber-400 font-black text-xs mt-0.5">Level 1 - Operator</div>
-          </div>
-          <span class="px-2 py-1 rounded bg-slate-900 border border-slate-700 text-slate-400 text-[9px] font-bold">🔒 Master EC (KG5TZT) Only</span>
-        </div>
-
-        <!-- License Class & GMRS / RACES -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold block mb-1">LICENSE CLASS:</label>
-            <select id="verify-class" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white">
-              <option value="Technician">Technician</option>
-              <option value="General">General</option>
-              <option value="Amateur Extra">Amateur Extra</option>
-              <option value="Novice">Novice</option>
-              <option value="GMRS Only">GMRS / Public Safety Liaison</option>
-            </select>
-          </div>
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold block mb-1">GMRS CALLSIGN:</label>
-            <input type="text" id="verify-gmrs" placeholder="e.g. WSHS425" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white uppercase">
-          </div>
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold block mb-1">RACES NUMBER:</label>
-            <input type="text" id="verify-races" placeholder="TX-FREE-05" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white uppercase">
-          </div>
-        </div>
-
-        <!-- Phone & Email -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold block mb-1">PHONE NUMBER (SMS) *:</label>
-            <input type="tel" id="verify-phone" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white">
-          </div>
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold block mb-1">OFFICIAL EMAIL *:</label>
-            <input type="email" id="verify-email" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white">
-          </div>
-        </div>
-
-        <!-- FEMA CERTIFICATIONS CHECKBOX GROUP -->
-        <div class="space-y-1">
-          <div class="flex items-center justify-between">
-            <label class="text-[10px] text-slate-300 font-bold block">FEMA NIMS / ICS CERTIFICATIONS (CHECK ALL THAT APPLY):</label>
-            <span class="text-[9px] text-emerald-400 font-mono">100, 200, 300, 400, 700, 800</span>
-          </div>
-          <div id="verify-fema-group" class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 p-2 bg-[#080b10] border border-slate-700 rounded-lg text-xs">
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
-              <input type="checkbox" value="IS-100" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
-              <span>IS-100</span>
-            </label>
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
-              <input type="checkbox" value="IS-200" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
-              <span>IS-200</span>
-            </label>
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
-              <input type="checkbox" value="IS-300" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
-              <span>IS-300</span>
-            </label>
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
-              <input type="checkbox" value="IS-400" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
-              <span>IS-400</span>
-            </label>
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
-              <input type="checkbox" value="IS-700" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
-              <span>IS-700</span>
-            </label>
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
-              <input type="checkbox" value="IS-800" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
-              <span>IS-800</span>
-            </label>
-          </div>
-        </div>
-
-        <!-- POWER DEPLOYMENT CAPABILITY CHECKBOX GROUP -->
-        <div class="space-y-1">
-          <label class="text-[10px] text-slate-300 font-bold block">POWER DEPLOYMENT CAPABILITY (CHECK ALL THAT APPLY):</label>
-          <div id="verify-power-group" class="grid grid-cols-1 sm:grid-cols-3 gap-1.5 p-2 bg-[#080b10] border border-slate-700 rounded-lg text-xs">
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
-              <input type="checkbox" value="Commercial" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
-              <span>Commercial</span>
-            </label>
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
-              <input type="checkbox" value="Battery back up" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
-              <span>Battery back up</span>
-            </label>
-            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
-              <input type="checkbox" value="Emergency generator" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
-              <span>Emergency generator</span>
-            </label>
-          </div>
-        </div>
-
-        <!-- NWS SKYWARN STORM SPOTTER QUALIFICATION CHECKBOX -->
-        <div class="p-2.5 bg-[#080b10] rounded-xl border border-amber-500/50 flex items-center justify-between">
-          <div>
-            <span class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
-              <span>⛈️</span>
-              <span>NWS SKYWARN SPOTTER TRAINING</span>
-            </span>
-            <p class="text-[10px] text-slate-400">Completed official NWS SKYWARN severe weather training</p>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" id="verify-is-spotter" class="sr-only peer">
-            <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
-          </label>
-        </div>
-
-        <!-- MANDATORY PROFESSIONAL PHOTO IDENTIFICATION -->
-        <div class="p-3 bg-[#080b10] rounded-xl border-2 border-emerald-500/60 space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
-              <span>📸</span>
-              <span>PROFESSIONAL OPERATOR PHOTO ID</span>
-            </span>
-            <span class="text-[9px] bg-red-950 text-red-300 border border-red-800 px-1.5 py-0.5 rounded font-bold">REQUIRED</span>
-          </div>
-          <p class="text-[10px] text-slate-300 leading-relaxed">
-            Must be a professional self-taken portrait photo with a plain <strong>WHITE BACKGROUND</strong> and <strong>NO HAT ON</strong>.
-          </p>
-          <div class="flex items-center gap-3 pt-1">
-            <img id="verify-photo-preview" src="" class="w-16 h-16 rounded-xl object-cover border-2 border-emerald-500 hidden">
-            <div id="verify-photo-placeholder" class="w-16 h-16 rounded-xl bg-slate-900 border-2 border-slate-700 flex items-center justify-center text-2xl text-slate-600 flex-shrink-0">
-              👤
-            </div>
-            <div class="flex-1 space-y-1.5">
-              <div class="flex items-center gap-2">
-                <button type="button" onclick="openLiveCameraModal('verify-photo-preview', 'verify-photo-data', 'verify-photo-placeholder', 'user')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-lg text-[10px] flex items-center gap-1 shadow cursor-pointer">
-                  <span>📸</span>
-                  <span>Take Live Photo</span>
-                </button>
-                <span class="text-[10px] text-slate-400">or choose file below:</span>
-              </div>
-              <input type="file" id="verify-photo-input" accept="image/*" capture="user" onchange="handlePhotoUpload(event, 'verify-photo-preview', 'verify-photo-data', 'verify-photo-placeholder')" class="block w-full text-[10px] text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-[10px] file:font-bold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer">
-              <span class="text-[9px] text-slate-500 block">White background &bull; No hat &bull; Facing forward</span>
-              <input type="hidden" id="verify-photo-data" value="">
-            </div>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-2 pt-1">
-          <button type="button" onclick="closeOperatorProfileVerifyModal()" class="w-1/3 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl text-xs transition cursor-pointer">
-            LATER
-          </button>
-          <button onclick="saveOperatorProfileVerification()" class="w-2/3 py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 text-slate-950 font-black rounded-xl text-xs shadow-lg transition flex items-center justify-center gap-2 cursor-pointer">
-            <span>✅</span>
-            <span>VERIFY &amp; RECORD PROFILE</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- LIVE IN-APP CAMERA VIEWFINDER MODAL -->
-  <div id="live-camera-modal" class="fixed inset-0 z-[9999] bg-black/90 backdrop-blur-md flex items-center justify-center p-4 hidden">
-    <div class="bg-[#10151d] border-2 border-emerald-500/80 rounded-2xl max-w-md w-full p-4 sm:p-5 shadow-[0_0_50px_rgba(16,185,129,0.3)] space-y-4 font-mono-tac">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-        <div class="flex items-center gap-2">
-          <span class="text-xl">📸</span>
-          <div>
-            <h3 class="font-bold text-sm text-white">LIVE TACTICAL CAMERA</h3>
-            <p class="text-[10px] text-slate-400">Position face centered with white background & no hat</p>
-          </div>
-        </div>
-        <button type="button" onclick="closeLiveCameraModal()" class="text-slate-400 hover:text-white text-lg font-bold px-2 py-1 cursor-pointer">✕</button>
-      </div>
-
-      <!-- Live Video Viewfinder -->
-      <div class="relative rounded-xl overflow-hidden bg-black border-2 border-slate-800 aspect-square flex items-center justify-center">
-        <video id="live-camera-video" autoplay playsinline muted class="w-full h-full object-cover"></video>
-        <!-- Overlay Reticle / Guide -->
-        <div class="absolute inset-0 pointer-events-none border-2 border-emerald-500/30 rounded-xl m-4 flex items-center justify-center">
-          <div class="w-32 h-44 border border-dashed border-emerald-400/50 rounded-full flex items-center justify-center">
-            <span class="text-[9px] text-emerald-400/60 font-bold bg-black/40 px-1 rounded">FACE GUIDE</span>
-          </div>
-        </div>
-        <div id="live-camera-error" class="absolute inset-x-4 p-3 bg-red-950/90 border border-red-800 rounded-lg text-[11px] text-red-200 text-center hidden">
-          Camera not accessible. Please grant camera permission or use the file upload option.
-        </div>
-      </div>
-
-      <div class="flex items-center justify-between gap-2 pt-1">
-        <button type="button" onclick="flipLiveCamera()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
-          <span>🔄</span>
-          <span>FLIP CAMERA</span>
-        </button>
-
-        <button type="button" onclick="captureLiveCameraPhoto()" class="flex-1 py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 text-slate-950 font-black rounded-xl text-xs shadow-lg transition flex items-center justify-center gap-2 cursor-pointer">
-          <span class="text-base">📸</span>
-          <span>SNAP &amp; USE PHOTO</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
-</body>
-</html>

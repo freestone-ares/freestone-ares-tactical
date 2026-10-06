@@ -67,12 +67,12 @@ jobs:
             - **In Obtainium:** Open Obtainium, tap **Check for updates** (or swipe down to refresh), then tap **Update**.
             - **Direct APK:** Download Freestone-ARES-Tactical-v7.8.5.apk below directly on your Android phone and install.
             
-            ### What's New in v7.8.5:
-            - **Top Banner Layout Alignment:** Positioned FREESTONE COUNTY ARES centered in the top row with App Logo on the left and full unconstrained Menu button on the right; slim full-width Activation Level bar stretched across the entire length of the banner directly underneath.
-            - **Removed Front Page Ver Badges & Added About Modal:** Cleaned front entrance view and added interactive About Tactical Mobile in the slide-out menu drawer and footer detailing version 7.8.5, build 33, EC contact info, and net frequencies.
-            - **Centered Tactical Sign-In:** Centered emblem, centered FREESTONE COUNTY ARES, centered TACTICAL COMMUNICATIONS, removed CAD Dispatch Console, and eliminated the ROSTER button for a clean callsign input.
-            - **County Generic Password (ARES2026):** All 15 volunteer operators can log in using county standard password ARES2026 or their custom password. Master EC KG5TZT remains strictly Chief@svfd1.
-            - **Mandatory Profile Verification & Onboarding:** Pre-filled operator profile prompt on login allows operators to review/edit emergency phone, email, license class, GMRS/RACES (AI5OX verified as WSEA569), FEMA certs, power capability, spotter toggle, and photo ID.
+            ### What's New in v7.8.5 (Build 33):
+            - **Station Equipment Capabilities Editor:** Check/uncheck station capabilities (50W VHF/UHF, HF Portable, HT, Crossband, Winlink RMS, Digital DMR/Fusion, 100Ah+ LiFePO4, Solar Array, Generator, 72-Hr Go-Kit) with live dashboard badge rendering.
+            - **Calendar NCS Management:** Full event editing with Net Control Station (NCS) assignment from active roster, quick self-assign, or NCS removal.
+            - **High-Stress SKYWARN Console:** Streamlined tactical severe spotting buttons (Tornado, Hail, Wind, Flash Flood, Damage) routing reports strictly to Net Control Station / EC with 1-tap voice script and direct EC call button.
+            - **Zero-Lag Cloud Synchronization:** Real-time push of member profiles, registrations, calendar edits, and weather spot reports directly via GitHub API, alerting the EC immediately of pending registrations.
+            - **Cleaned UI & Version Placement:** Version information is strictly maintained in the About modal, with an aligned top header and centered entrance screen.
           files: |
             Freestone-ARES-Tactical-v7.8.5.apk
             Freestone-ARES-Tactical.apk
