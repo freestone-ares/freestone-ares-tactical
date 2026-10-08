@@ -1,0 +1,537 @@
+{
+  "version": "7.8.5",
+  "lastUpdated": 1728181000000,
+  "updatedBy": "KG5TZT",
+  "members": [
+    {
+      "id": 1,
+      "call": "KG5TZT",
+      "gmrs": "WRPN302",
+      "races": "TX-FREE-01",
+      "name": "Brian Davis",
+      "class": "Amateur Extra",
+      "role": "Emergency Coordinator (EC)",
+      "level": "Level 6 - Emergency Coordinator (EC)",
+      "verified": true,
+      "claimed": true,
+      "canSendAlerts": true,
+      "phone": "903-644-5856",
+      "email": "fcares@pm.me",
+      "fema": [
+        "IS-100",
+        "IS-200",
+        "IS-300",
+        "IS-400",
+        "IS-700",
+        "IS-800"
+      ],
+      "power": "Commercial & Battery Backup & Emergency Generator",
+      "isSpotter": true,
+      "photo": "",
+      "capabilities": [
+        "50W VHF/UHF Mobile",
+        "HF Portable Base",
+        "Winlink RMS Packet / Radio Email",
+        "100Ah+ Battery / LiFePO4 Power"
+      ]
+    },
+    {
+      "id": 2,
+      "call": "AI5OX",
+      "gmrs": "WSEA569",
+      "races": "TX-FREE-02",
+      "name": "Robert Cockerell",
+      "class": "Amateur Extra",
+      "role": "Assistant EC (AEC)",
+      "level": "Level 4 - Assistant EC",
+      "verified": true,
+      "claimed": false,
+      "canSendAlerts": true,
+      "phone": "903-394-1772",
+      "email": "AI5OX@yahoo.com",
+      "fema": [
+        "IS-100",
+        "IS-200",
+        "IS-300",
+        "IS-700",
+        "IS-800"
+      ],
+      "power": "Commercial & Battery Backup",
+      "isSpotter": true,
+      "photo": "",
+      "capabilities": [
+        "50W VHF/UHF Mobile",
+        "HF Portable Base",
+        "Winlink RMS Packet / Radio Email",
+        "100Ah+ Battery / LiFePO4 Power"
+      ]
+    },
+    {
+      "id": 3,
+      "call": "FC-EMC",
+      "gmrs": "NONE",
+      "races": "TX-FREE-EMC",
+      "name": "Freestone County EMC",
+      "class": "Liaison",
+      "role": "County Emergency Management Coordinator (EMC)",
+      "level": "Level 5 - County EMC",
+      "verified": true,
+      "claimed": false,
+      "canSendAlerts": false,
+      "phone": "903-389-3335",
+      "email": "freestone.emc@co.freestone.tx.us",
+      "fema": [
+        "IS-100",
+        "IS-200",
+        "IS-300",
+        "IS-400",
+        "IS-700",
+        "IS-800"
+      ],
+      "power": "Commercial & Emergency Generator",
+      "isSpotter": false,
+      "photo": "",
+      "capabilities": [
+        "50W VHF/UHF Mobile",
+        "HF Portable Base",
+        "Winlink RMS Packet / Radio Email",
+        "100Ah+ Battery / LiFePO4 Power"
+      ]
+    },
+    {
+      "id": 4,
+      "call": "N5BED",
+      "gmrs": "WSDI801",
+      "races": "TX-FREE-04",
+      "name": "Billy Bryant",
+      "class": "General",
+      "role": "Net Control Station (NCS)",
+      "level": "Level 3 - NCS",
+      "verified": true,
+      "claimed": false,
+      "canSendAlerts": false,
+      "phone": "903-388-3470",
+      "email": "bryant1969@yahoo.com",
+      "fema": [
+        "IS-100",
+        "IS-200",
+        "IS-700",
+        "IS-800"
+      ],
+      "power": "Commercial & Battery Backup",
+      "isSpotter": true,
+      "photo": "",
+      "capabilities": [
+        "50W VHF/UHF Mobile",
+        "HF Portable Base",
+        "Winlink RMS Packet / Radio Email",
+        "100Ah+ Battery / LiFePO4 Power"
+      ]
+    },
+    {
+      "id": 5,
+      "call": "KJ5HSS",
+      "gmrs": "WSHS425",
+      "races": "TX-FREE-05",
+      "name": "Paul Parrish",
+      "class": "General",
+      "role": "Field Operator / Storm Spotter",
+      "level": "Level 2 - Field Operator / Spotter",
+      "verified": true,
+      "claimed": false,
+      "canSendAlerts": false,
+      "phone": "903-875-6420",
+      "email": "paulparrish@gmail.com",
+      "fema": [
+        "IS-100",
+        "IS-200",
+        "IS-700",
+        "IS-800"
+      ],
+      "power": "Commercial & Battery Backup",
+      "isSpotter": true,
+      "photo": "",
+      "capabilities": [
+        "50W VHF/UHF Mobile",
+        "HF Portable Base",
+        "Winlink RMS Packet / Radio Email",
+        "100Ah+ Battery / LiFePO4 Power"
+      ]
+    },
+    {
+      "id": 6,
+      "call": "KJ5GPK",
+      "gmrs": "WSHH865",
+      "races": "TX-FREE-06",
+      "name": "Leonard Smith",
+      "class": "General",
+      "role": "Field Operator / Storm Spotter",
+      "level": "Level 2 - Field Operator / Spotter",
+      "verified": true,
+      "claimed": false,
+      "canSendAlerts": false,
+      "phone": "254-488-1431",
+      "email": "kj5gpk@gmail.com",
+      "fema": [
+        "IS-100",
+        "IS-200",
+        "IS-700",
+        "IS-800"
+      ],
+      "power": "Commercial & Battery Backup",
+      "isSpotter": true,
+      "photo": "",
+      "capabilities": [
+        "50W VHF/UHF Mobile",
+        "HF Portable Base",
+        "Winlink RMS Packet / Radio Email",
+        "100Ah+ Battery / LiFePO4 Power"
+      ]
+    },
+    {
+      "id": 7,
+      "call": "KI5YIG",
+      "gmrs": "WROJ727",
+      "races": "TX-FREE-07",
+      "name": "Don Hall",
+      "class": "General",
+      "role": "Field Operator / Storm Spotter",
+      "level": "Level 2 - Field Operator / Spotter",
+      "verified": true,
+      "claimed": false,
+      "canSendAlerts": false,
+      "phone": "903-366-0169",
+      "email": "houndheadjr@gmail.com",
+      "fema": [
+        "IS-100",
+        "IS-700"
+      ],
+      "power": "Commercial & Battery Backup",
+      "isSpotter": true,
+      "photo": "",
+      "capabilities": [
+        "50W VHF/UHF Mobile",
+        "HF Portable Base",
+        "Winlink RMS Packet / Radio Email",
+        "100Ah+ Battery / LiFePO4 Power"
+      ]
+    },
+    {
+      "id": 8,
+      "call": "W5KFX",
+      "gmrs": "WRKY482",
+      "races": "TX-FREE-08",
+      "name": "Keath Huff",
+      "class": "Amateur Extra",
+      "role": "Field Operator / Storm Spotter",
+      "level": "Level 2 - Field Operator / Spotter",
+      "verified": true,
+      "claimed": false,
+      "canSendAlerts": false,
+      "phone": "360-907-5717",
+      "email": "cybercowboy777@gmail.com",
+      "fema": [
+        "IS-100",
+        "IS-700"
+      ],
+      "power": "Commercial & Battery Backup",
+      "isSpotter": true,
+      "photo": "",
+      "capabilities": [
+        "50W VHF/UHF Mobile",
+        "HF Portable Base",
+        "Winlink RMS Packet / Radio Email",
+        "100Ah+ Battery / LiFePO4 Power"
+      ]
+    },
+    {
+      "id": 9,
+      "call": "KE5DFY",
+      "gmrs": "WSHG319",
+      "races": "TX-FREE-09",
+      "name": "Daniel Harrington",
+      "class": "Amateur Extra",
+      "role": "Field Operator / Storm Spotter",
+      "level": "Level 2 - Field Operator / Spotter",
+      "verified": true,
+      "claimed": false,
+      "canSendAlerts": false,
+      "phone": "903-390-8828",
+      "email": "danharringtonweldingandfabrication@outlook.com",
+      "fema": [
+        "IS-100",
+        "IS-200",
+        "IS-700",
+        "IS-800"
+      ],
+      "power": "Commercial & Battery Backup",
+      "isSpotter": true,
+      "photo": "",
+      "capabilities": [
+        "50W VHF/UHF Mobile",
+        "HF Portable Base",
+        "Winlink RMS Packet / Radio Email",
+        "100Ah+ Battery / LiFePO4 Power"
+      ]
+    },
+    {
+      "id": 10,
+      "call": "KI5RZD",
+      "gmrs": "WRUP547",
+      "races": "TX-FREE-10",
+      "name": "Steve Bullard",
+      "class": "General",
+      "role": "Field Operator / Storm Spotter",
+      "level": "Level 2 - Field Operator / Spotter",
+      "verified": true,
+      "claimed": false,
+      "canSendAlerts": false,
+      "phone": "254-625-1643",
+      "email": "bullardfarms@gmail.com",
+      "fema": [
+        "IS-100",
+        "IS-200",
+        "IS-700",
+        "IS-800"
+      ],
+      "power": "Commercial & Battery Backup",
+      "isSpotter": true,
+      "photo": "",
+      "capabilities": [
+        "50W VHF/UHF Mobile",
+        "HF Portable Base",
+        "Winlink RMS Packet / Radio Email",
+        "100Ah+ Battery / LiFePO4 Power"
+      ]
+    },
+    {
+      "id": 11,
+      "call": "KJ5LMM",
+      "gmrs": "WSFR839",
+      "races": "TX-FREE-11",
+      "name": "Pete Harper",
+      "class": "General",
+      "role": "Field Operator / Storm Spotter",
+      "level": "Level 2 - Field Operator / Spotter",
+      "verified": true,
+      "claimed": false,
+      "canSendAlerts": false,
+      "phone": "408-767-0606",
+      "email": "peteharper1@yahoo.com",
+      "fema": [
+        "IS-100",
+        "IS-200",
+        "IS-700",
+        "IS-800"
+      ],
+      "power": "Commercial & Battery Backup",
+      "isSpotter": true,
+      "photo": "",
+      "capabilities": [
+        "50W VHF/UHF Mobile",
+        "HF Portable Base",
+        "Winlink RMS Packet / Radio Email",
+        "100Ah+ Battery / LiFePO4 Power"
+      ]
+    },
+    {
+      "id": 12,
+      "call": "N5WMH",
+      "gmrs": "WSBW995",
+      "races": "TX-FREE-12",
+      "name": "Russel Hall",
+      "class": "General",
+      "role": "Field Operator / Storm Spotter",
+      "level": "Level 2 - Field Operator / Spotter",
+      "verified": true,
+      "claimed": false,
+      "canSendAlerts": false,
+      "phone": "903-922-7620",
+      "email": "n5wmh3@gmail.com",
+      "fema": [
+        "IS-100",
+        "IS-200",
+        "IS-700",
+        "IS-800"
+      ],
+      "power": "Commercial & Battery Backup",
+      "isSpotter": true,
+      "photo": "",
+      "capabilities": [
+        "50W VHF/UHF Mobile",
+        "HF Portable Base",
+        "Winlink RMS Packet / Radio Email",
+        "100Ah+ Battery / LiFePO4 Power"
+      ]
+    },
+    {
+      "id": 13,
+      "call": "W5AMR",
+      "gmrs": "NONE",
+      "races": "TX-FREE-13",
+      "name": "William Houston",
+      "class": "General",
+      "role": "Field Operator / Storm Spotter",
+      "level": "Level 2 - Field Operator / Spotter",
+      "verified": true,
+      "claimed": false,
+      "canSendAlerts": false,
+      "phone": "903-944-8870",
+      "email": "operator@epsilonseven.com",
+      "fema": [
+        "IS-100",
+        "IS-200",
+        "IS-700",
+        "IS-800"
+      ],
+      "power": "Commercial & Battery Backup",
+      "isSpotter": true,
+      "photo": "",
+      "capabilities": [
+        "50W VHF/UHF Mobile",
+        "HF Portable Base",
+        "Winlink RMS Packet / Radio Email",
+        "100Ah+ Battery / LiFePO4 Power"
+      ]
+    },
+    {
+      "id": 14,
+      "call": "KE5MIB",
+      "gmrs": "NONE",
+      "races": "TX-FREE-14",
+      "name": "Buzz Russell",
+      "class": "Technician",
+      "role": "Level 1 Operator",
+      "level": "Level 1 - Operator",
+      "verified": true,
+      "claimed": false,
+      "canSendAlerts": false,
+      "phone": "903-390-6967",
+      "email": "ke5mib@fcares.org",
+      "fema": [
+        "IS-100",
+        "IS-700"
+      ],
+      "power": "Commercial",
+      "isSpotter": false,
+      "photo": "",
+      "capabilities": [
+        "50W VHF/UHF Mobile",
+        "HF Portable Base",
+        "Winlink RMS Packet / Radio Email",
+        "100Ah+ Battery / LiFePO4 Power"
+      ]
+    },
+    {
+      "id": 15,
+      "call": "KJ5GPJ",
+      "gmrs": "NONE",
+      "races": "TX-FREE-15",
+      "name": "Kateley Smith",
+      "class": "Technician",
+      "role": "Level 1 Operator",
+      "level": "Level 1 - Operator",
+      "verified": true,
+      "claimed": false,
+      "canSendAlerts": false,
+      "phone": "903-388-3253",
+      "email": "kately.craig@gmail.com",
+      "fema": [
+        "IS-100",
+        "IS-700"
+      ],
+      "power": "Commercial",
+      "isSpotter": false,
+      "photo": "",
+      "capabilities": [
+        "50W VHF/UHF Mobile",
+        "HF Portable Base",
+        "Winlink RMS Packet / Radio Email",
+        "100Ah+ Battery / LiFePO4 Power"
+      ]
+    },
+    {
+      "id": 16,
+      "call": "KJ5JUW",
+      "gmrs": "NONE",
+      "races": "TX-FREE-16",
+      "name": "Jason Andrews",
+      "class": "Technician",
+      "role": "Level 1 Operator",
+      "level": "Level 1 - Operator",
+      "verified": true,
+      "claimed": false,
+      "canSendAlerts": false,
+      "phone": "903-392-5432",
+      "email": "rjandrews2010@gmail.com",
+      "fema": [
+        "IS-100",
+        "IS-700"
+      ],
+      "power": "Commercial",
+      "isSpotter": false,
+      "photo": "",
+      "capabilities": [
+        "50W VHF/UHF Mobile",
+        "HF Portable Base",
+        "Winlink RMS Packet / Radio Email",
+        "100Ah+ Battery / LiFePO4 Power"
+      ]
+    }
+  ],
+  "pendingAuthorizations": [],
+  "calendarEvents": [
+    {
+      "id": "ev-net-weekly",
+      "title": "Freestone County ARES Weekly Training Net",
+      "category": "WEEKLY NET",
+      "recurrence": "EVERY SUNDAY @ 2000 LOCAL",
+      "date": "2026-10-11",
+      "time24": "20:00",
+      "zuluTime": "01:00Z",
+      "channel": "Ch 01 - FF 110 (145.110 -0.600 TSQ 146.2)",
+      "altChannel": "Ch 02 - WRTM 760 (146.760 -0.600 T136.5)",
+      "location": "W5NFL Fairfield VHF Repeater & EchoLink (AI5OX-R)",
+      "ncs": "AI5OX - Robert Cockerell (AEC / Net Control)",
+      "description": "Weekly countywide training net. Roll call of active operators, emergency traffic handling drill, ARES announcements, and Winlink check-ins on Ch 28 (144.975 MHz).",
+      "rsvps": {
+        "attending": [
+          "KG5TZT",
+          "AI5OX",
+          "N5BED"
+        ],
+        "remote": [],
+        "unavailable": []
+      },
+      "icsStart": "20261011T200000",
+      "icsEnd": "20261011T210000"
+    },
+    {
+      "id": "ev-meeting-monthly",
+      "title": "Monthly ARES In-Person Training & Meeting",
+      "category": "MEETING / TRAINING",
+      "recurrence": "1ST THURSDAY OF MONTH",
+      "date": "2026-11-05",
+      "time24": "19:00",
+      "zuluTime": "01:00Z",
+      "channel": "Ch 09 - ARES TAC (146.580 TSQ 123.0)",
+      "altChannel": "Ch 01 - FF 110 (145.110 TSQ 146.2)",
+      "location": "Fairfield Municipal Complex / County EOC (425 W Commerce St)",
+      "ncs": "KG5TZT - Brian Davis (Emergency Coordinator)",
+      "description": "Monthly county in-person tactical training session and equipment check. Topics: ICS form compliance, Winlink RMS Express message routing, and portable go-kit deployment.",
+      "rsvps": {
+        "attending": [
+          "KG5TZT",
+          "AI5OX",
+          "N5BED",
+          "KF5PDU"
+        ],
+        "remote": [],
+        "unavailable": []
+      },
+      "icsStart": "20261105T190000",
+      "icsEnd": "20261105T203000"
+    }
+  ],
+  "skywarnReports": []
+}

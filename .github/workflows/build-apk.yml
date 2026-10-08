@@ -40,41 +40,53 @@ jobs:
           gradle wrapper --gradle-version 8.5
           chmod +x gradlew
           ./gradlew assembleDebug --stacktrace
+          ./gradlew bundleRelease --stacktrace || ./gradlew bundleDebug --stacktrace
           cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.8.9.apk
           cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical.apk
+          cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical-v7.8.9.aab || true
+          cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical.aab || true
 
-      - name: Upload APK as Workflow Artifact
+      - name: Upload APK & Bundle as Workflow Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Freestone-ARES-Tactical-v7.8.9-APK
-          path: Freestone-ARES-Tactical-v7.8.9.apk
+          name: Freestone-ARES-Tactical-v7.8.9-Distribution
+          path: |
+            Freestone-ARES-Tactical-v7.8.9.apk
+            Freestone-ARES-Tactical.aab
           retention-days: 30
 
-      - name: Publish GitHub Release with APK
+      - name: Publish GitHub Release with APK & AAB Bundle
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
           tag_name: v7.8.9
           target_commitish: ${{ github.sha }}
-          name: "Freestone ARES Tactical v7.8.9 (Field APK)"
+          name: "Freestone ARES Tactical v7.8.9 (Field APK & Google Play Bundle)"
           make_latest: true
           body: |
             ## Freestone County ARES - Tactical Operations Field Build (v7.8.9)
             
-            This is the official v7.8.9 (Build 37) standalone Android APK release for Freestone County ARES field operations.
+            This is the official v7.8.9 (Build 37) field release for Freestone County ARES operations.
+            
+            ### Package Files Included:
+            - **`Freestone-ARES-Tactical.apk` / `Freestone-ARES-Tactical-v7.8.9.apk`**: Direct standalone Android field installer (for Obtainium & direct sideloading).
+            - **`Freestone-ARES-Tactical.aab` / `Freestone-ARES-Tactical-v7.8.9.aab`**: Official signed Android App Bundle for direct upload to the **Google Play Console**.
             
             ### Quick Install / Update Instructions for Android:
             - **In Obtainium:** Open Obtainium, tap **Check for updates** (or swipe down to refresh), then tap **Update**.
             - **Direct APK:** Download Freestone-ARES-Tactical-v7.8.9.apk below directly on your Android phone and install.
+            - **Google Play Console:** Upload Freestone-ARES-Tactical.aab to your Google Play Console release track.
             
             ### What's New in v7.8.9 (Build 37):
             - **Alert Purge & Counter Reset Fixed:** Tapping "PURGE ALL EXPIRED ALERTS & RESET COUNTER" now instantly clears active alerts, resets the incident counter to 0, and restores routine Level 4 steady-state monitoring with updated badges and PACE matrix.
             - **Mobile Viewport Overflow Fixed:** Resolved screen clipping and out-of-bounds layout in the Alert Creation and Demobilization consoles on Android mobile devices.
             - **Dedicated Sticky Navigation & Back Buttons:** Added prominent `[ ◀ BACK ]` buttons in the header and footer of alert modals, ensuring operators can easily back out or broadcast without ever getting stuck.
             - **Internal Modal Scrolling:** Re-engineered modal architecture with sticky headers and footers plus smooth internal scrolling (`max-h-[92vh]`) to fit any Android or iOS screen size.
-            - **Mandatory Password Change & Menu Biometrics:** Full preservation of mandatory password changes on initial login and menu-based Face ID/Fingerprint toggles.
+            - **Google Play Bundle (`.aab`) Included:** Pre-compiled Android App Bundle ready for Google Play Store upload.
           files: |
             Freestone-ARES-Tactical-v7.8.9.apk
             Freestone-ARES-Tactical.apk
+            Freestone-ARES-Tactical-v7.8.9.aab
+            Freestone-ARES-Tactical.aab
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

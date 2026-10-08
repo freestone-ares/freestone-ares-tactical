@@ -1,0 +1,239 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AA00002029B7F12300000020 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00001029B7F12300000010 /* AppDelegate.swift */; };
+		AA00002129B7F12300000021 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00001129B7F12300000011 /* ViewController.swift */; };
+		AA00002229B7F12300000022 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA00001229B7F12300000012 /* LaunchScreen.storyboard */; };
+		AA00002429B7F12300000024 /* web in Resources */ = {isa = PBXBuildFile; fileRef = AA00001429B7F12300000014 /* web */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		AA00001029B7F12300000010 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		AA00001129B7F12300000011 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		AA00001229B7F12300000012 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		AA00001329B7F12300000013 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA00001429B7F12300000014 /* web */ = {isa = PBXFileReference; lastKnownFileType = folder; path = web; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AA00000729B7F12300000007 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AA00000329B7F12300000003 = {
+			isa = PBXGroup;
+			children = (
+				AA00000429B7F12300000004 /* FreestoneARESTactical */,
+			);
+			sourceTree = "<group>";
+		};
+		AA00000429B7F12300000004 /* FreestoneARESTactical */ = {
+			isa = PBXGroup;
+			children = (
+				AA00001029B7F12300000010 /* AppDelegate.swift */,
+				AA00001129B7F12300000011 /* ViewController.swift */,
+				AA00001229B7F12300000012 /* LaunchScreen.storyboard */,
+				AA00001329B7F12300000013 /* Info.plist */,
+				AA00001429B7F12300000014 /* web */,
+			);
+			path = FreestoneARESTactical;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AA00000229B7F12300000002 /* FreestoneARESTactical */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA00003529B7F12300000035 /* Build configuration list for PBXNativeTarget "FreestoneARESTactical" */;
+			buildPhases = (
+				AA00000529B7F12300000005 /* Sources */,
+				AA00000729B7F12300000007 /* Frameworks */,
+				AA00000629B7F12300000006 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FreestoneARESTactical;
+			productName = FreestoneARESTactical;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AA00000129B7F12300000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1520;
+				LastUpgradeCheck = 1520;
+				TargetAttributes = {
+					AA00000229B7F12300000002 = {
+						CreatedOnToolsVersion = 15.2;
+					};
+				};
+			};
+			buildConfigurationList = AA00003429B7F12300000034 /* Build configuration list for PBXProject "FreestoneARESTactical" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AA00000329B7F12300000003;
+			productRefGroup = AA00000329B7F12300000003;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AA00000229B7F12300000002 /* FreestoneARESTactical */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AA00000629B7F12300000006 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA00002229B7F12300000022 /* LaunchScreen.storyboard in Resources */,
+				AA00002429B7F12300000024 /* web in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AA00000529B7F12300000005 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA00002029B7F12300000020 /* AppDelegate.swift in Sources */,
+				AA00002129B7F12300000021 /* ViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		AA00003029B7F12300000030 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		AA00003129B7F12300000031 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_OPTIMIZATION_LEVEL = s;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		AA00003229B7F12300000032 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 37;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = FreestoneARESTactical/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 7.8.9;
+				PRODUCT_BUNDLE_IDENTIFIER = org.freestone.ares.tactical;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AA00003329B7F12300000033 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 37;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = FreestoneARESTactical/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 7.8.9;
+				PRODUCT_BUNDLE_IDENTIFIER = org.freestone.ares.tactical;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AA00003429B7F12300000034 /* Build configuration list for PBXProject "FreestoneARESTactical" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA00003029B7F12300000030 /* Debug */,
+				AA00003129B7F12300000031 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA00003529B7F12300000035 /* Build configuration list for PBXNativeTarget "FreestoneARESTactical" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA00003229B7F12300000032 /* Debug */,
+				AA00003329B7F12300000033 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+	};
+	rootObject = AA00000129B7F12300000001 /* Project object */;
+}
