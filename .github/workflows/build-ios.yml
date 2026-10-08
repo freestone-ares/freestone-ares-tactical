@@ -1,0 +1,82 @@
+name: Build Freestone ARES iOS IPA
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-ios-ipa:
+    name: Build iOS IPA (.ipa)
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Select Xcode Version
+        run: sudo xcode-select -switch /Applications/Xcode_15.4.app || sudo xcode-select -switch /Applications/Xcode.app
+
+      - name: Install Apple Certificate and Profile
+        env:
+          P12_PASSWORD: 'freestone_ares_field_2026'
+        run: |
+          # Create temporary keychain
+          KEYCHAIN_PATH=$RUNNER_TEMP/build.keychain
+          KEYCHAIN_PASSWORD=temp_keychain_password
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+
+          # Import p12
+          security import ios_app/certs/distribution.p12 -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security list-keychain -d user -s "$KEYCHAIN_PATH" $(security list-keychains -d user | tr -d '"')
+
+          # Install mobileprovision
+          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
+          cp ios_app/certs/Freestone_ARES_Distribution.mobileprovision "$HOME/Library/MobileDevice/Provisioning Profiles/b7c5ddd0-f4b4-4e6b-bf56-91dcd9d2a6e1.mobileprovision"
+
+      - name: Build and Archive iOS Project
+        run: |
+          xcodebuild clean archive \
+            -project ios_app/FreestoneARESTactical.xcodeproj \
+            -scheme FreestoneARESTactical \
+            -configuration Release \
+            -archivePath build/FreestoneARESTactical.xcarchive \
+            CODE_SIGN_STYLE=Manual \
+            DEVELOPMENT_TEAM=LSMMV8JFAJ \
+            PROVISIONING_PROFILE="b7c5ddd0-f4b4-4e6b-bf56-91dcd9d2a6e1" \
+            CODE_SIGN_IDENTITY="Apple Distribution"
+
+      - name: Export IPA
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath build/FreestoneARESTactical.xcarchive \
+            -exportOptionsPlist ios_app/exportOptions.plist \
+            -exportPath build/artifacts
+
+          cp build/artifacts/*.ipa Freestone-ARES-Tactical.ipa || true
+          cp build/artifacts/*.ipa Freestone-ARES-Tactical-v7.8.9.ipa || true
+
+      - name: Upload IPA as Workflow Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Freestone-ARES-Tactical-iOS-v7.8.9
+          path: Freestone-ARES-Tactical.ipa
+          retention-days: 30
+
+      - name: Attach IPA to GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        with:
+          tag_name: v7.8.9
+          files: |
+            Freestone-ARES-Tactical.ipa
+            Freestone-ARES-Tactical-v7.8.9.ipa
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
