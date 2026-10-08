@@ -43,6 +43,7 @@ jobs:
 
       - name: Build and Archive iOS Project
         run: |
+          mkdir -p build
           xcodebuild clean archive \
             -project ios_app/FreestoneARESTactical.xcodeproj \
             -scheme FreestoneARESTactical \
@@ -50,6 +51,7 @@ jobs:
             -archivePath build/FreestoneARESTactical.xcarchive \
             CODE_SIGN_STYLE=Manual \
             DEVELOPMENT_TEAM=LSMMV8JFAJ \
+            PROVISIONING_PROFILE_SPECIFIER="Freestone ARES Distribution" \
             PROVISIONING_PROFILE="b7c5ddd0-f4b4-4e6b-bf56-91dcd9d2a6e1" \
             CODE_SIGN_IDENTITY="Apple Distribution"
 
