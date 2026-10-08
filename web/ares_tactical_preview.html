@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Freestone County ARES Tactical Mobile v7.8.8</title>
+  <title>Freestone County ARES Tactical Mobile v7.8.9</title>
   <meta name="description" content="Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES">
   <meta name="theme-color" content="#0b0e14">
   <meta name="mobile-web-app-capable" content="yes">
@@ -1513,7 +1513,7 @@
       </div>
 
       <!-- Active Paging Banner (ActiveAlert / CAD Style) -->
-      <div class="bg-gradient-to-r from-red-950/80 via-[#181116] to-[#12151e] border-2 border-red-500/70 rounded-xl p-5 shadow-[0_0_25px_rgba(239,68,68,0.25)] space-y-4">
+      <div id="active-incident-banner-card" class="bg-gradient-to-r from-emerald-950/40 via-[#0e141c] to-[#10151d] border-2 border-emerald-500/50 rounded-xl p-4 sm:p-5 shadow-[0_0_20px_rgba(16,185,129,0.15)] space-y-4">
         <!-- Top Row: Badge, ID, and Action Buttons -->
         <div class="flex flex-col md:flex-row md:items-start justify-between gap-3">
           <div class="space-y-1">
@@ -1589,7 +1589,7 @@
           <div class="space-y-1">
             <div class="flex items-center gap-2 text-slate-200">
               <span class="text-red-400 text-base">📍</span>
-              <strong>STAGING:</strong> <span id="incident-staging-text">Freestone County EOC - Fairfield, TX</span>
+              <strong>STAGING:</strong> <span id="incident-staging-text">Standby / Home QTH</span>
             </div>
             <div class="text-[11px] text-amber-400 pl-6">
               GPS: <span class="text-white font-bold">31.7249° N, 96.1652° W</span> • GRID: <span class="text-white font-bold">EM11xq</span> (Fairfield Municipal Complex)
@@ -1641,7 +1641,7 @@
         <!-- Mission Directive -->
         <div class="text-xs text-slate-300 font-mono-tac bg-black/40 p-2.5 rounded border border-red-950">
           <strong class="text-red-400">MISSION DIRECTIVE:</strong>
-          <span id="incident-mission-text" class="text-slate-200">Establish primary Winlink email station and VHF voice gateway between Fairfield Shelter and County EOC. Standby for Skywarn reports.</span>
+          <span id="incident-mission-text" class="text-slate-200">Routine monitoring on FF 110 (145.110 TSQ 146.2). Steady-state amateur radio standby.</span>
         </div>
 
         <!-- INCIDENT UPDATES & SITUATION REPORTS TIMELINE (CAD CHRONOLOGICAL LOG) -->
@@ -1656,7 +1656,7 @@
             </div>
             <div class="flex items-center gap-2">
               <span id="alert-updates-count-badge" class="px-2.5 py-0.5 rounded-full text-[10px] bg-amber-950 text-amber-300 border border-amber-700 font-bold">
-                2 UPDATES LOGGED
+                0 UPDATES LOGGED
               </span>
               <button onclick="openUpdateAlertModal()" class="px-3 py-1 bg-gradient-to-r from-red-600 via-amber-600 to-red-600 hover:from-red-500 hover:to-amber-500 text-white rounded text-[11px] font-black flex items-center gap-1.5 shadow animate-pulse border border-amber-400">
                 <span>⚡ POST UPDATE</span>
@@ -3172,20 +3172,25 @@
   </div>
 
   <!-- MODAL: EMERGENCY ACTIVATION BROADCAST (EC DISPATCH CONSOLE) -->
-  <div id="broadcast-modal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-[#10151d] border-2 border-red-500/70 rounded-xl max-w-lg w-full p-5 space-y-4 font-mono-tac text-xs hud-glow shadow-[0_0_30px_rgba(239,68,68,0.4)]">
-      <div class="flex justify-between items-center border-b border-red-900/60 pb-2">
-        <div class="flex items-center gap-2">
-          <span id="b-modal-icon" class="text-red-500 text-lg">📢</span>
-          <h4 id="b-modal-title" class="text-red-400 font-bold text-sm tracking-wide">DISPATCH EMERGENCY ACTIVATION (EC CONSOLE)</h4>
+  <div id="broadcast-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4 hidden overflow-y-auto">
+    <div class="bg-[#0e131b] border-2 border-red-500/80 rounded-2xl max-w-lg w-full max-h-[92vh] flex flex-col font-mono-tac text-xs hud-glow shadow-[0_0_35px_rgba(239,68,68,0.5)] my-auto overflow-hidden">
+      <!-- Sticky Modal Header -->
+      <div class="flex items-center justify-between border-b border-red-900/80 px-4 py-3 bg-[#080c12] rounded-t-2xl flex-shrink-0 gap-2">
+        <div class="flex items-center gap-2 min-w-0">
+          <button type="button" onclick="closeBroadcastModal()" class="py-1.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-lg border border-slate-700 text-xs flex items-center gap-1.5 cursor-pointer transition flex-shrink-0">
+            <span>◀</span><span>BACK</span>
+          </button>
+          <span id="b-modal-icon" class="text-red-500 text-base flex-shrink-0">📢</span>
+          <h4 id="b-modal-title" class="text-red-400 font-bold text-xs sm:text-sm tracking-wide truncate">DISPATCH EMERGENCY ACTIVATION</h4>
         </div>
-        <button onclick="closeBroadcastModal()" class="text-slate-400 hover:text-white text-base">✕</button>
+        <button type="button" onclick="closeBroadcastModal()" class="w-8 h-8 rounded-lg bg-slate-800/80 hover:bg-red-900/80 text-slate-300 hover:text-white flex items-center justify-center text-sm font-bold border border-slate-700 cursor-pointer transition flex-shrink-0" title="Close / Back">✕</button>
       </div>
 
-      <div class="space-y-3">
+      <!-- Scrollable Form Body -->
+      <div class="flex-1 overflow-y-auto p-4 space-y-3.5 overscroll-contain">
         <div>
-          <label class="text-slate-400 block mb-1">ACTIVATION READINESS LEVEL</label>
-          <select id="b-level" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-white font-bold">
+          <label class="text-slate-400 block mb-1 font-bold">ACTIVATION READINESS LEVEL</label>
+          <select id="b-level" class="w-full bg-[#0b0e14] border border-slate-700 rounded-lg p-2.5 text-white font-bold text-xs focus:outline-none focus:border-red-500">
             <option value="LEVEL 1 ACTIVATION">LEVEL 1 - FULL COUNTY ACTIVATION (EMERGENCY)</option>
             <option value="LEVEL 2 ACTIVATION">LEVEL 2 - ESCALATED / SEVERE WEATHER (WATCH)</option>
             <option value="LEVEL 3 ACTIVATION">LEVEL 3 - INCREASED READINESS / STAGING</option>
@@ -3194,27 +3199,27 @@
         </div>
 
         <div>
-          <label class="text-slate-400 block mb-1">INCIDENT TITLE / OPERATION NAME</label>
-          <input type="text" id="b-title" value="SEVERE WEATHER & FLASH FLOODING // FREESTONE CO. COMM SUPPORT" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-white font-bold">
+          <label class="text-slate-400 block mb-1 font-bold">INCIDENT TITLE / OPERATION NAME</label>
+          <input type="text" id="b-title" value="SEVERE WEATHER & FLASH FLOODING // FREESTONE CO. COMM SUPPORT" class="w-full bg-[#0b0e14] border border-slate-700 rounded-lg p-2.5 text-white font-bold text-xs focus:outline-none focus:border-red-500">
         </div>
 
         <div>
-          <label class="text-slate-400 block mb-1">STAGING LOCATION & GPS</label>
-          <input type="text" id="b-staging" value="Freestone County EOC - Fairfield, TX (31.7249° N, 96.1652° W) - Grid: EM11xq" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
+          <label class="text-slate-400 block mb-1 font-bold">STAGING LOCATION & GPS</label>
+          <input type="text" id="b-staging" value="Freestone County EOC - Fairfield, TX (31.7249° N, 96.1652° W) - Grid: EM11xq" class="w-full bg-[#0b0e14] border border-slate-700 rounded-lg p-2.5 text-slate-200 text-xs focus:outline-none focus:border-red-500">
         </div>
 
         <div>
-          <label class="text-slate-400 block mb-1">MISSION DIRECTIVE</label>
-          <textarea id="b-mission" rows="2" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">Establish primary Winlink email station and VHF voice gateway between Fairfield Shelter and County EOC. Standby for Skywarn reports.</textarea>
+          <label class="text-slate-400 block mb-1 font-bold">MISSION DIRECTIVE</label>
+          <textarea id="b-mission" rows="2" class="w-full bg-[#0b0e14] border border-slate-700 rounded-lg p-2.5 text-slate-200 text-xs focus:outline-none focus:border-red-500">Establish primary Winlink email station and VHF voice gateway between Fairfield Shelter and County EOC. Standby for Skywarn reports.</textarea>
         </div>
 
         <!-- SITREP / ALERT UPDATE REASON (VISIBLE WHEN UPDATING ALERT) -->
-        <div id="b-update-note-box" class="p-3 bg-amber-950/40 rounded-lg border border-amber-600/60 space-y-1.5">
+        <div id="b-update-note-box" class="p-3 bg-amber-950/40 rounded-xl border border-amber-600/60 space-y-1.5">
           <label class="text-amber-400 font-bold block text-[11px] flex items-center gap-1.5">
             <span>⚡</span>
             <span>ALERT UPDATE REASON / SITUATION REPORT (WHAT CHANGED)</span>
           </label>
-          <input type="text" id="b-update-note" placeholder="e.g. Staging confirmed at EOC rear bay; Flood waters cresting on US-84; Switch to WRTM 760" class="w-full bg-[#0b0e14] border border-amber-700/80 rounded p-2 text-white font-mono text-xs focus:outline-none focus:border-amber-400">
+          <input type="text" id="b-update-note" placeholder="e.g. Staging confirmed at EOC rear bay; Flood waters cresting on US-84; Switch to WRTM 760" class="w-full bg-[#0b0e14] border border-amber-700/80 rounded-lg p-2 text-white font-mono text-xs focus:outline-none focus:border-amber-400">
           <div class="text-[10px] text-amber-300/80 flex items-center gap-1">
             <span>ℹ️</span>
             <span>This update message will be broadcast to all responder devices along with the re-triggered emergency sirens.</span>
@@ -3222,13 +3227,13 @@
         </div>
 
         <!-- ICS-205 PACE CHANNEL ASSIGNMENT DROPDOWNS -->
-        <div class="p-3 bg-black/60 rounded-lg border border-amber-500/50 space-y-2.5">
+        <div class="p-3 bg-black/60 rounded-xl border border-amber-500/50 space-y-2.5">
           <div class="flex items-center justify-between">
             <span class="text-amber-400 font-bold text-[11px] flex items-center gap-1.5">
               <span>📻</span>
               <span>ASSIGN FREQUENCIES OFF ICS-205 (PACE MATRIX)</span>
             </span>
-            <span class="text-[10px] text-emerald-400 font-mono">COUNTYWIDE DISPATCH</span>
+            <span class="text-[10px] text-emerald-400 font-mono font-bold">COUNTYWIDE DISPATCH</span>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
@@ -3236,7 +3241,7 @@
               <label class="text-emerald-400 block mb-0.5 text-[10px] font-bold flex items-center gap-1">
                 <span class="w-2 h-2 rounded-full bg-emerald-500"></span> [P] PRIMARY NET
               </label>
-              <select id="b-pace-p" class="w-full bg-[#0b0e14] border border-emerald-600/60 rounded p-1.5 text-white font-mono text-[11px] focus:outline-none focus:border-emerald-400">
+              <select id="b-pace-p" class="w-full bg-[#0b0e14] border border-emerald-600/60 rounded-lg p-2 text-white font-mono text-[11px] focus:outline-none focus:border-emerald-400">
                 <!-- Populated dynamically via populatePaceDropdowns() -->
               </select>
             </div>
@@ -3244,7 +3249,7 @@
               <label class="text-amber-400 block mb-0.5 text-[10px] font-bold flex items-center gap-1">
                 <span class="w-2 h-2 rounded-full bg-amber-500"></span> [A] ALTERNATE NET
               </label>
-              <select id="b-pace-a" class="w-full bg-[#0b0e14] border border-amber-600/60 rounded p-1.5 text-white font-mono text-[11px] focus:outline-none focus:border-amber-400">
+              <select id="b-pace-a" class="w-full bg-[#0b0e14] border border-amber-600/60 rounded-lg p-2 text-white font-mono text-[11px] focus:outline-none focus:border-amber-400">
                 <!-- Populated dynamically via populatePaceDropdowns() -->
               </select>
             </div>
@@ -3252,7 +3257,7 @@
               <label class="text-blue-400 block mb-0.5 text-[10px] font-bold flex items-center gap-1">
                 <span class="w-2 h-2 rounded-full bg-blue-500"></span> [C] CONTINGENCY TAC
               </label>
-              <select id="b-pace-c" class="w-full bg-[#0b0e14] border border-blue-600/60 rounded p-1.5 text-white font-mono text-[11px] focus:outline-none focus:border-blue-400">
+              <select id="b-pace-c" class="w-full bg-[#0b0e14] border border-blue-600/60 rounded-lg p-2 text-white font-mono text-[11px] focus:outline-none focus:border-blue-400">
                 <!-- Populated dynamically via populatePaceDropdowns() -->
               </select>
             </div>
@@ -3260,7 +3265,7 @@
               <label class="text-purple-400 block mb-0.5 text-[10px] font-bold flex items-center gap-1">
                 <span class="w-2 h-2 rounded-full bg-purple-500"></span> [E] EMERGENCY FALLBACK
               </label>
-              <select id="b-pace-e" class="w-full bg-[#0b0e14] border border-purple-600/60 rounded p-1.5 text-white font-mono text-[11px] focus:outline-none focus:border-purple-400">
+              <select id="b-pace-e" class="w-full bg-[#0b0e14] border border-purple-600/60 rounded-lg p-2 text-white font-mono text-[11px] focus:outline-none focus:border-purple-400">
                 <!-- Populated dynamically via populatePaceDropdowns() -->
               </select>
             </div>
@@ -3270,29 +3275,32 @@
           </div>
         </div>
 
-        <div class="p-3 bg-red-950/40 rounded border border-red-800/60 space-y-1.5 text-[11px]">
+        <div class="p-3 bg-red-950/40 rounded-xl border border-red-800/60 space-y-1.5 text-[11px]">
           <div class="text-red-300 font-bold">OUTBOUND DISPATCH CHANNELS:</div>
           <div class="grid grid-cols-2 gap-2 text-slate-300">
-            <label class="flex items-center gap-1.5"><input type="checkbox" checked class="accent-red-500"> Push Notification (APNs/FCM)</label>
-            <label class="flex items-center gap-1.5"><input type="checkbox" checked class="accent-red-500"> SMS Group Dispatch</label>
-            <label class="flex items-center gap-1.5"><input type="checkbox" checked class="accent-red-500"> Sound Device Sirens</label>
-            <label class="flex items-center gap-1.5"><input type="checkbox" checked class="accent-red-500"> Winlink Packet Broadcast</label>
+            <label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" checked class="accent-red-500"> Push Notification (APNs/FCM)</label>
+            <label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" checked class="accent-red-500"> SMS Group Dispatch</label>
+            <label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" checked class="accent-red-500"> Sound Device Sirens</label>
+            <label class="flex items-center gap-1.5 cursor-pointer"><input type="checkbox" checked class="accent-red-500"> Winlink Packet Broadcast</label>
           </div>
         </div>
       </div>
 
-      <div class="flex gap-2 pt-2 border-t border-slate-800">
-        <button onclick="closeBroadcastModal()" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded">CANCEL</button>
-        <button id="b-modal-submit-btn" onclick="saveBroadcastIncident()" class="flex-2 py-2 px-4 bg-red-600 hover:bg-red-500 text-white font-bold rounded shadow-lg flex items-center justify-center gap-1.5">
-          <span>🚨 BROADCAST ALERT TO TEAM</span>
+      <!-- Sticky Modal Footer -->
+      <div class="flex items-center gap-2 border-t border-slate-800 px-4 py-3 bg-[#080c12] rounded-b-2xl flex-shrink-0 flex-wrap sm:flex-nowrap">
+        <button type="button" onclick="closeBroadcastModal()" class="w-full sm:w-auto px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-xl border border-slate-700 transition flex items-center justify-center gap-1.5 cursor-pointer text-xs">
+          <span>◀</span><span>BACK / CANCEL</span>
+        </button>
+        <button type="button" id="b-modal-submit-btn" onclick="saveBroadcastIncident()" class="w-full sm:flex-1 py-2.5 px-4 bg-red-600 hover:bg-red-500 text-white font-black rounded-xl shadow-lg transition flex items-center justify-center gap-2 cursor-pointer text-xs uppercase tracking-wider">
+          <span>🚨</span><span>BROADCAST ALERT TO TEAM</span>
         </button>
       </div>
     </div>
   </div>
 
   <!-- MODAL: TURN-BY-TURN TACTICAL ROUTING & GPS NAV -->
-  <div id="turnbyturn-modal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-[#10151d] border-2 border-emerald-500/70 rounded-xl max-w-lg w-full p-5 space-y-4 font-mono-tac text-xs hud-glow shadow-[0_0_30px_rgba(16,185,129,0.3)]">
+  <div id="turnbyturn-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4 hidden overflow-y-auto">
+    <div class="bg-[#0e131b] border-2 border-emerald-500/70 rounded-2xl max-w-lg w-full max-h-[92vh] flex flex-col font-mono-tac text-xs hud-glow shadow-[0_0_30px_rgba(16,185,129,0.3)] my-auto overflow-hidden p-4 sm:p-5 space-y-4">
       <div class="flex justify-between items-center border-b border-emerald-900/60 pb-2">
         <div class="flex items-center gap-2">
           <span class="text-emerald-400 text-lg">🧭</span>
@@ -3359,18 +3367,23 @@
   </div>
 
   <!-- MODAL: INCIDENT DEMOBILIZATION ORDER & CLOSE ALERT -->
-  <div id="demob-modal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-[#10151d] border-2 border-orange-500/80 rounded-xl max-w-lg w-full p-5 space-y-4 font-mono-tac text-xs hud-glow shadow-[0_0_35px_rgba(249,115,22,0.4)]">
-      <div class="flex justify-between items-center border-b border-orange-900/60 pb-2">
-        <div class="flex items-center gap-2">
-          <span class="text-orange-500 text-lg">🛑</span>
-          <h4 class="text-orange-400 font-bold text-sm tracking-wide">INCIDENT DEMOBILIZATION ORDER (EC CONSOLE)</h4>
+  <div id="demob-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4 hidden overflow-y-auto">
+    <div class="bg-[#0e131b] border-2 border-orange-500/80 rounded-2xl max-w-lg w-full max-h-[92vh] flex flex-col font-mono-tac text-xs hud-glow shadow-[0_0_35px_rgba(249,115,22,0.4)] my-auto overflow-hidden">
+      <!-- Sticky Modal Header -->
+      <div class="flex items-center justify-between border-b border-orange-900/80 px-4 py-3 bg-[#080c12] rounded-t-2xl flex-shrink-0 gap-2">
+        <div class="flex items-center gap-2 min-w-0">
+          <button type="button" onclick="closeDemobModal()" class="py-1.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-lg border border-slate-700 text-xs flex items-center gap-1.5 cursor-pointer transition flex-shrink-0">
+            <span>◀</span><span>BACK</span>
+          </button>
+          <span class="text-orange-500 text-base flex-shrink-0">🛑</span>
+          <h4 class="text-orange-400 font-bold text-xs sm:text-sm tracking-wide truncate">INCIDENT DEMOBILIZATION ORDER</h4>
         </div>
-        <button onclick="closeDemobModal()" class="text-slate-400 hover:text-white text-base">✕</button>
+        <button type="button" onclick="closeDemobModal()" class="w-8 h-8 rounded-lg bg-slate-800/80 hover:bg-orange-900/80 text-slate-300 hover:text-white flex items-center justify-center text-sm font-bold border border-slate-700 cursor-pointer transition flex-shrink-0" title="Close / Back">✕</button>
       </div>
 
-      <div class="space-y-3">
-        <div class="p-2.5 bg-orange-950/40 rounded border border-orange-700/60 text-orange-200 text-[11px] space-y-1">
+      <!-- Scrollable Form Body -->
+      <div class="flex-1 overflow-y-auto p-4 space-y-3.5 overscroll-contain">
+        <div class="p-2.5 bg-orange-950/40 rounded-xl border border-orange-700/60 text-orange-200 text-[11px] space-y-1">
           <div class="font-bold flex items-center gap-1.5 text-orange-300">
             <span>ℹ️</span>
             <span>FORMAL DEMOBILIZATION & ALL-CLEAR NOTICE:</span>
@@ -3379,27 +3392,27 @@
         </div>
 
         <div>
-          <label class="text-slate-400 block mb-1">DEMOBILIZATION DIRECTIVE / STAND-DOWN MESSAGE</label>
-          <textarea id="demob-directive" rows="3" class="w-full bg-[#0b0e14] border border-orange-700/60 rounded p-2 text-white font-mono text-xs focus:outline-none focus:border-orange-400">All stations secure field operations. Return to home QTH via safe routes. Net Control formally closed. Freestone County ARES thanks you for your service.</textarea>
+          <label class="text-slate-400 block mb-1 font-bold">DEMOBILIZATION DIRECTIVE / STAND-DOWN MESSAGE</label>
+          <textarea id="demob-directive" rows="3" class="w-full bg-[#0b0e14] border border-orange-700/60 rounded-lg p-2.5 text-white font-mono text-xs focus:outline-none focus:border-orange-400">All stations secure field operations. Return to home QTH via safe routes. Net Control formally closed. Freestone County ARES thanks you for your service.</textarea>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <div>
-            <label class="text-slate-400 block mb-1">DEMOBILIZATION TIME</label>
-            <input type="text" id="demob-time" value="2026-10-04 17:30 LOCAL / 22:30Z" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
+            <label class="text-slate-400 block mb-1 font-bold">DEMOBILIZATION TIME</label>
+            <input type="text" id="demob-time" value="2026-10-04 17:30 LOCAL / 22:30Z" class="w-full bg-[#0b0e14] border border-slate-700 rounded-lg p-2 text-slate-200 text-xs">
           </div>
           <div>
-            <label class="text-slate-400 block mb-1">TOTAL VOLUNTEER MAN-HOURS</label>
-            <input type="text" id="demob-hours" value="14.0 Man-Hours (5 Operators)" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-emerald-400 font-bold">
+            <label class="text-slate-400 block mb-1 font-bold">TOTAL VOLUNTEER MAN-HOURS</label>
+            <input type="text" id="demob-hours" value="14.0 Man-Hours (5 Operators)" class="w-full bg-[#0b0e14] border border-slate-700 rounded-lg p-2 text-emerald-400 font-bold text-xs">
           </div>
         </div>
 
         <div>
-          <label class="text-slate-400 block mb-1">FREQUENCY RELEASE ORDER</label>
-          <input type="text" id="demob-freqs" value="Ch 01 FF 110 & Ch 02 WRTM 760 returned to normal amateur service." class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
+          <label class="text-slate-400 block mb-1 font-bold">FREQUENCY RELEASE ORDER</label>
+          <input type="text" id="demob-freqs" value="Ch 01 FF 110 & Ch 02 WRTM 760 returned to normal amateur service." class="w-full bg-[#0b0e14] border border-slate-700 rounded-lg p-2 text-slate-200 text-xs">
         </div>
 
-        <div class="p-3 bg-black/60 rounded border border-slate-800 space-y-1.5 text-[11px]">
+        <div class="p-3 bg-black/60 rounded-xl border border-slate-800 space-y-1.5 text-[11px]">
           <div class="text-slate-300 font-bold">OUTBOUND DEMOBILIZATION ACTIONS:</div>
           <label class="flex items-center gap-1.5 text-slate-300 cursor-pointer">
             <input type="checkbox" id="chk-demob-chime" checked class="accent-orange-500"> Sound Stand-Down / All-Clear Audio Chime
@@ -3413,10 +3426,13 @@
         </div>
       </div>
 
-      <div class="flex gap-2 pt-2 border-t border-slate-800">
-        <button onclick="closeDemobModal()" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded">CANCEL</button>
-        <button onclick="submitDemobilization()" class="flex-2 py-2 px-4 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded shadow-lg flex items-center justify-center gap-1.5">
-          <span>🛑 ISSUE DEMOB ORDER & CLOSE</span>
+      <!-- Sticky Modal Footer -->
+      <div class="flex items-center gap-2 border-t border-slate-800 px-4 py-3 bg-[#080c12] rounded-b-2xl flex-shrink-0 flex-wrap sm:flex-nowrap">
+        <button type="button" onclick="closeDemobModal()" class="w-full sm:w-auto px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-xl border border-slate-700 transition flex items-center justify-center gap-1.5 cursor-pointer text-xs">
+          <span>◀</span><span>BACK / CANCEL</span>
+        </button>
+        <button type="button" onclick="submitDemobilization()" class="w-full sm:flex-1 py-2.5 px-4 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2 cursor-pointer text-xs uppercase tracking-wider">
+          <span>🛑</span><span>ISSUE DEMOB ORDER &amp; CLOSE</span>
         </button>
       </div>
     </div>
@@ -6676,7 +6692,7 @@ D. Out-of-County stations and visitors.
       if (countBadge) countBadge.textContent = `${updates.length} UPDATES LOGGED`;
 
       if (updates.length === 0) {
-        container.innerHTML = `<div class="text-slate-400 text-center py-4 bg-black/40 rounded border border-slate-800">No updates posted yet. Use the "⚡ UPDATE ALERT" button to post situation updates.</div>`;
+        container.innerHTML = `<div class="text-slate-400 text-center py-6 bg-black/40 rounded-xl border border-slate-800 flex items-center justify-center gap-2"><span>✅</span><span>No active incident alerts. County is in routine steady-state monitoring.</span></div>`;
         return;
       }
 
@@ -6792,7 +6808,8 @@ D. Out-of-County stations and visitors.
 
       if (!appState.activeIncident.updates) appState.activeIncident.updates = [];
       appState.activeIncident.updates.unshift(demobEntry);
-      renderIncidentUpdates();
+      saveActiveIncident();
+      renderActiveIncidentUI();
 
       // Update Banner UI to Closed State
       const badge = document.getElementById('incident-level-badge');
@@ -8655,7 +8672,8 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
 
       if (!appState.activeIncident.updates) appState.activeIncident.updates = [];
       appState.activeIncident.updates.unshift(newEntry);
-      renderIncidentUpdates();
+      saveActiveIncident();
+      renderActiveIncidentUI();
 
       // Update Sitrep strip and status badge
       const updateBadge = document.getElementById('alert-update-badge');
@@ -10027,7 +10045,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
     // ==========================================
     // AUTHENTICATION & EC AUTHORIZATION SUBSYSTEM
     // ==========================================
-    const AUTH_SYSTEM_REV = 'v7.8.8_profile_verify_generic_pw_01';
+    const AUTH_SYSTEM_REV = 'v7.8.9_profile_verify_generic_pw_01';
 
     function getRegisteredAccounts() {
       const raw = safeStorage.getItem('fc_ares_user_accounts');
@@ -11928,10 +11946,166 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
 
       if (appState.activeIncident && Array.isArray(appState.activeIncident.updates)) {
         appState.activeIncident.updates = appState.activeIncident.updates.filter(u => u.updateNum !== updateNum);
-        safeStorage.setItem('fc_ares_active_incident', JSON.stringify(appState.activeIncident));
-        renderIncidentUpdates();
+        if (appState.activeIncident.updates.length === 0) {
+          appState.activeIncident.updateCount = 0;
+          appState.activeIncident.level = 'LEVEL 4 - NORMAL MONITORING';
+          appState.activeIncident.title = 'ROUTINE OPERATIONS // FREESTONE CO. ARES';
+        }
+        saveActiveIncident();
+        renderActiveIncidentUI();
         pushRosterSyncToCloud();
       }
+    }
+
+    // ==========================================
+    // ACTIVE INCIDENT STORAGE & UI SYNCHRONIZATION
+    // ==========================================
+    function loadActiveIncident() {
+      try {
+        const raw = safeStorage.getItem('fc_ares_active_incident');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object') {
+            appState.activeIncident = Object.assign({
+              level: 'LEVEL 4 - NORMAL MONITORING',
+              title: 'ROUTINE OPERATIONS // FREESTONE CO. ARES',
+              staging: 'Standby / Home QTH',
+              mission: 'Routine monitoring on FF 110 (145.110 TSQ 146.2). Steady-state amateur radio standby.',
+              updateCount: 0,
+              lastUpdated: '--:--:--',
+              pace: { p: '01', a: '02', c: '09', e: '06' },
+              updates: [],
+              isClosed: false
+            }, parsed);
+            if (!Array.isArray(appState.activeIncident.updates)) {
+              appState.activeIncident.updates = [];
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('Failed to load active incident:', e);
+      }
+    }
+
+    function saveActiveIncident() {
+      try {
+        if (appState.activeIncident) {
+          safeStorage.setItem('fc_ares_active_incident', JSON.stringify(appState.activeIncident));
+        }
+      } catch (e) {}
+    }
+
+    function renderActiveIncidentUI() {
+      const inc = appState.activeIncident;
+      if (!inc) return;
+
+      const isRoutine = (!inc.updates || inc.updates.length === 0) && (!inc.level || inc.level.includes('LEVEL 4'));
+
+      // Active Banner Card Styling
+      const bannerCard = document.getElementById('active-incident-banner-card');
+      if (bannerCard) {
+        if (isRoutine) {
+          bannerCard.className = 'bg-gradient-to-r from-emerald-950/40 via-[#0e141c] to-[#10151d] border-2 border-emerald-500/50 rounded-xl p-4 sm:p-5 shadow-[0_0_20px_rgba(16,185,129,0.15)] space-y-4';
+        } else {
+          bannerCard.className = 'bg-gradient-to-r from-red-950/80 via-[#181116] to-[#12151e] border-2 border-red-500/80 rounded-xl p-4 sm:p-5 shadow-[0_0_30px_rgba(239,68,68,0.35)] space-y-4';
+        }
+      }
+
+      // Incident Level Badge
+      const levelBadge = document.getElementById('incident-level-badge');
+      if (levelBadge) {
+        levelBadge.textContent = inc.level || 'LEVEL 4 - NORMAL MONITORING';
+        if (inc.level && inc.level.includes('LEVEL 1')) {
+          levelBadge.className = 'px-2.5 py-0.5 rounded text-xs font-mono-tac font-bold bg-red-700 text-white tracking-wider animate-pulse';
+        } else if (inc.level && inc.level.includes('LEVEL 2')) {
+          levelBadge.className = 'px-2.5 py-0.5 rounded text-xs font-mono-tac font-bold bg-orange-700 text-white tracking-wider';
+        } else if (inc.level && inc.level.includes('LEVEL 3')) {
+          levelBadge.className = 'px-2.5 py-0.5 rounded text-xs font-mono-tac font-bold bg-amber-700 text-white tracking-wider';
+        } else {
+          levelBadge.className = 'px-2.5 py-0.5 rounded text-xs font-mono-tac font-bold bg-emerald-700 text-white tracking-wider';
+        }
+      }
+
+      // Incident Counter Badge
+      const numBadge = document.getElementById('incident-number-badge');
+      if (numBadge) {
+        numBadge.textContent = `INCIDENT COUNTER: ${inc.updateCount || 0}`;
+        numBadge.className = (inc.updateCount > 0) ? 'text-xs font-mono-tac text-amber-400 font-bold' : 'text-xs font-mono-tac text-emerald-400 font-bold';
+      }
+
+      // Incident Title Text
+      const titleEl = document.getElementById('incident-title-text');
+      if (titleEl) {
+        titleEl.textContent = inc.title || 'ROUTINE OPERATIONS // FREESTONE CO. ARES';
+      }
+
+      // Alert Status & Sitrep Strip
+      const updateBadge = document.getElementById('alert-update-badge');
+      if (updateBadge) {
+        if (inc.updateCount > 0 && inc.updates && inc.updates.length > 0) {
+          updateBadge.textContent = `UPDATE #${inc.updateCount} ACTIVE`;
+          updateBadge.className = 'px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-700 font-bold text-[10px]';
+        } else {
+          updateBadge.textContent = 'STEADY STATE (0 ALERTS)';
+          updateBadge.className = 'px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold text-[10px]';
+        }
+      }
+
+      const lastUpdatedEl = document.getElementById('alert-last-updated-text');
+      if (lastUpdatedEl) {
+        lastUpdatedEl.textContent = inc.lastUpdated && inc.lastUpdated !== '--:--:--' ? inc.lastUpdated : 'NONE ACTIVE';
+      }
+
+      const sitrepEl = document.getElementById('alert-sitrep-summary');
+      if (sitrepEl) {
+        if (inc.updates && inc.updates.length > 0) {
+          sitrepEl.textContent = `Sitrep: ${inc.updates[0].sitrep}`;
+          sitrepEl.className = 'text-amber-300 font-semibold truncate max-w-sm sm:max-w-md';
+        } else {
+          sitrepEl.textContent = 'All repeaters operational. Routine monitoring on FF 110 (145.110 TSQ 146.2).';
+          sitrepEl.className = 'text-emerald-300 font-semibold truncate max-w-sm sm:max-w-md';
+        }
+      }
+
+      // Staging & Mission
+      const stagingEl = document.getElementById('incident-staging-text');
+      if (stagingEl) {
+        stagingEl.textContent = inc.staging || 'Standby / Home QTH';
+      }
+
+      const missionEl = document.getElementById('incident-mission-text');
+      if (missionEl) {
+        missionEl.textContent = inc.mission || 'Routine monitoring on FF 110 (145.110 TSQ 146.2). Steady-state amateur radio standby.';
+      }
+
+      // 4 PACE Channels
+      const findCh = (num) => (appState.channels || []).find(c => c.ch === num) || { name: 'UNKNOWN', rx: '', tone: '' };
+      const pace = inc.pace || { p: '01', a: '02', c: '09', e: '06' };
+      const chP = findCh(pace.p || '01');
+      const chA = findCh(pace.a || '02');
+      const chC = findCh(pace.c || '09');
+      const chE = findCh(pace.e || '06');
+
+      const elP = document.getElementById('card-pace-p');
+      const elPsub = document.getElementById('card-pace-p-sub');
+      const elA = document.getElementById('card-pace-a');
+      const elAsub = document.getElementById('card-pace-a-sub');
+      const elC = document.getElementById('card-pace-c');
+      const elCsub = document.getElementById('card-pace-c-sub');
+      const elE = document.getElementById('card-pace-e');
+      const elEsub = document.getElementById('card-pace-e-sub');
+
+      if (elP) elP.textContent = `Ch ${chP.ch} - ${chP.name}`;
+      if (elPsub) elPsub.textContent = `${chP.rx} MHz ${chP.tone ? '• ' + chP.tone : ''}`;
+      if (elA) elA.textContent = `Ch ${chA.ch} - ${chA.name}`;
+      if (elAsub) elAsub.textContent = `${chA.rx} MHz ${chA.tone ? '• ' + chA.tone : ''}`;
+      if (elC) elC.textContent = `Ch ${chC.ch} - ${chC.name}`;
+      if (elCsub) elCsub.textContent = `${chC.rx} MHz ${chC.tone ? '• ' + chC.tone : ''}`;
+      if (elE) elE.textContent = `Ch ${chE.ch} - ${chE.name}`;
+      if (elEsub) elEsub.textContent = `${chE.rx} MHz ${chE.tone ? '• ' + chE.tone : ''} / Couriers`;
+
+      // Timeline Feed
+      renderIncidentUpdates();
     }
 
     function clearAllIncidentAlerts() {
@@ -11941,17 +12115,39 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         return;
       }
 
-      const confirmed = confirm('🚨 PURGE ALL ALERTS CONFIRMATION:\n\nAre you sure you want to permanently clear all past incident updates and reset the incident counter to 0?');
+      const confirmed = confirm('🚨 PURGE ALL ALERTS & RESET COUNTER:\n\nAre you sure you want to permanently clear all active/past alerts and reset the incident counter to 0?\n\nThis will restore routine steady-state monitoring.');
       if (!confirmed) return;
 
-      if (appState.activeIncident) {
-        appState.activeIncident.updates = [];
-        appState.activeIncident.updateCounter = 0;
-        safeStorage.setItem('fc_ares_active_incident', JSON.stringify(appState.activeIncident));
-        renderIncidentUpdates();
-        pushRosterSyncToCloud();
-        alert('✅ ALL PAST ALERTS CLEARED & INCIDENT COUNTER RESET TO 0.');
+      appState.activeIncident = {
+        level: 'LEVEL 4 - NORMAL MONITORING',
+        title: 'ROUTINE OPERATIONS // FREESTONE CO. ARES',
+        staging: 'Standby / Home QTH',
+        mission: 'Routine monitoring on FF 110 (145.110 TSQ 146.2). Steady-state amateur radio standby.',
+        updateCount: 0,
+        lastUpdated: '--:--:--',
+        pace: {
+          p: '01',
+          a: '02',
+          c: '09',
+          e: '06'
+        },
+        updates: [],
+        isClosed: false
+      };
+
+      saveActiveIncident();
+      renderActiveIncidentUI();
+
+      // Reset Demob button if previously closed
+      const demobBtn = document.getElementById('btn-demob-alert');
+      if (demobBtn) {
+        demobBtn.innerHTML = '<span>🛑</span><span>CLOSE / DEMOB</span>';
+        demobBtn.className = 'py-2 px-3 bg-gradient-to-r from-orange-700 to-slate-800 hover:from-orange-600 hover:to-slate-700 text-white border border-orange-500/70 font-mono-tac text-xs font-bold rounded-lg transition flex items-center gap-1.5 shadow';
+        demobBtn.setAttribute('onclick', 'openDemobModal()');
       }
+
+      pushRosterSyncToCloud();
+      alert('✅ ALL ALERTS PURGED SUCCESSFULLY\n\nIncident counter reset to 0.\nStatus set to Level 4 (Routine Monitoring / Steady State).');
     }
 
     // ==========================================
@@ -13096,7 +13292,8 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
     updateDispatchControlsVisibility();
     updateSessionHeaderUI();
     populatePaceDropdowns();
-    renderIncidentUpdates();
+    loadActiveIncident();
+    renderActiveIncidentUI();
     renderResponderTable();
     renderRosterGrid();
     renderPaceChannels();
@@ -13634,7 +13831,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.8.8 (Build 36)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.8.9 (Build 37)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>
