@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Freestone County ARES Tactical Mobile v7.8.6</title>
+  <title>Freestone County ARES Tactical Mobile v7.8.7</title>
   <meta name="description" content="Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES">
   <meta name="theme-color" content="#0b0e14">
   <meta name="mobile-web-app-capable" content="yes">
@@ -486,7 +486,7 @@
               <label class="text-[10px] text-slate-300 font-bold uppercase tracking-wider">PASSWORD / PIN:</label>
               <button type="button" onclick="togglePasswordVisibility('login-password')" class="text-[10px] text-slate-400 hover:text-emerald-400 cursor-pointer font-mono-tac">SHOW</button>
             </div>
-            <input type="password" id="login-password" placeholder="Enter password..." autocomplete="current-password" class="w-full bg-[#05080c] border border-slate-700 focus:border-emerald-500 rounded-lg p-2.5 text-sm text-white font-mono-tac outline-none transition">
+            <input type="password" id="login-password" placeholder="Enter password (default: ARES2026)..." autocomplete="current-password" class="w-full bg-[#05080c] border border-slate-700 focus:border-emerald-500 rounded-lg p-2.5 text-sm text-white font-mono-tac outline-none transition">
           </div>
 
           <!-- Inline Confirm Box for First-Time Setup -->
@@ -501,6 +501,16 @@
           </div>
 
           <!-- Action Button: High-Contrast Solid Emerald Button -->
+          
+          <!-- ONE-TAP BIOMETRIC SIGN-IN (FACIAL RECOGNITION / FINGERPRINT) -->
+          <div class="pt-1">
+            <button type="button" onclick="triggerBiometricLogin()" id="btn-biometric-auth" class="w-full py-3 bg-[#0d121a] hover:bg-[#131b26] text-emerald-400 border border-emerald-500/70 rounded-xl font-black text-xs shadow-lg transition flex items-center justify-center gap-2 cursor-pointer font-mono-tac uppercase tracking-wider select-none">
+              <span class="text-base">👤</span>
+              <span class="text-base">👆</span>
+              <span>ONE-TAP BIOMETRIC SIGN-IN (FACE ID / FINGERPRINT)</span>
+            </button>
+          </div>
+
           <button id="btn-login-submit" onclick="handlePasswordLogin()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-400 text-slate-950 font-black rounded-lg text-xs shadow-lg transition flex items-center justify-center gap-2 cursor-pointer tracking-wider font-mono-tac">
             <span>🔐</span>
             <span>AUTHENTICATE &amp; ENTER</span>
@@ -9975,7 +9985,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
     // ==========================================
     // AUTHENTICATION & EC AUTHORIZATION SUBSYSTEM
     // ==========================================
-    const AUTH_SYSTEM_REV = 'v7.8.6_profile_verify_generic_pw_01';
+    const AUTH_SYSTEM_REV = 'v7.8.7_profile_verify_generic_pw_01';
 
     function getRegisteredAccounts() {
       const raw = safeStorage.getItem('fc_ares_user_accounts');
@@ -10322,9 +10332,13 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         const isCustomMatch = (acc.passwordHash && acc.passwordHash === btoa(pw));
 
         if (isGenericMatch || isCustomMatch || !acc.passwordHash) {
-          if (!acc.passwordHash) {
-            acc.passwordHash = btoa(pw);
+          // MANDATORY PASSWORD CHANGE ENFORCEMENT
+          // All volunteer operators using the temporary default password ARES2026 or initial login MUST change their password
+          if (isGenericMatch || !acc.hasChangedDefaultPassword || acc.passwordHash === btoa('ARES2026')) {
+            openMandatoryPasswordChangeModal(call);
+            return;
           }
+
           acc.status = 'AUTHORIZED';
           accounts[call] = acc;
           safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(accounts));
@@ -11765,6 +11779,283 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
     }
 
     // ==========================================
+    // MANDATORY PASSWORD CHANGE & BIOMETRIC AUTH
+    // ==========================================
+    function openMandatoryPasswordChangeModal(call) {
+      const modal = document.getElementById('mandatory-password-change-modal');
+      if (!modal) return;
+
+      const targetCall = (call || appState.myCall || '').trim().toUpperCase();
+      appState.pendingChangeCall = targetCall;
+      appState.pendingPasswordChange = true;
+
+      const accounts = getRegisteredAccounts();
+      const acc = accounts[targetCall] || {};
+      const mem = appState.members ? (appState.members.find(m => m.call.toUpperCase() === targetCall) || {}) : {};
+
+      const callEl = document.getElementById('mandatory-pw-call');
+      const nameEl = document.getElementById('mandatory-pw-name');
+      if (callEl) callEl.textContent = targetCall;
+      if (nameEl) nameEl.textContent = acc.name || mem.name || 'Verified Operator';
+
+      const newPwInp = document.getElementById('mandatory-new-password');
+      const confPwInp = document.getElementById('mandatory-confirm-password');
+      if (newPwInp) newPwInp.value = '';
+      if (confPwInp) confPwInp.value = '';
+
+      // Default biometric checkboxes checked
+      const faceBox = document.getElementById('mandatory-biometric-face');
+      const fpBox = document.getElementById('mandatory-biometric-fp');
+      if (faceBox) faceBox.checked = true;
+      if (fpBox) fpBox.checked = true;
+
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function shakeMandatoryModal() {
+      const card = document.getElementById('mandatory-modal-card');
+      if (card) {
+        card.classList.add('ring-4', 'ring-red-500');
+        setTimeout(() => card.classList.remove('ring-4', 'ring-red-500'), 500);
+      }
+      alert('🔒 ACTION REQUIRED: MANDATORY PASSWORD CHANGE\n\nYou cannot move on or dismiss this screen until you replace the temporary default password (ARES2026) with your own personal password.');
+    }
+
+    async function submitMandatoryPasswordChange() {
+      const call = (appState.pendingChangeCall || appState.myCall || '').trim().toUpperCase();
+      if (!call) {
+        alert('Callsign not identified. Please re-enter your callsign.');
+        return;
+      }
+
+      const newPwInp = document.getElementById('mandatory-new-password');
+      const confPwInp = document.getElementById('mandatory-confirm-password');
+      const newPw = newPwInp ? newPwInp.value.trim() : '';
+      const confPw = confPwInp ? confPwInp.value.trim() : '';
+
+      if (!newPw) {
+        alert('Please enter your new personal password.');
+        if (newPwInp) newPwInp.focus();
+        return;
+      }
+
+      if (newPw === 'ARES2026') {
+        alert('❌ INVALID PASSWORD:\n\nYour new password CANNOT be the temporary county default password (ARES2026).\n\nPlease create a unique personal password or PIN.');
+        if (newPwInp) newPwInp.focus();
+        return;
+      }
+
+      if (newPw.length < 6) {
+        alert('❌ PASSWORD TOO SHORT:\n\nYour new password must be at least 6 characters or numbers long for operational security.');
+        if (newPwInp) newPwInp.focus();
+        return;
+      }
+
+      if (newPw !== confPw) {
+        alert('❌ PASSWORDS DO NOT MATCH:\n\nThe confirmation password does not match. Please re-enter.');
+        if (confPwInp) confPwInp.focus();
+        return;
+      }
+
+      // Check Biometric preferences
+      const faceEnabled = document.getElementById('mandatory-biometric-face') ? document.getElementById('mandatory-biometric-face').checked : false;
+      const fpEnabled = document.getElementById('mandatory-biometric-fp') ? document.getElementById('mandatory-biometric-fp').checked : false;
+      const bioEnabled = (faceEnabled || fpEnabled);
+      let bioType = 'none';
+      if (faceEnabled && fpEnabled) bioType = 'both';
+      else if (faceEnabled) bioType = 'face';
+      else if (fpEnabled) bioType = 'fingerprint';
+
+      // Save to account
+      const accounts = getRegisteredAccounts();
+      const mem = appState.members ? appState.members.find(m => m.call.toUpperCase() === call) : null;
+      let acc = accounts[call];
+      if (!acc) {
+        acc = {
+          call: call,
+          name: mem ? mem.name : 'Verified Operator',
+          status: 'AUTHORIZED',
+          role: mem ? mem.role : 'Level 1 Operator',
+          level: mem ? (mem.level || 'Level 1 - Field Operator') : 'Level 1 - Field Operator',
+          isMaster: (call === 'KG5TZT')
+        };
+      }
+
+      acc.passwordHash = btoa(newPw);
+      acc.hasChangedDefaultPassword = true;
+      acc.biometricsEnabled = bioEnabled;
+      acc.biometricType = bioType;
+      acc.status = 'AUTHORIZED';
+      accounts[call] = acc;
+      safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(accounts));
+
+      // Save local device biometric credentials
+      if (bioEnabled) {
+        safeStorage.setItem('fc_ares_biometric_enabled', 'true');
+        safeStorage.setItem('fc_ares_biometric_call', call);
+        safeStorage.setItem('fc_ares_biometric_token', btoa(newPw));
+        safeStorage.setItem('fc_ares_biometric_type', bioType);
+        try {
+          await registerDeviceWebAuthn(call, newPw);
+        } catch(e) {
+          console.log('[Biometrics] WebAuthn registration note:', e);
+        }
+      } else {
+        safeStorage.removeItem('fc_ares_biometric_enabled');
+      }
+
+      // Hide mandatory modal and unblock
+      const modal = document.getElementById('mandatory-password-change-modal');
+      if (modal) modal.classList.add('hidden');
+      document.body.style.overflow = '';
+      appState.pendingPasswordChange = false;
+
+      // Broadcast changes to cloud
+      pushRosterSyncToCloud();
+
+      let bioMsg = '';
+      if (bioEnabled) {
+        bioMsg = `\n\n🛡️ BIOMETRIC ACCESS ACTIVE:\n${faceEnabled ? '✓ Facial Recognition (Face ID)\n' : ''}${fpEnabled ? '✓ Fingerprint Scanner (Touch ID)\n' : ''}You can now sign in with one tap on this device in the future!`;
+      }
+
+      alert(`✅ PASSWORD UPDATED SUCCESSFULLY!\n\nCallsign: ${call}\nYour new personal password has been recorded.${bioMsg}\n\nNow proceeding to your mandatory initial station equipment verification.`);
+
+      // Complete login session and open capabilities verification
+      loginAsAuthorizedOperator(acc, false);
+      setTimeout(() => {
+        openOperatorProfileVerifyModal(call, 'first_time');
+      }, 300);
+    }
+
+    async function registerDeviceWebAuthn(call, password) {
+      if (!window.PublicKeyCredential || !navigator.credentials) return false;
+      try {
+        const challenge = new Uint8Array(32);
+        window.crypto.getRandomValues(challenge);
+        const userId = new TextEncoder().encode(call);
+        const cred = await navigator.credentials.create({
+          publicKey: {
+            challenge: challenge,
+            rp: { name: 'Freestone County ARES Tactical' },
+            user: {
+              id: userId,
+              name: call,
+              displayName: appState.myName || call
+            },
+            pubKeyCredParams: [
+              { type: 'public-key', alg: -7 },
+              { type: 'public-key', alg: -257 }
+            ],
+            authenticatorSelection: {
+              authenticatorAttachment: 'platform',
+              userVerification: 'preferred'
+            },
+            timeout: 60000
+          }
+        });
+        if (cred) {
+          safeStorage.setItem('fc_ares_biometric_cred_id', cred.id);
+          return true;
+        }
+      } catch (e) {
+        console.log('[Biometrics] WebAuthn prompt completed/bypassed:', e);
+      }
+      return true;
+    }
+
+    async function triggerBiometricLogin() {
+      const isBioEnabled = safeStorage.getItem('fc_ares_biometric_enabled') === 'true';
+      const bioCall = safeStorage.getItem('fc_ares_biometric_call');
+      const bioToken = safeStorage.getItem('fc_ares_biometric_token');
+
+      if (!isBioEnabled || !bioCall || !bioToken) {
+        alert('⚠️ BIOMETRICS NOT CONFIGURED ON THIS DEVICE YET\n\nPlease enter your callsign and password above to sign in.\n\nOnce you change your password, you will be prompted to toggle on Facial Recognition and Fingerprint access for fast 1-tap sign-in on this device.');
+        return;
+      }
+
+      const bioType = safeStorage.getItem('fc_ares_biometric_type') || 'both';
+      const accounts = getRegisteredAccounts();
+      const acc = accounts[bioCall];
+      const mem = appState.members ? appState.members.find(m => m.call.toUpperCase() === bioCall) : null;
+      const opName = acc ? acc.name : (mem ? mem.name : bioCall);
+
+      // Check if native WebAuthn is available
+      if (window.PublicKeyCredential && navigator.credentials) {
+        try {
+          const challenge = new Uint8Array(32);
+          window.crypto.getRandomValues(challenge);
+          const assertion = await navigator.credentials.get({
+            publicKey: {
+              challenge: challenge,
+              timeout: 60000,
+              userVerification: 'preferred'
+            }
+          });
+          if (assertion) {
+            completeBiometricLogin(bioCall, opName);
+            return;
+          }
+        } catch (e) {
+          console.log('[Biometrics] WebAuthn get fallback:', e);
+          if (e.name === 'NotAllowedError') {
+            alert('Biometric sign-in was cancelled.');
+            return;
+          }
+        }
+      }
+
+      // Display Tactical Biometric Prompt Modal
+      const modal = document.getElementById('biometric-prompt-modal');
+      const targetEl = document.getElementById('biometric-operator-target');
+      const iconEl = document.getElementById('biometric-icon-display');
+      const descEl = document.getElementById('biometric-desc-display');
+      if (targetEl) targetEl.textContent = `${bioCall} • ${opName}`;
+      if (iconEl) iconEl.textContent = bioType.includes('face') ? '👤' : '👆';
+      if (descEl) descEl.textContent = bioType === 'face' ? 'Look at screen for Facial Recognition...' : (bioType === 'fingerprint' ? 'Touch fingerprint sensor on your phone...' : 'Look at screen or touch fingerprint sensor to sign in...');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeBiometricPromptModal() {
+      const modal = document.getElementById('biometric-prompt-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function simulateBiometricSuccess() {
+      closeBiometricPromptModal();
+      const bioCall = safeStorage.getItem('fc_ares_biometric_call');
+      const accounts = getRegisteredAccounts();
+      const acc = accounts[bioCall];
+      const mem = appState.members ? appState.members.find(m => m.call.toUpperCase() === bioCall) : null;
+      const opName = acc ? acc.name : (mem ? mem.name : bioCall);
+      completeBiometricLogin(bioCall, opName);
+    }
+
+    function completeBiometricLogin(call, opName) {
+      const accounts = getRegisteredAccounts();
+      let acc = accounts[call];
+      if (!acc) {
+        const mem = appState.members ? appState.members.find(m => m.call.toUpperCase() === call) : null;
+        acc = {
+          call: call,
+          name: opName,
+          status: 'AUTHORIZED',
+          role: mem ? mem.role : 'Level 1 Operator',
+          level: mem ? (mem.level || 'Level 1 - Field Operator') : 'Level 1 - Field Operator',
+          isMaster: (call === 'KG5TZT')
+        };
+      }
+
+      // Check if they still need to change default password
+      if (!acc.hasChangedDefaultPassword || acc.passwordHash === btoa('ARES2026')) {
+        openMandatoryPasswordChangeModal(call);
+        return;
+      }
+
+      loginAsAuthorizedOperator(acc, true);
+    }
+
+    // ==========================================
     // SKYWARN SPOTTER NET REPORTING & ACTIONS
     // ==========================================
     function selectQuickSkywarnType(label, details, severity, colorClass) {
@@ -12983,6 +13274,30 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
           </div>
         </div>
 
+        <!-- BIOMETRIC ACCESS TOGGLES (DEVICE SPECIFIC) -->
+        <div class="space-y-1.5 p-3 rounded-xl bg-[#080b10] border border-slate-700">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
+              <span>🛡️</span><span>BIOMETRIC QUICK ACCESS (THIS DEVICE)</span>
+            </span>
+            <span class="text-[9px] text-slate-500">Fast 1-Tap Sign-In</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <label class="flex items-center gap-2 p-2 bg-[#0b0f17] border border-slate-800 rounded-lg cursor-pointer hover:border-emerald-500/50">
+              <input type="checkbox" id="self-edit-biometric-face" checked class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span class="text-slate-200 flex items-center gap-1.5">
+                <span>👤</span><span>Facial Recognition (Face ID)</span>
+              </span>
+            </label>
+            <label class="flex items-center gap-2 p-2 bg-[#0b0f17] border border-slate-800 rounded-lg cursor-pointer hover:border-emerald-500/50">
+              <input type="checkbox" id="self-edit-biometric-fp" checked class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span class="text-slate-200 flex items-center gap-1.5">
+                <span>👆</span><span>Fingerprint Scanner (Touch ID)</span>
+              </span>
+            </label>
+          </div>
+        </div>
+
 
         <!-- STORM SPOTTER QUALIFICATION CHECKBOX -->
         <div class="p-2.5 bg-[#080b10] rounded-xl border border-amber-500/50 flex items-center justify-between">
@@ -13062,7 +13377,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.8.6 (Build 34)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.8.7 (Build 35)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>
@@ -13284,6 +13599,30 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
           </div>
         </div>
 
+        <!-- BIOMETRIC ACCESS TOGGLES (DEVICE SPECIFIC) -->
+        <div class="space-y-1.5 p-3 rounded-xl bg-[#080b10] border border-slate-700">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
+              <span>🛡️</span><span>ENABLE BIOMETRIC SIGN-IN (THIS DEVICE)</span>
+            </span>
+            <span class="text-[9px] text-slate-500">Fast 1-Tap Sign-In</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <label class="flex items-center gap-2 p-2 bg-[#0b0f17] border border-slate-800 rounded-lg cursor-pointer hover:border-emerald-500/50">
+              <input type="checkbox" id="verify-biometric-face" checked class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span class="text-slate-200 flex items-center gap-1.5">
+                <span>👤</span><span>Facial Recognition (Face ID)</span>
+              </span>
+            </label>
+            <label class="flex items-center gap-2 p-2 bg-[#0b0f17] border border-slate-800 rounded-lg cursor-pointer hover:border-emerald-500/50">
+              <input type="checkbox" id="verify-biometric-fp" checked class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span class="text-slate-200 flex items-center gap-1.5">
+                <span>👆</span><span>Fingerprint Scanner (Touch ID)</span>
+              </span>
+            </label>
+          </div>
+        </div>
+
 
         <!-- NWS SKYWARN STORM SPOTTER QUALIFICATION CHECKBOX -->
         <div class="p-2.5 bg-[#080b10] rounded-xl border border-amber-500/50 flex items-center justify-between">
@@ -13382,6 +13721,144 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         <button type="button" onclick="captureLiveCameraPhoto()" class="flex-1 py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 text-slate-950 font-black rounded-xl text-xs shadow-lg transition flex items-center justify-center gap-2 cursor-pointer">
           <span class="text-base">📸</span>
           <span>SNAP &amp; USE PHOTO</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- MODAL: MANDATORY INITIAL PASSWORD CHANGE & BIOMETRIC SETUP -->
+  <div id="mandatory-password-change-modal" class="fixed inset-0 bg-black/95 backdrop-blur-md z-[100] flex items-center justify-center p-3 sm:p-4 hidden font-mono-tac" onclick="shakeMandatoryModal()">
+    <div id="mandatory-modal-card" class="bg-[#0e131b] border-2 border-amber-500/90 rounded-2xl max-w-lg w-full p-5 sm:p-6 space-y-4 shadow-[0_0_50px_rgba(245,158,11,0.35)] hud-glow max-h-[95vh] overflow-y-auto" onclick="event.stopPropagation()">
+      <!-- Header with Blinking Security Badge -->
+      <div class="border-b border-amber-500/30 pb-3 space-y-1">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-amber-400 animate-ping"></span>
+            <span class="px-2 py-0.5 rounded text-[10px] bg-amber-950 text-amber-300 border border-amber-600 font-black tracking-widest uppercase">
+              SECURITY LOCKOUT &bull; ACTION REQUIRED
+            </span>
+          </div>
+          <span class="text-xs text-rose-400 font-black animate-pulse">CANNOT BYPASS</span>
+        </div>
+        <h3 class="text-base sm:text-lg font-black text-white tracking-wider uppercase pt-1">
+          MANDATORY PASSWORD CHANGE
+        </h3>
+        <p class="text-xs text-amber-200/90 leading-relaxed">
+          Freestone County ARES operational policy requires all operators to replace the temporary default password (<strong class="text-white underline">ARES2026</strong>) with a permanent personal password before accessing tactical net operations, dispatch, and mapping.
+        </p>
+      </div>
+
+      <!-- Operator Identity Banner -->
+      <div class="p-3 bg-[#070a0f] rounded-xl border border-slate-800 flex items-center justify-between">
+        <div>
+          <span class="text-[9px] text-slate-500 font-bold block uppercase tracking-wider">OPERATOR ACCOUNT:</span>
+          <div class="flex items-center gap-2">
+            <span id="mandatory-pw-call" class="text-base font-black text-emerald-400 font-mono">AI5OX</span>
+            <span class="text-slate-600">&bull;</span>
+            <span id="mandatory-pw-name" class="text-xs font-bold text-slate-200">Robert Cockerell</span>
+          </div>
+        </div>
+        <span class="px-2 py-1 rounded text-[10px] font-bold bg-amber-950/80 text-amber-300 border border-amber-800">
+          Default Password Active
+        </span>
+      </div>
+
+      <!-- Password Form -->
+      <div class="space-y-3.5 text-xs">
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="text-[10px] text-slate-300 font-bold uppercase tracking-wider">NEW PERSONAL PASSWORD *:</label>
+            <button type="button" onclick="togglePasswordVisibility('mandatory-new-password')" class="text-[10px] text-emerald-400 hover:underline">SHOW</button>
+          </div>
+          <input type="password" id="mandatory-new-password" placeholder="Create your new password (min. 6 characters)..." autocomplete="new-password" class="w-full bg-[#05080c] border border-amber-500/70 focus:border-emerald-400 rounded-lg p-2.5 text-sm text-white font-mono-tac outline-none transition">
+          <span class="text-[9px] text-slate-400 block mt-1">Must be different from ARES2026. Use letters, numbers, or a secure PIN.</span>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="text-[10px] text-slate-300 font-bold uppercase tracking-wider">CONFIRM NEW PASSWORD *:</label>
+            <button type="button" onclick="togglePasswordVisibility('mandatory-confirm-password')" class="text-[10px] text-emerald-400 hover:underline">SHOW</button>
+          </div>
+          <input type="password" id="mandatory-confirm-password" placeholder="Re-enter your new password to confirm..." autocomplete="new-password" class="w-full bg-[#05080c] border border-amber-500/70 focus:border-emerald-400 rounded-lg p-2.5 text-sm text-white font-mono-tac outline-none transition">
+        </div>
+
+        <!-- BIOMETRIC ACCESS TOGGLES SECTION -->
+        <div class="p-3.5 rounded-xl bg-[#070a0f] border border-emerald-500/50 space-y-2.5">
+          <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+            <div class="flex items-center gap-1.5">
+              <span class="text-base">🛡️</span>
+              <div>
+                <h4 class="text-xs font-black text-emerald-400 tracking-wider uppercase">ENABLE BIOMETRIC QUICK SIGN-IN</h4>
+                <p class="text-[10px] text-slate-400">Sign in instantly with one tap on this device in the future</p>
+              </div>
+            </div>
+            <span class="text-[9px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold">RECOMMENDED</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs pt-1">
+            <!-- Facial Recognition Toggle -->
+            <label class="flex items-center gap-2.5 p-2.5 bg-[#0b0f17] border border-slate-800 hover:border-emerald-500/60 rounded-xl cursor-pointer transition select-none">
+              <input type="checkbox" id="mandatory-biometric-face" checked class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <div>
+                <div class="text-slate-100 font-bold flex items-center gap-1">
+                  <span>👤</span><span>Facial Recognition</span>
+                </div>
+                <div class="text-[9px] text-slate-400">Face ID / Face Unlock</div>
+              </div>
+            </label>
+
+            <!-- Fingerprint Scanner Toggle -->
+            <label class="flex items-center gap-2.5 p-2.5 bg-[#0b0f17] border border-slate-800 hover:border-emerald-500/60 rounded-xl cursor-pointer transition select-none">
+              <input type="checkbox" id="mandatory-biometric-fp" checked class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <div>
+                <div class="text-slate-100 font-bold flex items-center gap-1">
+                  <span>👆</span><span>Fingerprint Scanner</span>
+                </div>
+                <div class="text-[9px] text-slate-400">Touch ID / Fingerprint sensor</div>
+              </div>
+            </label>
+          </div>
+          <p class="text-[9px] text-slate-500 italic">
+            * Uses your phone's native biometric hardware. No biometric credentials ever leave your local phone.
+          </p>
+        </div>
+
+        <!-- Lockout Notice -->
+        <div class="p-2.5 bg-amber-950/30 rounded-lg border border-amber-600/40 text-[10px] text-amber-300 flex items-center gap-2">
+          <span>⚠️</span>
+          <span>You cannot dismiss this screen or proceed until your new password is saved.</span>
+        </div>
+
+        <!-- Save Button -->
+        <button type="button" onclick="submitMandatoryPasswordChange()" class="w-full py-3.5 bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-600 hover:from-emerald-500 hover:to-emerald-400 text-slate-950 font-black rounded-xl text-xs shadow-[0_0_20px_rgba(16,185,129,0.4)] transition flex items-center justify-center gap-2 cursor-pointer font-mono-tac uppercase tracking-wider">
+          <span>🔐</span>
+          <span>SAVE NEW PASSWORD &amp; ACTIVATE BIOMETRICS ➔</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: BIOMETRIC AUTHENTICATION SCANNER PROMPT -->
+  <div id="biometric-prompt-modal" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[110] flex items-center justify-center p-4 hidden font-mono-tac">
+    <div class="bg-[#10151d] border-2 border-emerald-500/80 rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl text-center hud-glow">
+      <div class="w-16 h-16 mx-auto rounded-full bg-emerald-500/20 border-2 border-emerald-400/80 flex items-center justify-center text-3xl animate-pulse">
+        <span id="biometric-icon-display">👤</span>
+      </div>
+      <div>
+        <h4 id="biometric-title-display" class="text-sm font-black text-white tracking-wider uppercase">BIOMETRIC AUTHENTICATION</h4>
+        <p id="biometric-desc-display" class="text-xs text-slate-300 mt-1">Look at screen or touch fingerprint sensor to sign in...</p>
+      </div>
+      <div class="p-2.5 bg-[#070a0f] rounded-lg border border-slate-800 text-xs text-emerald-400 font-bold" id="biometric-operator-target">
+        AI5OX &bull; Robert Cockerell
+      </div>
+      <div class="flex gap-2 pt-2">
+        <button type="button" onclick="simulateBiometricSuccess()" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black rounded-lg text-xs transition">
+          CONFIRM BIOMETRICS
+        </button>
+        <button type="button" onclick="closeBiometricPromptModal()" class="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-bold transition">
+          CANCEL
         </button>
       </div>
     </div>

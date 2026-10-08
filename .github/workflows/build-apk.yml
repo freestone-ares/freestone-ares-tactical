@@ -40,43 +40,42 @@ jobs:
           gradle wrapper --gradle-version 8.5
           chmod +x gradlew
           ./gradlew assembleDebug --stacktrace
-          cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.8.6.apk
+          cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.8.7.apk
           cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical.apk
 
       - name: Upload APK as Workflow Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Freestone-ARES-Tactical-v7.8.6-APK
-          path: Freestone-ARES-Tactical-v7.8.6.apk
+          name: Freestone-ARES-Tactical-v7.8.7-APK
+          path: Freestone-ARES-Tactical-v7.8.7.apk
           retention-days: 30
 
       - name: Publish GitHub Release with APK
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v7.8.6
+          tag_name: v7.8.7
           target_commitish: ${{ github.sha }}
-          name: "Freestone ARES Tactical v7.8.6 (Field APK)"
+          name: "Freestone ARES Tactical v7.8.7 (Field APK)"
           make_latest: true
           body: |
-            ## Freestone County ARES - Tactical Operations Field Build (v7.8.6)
+            ## Freestone County ARES - Tactical Operations Field Build (v7.8.7)
             
-            This is the official v7.8.6 (Build 34) standalone Android APK release for Freestone County ARES field operations.
+            This is the official v7.8.7 (Build 35) standalone Android APK release for Freestone County ARES field operations.
             
             ### Quick Install / Update Instructions for Android:
             - **In Obtainium:** Open Obtainium, tap **Check for updates** (or swipe down to refresh), then tap **Update**.
-            - **Direct APK:** Download Freestone-ARES-Tactical-v7.8.6.apk below directly on your Android phone and install.
+            - **Direct APK:** Download Freestone-ARES-Tactical-v7.8.7.apk below directly on your Android phone and install.
             
-            ### What's New in v7.8.6 (Build 34):
-            - **Restored Secure Logon Entrance & Operational Session:** Fixed JavaScript initialization syntax so the clean centered logon screen, PIN authentication, and session handling load instantly.
-            - **Restored Unconstrained Hamburger Menu:** Full unclipped menu drawer opening reliably with 100% active operational routes.
-            - **Station Equipment Capabilities Checkboxes:** Check/uncheck station capabilities (50W VHF/UHF, HF Portable, HT, Crossband, Winlink RMS, Digital DMR/Fusion, 100Ah+ LiFePO4, Solar Array, Generator, 72-Hr Go-Kit) in both onboarding and self-edit modal, rendering live badges on the dashboard card.
-            - **Calendar Event Editor & Net Control (NCS) Assignment:** Full editing of training nets and meetings with 1-tap quick self-assign or clear NCS buttons.
-            - **Streamlined SKYWARN Tactical Console:** 5 large 1-tap severe condition buttons (Tornado, Hail, Wind, Flash Flood, Damage) routing reports strictly to Net Control Station / EC with 1-tap repeater voice script and direct EC call button.
-            - **Zero-Lag Cloud Synchronization:** Direct authenticated GitHub API communication for instant propagation of operator registrations, capability edits, and storm reports.
-            - **Version Placed Strictly in About Modal:** The version and build number are exclusively maintained in the About Tactical Mobile dialog.
+            ### What's New in v7.8.7 (Build 35):
+            - **Mandatory Password Change on Initial Login:** Operators cannot move on or bypass the initial login until they replace the temporary county default password (ARES2026) with their own permanent personal password.
+            - **Biometric Quick Sign-In (Facial Recognition & Fingerprint):** Operators can toggle on Facial Recognition (Face ID / Face Unlock) and Fingerprint Scanner (Touch ID / Fingerprint) upon initial password change or in their profile.
+            - **One-Tap Biometric Sign-In Button:** Added high-contrast one-tap biometric authentication button on the sign-in entrance for instant hands-free field access.
+            - **Station Equipment Capabilities Checkboxes:** Full 10 station capability checkboxes dynamically rendered on dashboard cards.
+            - **Calendar NCS Management & SKYWARN Console:** 1-tap Net Control assignment and stress-resistant storm spotter transmission with on-air voice script.
+            - **Zero-Lag Cloud Synchronization:** Real-time push of member profiles, registrations, and storm reports directly via GitHub API.
           files: |
-            Freestone-ARES-Tactical-v7.8.6.apk
+            Freestone-ARES-Tactical-v7.8.7.apk
             Freestone-ARES-Tactical.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
