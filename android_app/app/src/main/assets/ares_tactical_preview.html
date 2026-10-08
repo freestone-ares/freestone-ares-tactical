@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Freestone County ARES Tactical Mobile v7.8.7</title>
+  <title>Freestone County ARES Tactical Mobile v7.8.8</title>
   <meta name="description" content="Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES">
   <meta name="theme-color" content="#0b0e14">
   <meta name="mobile-web-app-capable" content="yes">
@@ -216,7 +216,43 @@
         </div>
 
         <!-- Operator Identity in Menu (Clean, Non-Blinking) -->
-        <div id="drawer-session-card" class="bg-[#080b10] border border-slate-800 rounded-lg p-2.5 flex items-center justify-between gap-2 font-mono-tac">
+        <!-- Biometric Access Toggle Card inside Navigation Menu -->
+        <div id="drawer-biometric-card" class="bg-[#080b10] border border-emerald-500/40 rounded-xl p-3 space-y-2.5 font-mono-tac">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <div class="flex items-center gap-1.5">
+              <span class="text-sm">🛡️</span>
+              <span class="text-[11px] font-black text-emerald-400 uppercase tracking-wider">BIOMETRIC ACCESS</span>
+            </div>
+            <span id="menu-biometric-status-badge" class="text-[9px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 border border-slate-700 font-bold">READY</span>
+          </div>
+          <p class="text-[10px] text-slate-400 leading-tight">
+            Enable 1-tap fast sign-in on this device using Face ID or Fingerprint:
+          </p>
+          <div class="space-y-1.5 pt-0.5">
+            <label class="flex items-center justify-between p-2 rounded-lg bg-[#0c1017] border border-slate-800 hover:border-emerald-500/40 cursor-pointer">
+              <div class="flex items-center gap-2">
+                <span>👤</span>
+                <div>
+                  <div class="text-[11px] font-bold text-slate-200">Facial Recognition</div>
+                  <div class="text-[9px] text-slate-400">Face ID / Face Unlock</div>
+                </div>
+              </div>
+              <input type="checkbox" id="menu-toggle-biometric-face" onchange="handleMenuBiometricToggle('face', this.checked)" class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0 cursor-pointer">
+            </label>
+            <label class="flex items-center justify-between p-2 rounded-lg bg-[#0c1017] border border-slate-800 hover:border-emerald-500/40 cursor-pointer">
+              <div class="flex items-center gap-2">
+                <span>👆</span>
+                <div>
+                  <div class="text-[11px] font-bold text-slate-200">Fingerprint Scanner</div>
+                  <div class="text-[9px] text-slate-400">Touch ID / Fingerprint</div>
+                </div>
+              </div>
+              <input type="checkbox" id="menu-toggle-biometric-fp" onchange="handleMenuBiometricToggle('fingerprint', this.checked)" class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0 cursor-pointer">
+            </label>
+          </div>
+        </div>
+
+        <div id="drawer-session-card"  class="bg-[#080b10] border border-slate-800 rounded-lg p-2.5 flex items-center justify-between gap-2 font-mono-tac">
           <div class="flex items-center gap-2 min-w-0">
             <span id="session-btn-icon" class="text-sm">🔑</span>
             <div class="min-w-0">
@@ -476,7 +512,7 @@
           <!-- Callsign Field -->
           <div class="space-y-1">
             <label class="text-[10px] text-slate-300 font-bold block uppercase tracking-wider">OPERATOR CALLSIGN:</label>
-            <input type="text" id="login-callsign" placeholder="e.g. KG5TZT, AI5OX, N5BED" autocomplete="username" class="w-full bg-[#05080c] border border-slate-700 focus:border-emerald-500 rounded-lg p-2.5 text-sm text-emerald-400 font-black tracking-wider uppercase outline-none transition font-mono-tac" oninput="handleCallsignInput(this.value)">
+            <input type="text" id="login-callsign" placeholder="CALLSIGN" autocomplete="username" class="w-full bg-[#05080c] border border-slate-700 focus:border-emerald-500 rounded-lg p-2.5 text-sm text-emerald-400 font-black tracking-wider uppercase outline-none transition font-mono-tac" oninput="handleCallsignInput(this.value)">
             <div id="login-callsign-info" class="text-[10px] min-h-[16px] font-mono-tac"></div>
           </div>
 
@@ -486,7 +522,7 @@
               <label class="text-[10px] text-slate-300 font-bold uppercase tracking-wider">PASSWORD / PIN:</label>
               <button type="button" onclick="togglePasswordVisibility('login-password')" class="text-[10px] text-slate-400 hover:text-emerald-400 cursor-pointer font-mono-tac">SHOW</button>
             </div>
-            <input type="password" id="login-password" placeholder="Enter password (default: ARES2026)..." autocomplete="current-password" class="w-full bg-[#05080c] border border-slate-700 focus:border-emerald-500 rounded-lg p-2.5 text-sm text-white font-mono-tac outline-none transition">
+            <input type="password" id="login-password" placeholder="PASSWORD" autocomplete="current-password" class="w-full bg-[#05080c] border border-slate-700 focus:border-emerald-500 rounded-lg p-2.5 text-sm text-white font-mono-tac outline-none transition">
           </div>
 
           <!-- Inline Confirm Box for First-Time Setup -->
@@ -1453,6 +1489,11 @@
               <span id="siren-playing-badge" class="hidden px-1.5 py-0.2 rounded text-[9px] bg-red-600 text-white animate-pulse">SOUNDING</span>
             </div>
             <div class="text-[11px] text-slate-400 font-mono-tac">Active911 tone synthesizer for immediate field operator callout.</div>
+            <div id="ec-alert-purge-controls" class="pt-2">
+              <button type="button" onclick="clearAllIncidentAlerts()" class="px-3 py-1.5 bg-red-950/80 hover:bg-red-900 border border-red-700 text-red-300 font-bold rounded-lg text-xs flex items-center gap-1.5 transition cursor-pointer">
+                <span>🗑️</span><span>PURGE ALL EXPIRED ALERTS &amp; RESET COUNTER</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -5532,6 +5573,7 @@ function getOperatorClearance() {
     }
 
     function updateMenuPagingState() {
+      try { updateMenuBiometricUI(); } catch(e) {}
       const container = document.getElementById('menu-item-alert-wrapper');
       const clearance = getOperatorClearance();
       const canPage = clearance.canSendAlerts;
@@ -9985,7 +10027,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
     // ==========================================
     // AUTHENTICATION & EC AUTHORIZATION SUBSYSTEM
     // ==========================================
-    const AUTH_SYSTEM_REV = 'v7.8.7_profile_verify_generic_pw_01';
+    const AUTH_SYSTEM_REV = 'v7.8.8_profile_verify_generic_pw_01';
 
     function getRegisteredAccounts() {
       const raw = safeStorage.getItem('fc_ares_user_accounts');
@@ -11779,6 +11821,227 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
     }
 
     // ==========================================
+    // OPERATOR REMOVAL & ACCESS REVOCATION (EC LEVEL 6)
+    // ==========================================
+    function getBlockedMembers() {
+      try {
+        const raw = safeStorage.getItem('fc_ares_blocked_members');
+        if (raw) return JSON.parse(raw);
+      } catch (e) {}
+      return [];
+    }
+
+    function saveBlockedMembers(list) {
+      try {
+        safeStorage.setItem('fc_ares_blocked_members', JSON.stringify(list));
+      } catch (e) {}
+    }
+
+    function isMemberBlocked(call) {
+      if (!call) return false;
+      const blocked = getBlockedMembers();
+      return blocked.includes(call.toUpperCase());
+    }
+
+    function blockAndRemoveOperator(targetCall) {
+      const clearance = getOperatorClearance();
+      if (clearance.levelNum !== 6 && appState.myCall !== 'KG5TZT') {
+        alert('🔒 EC AUTHORITY RESTRICTION:\n\nOnly Master Emergency Coordinator Brian Davis (KG5TZT) holds authority to revoke ARES membership and block access.');
+        return;
+      }
+
+      const call = (targetCall || '').trim().toUpperCase();
+      if (!call || call === 'KG5TZT') {
+        alert('Cannot block Emergency Coordinator account.');
+        return;
+      }
+
+      const confirmed = confirm(`🚨 REVOKE ARES MEMBERSHIP & BLOCK OPERATOR\n\nCallsign: ${call}\n\nAre you sure you want to permanently remove this member from Freestone County ARES and block all future app access?\n\nThis will remove them from all rosters and immediately terminate any active session.`);
+      if (!confirmed) return;
+
+      // 1. Add to blocked list
+      const blocked = getBlockedMembers();
+      if (!blocked.includes(call)) {
+        blocked.push(call);
+        saveBlockedMembers(blocked);
+      }
+
+      // 2. Remove from active roster
+      if (appState.members) {
+        appState.members = appState.members.filter(m => m.call.toUpperCase() !== call);
+        saveRosterMembers();
+      }
+
+      // 3. Mark account as REVOKED & BLOCKED
+      const accounts = getRegisteredAccounts();
+      if (accounts[call]) {
+        accounts[call].status = 'REVOKED_BLOCKED';
+        accounts[call].role = 'Membership Revoked';
+        accounts[call].level = 'Blocked';
+        accounts[call].passwordHash = '';
+        safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(accounts));
+      }
+
+      // 4. Update UI
+      renderEcOperatorDirectory();
+      renderRosterGrid();
+      renderResponderTable();
+
+      // 5. Cloud broadcast
+      pushRosterSyncToCloud();
+
+      alert(`🚫 OPERATOR REMOVED & ACCESS BLOCKED\n\nCallsign: ${call}\n\nThis operator has been removed from the active county roster and permanently blocked from logging into the Freestone County ARES platform.`);
+    }
+
+    function unblockOperator(call) {
+      const clearance = getOperatorClearance();
+      if (clearance.levelNum !== 6 && appState.myCall !== 'KG5TZT') return;
+
+      let blocked = getBlockedMembers();
+      blocked = blocked.filter(c => c !== call.toUpperCase());
+      saveBlockedMembers(blocked);
+
+      const accounts = getRegisteredAccounts();
+      if (accounts[call]) {
+        accounts[call].status = 'AUTHORIZED';
+        accounts[call].role = 'Field Operator';
+        accounts[call].level = 'Level 1 - Field Operator';
+        safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(accounts));
+      }
+
+      renderEcOperatorDirectory();
+      pushRosterSyncToCloud();
+      alert(`✅ Callsign ${call} unblocked and restored.`);
+    }
+
+    // ==========================================
+    // ALERT PURGING & RESET SUBSYSTEM
+    // ==========================================
+    function deleteSingleSitrep(updateNum) {
+      const clearance = getOperatorClearance();
+      if (clearance.levelNum < 4 && appState.myCall !== 'KG5TZT') {
+        alert('Only the Emergency Coordinator or Assistant EC can delete incident updates.');
+        return;
+      }
+
+      if (!confirm(`Delete incident update #${updateNum}?`)) return;
+
+      if (appState.activeIncident && Array.isArray(appState.activeIncident.updates)) {
+        appState.activeIncident.updates = appState.activeIncident.updates.filter(u => u.updateNum !== updateNum);
+        safeStorage.setItem('fc_ares_active_incident', JSON.stringify(appState.activeIncident));
+        renderIncidentUpdates();
+        pushRosterSyncToCloud();
+      }
+    }
+
+    function clearAllIncidentAlerts() {
+      const clearance = getOperatorClearance();
+      if (clearance.levelNum !== 6 && appState.myCall !== 'KG5TZT') {
+        alert('🔒 EC RESTRICTION:\n\nOnly Master Emergency Coordinator Brian Davis (KG5TZT) can purge all alerts.');
+        return;
+      }
+
+      const confirmed = confirm('🚨 PURGE ALL ALERTS CONFIRMATION:\n\nAre you sure you want to permanently clear all past incident updates and reset the incident counter to 0?');
+      if (!confirmed) return;
+
+      if (appState.activeIncident) {
+        appState.activeIncident.updates = [];
+        appState.activeIncident.updateCounter = 0;
+        safeStorage.setItem('fc_ares_active_incident', JSON.stringify(appState.activeIncident));
+        renderIncidentUpdates();
+        pushRosterSyncToCloud();
+        alert('✅ ALL PAST ALERTS CLEARED & INCIDENT COUNTER RESET TO 0.');
+      }
+    }
+
+    // ==========================================
+    // CALENDAR EVENT DELETION
+    // ==========================================
+    function deleteEditedEvent() {
+      const clearance = getOperatorClearance();
+      if (clearance.levelNum < 3 && appState.myCall !== 'KG5TZT') {
+        alert('Only Emergency Coordinators or Net Control Stations can delete operational events.');
+        return;
+      }
+
+      const eventId = document.getElementById('edit-event-id') ? document.getElementById('edit-event-id').value : '';
+      if (!eventId) return;
+
+      const confirmed = confirm('🚨 DELETE OPERATIONAL EVENT:\n\nAre you sure you want to permanently delete this event from the Freestone County ARES calendar?');
+      if (!confirmed) return;
+
+      appState.events = (appState.events || []).filter(e => e.id !== eventId);
+      saveCalendarEvents();
+      renderCalendarEvents();
+      renderCalendarMonthGrid();
+      updateDashboardSundayNetWidget();
+      closeEditEventModal();
+      pushRosterSyncToCloud();
+      alert('✅ EVENT PERMANENTLY DELETED FROM CALENDAR.');
+    }
+
+    // ==========================================
+    // MENU BIOMETRIC CONTROLS
+    // ==========================================
+    function updateMenuBiometricUI() {
+      const isBioEnabled = safeStorage.getItem('fc_ares_biometric_enabled') === 'true';
+      const bioType = safeStorage.getItem('fc_ares_biometric_type') || 'both';
+
+      const faceBox = document.getElementById('menu-toggle-biometric-face');
+      const fpBox = document.getElementById('menu-toggle-biometric-fp');
+      const badge = document.getElementById('menu-biometric-status-badge');
+
+      if (faceBox) faceBox.checked = isBioEnabled && (bioType === 'both' || bioType === 'face');
+      if (fpBox) fpBox.checked = isBioEnabled && (bioType === 'both' || bioType === 'fingerprint');
+      if (badge) {
+        badge.textContent = isBioEnabled ? 'ACTIVE' : 'OFF';
+        badge.className = isBioEnabled
+          ? 'text-[9px] px-1.5 py-0.2 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold'
+          : 'text-[9px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 border border-slate-700 font-bold';
+      }
+    }
+
+    async function handleMenuBiometricToggle(type, enabled) {
+      const call = (appState.myCall && appState.myCall !== 'GUEST') ? appState.myCall : safeStorage.getItem('fc_ares_biometric_call');
+      if (!call || call === 'GUEST') {
+        alert('Please log in with your callsign before configuring biometric authentication.');
+        updateMenuBiometricUI();
+        return;
+      }
+
+      const faceBox = document.getElementById('menu-toggle-biometric-face');
+      const fpBox = document.getElementById('menu-toggle-biometric-fp');
+      const faceEnabled = faceBox ? faceBox.checked : false;
+      const fpEnabled = fpBox ? fpBox.checked : false;
+
+      if (!faceEnabled && !fpEnabled) {
+        safeStorage.removeItem('fc_ares_biometric_enabled');
+        safeStorage.removeItem('fc_ares_biometric_type');
+        updateMenuBiometricUI();
+        alert('Biometric quick sign-in has been disabled on this device.');
+        return;
+      }
+
+      let bioType = 'both';
+      if (faceEnabled && !fpEnabled) bioType = 'face';
+      else if (!faceEnabled && fpEnabled) bioType = 'fingerprint';
+
+      safeStorage.setItem('fc_ares_biometric_enabled', 'true');
+      safeStorage.setItem('fc_ares_biometric_call', call);
+      safeStorage.setItem('fc_ares_biometric_type', bioType);
+
+      const accounts = getRegisteredAccounts();
+      if (accounts[call]) {
+        accounts[call].biometricsEnabled = true;
+        accounts[call].biometricType = bioType;
+        safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(accounts));
+      }
+
+      updateMenuBiometricUI();
+      alert(`🛡️ BIOMETRICS CONFIGURED:\n\n${faceEnabled ? '✓ Facial Recognition (Face ID)\n' : ''}${fpEnabled ? '✓ Fingerprint Scanner (Touch ID)\n' : ''}Fast biometric sign-in is now active on this device.`);
+    }
+
+    // ==========================================
     // MANDATORY PASSWORD CHANGE & BIOMETRIC AUTH
     // ==========================================
     function openMandatoryPasswordChangeModal(call) {
@@ -11803,7 +12066,6 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       if (newPwInp) newPwInp.value = '';
       if (confPwInp) confPwInp.value = '';
 
-      // Default biometric checkboxes checked
       const faceBox = document.getElementById('mandatory-biometric-face');
       const fpBox = document.getElementById('mandatory-biometric-fp');
       if (faceBox) faceBox.checked = true;
@@ -11819,7 +12081,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         card.classList.add('ring-4', 'ring-red-500');
         setTimeout(() => card.classList.remove('ring-4', 'ring-red-500'), 500);
       }
-      alert('🔒 ACTION REQUIRED: MANDATORY PASSWORD CHANGE\n\nYou cannot move on or dismiss this screen until you replace the temporary default password (ARES2026) with your own personal password.');
+      alert('🔒 ACTION REQUIRED: MANDATORY PASSWORD CHANGE\n\nYou cannot move on or dismiss this screen until you create your personal password.');
     }
 
     async function submitMandatoryPasswordChange() {
@@ -11841,13 +12103,13 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       }
 
       if (newPw === 'ARES2026') {
-        alert('❌ INVALID PASSWORD:\n\nYour new password CANNOT be the temporary county default password (ARES2026).\n\nPlease create a unique personal password or PIN.');
+        alert('❌ INVALID PASSWORD:\n\nYour new password CANNOT be the temporary default password.\n\nPlease create a unique personal password or PIN.');
         if (newPwInp) newPwInp.focus();
         return;
       }
 
       if (newPw.length < 6) {
-        alert('❌ PASSWORD TOO SHORT:\n\nYour new password must be at least 6 characters or numbers long for operational security.');
+        alert('❌ PASSWORD TOO SHORT:\n\nYour new password must be at least 6 characters or numbers long.');
         if (newPwInp) newPwInp.focus();
         return;
       }
@@ -11858,7 +12120,6 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         return;
       }
 
-      // Check Biometric preferences
       const faceEnabled = document.getElementById('mandatory-biometric-face') ? document.getElementById('mandatory-biometric-face').checked : false;
       const fpEnabled = document.getElementById('mandatory-biometric-fp') ? document.getElementById('mandatory-biometric-fp').checked : false;
       const bioEnabled = (faceEnabled || fpEnabled);
@@ -11867,7 +12128,6 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       else if (faceEnabled) bioType = 'face';
       else if (fpEnabled) bioType = 'fingerprint';
 
-      // Save to account
       const accounts = getRegisteredAccounts();
       const mem = appState.members ? appState.members.find(m => m.call.toUpperCase() === call) : null;
       let acc = accounts[call];
@@ -11890,7 +12150,6 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       accounts[call] = acc;
       safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(accounts));
 
-      // Save local device biometric credentials
       if (bioEnabled) {
         safeStorage.setItem('fc_ares_biometric_enabled', 'true');
         safeStorage.setItem('fc_ares_biometric_call', call);
@@ -11898,20 +12157,16 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         safeStorage.setItem('fc_ares_biometric_type', bioType);
         try {
           await registerDeviceWebAuthn(call, newPw);
-        } catch(e) {
-          console.log('[Biometrics] WebAuthn registration note:', e);
-        }
+        } catch(e) {}
       } else {
         safeStorage.removeItem('fc_ares_biometric_enabled');
       }
 
-      // Hide mandatory modal and unblock
       const modal = document.getElementById('mandatory-password-change-modal');
       if (modal) modal.classList.add('hidden');
       document.body.style.overflow = '';
       appState.pendingPasswordChange = false;
 
-      // Broadcast changes to cloud
       pushRosterSyncToCloud();
 
       let bioMsg = '';
@@ -11919,9 +12174,8 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         bioMsg = `\n\n🛡️ BIOMETRIC ACCESS ACTIVE:\n${faceEnabled ? '✓ Facial Recognition (Face ID)\n' : ''}${fpEnabled ? '✓ Fingerprint Scanner (Touch ID)\n' : ''}You can now sign in with one tap on this device in the future!`;
       }
 
-      alert(`✅ PASSWORD UPDATED SUCCESSFULLY!\n\nCallsign: ${call}\nYour new personal password has been recorded.${bioMsg}\n\nNow proceeding to your mandatory initial station equipment verification.`);
+      alert(`✅ PASSWORD UPDATED SUCCESSFULLY!\n\nCallsign: ${call}\nYour new personal password has been saved.${bioMsg}\n\nNow proceeding to your mandatory initial station equipment verification.`);
 
-      // Complete login session and open capabilities verification
       loginAsAuthorizedOperator(acc, false);
       setTimeout(() => {
         openOperatorProfileVerifyModal(call, 'first_time');
@@ -11958,9 +12212,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
           safeStorage.setItem('fc_ares_biometric_cred_id', cred.id);
           return true;
         }
-      } catch (e) {
-        console.log('[Biometrics] WebAuthn prompt completed/bypassed:', e);
-      }
+      } catch (e) {}
       return true;
     }
 
@@ -11970,7 +12222,12 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       const bioToken = safeStorage.getItem('fc_ares_biometric_token');
 
       if (!isBioEnabled || !bioCall || !bioToken) {
-        alert('⚠️ BIOMETRICS NOT CONFIGURED ON THIS DEVICE YET\n\nPlease enter your callsign and password above to sign in.\n\nOnce you change your password, you will be prompted to toggle on Facial Recognition and Fingerprint access for fast 1-tap sign-in on this device.');
+        alert('⚠️ BIOMETRICS NOT CONFIGURED ON THIS DEVICE YET\n\nPlease enter your callsign and password above to sign in.\n\nYou can enable Facial Recognition and Fingerprint access in the navigation menu or during initial password setup.');
+        return;
+      }
+
+      if (isMemberBlocked(bioCall)) {
+        alert(`❌ ACCESS PERMANENTLY REVOKED & BLOCKED\n\nCallsign "${bioCall}" has been removed from Freestone County ARES by Emergency Coordinator Brian Davis (KG5TZT).\n\nAccess is permanently revoked.`);
         return;
       }
 
@@ -11980,7 +12237,6 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       const mem = appState.members ? appState.members.find(m => m.call.toUpperCase() === bioCall) : null;
       const opName = acc ? acc.name : (mem ? mem.name : bioCall);
 
-      // Check if native WebAuthn is available
       if (window.PublicKeyCredential && navigator.credentials) {
         try {
           const challenge = new Uint8Array(32);
@@ -11997,7 +12253,6 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
             return;
           }
         } catch (e) {
-          console.log('[Biometrics] WebAuthn get fallback:', e);
           if (e.name === 'NotAllowedError') {
             alert('Biometric sign-in was cancelled.');
             return;
@@ -12005,14 +12260,13 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         }
       }
 
-      // Display Tactical Biometric Prompt Modal
       const modal = document.getElementById('biometric-prompt-modal');
       const targetEl = document.getElementById('biometric-operator-target');
       const iconEl = document.getElementById('biometric-icon-display');
       const descEl = document.getElementById('biometric-desc-display');
       if (targetEl) targetEl.textContent = `${bioCall} • ${opName}`;
       if (iconEl) iconEl.textContent = bioType.includes('face') ? '👤' : '👆';
-      if (descEl) descEl.textContent = bioType === 'face' ? 'Look at screen for Facial Recognition...' : (bioType === 'fingerprint' ? 'Touch fingerprint sensor on your phone...' : 'Look at screen or touch fingerprint sensor to sign in...');
+      if (descEl) descEl.textContent = bioType === 'face' ? 'Look at screen for Facial Recognition...' : (bioType === 'fingerprint' ? 'Touch fingerprint sensor on your phone or device...' : 'Look at screen or touch fingerprint sensor to sign in...');
       if (modal) modal.classList.remove('hidden');
     }
 
@@ -12032,6 +12286,11 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
     }
 
     function completeBiometricLogin(call, opName) {
+      if (isMemberBlocked(call)) {
+        alert(`❌ ACCESS PERMANENTLY REVOKED & BLOCKED\n\nCallsign "${call}" has been removed from Freestone County ARES by Emergency Coordinator Brian Davis (KG5TZT).`);
+        return;
+      }
+
       const accounts = getRegisteredAccounts();
       let acc = accounts[call];
       if (!acc) {
@@ -12046,7 +12305,6 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         };
       }
 
-      // Check if they still need to change default password
       if (!acc.hasChangedDefaultPassword || acc.passwordHash === btoa('ARES2026')) {
         openMandatoryPasswordChangeModal(call);
         return;
@@ -12130,7 +12388,6 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       saveSkywarnReports(reports);
       renderSkywarnReportsFeed();
 
-      // Show and populate on-air voice script card
       const scriptCard = document.getElementById('skywarn-voice-script-card');
       const scriptTextEl = document.getElementById('skywarn-generated-voice-script');
       const scriptContent = `Net Control, this is ${call} (${name}) with a SEVERE WEATHER REPORT.\nLOCATION: ${loc}\nHAIL: ${hail} | WIND: ${wind} | MOTION: ${motion}\nDETAILS: ${notes}\nOver to Net Control.`;
@@ -13377,7 +13634,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.8.7 (Build 35)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.8.8 (Build 36)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>
@@ -13746,7 +14003,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
           MANDATORY PASSWORD CHANGE
         </h3>
         <p class="text-xs text-amber-200/90 leading-relaxed">
-          Freestone County ARES operational policy requires all operators to replace the temporary default password (<strong class="text-white underline">ARES2026</strong>) with a permanent personal password before accessing tactical net operations, dispatch, and mapping.
+          Freestone County ARES operational policy requires all operators to create and verify a secure personal password before accessing tactical net operations, dispatch, and mapping.
         </p>
       </div>
 
@@ -13761,7 +14018,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
           </div>
         </div>
         <span class="px-2 py-1 rounded text-[10px] font-bold bg-amber-950/80 text-amber-300 border border-amber-800">
-          Default Password Active
+          Setup Required
         </span>
       </div>
 
@@ -13773,7 +14030,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
             <button type="button" onclick="togglePasswordVisibility('mandatory-new-password')" class="text-[10px] text-emerald-400 hover:underline">SHOW</button>
           </div>
           <input type="password" id="mandatory-new-password" placeholder="Create your new password (min. 6 characters)..." autocomplete="new-password" class="w-full bg-[#05080c] border border-amber-500/70 focus:border-emerald-400 rounded-lg p-2.5 text-sm text-white font-mono-tac outline-none transition">
-          <span class="text-[9px] text-slate-400 block mt-1">Must be different from ARES2026. Use letters, numbers, or a secure PIN.</span>
+          <span class="text-[9px] text-slate-400 block mt-1">Must be different from temporary password. Use letters, numbers, or a secure PIN.</span>
         </div>
 
         <div>
