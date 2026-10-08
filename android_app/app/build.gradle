@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace 'org.freestone.ares'
-    compileSdk 34
+    compileSdk 36
 
     signingConfigs {
         fieldRelease {
@@ -19,8 +19,8 @@ android {
     defaultConfig {
         applicationId "org.freestone.ares.tactical"
         minSdk 24
-        targetSdk 34
-        versionCode System.getenv("BUILD_NUMBER") ? System.getenv("BUILD_NUMBER").toInteger() : 37
+        targetSdk 36
+        versionCode System.getenv("BUILD_NUMBER") ? Math.max(38, System.getenv("BUILD_NUMBER").toInteger()) : 38
         versionName "7.8.9"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
