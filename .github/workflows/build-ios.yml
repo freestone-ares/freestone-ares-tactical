@@ -11,14 +11,24 @@ permissions:
 jobs:
   build-ios-ipa:
     name: Build iOS IPA (.ipa)
-    runs-on: macos-14
+    runs-on: macos-15
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Select Xcode Version
-        run: sudo xcode-select -switch /Applications/Xcode_15.4.app || sudo xcode-select -switch /Applications/Xcode.app
+      - name: Select Latest Xcode Version
+        run: |
+          echo "Installed Xcode versions:"
+          ls -d /Applications/Xcode*.app 2>/dev/null || true
+          BEST_XCODE=$(ls -d /Applications/Xcode*.app 2>/dev/null | grep -v "15" | sort -V | tail -n 1)
+          if [ -z "$BEST_XCODE" ]; then
+            BEST_XCODE="/Applications/Xcode.app"
+          fi
+          echo "Selected: $BEST_XCODE"
+          sudo xcode-select -switch "$BEST_XCODE"
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-version
 
       - name: Install Apple Certificate and Profile
         env:
