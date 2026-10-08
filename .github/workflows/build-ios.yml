@@ -68,9 +68,12 @@ jobs:
           cp build/artifacts/*.ipa Freestone-ARES-Tactical.ipa || true
           cp build/artifacts/*.ipa Freestone-ARES-Tactical-v7.8.9.ipa || true
 
-          # Ensure no root Symbols directory confuses Apple lipo validator
+          # Ensure no root Symbols directory or storyboardc bundle confuses Apple lipo validator
           zip -d Freestone-ARES-Tactical.ipa "Symbols/*" 2>/dev/null || true
+          zip -d Freestone-ARES-Tactical.ipa "*storyboardc*" 2>/dev/null || true
           zip -d Freestone-ARES-Tactical-v7.8.9.ipa "Symbols/*" 2>/dev/null || true
+          zip -d Freestone-ARES-Tactical-v7.8.9.ipa "*storyboardc*" 2>/dev/null || true
+          unzip -l Freestone-ARES-Tactical.ipa
 
       - name: Upload IPA as Workflow Artifact
         uses: actions/upload-artifact@v4

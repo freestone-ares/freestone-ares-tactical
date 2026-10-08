@@ -9,14 +9,14 @@
 /* Begin PBXBuildFile section */
 		AA00002029B7F12300000020 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00001029B7F12300000010 /* AppDelegate.swift */; };
 		AA00002129B7F12300000021 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00001129B7F12300000011 /* ViewController.swift */; };
-		AA00002229B7F12300000022 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA00001229B7F12300000012 /* LaunchScreen.storyboard */; };
+		AA00002229B7F12300000022 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA00001229B7F12300000012 /* Assets.xcassets */; };
 		AA00002429B7F12300000024 /* web in Resources */ = {isa = PBXBuildFile; fileRef = AA00001429B7F12300000014 /* web */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		AA00001029B7F12300000010 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AA00001129B7F12300000011 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		AA00001229B7F12300000012 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		AA00001229B7F12300000012 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA00001329B7F12300000013 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA00001429B7F12300000014 /* web */ = {isa = PBXFileReference; lastKnownFileType = folder; path = web; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -44,7 +44,7 @@
 			children = (
 				AA00001029B7F12300000010 /* AppDelegate.swift */,
 				AA00001129B7F12300000011 /* ViewController.swift */,
-				AA00001229B7F12300000012 /* LaunchScreen.storyboard */,
+				AA00001229B7F12300000012 /* Assets.xcassets */,
 				AA00001329B7F12300000013 /* Info.plist */,
 				AA00001429B7F12300000014 /* web */,
 			);
@@ -108,7 +108,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA00002229B7F12300000022 /* LaunchScreen.storyboard in Resources */,
+				AA00002229B7F12300000022 /* Assets.xcassets in Resources */,
 				AA00002429B7F12300000024 /* web in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -182,7 +182,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 39;
 				DEVELOPMENT_TEAM = LSMMV8JFAJ;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = FreestoneARESTactical/Info.plist;
@@ -201,7 +201,7 @@
 				ARCHS = arm64;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 39;
 				DEVELOPMENT_TEAM = LSMMV8JFAJ;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = FreestoneARESTactical/Info.plist;
