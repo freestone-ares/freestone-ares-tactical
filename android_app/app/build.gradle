@@ -20,7 +20,7 @@ android {
         applicationId "org.freestone.ares.tactical"
         minSdk 24
         targetSdk 36
-        versionCode System.getenv("BUILD_NUMBER") ? Math.max(41, System.getenv("BUILD_NUMBER").toInteger()) : 41
+        versionCode System.getenv("BUILD_NUMBER") ? Math.max(42, System.getenv("BUILD_NUMBER").toInteger()) : 42
         versionName "7.9.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
