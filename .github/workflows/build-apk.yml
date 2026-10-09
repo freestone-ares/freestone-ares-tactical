@@ -46,17 +46,17 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug --stacktrace
           ./gradlew bundleRelease --stacktrace
-          cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.8.9.apk
+          cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.9.0.apk
           cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical.apk
-          cp app/build/outputs/bundle/release/*.aab ../Freestone-ARES-Tactical-v7.8.9.aab || cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical-v7.8.9.aab
+          cp app/build/outputs/bundle/release/*.aab ../Freestone-ARES-Tactical-v7.9.0.aab || cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical-v7.9.0.aab
           cp app/build/outputs/bundle/release/*.aab ../Freestone-ARES-Tactical.aab || cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical.aab
 
       - name: Upload APK & Bundle as Workflow Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Freestone-ARES-Tactical-v7.8.9-Distribution
+          name: Freestone-ARES-Tactical-v7.9.0-Distribution
           path: |
-            Freestone-ARES-Tactical-v7.8.9.apk
+            Freestone-ARES-Tactical-v7.9.0.apk
             Freestone-ARES-Tactical.aab
           retention-days: 30
 
@@ -64,18 +64,18 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v7.8.9
+          tag_name: v7.9.0
           target_commitish: ${{ github.sha }}
-          name: "Freestone ARES Tactical v7.8.9 (Field APK & Google Play Bundle)"
+          name: "Freestone ARES Tactical v7.9.0 (Field APK & Google Play Bundle)"
           make_latest: true
           body: |
-            ## Freestone County ARES - Tactical Operations Field Build (v7.8.9)
+            ## Freestone County ARES - Tactical Operations Field Build (v7.9.0)
             
-            This is the official v7.8.9 (Build 37) field release for Freestone County ARES operations.
+            This is the official v7.9.0 (Build 41) field release for Freestone County ARES operations.
             
             ### Package Files Included:
-            - **`Freestone-ARES-Tactical.apk` / `Freestone-ARES-Tactical-v7.8.9.apk`**: Direct standalone Android field installer (for Obtainium & direct sideloading).
-            - **`Freestone-ARES-Tactical.aab` / `Freestone-ARES-Tactical-v7.8.9.aab`**: Official signed Android App Bundle for direct upload to the **Google Play Console**.
+            - **`Freestone-ARES-Tactical.apk` / `Freestone-ARES-Tactical-v7.9.0.apk`**: Direct standalone Android field installer (for Obtainium & direct sideloading).
+            - **`Freestone-ARES-Tactical.aab` / `Freestone-ARES-Tactical-v7.9.0.aab`**: Official signed Android App Bundle for direct upload to the **Google Play Console**.
             
             ### Quick Install / Update Instructions for Android:
             - **In Obtainium:** Open Obtainium, tap **Check for updates** (or swipe down to refresh), then tap **Update**.

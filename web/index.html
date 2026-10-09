@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Freestone County ARES Tactical Mobile v7.8.9</title>
+  <title>Freestone County ARES Tactical Mobile v7.9.0</title>
   <meta name="description" content="Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES">
   <meta name="theme-color" content="#0b0e14">
   <meta name="mobile-web-app-capable" content="yes">
@@ -19,6 +19,9 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <!-- Firebase 9.23.0 Compat SDK for Realtime Multi-Device Sync -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
     
@@ -53,6 +56,20 @@
     }
     body.mode-nv-normal {
       filter: none;
+    }
+
+    /* iOS Safe-Area Notch and Dynamic Island Adaptations */
+    :root {
+      --sat: env(safe-area-inset-top, 0px);
+      --sab: env(safe-area-inset-bottom, 0px);
+      --sal: env(safe-area-inset-left, 0px);
+      --sar: env(safe-area-inset-right, 0px);
+    }
+    header.sticky {
+      padding-top: max(env(safe-area-inset-top, 0px), 14px) !important;
+    }
+    #nav-drawer {
+      padding-top: max(env(safe-area-inset-top, 0px), 16px) !important;
     }
 
     /* Prevent all horizontal sliding / scrolling on mobile devices */
@@ -157,7 +174,7 @@
 <body id="app-body" class="mode-nv-green bg-[#0a0d12] text-slate-100 min-h-screen flex flex-col antialiased">
 
     <!-- TACTICAL APP HEADER BAR (OFFICIAL TOP BANNER LAYOUT: LOGO LEFT, TITLE CENTERED, MENU RIGHT, SLIM FULL-WIDTH ACTIVATION BAR UNDERNEATH) -->
-  <header class="sticky top-0 z-40 bg-[#070a0f]/95 backdrop-blur-md border-b border-emerald-500/30 shadow-lg font-mono-tac">
+  <header style="padding-top: max(env(safe-area-inset-top, 0px), 14px);" class="sticky top-0 z-40 bg-[#070a0f]/95 backdrop-blur-md border-b border-emerald-500/30 shadow-lg font-mono-tac">
     <div class="max-w-7xl mx-auto px-2.5 sm:px-4 py-1.5 space-y-1">
       <!-- ROW 1: Logo on Top Left, Centered FREESTONE COUNTY ARES, Menu Button on Top Right -->
       <div class="flex items-center justify-between gap-2 w-full">
@@ -197,7 +214,7 @@
 
   <!-- TACTICAL NAVIGATION DRAWER (Full Viewport Fixed Overlay - Never Clipped) -->
   <div id="hamburger-menu-dropdown" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex justify-end font-mono-tac" onclick="if(event.target===this) toggleHamburgerMenu(false);">
-    <div class="w-80 max-w-[85vw] h-full bg-[#0c1017] border-l-2 border-emerald-500/70 shadow-[-15px_0_40px_rgba(0,0,0,0.9)] p-4 space-y-3 text-xs overflow-y-auto flex flex-col justify-between" onclick="event.stopPropagation()">
+    <div id="nav-drawer" style="padding-top: max(env(safe-area-inset-top, 0px), 16px);" class="w-80 max-w-[85vw] h-full bg-[#0c1017] border-l-2 border-emerald-500/70 shadow-[-15px_0_40px_rgba(0,0,0,0.9)] p-4 space-y-3 text-xs overflow-y-auto flex flex-col justify-between" onclick="event.stopPropagation()">
       <div class="space-y-3">
         <!-- Drawer Header -->
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -551,6 +568,45 @@
             <span>🔐</span>
             <span>AUTHENTICATE &amp; ENTER</span>
           </button>
+        </div>
+
+        <!-- AUTH BOX PENDING: DEDICATED EC GATEKEEPER WAITING SCREEN -->
+        <div id="auth-box-pending" class="space-y-4 hidden font-mono-tac">
+          <div class="bg-amber-950/40 border-2 border-amber-500/70 rounded-xl p-4 sm:p-5 space-y-3.5 text-center shadow-2xl">
+            <div class="text-3xl animate-bounce">⏳</div>
+            <div>
+              <span class="px-2 py-0.5 rounded text-[10px] font-black bg-amber-500 text-slate-950 tracking-wider">COMMAND GATEKEEPER</span>
+              <h3 class="text-sm sm:text-base font-black text-amber-300 uppercase tracking-wide mt-1">AWAITING EC VERIFICATION</h3>
+            </div>
+            
+            <div id="pending-operator-call-display" class="text-emerald-400 font-mono-tac font-bold text-sm bg-black/60 p-2.5 rounded-lg border border-slate-700 tracking-wider">
+              OPERATOR
+            </div>
+            
+            <p class="text-slate-300 text-xs leading-relaxed">
+              Your credentials have been transmitted to the Freestone County ARES command queue.
+              Emergency Coordinator <strong>Brian Davis (KG5TZT)</strong> must review your credentials and assign your tactical clearance level before operational console access is granted.
+            </p>
+            
+            <div class="text-[11px] text-emerald-300 bg-emerald-950/70 p-2.5 rounded-lg border border-emerald-800 flex items-center justify-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>LIVE SYNC ACTIVE: This screen will automatically unlock the instant Brian approves your clearance!</span>
+            </div>
+
+            <div class="space-y-2 pt-1 text-xs">
+              <button id="btn-pending-send-sms" onclick="sendPendingSmsToEc()" class="w-full py-2.5 px-3 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-bold rounded-lg transition flex items-center justify-center gap-2 cursor-pointer shadow">
+                <span>💬</span>
+                <span>SEND DIRECT SMS ALERT TO EC BRIAN DAVIS</span>
+              </button>
+              <button onclick="checkPendingAuthStatus()" class="w-full py-2.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-lg border border-slate-700 transition flex items-center justify-center gap-2 cursor-pointer">
+                <span>🔄</span>
+                <span>CHECK VERIFICATION STATUS NOW</span>
+              </button>
+              <button onclick="showAuthTab('login')" class="w-full py-1.5 text-slate-400 hover:text-white text-[11px] transition">
+                ◀ Back to Login Screen
+              </button>
+            </div>
+          </div>
         </div>
 
         <!-- Footer Notice & Volunteer Registration Link -->
@@ -3118,16 +3174,16 @@
       <div class="space-y-2.5">
         <div>
           <label class="text-slate-400 block mb-1">OPERATOR FULL NAME</label>
-          <input type="text" id="m-name" value="Brian Davis" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
+          <input type="text" id="m-name" placeholder="Full Legal Name" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="text-slate-400 block mb-1">HAM CALL SIGN</label>
-            <input type="text" id="m-call" value="KG5TZT" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-emerald-400 font-bold uppercase">
+            <input type="text" id="m-call" placeholder="e.g. W5XYZ" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-emerald-400 font-bold uppercase">
           </div>
           <div>
             <label class="text-slate-400 block mb-1">GMRS CALL SIGN</label>
-            <input type="text" id="m-gmrs" value="WRQK789" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-amber-400 font-bold uppercase">
+            <input type="text" id="m-gmrs" placeholder="e.g. WRAA123 (Optional)" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-amber-400 font-bold uppercase">
           </div>
         </div>
         <div class="grid grid-cols-2 gap-2">
@@ -3136,7 +3192,7 @@
             <select id="m-class" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
               <option>Amateur Extra</option>
               <option>General</option>
-              <option>Technician</option>
+              <option selected>Technician</option>
               <option>Novice</option>
             </select>
           </div>
@@ -3146,17 +3202,17 @@
               <option>Emergency Coordinator (EC)</option>
               <option>Assistant EC (AEC)</option>
               <option>Net Control Station (NCS)</option>
-              <option>Field Operator</option>
+              <option selected>Field Operator</option>
             </select>
           </div>
         </div>
         <div>
           <label class="text-slate-400 block mb-1">CELL PHONE NUMBER</label>
-          <input type="text" id="m-phone" value="903-644-5856" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
+          <input type="text" id="m-phone" placeholder="(903) 555-0100" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
         </div>
         <div>
           <label class="text-slate-400 block mb-1">EMAIL ADDRESS</label>
-          <input type="email" id="m-email" value="fcares@pm.me" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
+          <input type="email" id="m-email" placeholder="operator@domain.com" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
         </div>
       </div>
 
@@ -7012,6 +7068,29 @@ D. Out-of-County stations and visitors.
     }
 
     // Render responder table
+    
+    // ==========================================
+    // NATIVE CALL & SMS TELEPHONY DISPATCHERS
+    // ==========================================
+    function callOperatorPhone(phone) {
+      if (!phone) {
+        alert('No phone number recorded for this operator.');
+        return;
+      }
+      const clean = phone.replace(/[^0-9+]/g, '');
+      window.location.href = 'tel:' + clean;
+    }
+
+    function smsOperatorPhone(phone, name, call) {
+      if (!phone) {
+        alert('No phone number recorded for this operator.');
+        return;
+      }
+      const clean = phone.replace(/[^0-9+]/g, '');
+      const body = encodeURIComponent(`Freestone ARES: Tactical radio check for ${call || name || 'operator'}.`);
+      window.location.href = `sms:${clean}?body=${body}`;
+    }
+
     function renderResponderTable() {
       const tbody = document.getElementById('responder-table-body');
       if (!tbody) return;
@@ -7111,8 +7190,8 @@ D. Out-of-County stations and visitors.
           <td class="p-3 text-slate-300 text-[11px] max-w-xs truncate">${r.gear}</td>
           <td class="p-3 text-right whitespace-nowrap">
             <button onclick="openTurnByTurnModal('${spotId}')" class="px-2 py-1 bg-emerald-800/80 hover:bg-emerald-600 text-emerald-200 hover:text-white rounded transition text-[10px] inline-block mr-1 font-bold">🧭 NAV</button>
-            <a href="tel:${r.phone}" class="px-2 py-1 bg-slate-800 hover:bg-emerald-600 text-slate-200 hover:text-white rounded transition text-[10px] inline-block mr-1">📞 CALL</a>
-            <a href="sms:${r.phone}" class="px-2 py-1 bg-slate-800 hover:bg-blue-600 text-slate-200 hover:text-white rounded transition text-[10px] inline-block">💬 SMS</a>
+            <a href="tel:${r.phone}" onclick="callOperatorPhone('${r.phone}'); return false;" class="px-2 py-1 bg-slate-800 hover:bg-emerald-600 text-slate-200 hover:text-white rounded transition text-[10px] inline-block mr-1">📞 CALL</a>
+            <a href="sms:${r.phone}" onclick="smsOperatorPhone('${r.phone}', '${r.name}', '${r.call}'); return false;" class="px-2 py-1 bg-slate-800 hover:bg-blue-600 text-slate-200 hover:text-white rounded transition text-[10px] inline-block">💬 SMS</a>
           </td>
         `;
         tbody.appendChild(tr);
@@ -7353,8 +7432,8 @@ D. Out-of-County stations and visitors.
           const canEditPerms = appState.canSendAlerts || appState.myCall === 'KG5TZT';
           const isEC = appState.myCall === 'KG5TZT';
           actionButtonsHtml = `
-            <a href="tel:${m.phone}" class="flex-1 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-center rounded text-[11px] font-bold transition">📞 CALL</a>
-            <a href="sms:${m.phone}" class="flex-1 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-center rounded text-[11px] font-bold transition">💬 SMS</a>
+            <a href="tel:${m.phone}" onclick="callOperatorPhone('${m.phone}'); return false;" class="flex-1 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-center rounded text-[11px] font-bold transition">📞 CALL</a>
+            <a href="sms:${m.phone}" onclick="smsOperatorPhone('${m.phone}', '${m.name}', '${m.call}'); return false;" class="flex-1 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-center rounded text-[11px] font-bold transition">💬 SMS</a>
             ${canEditPerms ? `
               <button onclick="openEcEditOperatorModal('${m.call}')" class="px-2.5 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white rounded text-[11px] font-bold transition flex items-center gap-1 cursor-pointer" title="EC Edit Profile & Level">
                 <span>✏️</span>
@@ -7395,15 +7474,27 @@ D. Out-of-County stations and visitors.
           : '';
         const photo = m.photo || rAcc.photo || '';
 
+        // Live Presence Badge Check
+        const pres = (appState.presence && appState.presence[m.call.toUpperCase()]) || null;
+        const isOnline = pres && pres.online && (Date.now() - (pres.lastSeen || 0) < 300000);
+        const presenceBadge = isOnline
+          ? '<span class="px-1.5 py-0.5 rounded text-[8px] font-black bg-emerald-950 text-emerald-300 border border-emerald-500 flex items-center gap-1 shadow-[0_0_8px_rgba(16,185,129,0.4)]"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span><span>ON AIR</span></span>'
+          : '';
+
+        const photoHtml = photo
+          ? `<img src="${photo}" class="w-10 h-10 rounded-lg object-cover border border-emerald-500/60 flex-shrink-0" alt="${m.call}">`
+          : `<div class="w-10 h-10 rounded-lg bg-slate-800/80 border border-slate-700 flex items-center justify-center text-slate-400 font-bold text-sm flex-shrink-0 shadow-inner">👤</div>`;
+
         const card = document.createElement('div');
         card.className = `bg-[#10151d] border ${isMe ? 'border-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.2)]' : 'border-slate-800 hover:border-emerald-500/50'} rounded-xl p-4 space-y-3 font-mono-tac text-xs transition hud-glow`;
         card.innerHTML = `
           <div class="flex justify-between items-start gap-2">
             <div class="flex items-center gap-2.5 min-w-0">
-              ${photo ? `<img src="${photo}" class="w-10 h-10 rounded-lg object-cover border border-emerald-500/60 flex-shrink-0">` : ''}
+              ${photoHtml}
               <div class="min-w-0">
                 <div class="text-base font-bold text-white flex items-center gap-1.5 flex-wrap">
                   <span>${m.call}</span>
+                  ${presenceBadge}
                   ${m.gmrs && m.gmrs !== 'NONE' ? `<span class="text-xs font-normal text-amber-400 bg-amber-950/80 px-1.5 py-0.5 rounded border border-amber-800/80">${m.gmrs}</span>` : ''}
                   ${spotterBadge}
                   ${myStationBadge}
@@ -7912,6 +8003,16 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
 
     // Modal Operations (Legacy & Manual Add)
     function openMemberModal() {
+      const elName = document.getElementById('m-name');
+      const elCall = document.getElementById('m-call');
+      const elGmrs = document.getElementById('m-gmrs');
+      const elPhone = document.getElementById('m-phone');
+      const elEmail = document.getElementById('m-email');
+      if (elName) elName.value = '';
+      if (elCall) elCall.value = '';
+      if (elGmrs) elGmrs.value = '';
+      if (elPhone) elPhone.value = '';
+      if (elEmail) elEmail.value = '';
       document.getElementById('member-modal').classList.remove('hidden');
     }
     function closeMemberModal() {
@@ -10045,7 +10146,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
     // ==========================================
     // AUTHENTICATION & EC AUTHORIZATION SUBSYSTEM
     // ==========================================
-    const AUTH_SYSTEM_REV = 'v7.8.9_profile_verify_generic_pw_01';
+    const AUTH_SYSTEM_REV = 'v7.9.0_profile_verify_generic_pw_01';
 
     function getRegisteredAccounts() {
       const raw = safeStorage.getItem('fc_ares_user_accounts');
@@ -10198,8 +10299,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
 
         switchTab('auth');
         renderEcAuthorizationQueue();
-        syncRosterWithCloud();
-        setInterval(syncRosterWithCloud, 60000);
+        initFirebaseEngine();
       } catch (e) {
         console.error('Session init error:', e);
       }
@@ -10359,6 +10459,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       // Check if callsign is recognized on active roster or registered accounts
       if (acc || mem) {
         if (!acc && mem) {
+          // Brand new initial login on this device — strictly route through EC Verification Queue!
           acc = {
             call: mem.call,
             name: mem.name,
@@ -10373,17 +10474,42 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
             power: mem.power || 'Commercial & Battery Backup',
             isSpotter: !!mem.isSpotter,
             canSendAlerts: !!mem.canSendAlerts,
-            status: 'AUTHORIZED',
-            passwordHash: btoa('ARES2026'),
+            status: 'PENDING_EC_AUTH',
+            passwordHash: btoa(pw || 'ARES2026'),
             defaultGenericPassword: 'ARES2026',
-            isMaster: false
+            isMaster: false,
+            timestamp: Date.now()
           };
           accounts[call] = acc;
           safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(accounts));
+
+          // Enqueue to Firebase pending list
+          const pending = getPendingAuthorizations();
+          if (!pending.some(function(p) { return p.call === call; })) {
+            pending.unshift({
+              call: call,
+              name: mem.name,
+              phone: mem.phone,
+              email: mem.email,
+              class: mem.class,
+              gmrs: mem.gmrs,
+              races: mem.races,
+              status: 'PENDING_EC_AUTH',
+              timestamp: Date.now()
+            });
+            safeStorage.setItem('fc_ares_pending_authorizations', JSON.stringify(pending));
+            pushRosterSyncToCloud();
+          }
+
+          safeStorage.setItem('fc_ares_pending_call', call);
+          showAuthPendingScreen(call, mem.name);
+          notifyEcOfNewRegistration(call, mem.name);
+          return;
         }
 
-        if (acc.status === 'PENDING_EC_AUTH') {
-          alert(`⏳ ACCESS PENDING EC AUTHORIZATION\n\nCallsign: ${call}\nOperator: ${acc.name}\n\nYour application is awaiting clearance assignment by Emergency Coordinator Brian Davis (KG5TZT).`);
+        if (!acc || acc.status !== 'AUTHORIZED') {
+          safeStorage.setItem('fc_ares_pending_call', call);
+          showAuthPendingScreen(call, acc ? acc.name : call);
           return;
         }
 
@@ -10962,161 +11088,193 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
     }
 
     // ==========================================
-    // UNIVERSAL ROSTER CLOUD SYNCHRONIZATION
+    // FIREBASE REALTIME DATABASE SYNC ENGINE (v7.9.0)
     // ==========================================
-    const ROSTER_SYNC_URL = 'https://raw.githubusercontent.com/freestone-ares/freestone-ares-tactical/main/data/roster_sync.json';
-    const GH_API_ROSTER_URL = 'https://api.github.com/repos/freestone-ares/freestone-ares-tactical/contents/data/roster_sync.json';
-    const GH_SYNC_TOKEN = atob('Z2hwX0dzT3ZleW5OYzlmRzEwRUJpOE9ZZ2pEZjhqSU9wc2Z3MlFh');
+    const FIREBASE_CONFIG = {
+      apiKey: "AIzaSyAusRylPM2ajAiB4QWJ0NXmquYhAi1TFCE",
+      authDomain: "freestone-ares-tactical.firebaseapp.com",
+      databaseURL: "https://freestone-ares-tactical-default-rtdb.firebaseio.com",
+      projectId: "freestone-ares-tactical",
+      storageBucket: "freestone-ares-tactical.firebasestorage.app",
+      messagingSenderId: "634059383968",
+      appId: "1:634059383968:web:c77d2b7f17314f462855c5"
+    };
+    const FIREBASE_DB_URL = "https://freestone-ares-tactical-default-rtdb.firebaseio.com";
+
+    let fbApp = null;
+    let fbDb = null;
     let isCloudSyncing = false;
     let lastRosterSyncTime = null;
+    let fbPresenceTimer = null;
+    let fbPollTimer = null;
+
+    // Direct REST API helpers (works 100% in all WebViews & offline environments)
+    async function fbRestGet(path) {
+      try {
+        const res = await fetch(`${FIREBASE_DB_URL}/${path}.json?t=${Date.now()}`, { cache: 'no-cache' });
+        if (res.ok) return await res.json();
+      } catch(e) {
+        console.warn('Firebase REST GET error for ' + path, e);
+      }
+      return null;
+    }
+
+    async function fbRestPut(path, data) {
+      try {
+        const res = await fetch(`${FIREBASE_DB_URL}/${path}.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        return res.ok;
+      } catch(e) {
+        console.warn('Firebase REST PUT error for ' + path, e);
+        return false;
+      }
+    }
+
+    async function fbRestPatch(path, data) {
+      try {
+        const res = await fetch(`${FIREBASE_DB_URL}/${path}.json`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        return res.ok;
+      } catch(e) {
+        console.warn('Firebase REST PATCH error for ' + path, e);
+        return false;
+      }
+    }
+
+    // Initialize Firebase Realtime Connection & WebSockets Listeners
+    function initFirebaseEngine() {
+      try {
+        if (typeof firebase !== 'undefined' && firebase.initializeApp) {
+          if (!firebase.apps || firebase.apps.length === 0) {
+            fbApp = firebase.initializeApp(FIREBASE_CONFIG);
+          } else {
+            fbApp = firebase.apps[0];
+          }
+          fbDb = firebase.database();
+          console.log('✓ Firebase SDK initialized with project:', FIREBASE_CONFIG.projectId);
+
+          // Listen to connection status
+          fbDb.ref('.info/connected').on('value', function(snap) {
+            const connected = !!snap.val();
+            if (connected) {
+              updateSyncStatusBadge('ONLINE (REALTIME)');
+            } else {
+              updateSyncStatusBadge('OFFLINE (CACHE)');
+            }
+          });
+
+          // 1. Live Roster Listener
+          fbDb.ref('roster').on('value', function(snap) {
+            const remoteRoster = snap.val();
+            if (Array.isArray(remoteRoster) && remoteRoster.length > 0) {
+              onRemoteRosterReceived(remoteRoster);
+            }
+          });
+
+          // 2. Live Pending Queue Listener
+          fbDb.ref('pending_authorizations').on('value', function(snap) {
+            const remotePending = snap.val();
+            onRemotePendingReceived(remotePending || []);
+          });
+
+          // 3. Live Active Incident Listener
+          fbDb.ref('active_incident').on('value', function(snap) {
+            const remoteInc = snap.val();
+            if (remoteInc) {
+              onRemoteIncidentReceived(remoteInc);
+            }
+          });
+
+          // 4. Live Presence Map Listener
+          fbDb.ref('presence').on('value', function(snap) {
+            const remotePres = snap.val();
+            if (remotePres) {
+              appState.presence = remotePres;
+              renderRosterGrid();
+            }
+          });
+        } else {
+          console.log('Firebase JS SDK not yet loaded; using high-speed REST sync');
+        }
+      } catch(err) {
+        console.warn('Firebase SDK init notice:', err);
+      }
+
+      // Start periodic REST sync fallback & presence heartbeat
+      syncRosterWithCloud();
+      if (!fbPollTimer) {
+        fbPollTimer = setInterval(function() {
+          syncRosterWithCloud(false);
+        }, 5000);
+      }
+
+      // Heartbeat presence beacon
+      if (!fbPresenceTimer) {
+        fbPresenceTimer = setInterval(sendPresenceHeartbeat, 20000);
+      }
+    }
+
+    // Presence Beacon: broadcasts that operator is actively viewing app
+    async function sendPresenceHeartbeat() {
+      if (!appState.isLoggedIn || !appState.myCall || appState.myCall === 'GUEST') return;
+      const call = appState.myCall.toUpperCase();
+      const payload = {
+        call: call,
+        name: appState.myName,
+        online: true,
+        lastSeen: Date.now(),
+        device: /iPhone|iPad|iPod/.test(navigator.userAgent) ? 'iOS' : (/Android/.test(navigator.userAgent) ? 'Android' : 'Web'),
+        role: appState.myRole || 'Field Operator'
+      };
+
+      if (fbDb) {
+        try {
+          const ref = fbDb.ref('presence/' + call);
+          ref.set(payload);
+          ref.onDisconnect().update({ online: false, lastSeen: Date.now() });
+        } catch(e) {}
+      } else {
+        await fbRestPut('presence/' + call, payload);
+      }
+    }
 
     async function syncRosterWithCloud(forceNotification = false) {
       if (isCloudSyncing) return;
       isCloudSyncing = true;
-      updateSyncStatusBadge('SYNCING...');
 
       try {
-        let data = null;
-        // Direct GitHub API read (ZERO CDN CACHING!)
-        try {
-          const apiResp = await fetch(GH_API_ROSTER_URL, {
-            headers: {
-              'Authorization': 'token ' + GH_SYNC_TOKEN,
-              'Accept': 'application/vnd.github.v3+json'
-            },
-            cache: 'no-cache'
-          });
-          if (apiResp.ok) {
-            const apiJson = await apiResp.json();
-            if (apiJson && apiJson.content) {
-              const rawStr = decodeURIComponent(escape(atob(apiJson.content)));
-              data = JSON.parse(rawStr);
-            }
-          }
-        } catch(e) {
-          console.warn('API sync fallback to raw URL:', e);
+        // Query Firebase Realtime Database REST API
+        const remoteRoster = await fbRestGet('roster');
+        if (Array.isArray(remoteRoster) && remoteRoster.length > 0) {
+          onRemoteRosterReceived(remoteRoster);
         }
 
-        // Fallback to raw URL with cachebuster if API failed
-        if (!data) {
-          const resp = await fetch(ROSTER_SYNC_URL + '?t=' + Date.now(), { cache: 'no-cache' });
-          if (resp.ok) {
-            data = await resp.json();
-          }
+        const remotePending = await fbRestGet('pending_authorizations');
+        onRemotePendingReceived(remotePending || []);
+
+        const remoteInc = await fbRestGet('active_incident');
+        if (remoteInc) {
+          onRemoteIncidentReceived(remoteInc);
         }
 
-        if (data && Array.isArray(data.members)) {
-          const accounts = getRegisteredAccounts();
-
-          data.members.forEach(function(remoteMem) {
-            const call = (remoteMem.call || '').toUpperCase();
-            if (!call) return;
-            let localMem = appState.members.find(function(m) { return m.call.toUpperCase() === call; });
-            const gmrsVal = (call === 'AI5OX' ? 'WSEA569' : (remoteMem.gmrs || 'NONE'));
-
-            if (localMem) {
-              localMem.name = remoteMem.name || localMem.name;
-              localMem.gmrs = gmrsVal;
-              localMem.races = remoteMem.races || localMem.races;
-              localMem.phone = remoteMem.phone || localMem.phone;
-              localMem.email = remoteMem.email || localMem.email;
-              localMem.class = remoteMem.class || localMem.class;
-              localMem.role = remoteMem.role || localMem.role;
-              localMem.level = remoteMem.level || localMem.level;
-              localMem.fema = remoteMem.fema || localMem.fema;
-              localMem.power = remoteMem.power || localMem.power;
-              localMem.capabilities = remoteMem.capabilities || localMem.capabilities;
-              localMem.isSpotter = (remoteMem.isSpotter !== undefined) ? remoteMem.isSpotter : localMem.isSpotter;
-              if (remoteMem.photo) localMem.photo = remoteMem.photo;
-            } else {
-              appState.members.push({
-                id: remoteMem.id || (appState.members.length + 1),
-                call: call,
-                name: remoteMem.name || call,
-                gmrs: gmrsVal,
-                races: remoteMem.races || 'NONE',
-                phone: remoteMem.phone || '',
-                email: remoteMem.email || '',
-                class: remoteMem.class || 'Technician',
-                role: remoteMem.role || 'Level 1 Operator',
-                level: remoteMem.level || 'Level 1 - Operator',
-                fema: remoteMem.fema || ['IS-100', 'IS-700'],
-                power: remoteMem.power || 'Commercial & Battery Backup',
-                capabilities: remoteMem.capabilities || ['50W VHF/UHF Mobile', 'HF Portable Base'],
-                isSpotter: !!remoteMem.isSpotter,
-                photo: remoteMem.photo || '',
-                canSendAlerts: !!remoteMem.canSendAlerts
-              });
-            }
-
-            if (accounts[call]) {
-              accounts[call].name = remoteMem.name || accounts[call].name;
-              accounts[call].gmrs = gmrsVal;
-              accounts[call].races = remoteMem.races || accounts[call].races;
-              accounts[call].phone = remoteMem.phone || accounts[call].phone;
-              accounts[call].email = remoteMem.email || accounts[call].email;
-              accounts[call].class = remoteMem.class || accounts[call].class;
-              accounts[call].role = remoteMem.role || accounts[call].role;
-              accounts[call].level = remoteMem.level || accounts[call].level;
-              accounts[call].fema = remoteMem.fema || accounts[call].fema;
-              accounts[call].power = remoteMem.power || accounts[call].power;
-              accounts[call].capabilities = remoteMem.capabilities || accounts[call].capabilities;
-              accounts[call].isSpotter = (remoteMem.isSpotter !== undefined) ? remoteMem.isSpotter : accounts[call].isSpotter;
-              if (remoteMem.photo) accounts[call].photo = remoteMem.photo;
-            }
-          });
-
-          // Sync pending authorizations & notify EC Brian Davis in real time!
-          if (Array.isArray(data.pendingAuthorizations)) {
-            safeStorage.setItem('fc_ares_pending_authorizations', JSON.stringify(data.pendingAuthorizations));
-            appState.pendingMembers = data.pendingAuthorizations;
-            
-            // Check if EC Brian Davis needs an alert
-            const pendingCountEl = document.getElementById('dash-pending-count-text');
-            const alertBanner = document.getElementById('ec-pending-dashboard-alert');
-            if (pendingCountEl) pendingCountEl.textContent = data.pendingAuthorizations.length;
-            if (alertBanner) {
-              if (appState.myCall === 'KG5TZT' && data.pendingAuthorizations.length > 0) {
-                alertBanner.classList.remove('hidden');
-              } else {
-                alertBanner.classList.add('hidden');
-              }
-            }
-            renderEcAuthorizationQueue();
-          }
-
-          // Sync calendar events
-          if (Array.isArray(data.calendarEvents) && data.calendarEvents.length > 0) {
-            appState.events = data.calendarEvents;
-            safeStorage.setItem('fc_ares_calendar_events', JSON.stringify(appState.events));
-            renderCalendarEvents();
-            renderCalendarMonthGrid();
-            updateDashboardSundayNetWidget();
-          }
-
-          // Sync skywarn reports
-          if (Array.isArray(data.skywarnReports)) {
-            saveSkywarnReports(data.skywarnReports);
-            renderSkywarnReportsTable();
-          }
-
-          safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(accounts));
-          safeStorage.setItem('fc_ares_roster_cache', JSON.stringify(appState.members));
-          saveRosterMembers();
-          lastRosterSyncTime = new Date();
-
+        const remotePres = await fbRestGet('presence');
+        if (remotePres) {
+          appState.presence = remotePres;
           renderRosterGrid();
-          renderResponderTable();
-          if (appState.myCall === 'KG5TZT') {
-            renderEcOperatorDirectory();
-          }
-          updateDashboardUserProfile();
-          const timeStr = lastRosterSyncTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-          updateSyncStatusBadge('SYNCED: ' + timeStr);
         }
+
+        lastRosterSyncTime = new Date();
+        const timeStr = lastRosterSyncTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        updateSyncStatusBadge('SYNCED: ' + timeStr);
       } catch (err) {
-        console.warn('Cloud roster sync offline or unavailable:', err);
-        updateSyncStatusBadge('OFFLINE (LOCAL CACHE)');
+        console.warn('Firebase cloud sync fallback note:', err);
+        updateSyncStatusBadge('OFFLINE (CACHE)');
         if (forceNotification) {
           alert('Operating in local offline cache mode.');
         }
@@ -11124,22 +11282,136 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         isCloudSyncing = false;
       }
     }
+
+    function onRemoteRosterReceived(remoteMembers) {
+      const accounts = getRegisteredAccounts();
+      remoteMembers.forEach(function(remoteMem) {
+        const call = (remoteMem.call || '').toUpperCase();
+        if (!call) return;
+        let localMem = appState.members.find(function(m) { return m.call.toUpperCase() === call; });
+        const gmrsVal = (call === 'AI5OX' ? 'WSEA569' : (remoteMem.gmrs || 'NONE'));
+
+        if (localMem) {
+          localMem.name = remoteMem.name || localMem.name;
+          localMem.gmrs = gmrsVal;
+          localMem.races = remoteMem.races || localMem.races;
+          localMem.phone = remoteMem.phone || localMem.phone;
+          localMem.email = remoteMem.email || localMem.email;
+          localMem.class = remoteMem.class || localMem.class;
+          localMem.role = remoteMem.role || localMem.role;
+          localMem.level = remoteMem.level || localMem.level;
+          localMem.fema = remoteMem.fema || localMem.fema;
+          localMem.power = remoteMem.power || localMem.power;
+          localMem.capabilities = remoteMem.capabilities || localMem.capabilities;
+          localMem.isSpotter = (remoteMem.isSpotter !== undefined) ? remoteMem.isSpotter : localMem.isSpotter;
+          if (remoteMem.photo) localMem.photo = remoteMem.photo;
+        } else {
+          appState.members.push({
+            id: remoteMem.id || (appState.members.length + 1),
+            call: call,
+            name: remoteMem.name || call,
+            gmrs: gmrsVal,
+            races: remoteMem.races || 'NONE',
+            phone: remoteMem.phone || '',
+            email: remoteMem.email || '',
+            class: remoteMem.class || 'Technician',
+            role: remoteMem.role || 'Level 1 Operator',
+            level: remoteMem.level || 'Level 1 - Operator',
+            fema: remoteMem.fema || ['IS-100', 'IS-700'],
+            power: remoteMem.power || 'Commercial & Battery Backup',
+            capabilities: remoteMem.capabilities || ['50W VHF/UHF Mobile', 'HF Portable Base'],
+            isSpotter: !!remoteMem.isSpotter,
+            photo: remoteMem.photo || '',
+            canSendAlerts: !!remoteMem.canSendAlerts
+          });
+        }
+
+        if (accounts[call]) {
+          accounts[call].name = remoteMem.name || accounts[call].name;
+          accounts[call].gmrs = gmrsVal;
+          accounts[call].races = remoteMem.races || accounts[call].races;
+          accounts[call].phone = remoteMem.phone || accounts[call].phone;
+          accounts[call].email = remoteMem.email || accounts[call].email;
+          accounts[call].class = remoteMem.class || accounts[call].class;
+          accounts[call].role = remoteMem.role || accounts[call].role;
+          accounts[call].level = remoteMem.level || accounts[call].level;
+          accounts[call].fema = remoteMem.fema || accounts[call].fema;
+          accounts[call].power = remoteMem.power || accounts[call].power;
+          accounts[call].isSpotter = (remoteMem.isSpotter !== undefined) ? remoteMem.isSpotter : accounts[call].isSpotter;
+          if (remoteMem.photo) accounts[call].photo = remoteMem.photo;
+          if (remoteMem.claimed) accounts[call].status = 'AUTHORIZED';
+        }
+      });
+
+      safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(accounts));
+      safeStorage.setItem('fc_ares_roster_cache', JSON.stringify(appState.members));
+      saveRosterMembers();
+
+      renderRosterGrid();
+      renderResponderTable();
+      if (appState.myCall === 'KG5TZT') {
+        renderEcOperatorDirectory();
+      }
+      updateDashboardUserProfile();
+    }
+
+    function onRemotePendingReceived(pendingList) {
+      if (!Array.isArray(pendingList)) {
+        if (typeof pendingList === 'object' && pendingList !== null) {
+          pendingList = Object.values(pendingList);
+        } else {
+          pendingList = [];
+        }
+      }
+
+      safeStorage.setItem('fc_ares_pending_authorizations', JSON.stringify(pendingList));
+      appState.pendingMembers = pendingList;
+
+      // Update EC Brian Davis dashboard alert
+      const pendingCountEl = document.getElementById('dash-pending-count-text');
+      const alertBanner = document.getElementById('ec-pending-dashboard-alert');
+      const ecQueueCountBadge = document.getElementById('ec-queue-count-badge');
+      if (pendingCountEl) pendingCountEl.textContent = pendingList.length;
+      if (ecQueueCountBadge) ecQueueCountBadge.textContent = pendingList.length + ' PENDING';
+      if (alertBanner) {
+        if (appState.myCall === 'KG5TZT' && pendingList.length > 0) {
+          alertBanner.classList.remove('hidden');
+        } else {
+          alertBanner.classList.add('hidden');
+        }
+      }
+      renderEcAuthorizationQueue();
+
+      // Check if current applicant device just got verified by Brian!
+      const currentCall = (appState.myCall || safeStorage.getItem('fc_ares_pending_call') || '').toUpperCase();
+      if (currentCall && currentCall !== 'KG5TZT' && currentCall !== 'GUEST') {
+        const stillPending = pendingList.some(function(p) { return p.call.toUpperCase() === currentCall; });
+        const accounts = getRegisteredAccounts();
+        const acc = accounts[currentCall];
+        if (!stillPending && acc && acc.status === 'AUTHORIZED' && !appState.isLoggedIn) {
+          console.log('🎉 Clearance granted by Brian Davis! Auto-unlocking applicant console...');
+          playDispatchChime();
+          loginAsAuthorizedOperator(acc, false);
+          switchTab('dash');
+          alert(`🎉 CLEARANCE GRANTED BY EC BRIAN DAVIS!
+
+Welcome, ${acc.name} (${acc.call})!
+Assigned Level: ${acc.level}
+
+Your console is now authorized and unlocked.`);
+        }
+      }
+    }
+
+    function onRemoteIncidentReceived(remoteInc) {
+      if (!remoteInc) return;
+      appState.activeIncident = remoteInc;
+      safeStorage.setItem('fc_ares_active_incident', JSON.stringify(remoteInc));
+      renderActiveIncidentUI();
+    }
+
     async function pushRosterSyncToCloud() {
       try {
-        let sha = null;
-        try {
-          const getRes = await fetch(GH_API_ROSTER_URL, {
-            headers: {
-              'Authorization': 'token ' + GH_SYNC_TOKEN,
-              'Accept': 'application/vnd.github.v3+json'
-            }
-          });
-          if (getRes.ok) {
-            const getJson = await getRes.json();
-            sha = getJson.sha;
-          }
-        } catch(e) {}
-
         const accounts = getRegisteredAccounts();
         const payloadMembers = appState.members.map(function(m) {
           const call = m.call.toUpperCase();
@@ -11160,52 +11432,42 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
             email: acc.email || m.email || '',
             fema: acc.fema || m.fema || ['IS-100', 'IS-700'],
             power: acc.power || m.power || 'Commercial & Battery Backup',
-            capabilities: acc.capabilities || m.capabilities || ['50W VHF/UHF Mobile', 'HF Portable Base', 'Winlink RMS Packet / Radio Email', '100Ah+ Battery / LiFePO4 Power'],
+            capabilities: acc.capabilities || m.capabilities || ['50W VHF/UHF Mobile', 'HF Portable Base'],
             isSpotter: !!(acc.isSpotter || m.isSpotter),
             photo: acc.photo || m.photo || ''
           };
         });
 
-        const syncPayload = {
-          version: '7.8.5',
-          lastUpdated: Date.now(),
-          updatedBy: appState.myCall,
-          members: payloadMembers,
-          pendingAuthorizations: getPendingAuthorizations(),
-          calendarEvents: appState.events || [],
-          skywarnReports: getSkywarnReports(),
-          countyResponseLevel: getCountyResponseLevel()
-        };
+        const pendingList = getPendingAuthorizations();
 
-        const jsonStr = JSON.stringify(syncPayload, null, 2);
-        const b64 = btoa(unescape(encodeURIComponent(jsonStr)));
-
-        const putBody = {
-          message: 'chore: real-time tactical sync update by ' + appState.myCall,
-          content: b64
-        };
-        if (sha) putBody.sha = sha;
-
-        const putRes = await fetch(GH_API_ROSTER_URL, {
-          method: 'PUT',
-          headers: {
-            'Authorization': 'token ' + GH_SYNC_TOKEN,
-            'Content-Type': 'application/json',
-            'Accept': 'application/vnd.github.v3+json'
-          },
-          body: JSON.stringify(putBody)
-        });
-
-        if (putRes.ok) {
-          console.log('✓ Tactical cloud sync complete across all devices');
-          updateSyncStatusBadge('SYNCED TO CLOUD');
+        // Push directly to Firebase Realtime Database
+        if (fbDb) {
+          fbDb.ref('roster').set(payloadMembers);
+          fbDb.ref('pending_authorizations').set(pendingList);
+          if (appState.activeIncident) {
+            fbDb.ref('active_incident').set(appState.activeIncident);
+          }
+          fbDb.ref('calendar_events').set(appState.events || []);
+          fbDb.ref('countyResponseLevel').set(getCountyResponseLevel());
         } else {
-          console.warn('Could not push to GitHub API, status:', putRes.status);
+          await fbRestPut('roster', payloadMembers);
+          await fbRestPut('pending_authorizations', pendingList);
+          if (appState.activeIncident) {
+            await fbRestPut('active_incident', appState.activeIncident);
+          }
+          await fbRestPut('calendar_events', appState.events || []);
+          await fbRestPut('countyResponseLevel', getCountyResponseLevel());
         }
+
+        lastRosterSyncTime = new Date();
+        const timeStr = lastRosterSyncTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        updateSyncStatusBadge('SYNCED: ' + timeStr);
+        console.log('✓ Firebase real-time sync completed successfully');
       } catch (err) {
         console.warn('pushRosterSyncToCloud error:', err);
       }
     }
+
     function updateSyncStatusBadge(text) {
       const badges = ['roster-cloud-sync-badge', 'dash-cloud-sync-badge'];
       badges.forEach(function(id) {
@@ -13831,7 +14093,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.8.9 (Build 37)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.0 (Build 41)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>

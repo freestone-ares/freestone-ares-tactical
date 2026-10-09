@@ -47,9 +47,16 @@ jobs:
           security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
           security list-keychain -d user -s "$KEYCHAIN_PATH" $(security list-keychains -d user | tr -d '"')
 
-          # Install mobileprovision
+      # Install mobileprovision
+      - name: Install Mobileprovision
+        run: |
           mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
           cp ios_app/certs/Freestone_ARES_Distribution.mobileprovision "$HOME/Library/MobileDevice/Provisioning Profiles/b7c5ddd0-f4b4-4e6b-bf56-91dcd9d2a6e1.mobileprovision"
+
+      - name: Ensure Web Assets Synced
+        run: |
+          mkdir -p ios_app/FreestoneARESTactical/web
+          cp -r web/* ios_app/FreestoneARESTactical/web/
 
       - name: Build and Archive iOS Project
         run: |
@@ -76,19 +83,19 @@ jobs:
             -exportPath build/artifacts
 
           cp build/artifacts/*.ipa Freestone-ARES-Tactical.ipa || true
-          cp build/artifacts/*.ipa Freestone-ARES-Tactical-v7.8.9.ipa || true
+          cp build/artifacts/*.ipa Freestone-ARES-Tactical-v7.9.0.ipa || true
 
           # Ensure no root Symbols directory or storyboardc bundle confuses Apple lipo validator
           zip -d Freestone-ARES-Tactical.ipa "Symbols/*" 2>/dev/null || true
           zip -d Freestone-ARES-Tactical.ipa "*storyboardc*" 2>/dev/null || true
-          zip -d Freestone-ARES-Tactical-v7.8.9.ipa "Symbols/*" 2>/dev/null || true
-          zip -d Freestone-ARES-Tactical-v7.8.9.ipa "*storyboardc*" 2>/dev/null || true
+          zip -d Freestone-ARES-Tactical-v7.9.0.ipa "Symbols/*" 2>/dev/null || true
+          zip -d Freestone-ARES-Tactical-v7.9.0.ipa "*storyboardc*" 2>/dev/null || true
           unzip -l Freestone-ARES-Tactical.ipa
 
       - name: Upload IPA as Workflow Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Freestone-ARES-Tactical-iOS-v7.8.9
+          name: Freestone-ARES-Tactical-iOS-v7.9.0
           path: Freestone-ARES-Tactical.ipa
           retention-days: 30
 
@@ -97,9 +104,9 @@ jobs:
         continue-on-error: true
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v7.8.9
+          tag_name: v7.9.0
           files: |
             Freestone-ARES-Tactical.ipa
-            Freestone-ARES-Tactical-v7.8.9.ipa
+            Freestone-ARES-Tactical-v7.9.0.ipa
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

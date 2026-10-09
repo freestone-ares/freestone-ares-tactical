@@ -76,6 +76,25 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, WKSc
         }
     }
 
+    // Native URL Scheme Handler for Phone Calls and SMS Messages
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        guard let url = navigationAction.request.url else {
+            decisionHandler(.allow)
+            return
+        }
+
+        let scheme = (url.scheme ?? "").lowercased()
+        if ["tel", "sms", "mailto", "facetime"].contains(scheme) {
+            if UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
+            decisionHandler(.cancel)
+            return
+        }
+
+        decisionHandler(.allow)
+    }
+
     // Native Alert / Confirm Handlers for JavaScript Dialogs
     func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
         let alert = UIAlertController(title: "Freestone ARES", message: message, preferredStyle: .alert)

@@ -66,18 +66,52 @@ public class MainActivity extends AppCompatActivity {
 
         // Native Link & Intent Handler (for direct CALL and SMS action buttons)
         webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.startsWith("tel:") || url.startsWith("sms:") || url.startsWith("mailto:")) {
+            private boolean handleSpecialUrl(String url) {
+                if (url == null) return false;
+                if (url.startsWith("tel:")) {
                     try {
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
                         startActivity(intent);
+                        return true;
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    return true;
+                } else if (url.startsWith("sms:")) {
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        startActivity(intent);
+                        return true;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else if (url.startsWith("mailto:")) {
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(url));
+                        startActivity(intent);
+                        return true;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 return false;
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, android.webkit.WebResourceRequest request) {
+                if (request != null && request.getUrl() != null) {
+                    if (handleSpecialUrl(request.getUrl().toString())) {
+                        return true;
+                    }
+                }
+                return super.shouldOverrideUrlLoading(view, request);
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (handleSpecialUrl(url)) {
+                    return true;
+                }
+                return super.shouldOverrideUrlLoading(view, url);
             }
         });
 
