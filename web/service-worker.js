@@ -1,8 +1,8 @@
-// Freestone County ARES Tactical Mobile Service Worker (v10)
-// Enables 100% offline field operation when cellular and internet infrastructure fails.
+// Freestone County ARES Tactical Mobile Service Worker (v11)
+// Enables 100% offline field operation with Network-First updates for latest tactical changes.
 // Pure Free OpenStreetMap & ESRI Satellite (ZERO API KEYS REQUIRED).
 
-const CACHE_NAME = 'fc-ares-tactical-v10';
+const CACHE_NAME = 'fc-ares-tactical-v11';
 const TILE_CACHE_NAME = 'fc-ares-maptiles-v1';
 
 const ASSETS_TO_CACHE = [
@@ -31,9 +31,9 @@ const OFFLINE_SVG_TILE = `<svg xmlns="http://www.w3.org/2000/svg" width="256" he
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[ARES Tactical SW v10] Pre-caching core emergency tactical assets & Leaflet engine...');
+      console.log('[ARES Tactical SW v11] Pre-caching core emergency tactical assets & Leaflet engine...');
       return cache.addAll(ASSETS_TO_CACHE).catch((err) => {
-        console.warn('[ARES Tactical SW v10] Notice: Non-critical asset cache deferred:', err);
+        console.warn('[ARES Tactical SW v11] Notice: Non-critical asset cache deferred:', err);
       });
     }).then(() => self.skipWaiting())
   );
@@ -44,9 +44,8 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((keyList) => {
       return Promise.all(
         keyList.map((key) => {
-          // Preserve current app cache and permanent map tile cache
           if (key !== CACHE_NAME && key !== TILE_CACHE_NAME) {
-            console.log('[ARES Tactical SW v10] Removing superseded cache:', key);
+            console.log('[ARES Tactical SW v11] Removing superseded cache:', key);
             return caches.delete(key);
           }
         })
@@ -69,14 +68,12 @@ self.addEventListener('fetch', (event) => {
           if (cachedTile) {
             return cachedTile;
           }
-          // Fetch from network and store in permanent tile cache
           return fetch(event.request).then((networkResponse) => {
             if (networkResponse && networkResponse.status === 200) {
               tileCache.put(event.request, networkResponse.clone());
             }
             return networkResponse;
           }).catch(() => {
-            // If offline and tile is not cached, return emergency SVG tile
             return new Response(OFFLINE_SVG_TILE, {
               headers: { 'Content-Type': 'image/svg+xml', 'Cache-Control': 'public, max-age=86400' }
             });
@@ -87,7 +84,29 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 2. Standard Cache-First Strategy for Tactical App Assets
+  // 2. HTML & Navigation Documents: NETWORK-FIRST (Guarantees freshest tactical changes immediately)
+  const isHtml = event.request.mode === 'navigate' ||
+                 event.request.destination === 'document' ||
+                 url.pathname.endsWith('.html') ||
+                 url.pathname === '/' ||
+                 url.pathname.endsWith('/');
+
+  if (isHtml) {
+    event.respondWith(
+      fetch(event.request).then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseToCache));
+        }
+        return networkResponse;
+      }).catch(() => {
+        return caches.match(event.request).then((cached) => cached || caches.match('./index.html') || caches.match('./ares_tactical_preview.html'));
+      })
+    );
+    return;
+  }
+
+  // 3. Static Assets (Images, Stylesheets, Icons): Cache-First Strategy
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
@@ -101,10 +120,6 @@ self.addEventListener('fetch', (event) => {
           });
         }
         return networkResponse;
-      }).catch(() => {
-        if (event.request.mode === 'navigate') {
-          return caches.match('./index.html').then((r) => r || caches.match('./ares_tactical_preview.html'));
-        }
       });
     })
   );

@@ -83,19 +83,19 @@ jobs:
             -exportPath build/artifacts
 
           cp build/artifacts/*.ipa Freestone-ARES-Tactical.ipa || true
-          cp build/artifacts/*.ipa Freestone-ARES-Tactical-v7.9.0.ipa || true
+          cp build/artifacts/*.ipa Freestone-ARES-Tactical-v7.9.1.ipa || true
 
           # Ensure no root Symbols directory or storyboardc bundle confuses Apple lipo validator
           zip -d Freestone-ARES-Tactical.ipa "Symbols/*" 2>/dev/null || true
           zip -d Freestone-ARES-Tactical.ipa "*storyboardc*" 2>/dev/null || true
-          zip -d Freestone-ARES-Tactical-v7.9.0.ipa "Symbols/*" 2>/dev/null || true
-          zip -d Freestone-ARES-Tactical-v7.9.0.ipa "*storyboardc*" 2>/dev/null || true
+          zip -d Freestone-ARES-Tactical-v7.9.1.ipa "Symbols/*" 2>/dev/null || true
+          zip -d Freestone-ARES-Tactical-v7.9.1.ipa "*storyboardc*" 2>/dev/null || true
           unzip -l Freestone-ARES-Tactical.ipa
 
       - name: Upload IPA as Workflow Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Freestone-ARES-Tactical-iOS-v7.9.0
+          name: Freestone-ARES-Tactical-iOS-v7.9.1
           path: Freestone-ARES-Tactical.ipa
           retention-days: 30
 
@@ -104,9 +104,9 @@ jobs:
         continue-on-error: true
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v7.9.0
+          tag_name: v7.9.1
           files: |
             Freestone-ARES-Tactical.ipa
-            Freestone-ARES-Tactical-v7.9.0.ipa
+            Freestone-ARES-Tactical-v7.9.1.ipa
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
