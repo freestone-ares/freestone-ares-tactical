@@ -46,17 +46,17 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug --stacktrace
           ./gradlew bundleRelease --stacktrace
-          cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.9.3.apk
+          cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.9.4.apk
           cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical.apk
-          cp app/build/outputs/bundle/release/*.aab ../Freestone-ARES-Tactical-v7.9.3.aab || cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical-v7.9.3.aab
+          cp app/build/outputs/bundle/release/*.aab ../Freestone-ARES-Tactical-v7.9.4.aab || cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical-v7.9.4.aab
           cp app/build/outputs/bundle/release/*.aab ../Freestone-ARES-Tactical.aab || cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical.aab
 
       - name: Upload APK & Bundle as Workflow Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Freestone-ARES-Tactical-v7.9.3-Distribution
+          name: Freestone-ARES-Tactical-v7.9.4-Distribution
           path: |
-            Freestone-ARES-Tactical-v7.9.3.apk
+            Freestone-ARES-Tactical-v7.9.4.apk
             Freestone-ARES-Tactical.aab
           retention-days: 30
 
@@ -64,26 +64,27 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v7.9.3
+          tag_name: v7.9.4
           target_commitish: ${{ github.sha }}
-          name: "Freestone ARES Tactical v7.9.3 Build 45 (Mac, iPad & Phone Universal)"
+          name: "Freestone ARES Tactical v7.9.4 Build 46 (Net Control Assignment Dropdown)"
           make_latest: true
           body: |
-            ## Freestone County ARES - Tactical Operations Field Build (v7.9.3 / Build 45)
+            ## Freestone County ARES - Tactical Operations Field Build (v7.9.4 / Build 46)
             
             Universal release for Android Phones & Tablets and Apple iOS, iPadOS, and macOS (Designed for iPad).
             
             ### Package Files Included:
-            - **`Freestone-ARES-Tactical.apk` / `Freestone-ARES-Tactical-v7.9.3.apk`**: Standalone Android field installer.
-            - **`Freestone-ARES-Tactical.aab` / `Freestone-ARES-Tactical-v7.9.3.aab`**: Signed Android App Bundle for Google Play.
+            - **`Freestone-ARES-Tactical.apk` / `Freestone-ARES-Tactical-v7.9.4.apk`**: Standalone Android field installer.
+            - **`Freestone-ARES-Tactical.aab` / `Freestone-ARES-Tactical-v7.9.4.aab`**: Signed Android App Bundle for Google Play.
             
-            ### What's New in Build 45:
-            - **Mac & iPad Screen Adaptation:** Full-screen and resizable window support for Apple Silicon Macs (iMac, MacBook) and iPads with native desktop layout, responsive font scaling, and 120% crisp zoom on macOS.
-            - **Phone Layout Preserved:** Mobile layout and notch/Dynamic Island safe-area anchoring remains 100% untouched and perfect.
+            ### What's New in Build 46:
+            - **Net Control Staffing Dropdown Selector:** Replaced manual prompt inputs with an interactive dropdown selection modal populated with official Freestone County ARES roster operators. Supports Primary NCS and Standby/Unassigned Backup NCS with instant live sync.
+            - **Net Manager Position Removed:** Fully removed Net Manager role references per county operational requirements.
+            - **Multi-Device Compatibility:** Preserved adaptive screen scaling for Macs and iPads while keeping phone settings and layouts 100% untouched.
           files: |
-            Freestone-ARES-Tactical-v7.9.3.apk
+            Freestone-ARES-Tactical-v7.9.4.apk
             Freestone-ARES-Tactical.apk
-            Freestone-ARES-Tactical-v7.9.3.aab
+            Freestone-ARES-Tactical-v7.9.4.aab
             Freestone-ARES-Tactical.aab
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
