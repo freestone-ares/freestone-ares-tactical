@@ -5624,6 +5624,8 @@ assignedSpots: [
       accounts[targetCall].power = powerList.join(' & ');
       accounts[targetCall].capabilities = capabilitiesList;
       accounts[targetCall].isSpotter = isSpotter;
+      accounts[targetCall].claimed = true;
+      accounts[targetCall].status = 'AUTHORIZED';
       accounts[targetCall].lastProfileVerified = now;
       if (photo) accounts[targetCall].photo = photo;
 
@@ -5646,6 +5648,7 @@ assignedSpots: [
         mem.power = powerList.join(' & ');
         mem.capabilities = capabilitiesList;
         mem.isSpotter = isSpotter;
+        mem.claimed = true;
         mem.lastProfileVerified = now;
         if (photo) mem.photo = photo;
       }
@@ -7669,8 +7672,76 @@ D. Out-of-County stations and visitors.
       const isLoggedIn = !!appState.isLoggedIn;
 
       filtered.forEach(m => {
-        let levelBadge = getAresLevelBadge(m.level);
-        let nimsTag = getAresNimsRequirementText(m.level);
+        const rosterAccounts = getRegisteredAccounts();
+        const rAcc = rosterAccounts[m.call.toUpperCase()] || {};
+        const isMe = isLoggedIn && (m.call === appState.myCall);
+        
+        // Claimed evaluation: checks local member, master EC, accounts registry, verified date, and password setup
+        const isClaimed = !!m.claimed || 
+                          (m.call === 'KG5TZT') || 
+                          (rAcc.status === 'AUTHORIZED') || 
+                          !!rAcc.claimed || 
+                          !!rAcc.lastProfileVerified || 
+                          !!rAcc.passwordHash;
+
+        const isSpotter = !!(m.isSpotter || rAcc.isSpotter || (m.level && m.level.toLowerCase().includes('spotter')) || m.call === 'KG5TZT');
+
+        const pres = (appState.presence && appState.presence[m.call.toUpperCase()]) || {};
+        const isOnline = pres && pres.online && (Date.now() - (pres.lastSeen || 0) < 300000);
+        const statusId = pres.statusId || m.statusId || 'available';
+
+        const isNcs = (m.role && (m.role.toLowerCase().includes('ncs') || m.role.toLowerCase().includes('net control'))) ||
+                      (m.level && (m.level.toLowerCase().includes('ncs') || m.level.toLowerCase().includes('net control'))) ||
+                      (m.call === 'N5BED') ||
+                      (statusId === 'net_control');
+
+        // Operational status styling (Right Column - Box 1)
+        let opStatusHtml = '';
+        if (statusId === 'responding') {
+          opStatusHtml = '<div class="w-full bg-red-950/90 text-red-200 border border-red-500 rounded px-2.5 py-1.5 flex items-center justify-center gap-1.5 text-center shadow-[0_0_10px_rgba(239,68,68,0.4)] animate-pulse"><span class="w-2 h-2 rounded-full bg-red-400"></span><span class="text-[10px] font-black tracking-wider uppercase">RESPONDING</span></div>';
+        } else if (statusId === 'on_scene') {
+          opStatusHtml = '<div class="w-full bg-amber-950/90 text-amber-200 border border-amber-500 rounded px-2.5 py-1.5 flex items-center justify-center gap-1.5 text-center shadow-sm"><span class="w-2 h-2 rounded-full bg-amber-400"></span><span class="text-[10px] font-black tracking-wider uppercase">ON SCENE</span></div>';
+        } else if (statusId === 'net_control') {
+          opStatusHtml = '<div class="w-full bg-purple-950/90 text-purple-200 border border-purple-500 rounded px-2.5 py-1.5 flex items-center justify-center gap-1.5 text-center shadow-sm"><span class="w-2 h-2 rounded-full bg-purple-400"></span><span class="text-[10px] font-black tracking-wider uppercase">NET CONTROL</span></div>';
+        } else if (statusId === 'en_route') {
+          opStatusHtml = '<div class="w-full bg-blue-950/90 text-blue-200 border border-blue-500 rounded px-2.5 py-1.5 flex items-center justify-center gap-1.5 text-center shadow-sm"><span class="w-2 h-2 rounded-full bg-blue-400"></span><span class="text-[10px] font-black tracking-wider uppercase">EN ROUTE</span></div>';
+        } else if (statusId === 'off_duty') {
+          opStatusHtml = '<div class="w-full bg-slate-900 text-slate-400 border border-slate-700 rounded px-2.5 py-1.5 flex items-center justify-center gap-1.5 text-center shadow-sm"><span>⚪</span><span class="text-[10px] font-semibold tracking-wider uppercase">OFF DUTY</span></div>';
+        } else {
+          opStatusHtml = '<div class="w-full bg-emerald-950/90 text-emerald-300 border border-emerald-500 rounded px-2.5 py-1.5 flex items-center justify-center gap-1.5 text-center shadow-[0_0_8px_rgba(16,185,129,0.3)]"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span class="text-[10px] font-black tracking-wider uppercase">AVAILABLE</span></div>';
+        }
+
+        // Unclaimed Box: ONLY shown if NOT claimed. When claimed/created, disappears completely!
+        let unclaimedBoxHtml = '';
+        if (!isClaimed) {
+          unclaimedBoxHtml = '<div class="w-full bg-amber-950/90 text-amber-400 border border-amber-600 rounded px-2.5 py-1.5 flex items-center justify-center gap-1.5 text-center shadow-sm animate-pulse"><span>⚠️</span><span class="text-[10px] font-black tracking-wider uppercase">UNCLAIMED</span></div>';
+        }
+
+        // Storm Spotter Box
+        let spotterBoxHtml = '';
+        if (isSpotter) {
+          spotterBoxHtml = '<div class="w-full bg-sky-950/90 text-sky-300 border border-sky-500 rounded px-2.5 py-1.5 flex items-center justify-center gap-1.5 text-center shadow-[0_0_8px_rgba(56,189,248,0.25)]"><span>⛈️</span><span class="text-[10px] font-black tracking-wider uppercase">STORM SPOTTER</span></div>';
+        }
+
+        // Net Control Box
+        let ncsBoxHtml = '';
+        if (isNcs) {
+          ncsBoxHtml = '<div class="w-full bg-purple-950/90 text-purple-300 border border-purple-500 rounded px-2.5 py-1.5 flex items-center justify-center gap-1.5 text-center shadow-[0_0_8px_rgba(168,85,247,0.25)]"><span>🎙️</span><span class="text-[10px] font-black tracking-wider uppercase">NET CONTROL</span></div>';
+        }
+
+        // Level Badge Box
+        let levelText = m.level || 'Level 1 - Operator';
+        let levelBoxHtml = `<div class="w-full bg-slate-900 text-slate-300 border border-slate-700 rounded px-2.5 py-1.5 flex items-center justify-center text-center shadow-sm"><span class="text-[10px] font-bold truncate">${levelText}</span></div>`;
+
+        // Left column identifiers: Callsign, Name, GMRS, ARES ID, RACES ID
+        const aresIdDisp = m.ares || rAcc.ares || m.aresId || rAcc.aresId || (m.call === 'KG5TZT' ? 'TX-ARES-01' : 'TX-ARES');
+        const racesIdDisp = m.races || rAcc.races || m.racesId || rAcc.racesId || (m.call === 'KG5TZT' ? 'TX-FREE-01' : 'TX-FREE');
+        const gmrsVal = (m.call === 'AI5OX' ? 'WSEA569' : (m.gmrs || rAcc.gmrs || 'NONE'));
+        const photo = m.photo || rAcc.photo || '';
+
+        const photoHtml = photo
+          ? `<img src="${photo}" class="w-6 h-6 rounded object-cover border border-emerald-500/60 flex-shrink-0" alt="${m.call}">`
+          : '';
 
         let dispatchBadge = '';
         if (m.canSendAlerts) {
@@ -7679,46 +7750,22 @@ D. Out-of-County stations and visitors.
           dispatchBadge = '<span class="px-2 py-0.5 rounded text-[9px] font-semibold bg-slate-900 text-slate-400 border border-slate-800">RECEIVE ONLY</span>';
         }
 
-        const isMe = isLoggedIn && (m.call === appState.myCall);
-        const isClaimed = !!m.claimed || (m.call === 'KG5TZT' && isLoggedIn);
-
-        let claimBadge = '';
-        if (isClaimed) {
-          claimBadge = '<span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">✓ CLAIMED</span>';
-        } else {
-          claimBadge = '<span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-950/80 text-amber-400 border border-amber-800">UNCLAIMED</span>';
-        }
-
-        let myStationBadge = '';
-        if (isMe) {
-          myStationBadge = '<span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-cyan-950 text-cyan-300 border border-cyan-700 shadow-[0_0_10px_rgba(6,182,212,0.3)]">★ MY STATION</span>';
-        }
-
         let contactSectionHtml = '';
         let actionButtonsHtml = '';
 
         if (isLoggedIn) {
-          // Unlocked full contacts
-          const rAccTemp = (getRegisteredAccounts && getRegisteredAccounts()) ? getRegisteredAccounts()[m.call.toUpperCase()] || {} : {};
-          const femaListVal = m.fema || rAccTemp.fema || ['IS-100', 'IS-700'];
+          const femaListVal = m.fema || rAcc.fema || ['IS-100', 'IS-700'];
           const femaStr = Array.isArray(femaListVal) ? femaListVal.join(', ') : femaListVal;
-          const powerStr = m.power || rAccTemp.power || 'Commercial & Battery Backup';
-          const lastV = m.lastProfileVerified || rAccTemp.lastProfileVerified;
+          const powerStr = m.power || rAcc.power || 'Commercial & Battery Backup';
+          const lastV = m.lastProfileVerified || rAcc.lastProfileVerified;
           const vBadge = lastV
             ? `<span class="text-[9px] text-emerald-400 font-bold bg-emerald-950 px-1.5 py-0.2 rounded border border-emerald-800">✓ VERIFIED</span>`
             : `<span class="text-[9px] text-amber-400 font-bold bg-amber-950 px-1.5 py-0.2 rounded border border-amber-800">AUDIT DUE</span>`;
-
-          const aresIdDisp = m.ares || rAccTemp.ares || m.aresId || rAccTemp.aresId || (m.call === 'KG5TZT' ? 'TX-ARES-01' : 'TX-ARES');
-          const racesIdDisp = m.races || rAccTemp.races || m.racesId || rAccTemp.racesId || (m.call === 'KG5TZT' ? 'TX-FREE-01' : 'TX-FREE');
 
           contactSectionHtml = `
             <div class="flex justify-between items-center">
               <span>ROLE: <strong class="text-slate-200">${m.role}</strong></span>
               ${dispatchBadge}
-            </div>
-            <div class="grid grid-cols-2 gap-1 text-[10px] bg-slate-900/80 p-1.5 rounded border border-slate-800">
-              <div><span class="text-slate-400">ARES ID:</span> <strong class="text-emerald-300 font-bold">${aresIdDisp}</strong></div>
-              <div><span class="text-slate-400">RACES ID:</span> <strong class="text-amber-300 font-bold">${racesIdDisp}</strong></div>
             </div>
             <div class="text-[10px] text-slate-400 flex justify-between items-center">
               <span>FEMA: <strong class="text-emerald-400">${femaStr}</strong></span>
@@ -7747,24 +7794,16 @@ D. Out-of-County stations and visitors.
             ` : ''}
           `;
         } else {
-          // Masked guest contacts
-          const aresIdGuest = m.ares || (m.call === 'KG5TZT' ? 'TX-ARES-01' : 'TX-ARES');
-          const racesIdGuest = m.races || (m.call === 'KG5TZT' ? 'TX-FREE-01' : 'TX-FREE');
-
+          let nimsTag = getAresNimsRequirementText(m.level);
           contactSectionHtml = `
             <div class="flex justify-between items-center">
               <span>ROLE: <strong class="text-slate-200">${m.role}</strong></span>
               ${dispatchBadge}
             </div>
-            <div class="grid grid-cols-2 gap-1 text-[10px] bg-slate-900/80 p-1.5 rounded border border-slate-800">
-              <div><span class="text-slate-400">ARES ID:</span> <strong class="text-emerald-300 font-bold">${aresIdGuest}</strong></div>
-              <div><span class="text-slate-400">RACES ID:</span> <strong class="text-amber-300 font-bold">${racesIdGuest}</strong></div>
-            </div>
             <div class="text-[10px] text-slate-400"><span>QUAL: </span><span class="text-emerald-400 font-semibold">${nimsTag}</span></div>
             <div>PHONE: <span class="text-amber-400/90 font-mono tracking-wider font-bold">${maskPhone(m.phone)}</span> <span class="ml-1 text-[9px] text-amber-500 bg-amber-950/80 px-1 py-0.2 rounded border border-amber-900">🔒 LOCKED</span></div>
             <div>EMAIL: <span class="text-slate-400 font-mono tracking-wider">${maskEmail(m.email)}</span></div>
           `;
-
           actionButtonsHtml = `
             <button onclick="openLoginModal()" class="flex-1 py-2 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 text-slate-950 text-center rounded text-[11px] font-black tracking-wide shadow flex items-center justify-center gap-1.5 transition">
               <span>🔑</span>
@@ -7773,73 +7812,61 @@ D. Out-of-County stations and visitors.
           `;
         }
 
-        const rosterAccounts = getRegisteredAccounts();
-        const rAcc = rosterAccounts[m.call.toUpperCase()] || {};
-        const isSpotter = m.isSpotter || rAcc.isSpotter || (m.level && m.level.includes('Spotter')) || m.call === 'KG5TZT';
-        const spotterBadge = isSpotter
-          ? '<span class="px-1.5 py-0.5 rounded text-[8px] font-black bg-amber-950 text-amber-300 border border-amber-600 flex items-center gap-1 shadow-[0_0_8px_rgba(245,158,11,0.25)]"><span>⛈️</span><span>SPOTTER</span></span>'
-          : '';
-        const photo = m.photo || rAcc.photo || '';
-
-        // Live Presence & Member Operational Status Badge (ActiveAlerts Style)
-        const pres = (appState.presence && appState.presence[m.call.toUpperCase()]) || {};
-        const isOnline = pres && pres.online && (Date.now() - (pres.lastSeen || 0) < 300000);
-        const statusId = pres.statusId || m.statusId || 'available';
-        
-        let opStatusBadge = '';
-        if (statusId === 'responding') {
-          opStatusBadge = '<span class="px-2 py-0.5 rounded text-[8px] font-black bg-red-950 text-red-200 border border-red-500 flex items-center gap-1 shadow-[0_0_10px_rgba(239,68,68,0.5)] animate-pulse"><span>🚨</span><span>RESPONDING</span></span>';
-        } else if (statusId === 'on_scene') {
-          opStatusBadge = '<span class="px-2 py-0.5 rounded text-[8px] font-bold bg-amber-950 text-amber-200 border border-amber-500 flex items-center gap-1"><span>📍</span><span>ON SCENE</span></span>';
-        } else if (statusId === 'net_control') {
-          opStatusBadge = '<span class="px-2 py-0.5 rounded text-[8px] font-bold bg-purple-950 text-purple-200 border border-purple-500 flex items-center gap-1"><span>🎙️</span><span>NET CONTROL</span></span>';
-        } else if (statusId === 'en_route') {
-          opStatusBadge = '<span class="px-2 py-0.5 rounded text-[8px] font-bold bg-blue-950 text-blue-200 border border-blue-500 flex items-center gap-1"><span>🚙</span><span>EN ROUTE</span></span>';
-        } else if (statusId === 'off_duty') {
-          opStatusBadge = '<span class="px-2 py-0.5 rounded text-[8px] font-semibold bg-slate-900 text-slate-400 border border-slate-700 flex items-center gap-1"><span>⚪</span><span>OFF DUTY</span></span>';
-        } else {
-          opStatusBadge = '<span class="px-2 py-0.5 rounded text-[8px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-600 flex items-center gap-1"><span>🟢</span><span>AVAILABLE</span></span>';
-        }
-
-        const presenceBadge = isOnline
-          ? '<span class="px-1.5 py-0.5 rounded text-[8px] font-black bg-emerald-950 text-emerald-300 border border-emerald-500 flex items-center gap-1 shadow-[0_0_8px_rgba(16,185,129,0.4)]"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span><span>ON AIR</span></span>'
-          : '';
-
-        const photoHtml = photo
-          ? `<img src="${photo}" class="w-10 h-10 rounded-lg object-cover border border-emerald-500/60 flex-shrink-0" alt="${m.call}">`
-          : `<div class="w-10 h-10 rounded-lg bg-slate-800/80 border border-slate-700 flex items-center justify-center text-slate-400 font-bold text-sm flex-shrink-0 shadow-inner">👤</div>`;
-
         const card = document.createElement('div');
-        card.className = `bg-[#10151d] border ${isMe ? 'border-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.2)]' : 'border-slate-800 hover:border-emerald-500/50'} rounded-xl p-4 space-y-3 font-mono-tac text-xs transition hud-glow`;
+        card.className = `bg-[#10151d] border ${isMe ? 'border-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.2)]' : 'border-slate-800 hover:border-emerald-500/50'} rounded-xl p-3.5 space-y-3 font-mono-tac text-xs transition hud-glow`;
         card.innerHTML = `
-          <div class="flex justify-between items-start gap-2">
-            <div class="flex items-center gap-2.5 min-w-0">
-              ${photoHtml}
-              <div class="min-w-0">
-                <div class="text-base font-bold text-white flex items-center gap-1.5 flex-wrap">
-                  <span>${m.call}</span>
-                  ${opStatusBadge}
-                  ${presenceBadge}
-                  ${m.gmrs && m.gmrs !== 'NONE' ? `<span class="text-xs font-normal text-amber-400 bg-amber-950/80 px-1.5 py-0.5 rounded border border-amber-800/80">${m.gmrs}</span>` : ''}
-                  ${spotterBadge}
-                  ${myStationBadge}
+          <!-- Header Split: Left Column (Identifiers) & Right Column (Badges) -->
+          <div class="grid grid-cols-2 gap-2.5 items-stretch">
+            
+            <!-- LEFT COLUMN: Callsign, Name, GMRS, ARES ID, RACES ID in vertical line with equal width -->
+            <div class="space-y-1.5 flex flex-col justify-between">
+              <!-- Callsign -->
+              <div class="w-full bg-[#080b10] border border-emerald-500/80 rounded px-2.5 py-1.5 flex items-center justify-between shadow-sm">
+                <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wide">CALL:</span>
+                <div class="flex items-center gap-1.5">
+                  ${photoHtml}
+                  <span class="text-white font-extrabold text-xs tracking-wider">${m.call}</span>
                 </div>
-                <div class="text-slate-300 font-semibold mt-0.5 truncate">${m.name}</div>
+              </div>
+              <!-- Name -->
+              <div class="w-full bg-[#080b10] border border-slate-700/80 rounded px-2.5 py-1.5 flex items-center justify-between shadow-sm">
+                <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wide">NAME:</span>
+                <span class="text-slate-200 font-bold text-xs truncate max-w-[110px]" title="${m.name}">${m.name}</span>
+              </div>
+              <!-- GMRS -->
+              <div class="w-full bg-[#080b10] border border-slate-700/80 rounded px-2.5 py-1.5 flex items-center justify-between shadow-sm">
+                <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wide">GMRS:</span>
+                <span class="text-amber-400 font-bold text-xs">${gmrsVal}</span>
+              </div>
+              <!-- ARES ID -->
+              <div class="w-full bg-[#080b10] border border-slate-700/80 rounded px-2.5 py-1.5 flex items-center justify-between shadow-sm">
+                <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wide">ARES:</span>
+                <span class="text-emerald-300 font-bold text-xs">${aresIdDisp}</span>
+              </div>
+              <!-- RACES ID -->
+              <div class="w-full bg-[#080b10] border border-slate-700/80 rounded px-2.5 py-1.5 flex items-center justify-between shadow-sm">
+                <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wide">RACES:</span>
+                <span class="text-amber-300 font-bold text-xs">${racesIdDisp}</span>
               </div>
             </div>
-            <div class="text-right flex flex-col items-end gap-1">
-              <div class="flex items-center gap-1">
-                ${claimBadge}
-                ${levelBadge}
-              </div>
-              <span class="text-[10px] text-slate-400">${m.class}</span>
+
+            <!-- RIGHT COLUMN: Available, Unclaimed, Storm Spotter, NCS, Level in vertical line with equal width -->
+            <div class="space-y-1.5 flex flex-col justify-start">
+              ${opStatusHtml}
+              ${unclaimedBoxHtml}
+              ${spotterBoxHtml}
+              ${ncsBoxHtml}
+              ${levelBoxHtml}
             </div>
+
           </div>
 
+          <!-- Contact & Station Details -->
           <div class="text-[11px] text-slate-400 space-y-1 bg-[#0b0e14] p-2.5 rounded border border-slate-800/80">
             ${contactSectionHtml}
           </div>
 
+          <!-- Quick Action Buttons -->
           <div class="flex gap-2 pt-1">
             ${actionButtonsHtml}
           </div>
@@ -11950,18 +11977,46 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
 
       Object.keys(remoteAccounts).forEach(call => {
         const remote = remoteAccounts[call];
-        if (remote && remote.call) {
-          const upper = remote.call.toUpperCase();
-          if (!localAccounts[upper] || (remote.authorizedTimestamp || 0) >= (localAccounts[upper].authorizedTimestamp || 0)) {
-            localAccounts[upper] = Object.assign({}, localAccounts[upper] || {}, remote);
-            changed = true;
+        if (remote && (remote.call || call)) {
+          const upper = (remote.call || call).toUpperCase();
+          localAccounts[upper] = Object.assign({}, localAccounts[upper] || {}, remote);
+          changed = true;
+
+          // Crucial: Update matching operator in appState.members so UI updates immediately across all platforms!
+          let mem = appState.members ? appState.members.find(m => m.call.toUpperCase() === upper) : null;
+          if (mem) {
+            if (remote.name) mem.name = remote.name;
+            if (remote.gmrs) mem.gmrs = (upper === 'AI5OX' ? 'WSEA569' : remote.gmrs);
+            if (remote.ares || remote.aresId) { mem.ares = remote.ares || remote.aresId; mem.aresId = mem.ares; }
+            if (remote.races || remote.racesId) { mem.races = remote.races || remote.racesId; mem.racesId = mem.races; }
+            if (remote.phone) mem.phone = remote.phone;
+            if (remote.email) mem.email = remote.email;
+            if (remote.class) mem.class = remote.class;
+            if (remote.role) mem.role = remote.role;
+            if (remote.level) mem.level = remote.level;
+            if (remote.fema) mem.fema = remote.fema;
+            if (remote.power) mem.power = remote.power;
+            if (remote.capabilities) mem.capabilities = remote.capabilities;
+            if (remote.isSpotter !== undefined) mem.isSpotter = !!remote.isSpotter;
+            if (remote.photo) mem.photo = remote.photo;
+            if (remote.claimed || remote.status === 'AUTHORIZED' || remote.lastProfileVerified || remote.passwordHash) {
+              mem.claimed = true;
+            }
+            if (remote.lastProfileVerified) mem.lastProfileVerified = remote.lastProfileVerified;
           }
         }
       });
 
       if (changed) {
         safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(localAccounts));
+        safeStorage.setItem('fc_ares_roster_cache', JSON.stringify(appState.members));
+        saveRosterMembers();
         renderRosterGrid();
+        renderResponderTable();
+        if (appState.myCall === 'KG5TZT') {
+          renderEcOperatorDirectory();
+        }
+        updateDashboardUserProfile();
       }
     }
 
@@ -12412,6 +12467,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
     }
 
     function onRemoteRosterReceived(remoteMembers) {
+      if (!Array.isArray(remoteMembers) || remoteMembers.length === 0) return;
       const accounts = getRegisteredAccounts();
       remoteMembers.forEach(function(remoteMem) {
         const call = (remoteMem.call || '').toUpperCase();
@@ -12422,7 +12478,10 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         if (localMem) {
           localMem.name = remoteMem.name || localMem.name;
           localMem.gmrs = gmrsVal;
-          localMem.races = remoteMem.races || localMem.races;
+          localMem.ares = remoteMem.ares || remoteMem.aresId || localMem.ares;
+          localMem.aresId = remoteMem.ares || remoteMem.aresId || localMem.aresId;
+          localMem.races = remoteMem.races || remoteMem.racesId || localMem.races;
+          localMem.racesId = remoteMem.races || remoteMem.racesId || localMem.racesId;
           localMem.phone = remoteMem.phone || localMem.phone;
           localMem.email = remoteMem.email || localMem.email;
           localMem.class = remoteMem.class || localMem.class;
@@ -12431,15 +12490,20 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
           localMem.fema = remoteMem.fema || localMem.fema;
           localMem.power = remoteMem.power || localMem.power;
           localMem.capabilities = remoteMem.capabilities || localMem.capabilities;
-          localMem.isSpotter = (remoteMem.isSpotter !== undefined) ? remoteMem.isSpotter : localMem.isSpotter;
+          localMem.isSpotter = (remoteMem.isSpotter !== undefined) ? !!remoteMem.isSpotter : localMem.isSpotter;
           if (remoteMem.photo) localMem.photo = remoteMem.photo;
+          if (remoteMem.claimed !== undefined) localMem.claimed = !!remoteMem.claimed;
+          if (remoteMem.lastProfileVerified) localMem.lastProfileVerified = remoteMem.lastProfileVerified;
         } else {
           appState.members.push({
             id: remoteMem.id || (appState.members.length + 1),
             call: call,
             name: remoteMem.name || call,
             gmrs: gmrsVal,
-            races: remoteMem.races || 'NONE',
+            ares: remoteMem.ares || remoteMem.aresId || 'TX-ARES',
+            aresId: remoteMem.ares || remoteMem.aresId || 'TX-ARES',
+            races: remoteMem.races || remoteMem.racesId || 'NONE',
+            racesId: remoteMem.races || remoteMem.racesId || 'NONE',
             phone: remoteMem.phone || '',
             email: remoteMem.email || '',
             class: remoteMem.class || 'Technician',
@@ -12450,25 +12514,34 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
             capabilities: remoteMem.capabilities || ['50W VHF/UHF Mobile', 'HF Portable Base'],
             isSpotter: !!remoteMem.isSpotter,
             photo: remoteMem.photo || '',
+            claimed: !!remoteMem.claimed,
             canSendAlerts: !!remoteMem.canSendAlerts
           });
         }
 
-        if (accounts[call]) {
-          accounts[call].name = remoteMem.name || accounts[call].name;
-          accounts[call].gmrs = gmrsVal;
-          accounts[call].races = remoteMem.races || accounts[call].races;
-          accounts[call].phone = remoteMem.phone || accounts[call].phone;
-          accounts[call].email = remoteMem.email || accounts[call].email;
-          accounts[call].class = remoteMem.class || accounts[call].class;
-          accounts[call].role = remoteMem.role || accounts[call].role;
-          accounts[call].level = remoteMem.level || accounts[call].level;
-          accounts[call].fema = remoteMem.fema || accounts[call].fema;
-          accounts[call].power = remoteMem.power || accounts[call].power;
-          accounts[call].isSpotter = (remoteMem.isSpotter !== undefined) ? remoteMem.isSpotter : accounts[call].isSpotter;
-          if (remoteMem.photo) accounts[call].photo = remoteMem.photo;
-          if (remoteMem.claimed) accounts[call].status = 'AUTHORIZED';
+        if (!accounts[call]) {
+          accounts[call] = { call: call };
         }
+        accounts[call].name = remoteMem.name || accounts[call].name;
+        accounts[call].gmrs = gmrsVal;
+        accounts[call].ares = remoteMem.ares || remoteMem.aresId || accounts[call].ares;
+        accounts[call].aresId = remoteMem.ares || remoteMem.aresId || accounts[call].aresId;
+        accounts[call].races = remoteMem.races || remoteMem.racesId || accounts[call].races;
+        accounts[call].racesId = remoteMem.races || remoteMem.racesId || accounts[call].racesId;
+        accounts[call].phone = remoteMem.phone || accounts[call].phone;
+        accounts[call].email = remoteMem.email || accounts[call].email;
+        accounts[call].class = remoteMem.class || accounts[call].class;
+        accounts[call].role = remoteMem.role || accounts[call].role;
+        accounts[call].level = remoteMem.level || accounts[call].level;
+        accounts[call].fema = remoteMem.fema || accounts[call].fema;
+        accounts[call].power = remoteMem.power || accounts[call].power;
+        accounts[call].isSpotter = (remoteMem.isSpotter !== undefined) ? remoteMem.isSpotter : accounts[call].isSpotter;
+        if (remoteMem.photo) accounts[call].photo = remoteMem.photo;
+        if (remoteMem.claimed) {
+          accounts[call].status = 'AUTHORIZED';
+          accounts[call].claimed = true;
+        }
+        if (remoteMem.lastProfileVerified) accounts[call].lastProfileVerified = remoteMem.lastProfileVerified;
       });
 
       safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(accounts));
@@ -12544,17 +12617,22 @@ Your console is now authorized and unlocked.`);
         const payloadMembers = appState.members.map(function(m) {
           const call = m.call.toUpperCase();
           const acc = accounts[call] || {};
+          const isOpClaimed = !!(acc.status === 'AUTHORIZED' || acc.claimed || m.claimed || call === 'KG5TZT' || acc.lastProfileVerified || acc.passwordHash);
           return {
             id: m.id,
             call: call,
             gmrs: (call === 'AI5OX' ? 'WSEA569' : (acc.gmrs || m.gmrs || 'NONE')),
-            races: acc.races || m.races || 'TX-FREE-01',
+            ares: acc.ares || acc.aresId || m.ares || m.aresId || (call === 'KG5TZT' ? 'TX-ARES-01' : 'TX-ARES'),
+            aresId: acc.ares || acc.aresId || m.ares || m.aresId || (call === 'KG5TZT' ? 'TX-ARES-01' : 'TX-ARES'),
+            races: acc.races || acc.racesId || m.races || m.racesId || (call === 'KG5TZT' ? 'TX-FREE-01' : 'TX-FREE'),
+            racesId: acc.races || acc.racesId || m.races || m.racesId || (call === 'KG5TZT' ? 'TX-FREE-01' : 'TX-FREE'),
             name: acc.name || m.name,
             class: acc.class || m.class || 'Technician',
             role: acc.role || m.role || 'Level 1 Operator',
             level: acc.level || m.level || 'Level 1 - Operator',
             verified: true,
-            claimed: acc.status === 'AUTHORIZED' || call === 'KG5TZT',
+            claimed: isOpClaimed,
+            lastProfileVerified: acc.lastProfileVerified || m.lastProfileVerified || 0,
             canSendAlerts: !!(acc.canSendAlerts || m.canSendAlerts),
             phone: acc.phone || m.phone || '',
             email: acc.email || m.email || '',
@@ -12568,24 +12646,22 @@ Your console is now authorized and unlocked.`);
 
         const pendingList = getPendingAuthorizations();
 
-        // Push directly to Firebase Realtime Database
+        // Push directly to Firebase Realtime Database WebSockets & REST for multi-platform delivery
         if (fbDb) {
-          fbDb.ref('roster').set(payloadMembers);
-          fbDb.ref('pending_authorizations').set(pendingList);
-          if (appState.activeIncident) {
-            fbDb.ref('active_incident').set(appState.activeIncident);
+          try {
+            fbDb.ref('roster').set(payloadMembers);
+            fbDb.ref('pending_authorizations').set(pendingList);
+            if (appState.activeIncident) {
+              fbDb.ref('active_incident').set(appState.activeIncident);
+            }
+            fbDb.ref('calendar_events').set(appState.events || []);
+            fbDb.ref('countyResponseLevel').set(getCountyResponseLevel());
+          } catch(e) {
+            console.warn('Firebase RTDB push note:', e);
           }
-          fbDb.ref('calendar_events').set(appState.events || []);
-          fbDb.ref('countyResponseLevel').set(getCountyResponseLevel());
-        } else {
-          await fbRestPut('roster', payloadMembers);
-          await fbRestPut('pending_authorizations', pendingList);
-          if (appState.activeIncident) {
-            await fbRestPut('active_incident', appState.activeIncident);
-          }
-          await fbRestPut('calendar_events', appState.events || []);
-          await fbRestPut('countyResponseLevel', getCountyResponseLevel());
         }
+        await fbRestPut('roster', payloadMembers);
+        await fbRestPut('pending_authorizations', pendingList);
 
         lastRosterSyncTime = new Date();
         const timeStr = lastRosterSyncTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -13218,6 +13294,8 @@ Your console is now authorized and unlocked.`);
       accounts[myCall].power = power;
       accounts[myCall].capabilities = capabilitiesList;
       accounts[myCall].isSpotter = isSpotter;
+      accounts[myCall].claimed = true;
+      accounts[myCall].status = 'AUTHORIZED';
       accounts[myCall].lastProfileVerified = accounts[myCall].lastProfileVerified || Date.now();
       if (photo) accounts[myCall].photo = photo;
       safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(accounts));
@@ -13237,6 +13315,7 @@ Your console is now authorized and unlocked.`);
         mem.power = power;
         mem.capabilities = capabilitiesList;
         mem.isSpotter = isSpotter;
+        mem.claimed = true;
         if (photo) mem.photo = photo;
       }
 
