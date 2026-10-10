@@ -1,8 +1,8 @@
-// Freestone County ARES Tactical Mobile Service Worker (v11)
+// Freestone County ARES Tactical Mobile Service Worker (v12)
 // Enables 100% offline field operation with Network-First updates for latest tactical changes.
 // Pure Free OpenStreetMap & ESRI Satellite (ZERO API KEYS REQUIRED).
 
-const CACHE_NAME = 'fc-ares-tactical-v11';
+const CACHE_NAME = 'fc-ares-tactical-v12';
 const TILE_CACHE_NAME = 'fc-ares-maptiles-v1';
 
 const ASSETS_TO_CACHE = [
