@@ -12,6 +12,14 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, WKSc
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(red: 10/255, green: 13/255, blue: 18/255, alpha: 1.0)
+
+        // Desktop (MacBook/iMac) and Tablet (iPad) Window Sizing (iPhone remains 100% untouched)
+        if ProcessInfo.processInfo.isiOSAppOnMac {
+            self.preferredContentSize = CGSize(width: 1360, height: 880)
+        } else if UIDevice.current.userInterfaceIdiom == .pad {
+            self.preferredContentSize = CGSize(width: 1280, height: 850)
+        }
+
         setupWebView()
         loadLocalApp()
     }
@@ -34,6 +42,13 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, WKSc
         webView.isOpaque = false
         webView.scrollView.bounces = false
         webView.scrollView.contentInsetAdjustmentBehavior = .automatic
+
+        // Optimize page zoom on larger Mac & iPad displays (iPhone remains at default 1.0)
+        if ProcessInfo.processInfo.isiOSAppOnMac {
+            webView.pageZoom = 1.20
+        } else if UIDevice.current.userInterfaceIdiom == .pad {
+            webView.pageZoom = 1.15
+        }
 
         view.addSubview(webView)
 

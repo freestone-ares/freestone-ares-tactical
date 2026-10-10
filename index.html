@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Freestone County ARES Tactical Mobile v7.9.2</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Freestone County ARES Tactical Mobile v7.9.3</title>
   <meta name="description" content="Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES">
   <meta name="theme-color" content="#0b0e14">
   <meta name="mobile-web-app-capable" content="yes">
@@ -76,6 +76,32 @@
     html, body {
       max-width: 100vw;
       overflow-x: hidden !important;
+    }
+
+    /* Responsive Desktop & Tablet Scaling: iPad, MacBook & iMac (Phones < 768px remain 100% untouched) */
+    @media (min-width: 1024px) {
+      html {
+        font-size: 17.5px;
+      }
+      .max-w-7xl {
+        max-width: 90rem !important;
+      }
+    }
+    @media (min-width: 1440px) {
+      html {
+        font-size: 18.5px;
+      }
+      .max-w-7xl {
+        max-width: 98rem !important;
+      }
+    }
+    @media (min-width: 1920px) {
+      html {
+        font-size: 19.5px;
+      }
+      .max-w-7xl {
+        max-width: 110rem !important;
+      }
     }
 
     .hud-border {
@@ -15111,7 +15137,7 @@ Your console is now authorized and unlocked.`);
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.2 (Build 44)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.3 (Build 45)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>
