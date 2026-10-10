@@ -199,6 +199,47 @@
 </head>
 <body id="app-body" class="mode-nv-green bg-[#0a0d12] text-slate-100 min-h-screen flex flex-col antialiased">
 
+  <!-- ACTIVE ALERT HEADS-UP EMERGENCY BANNER (ActiveAlert / CAD Paging Style) -->
+  <aside id="active-alert-heads-up-banner" aria-label="Emergency Dispatch Alert" class="hidden fixed top-0 left-0 right-0 z-[9999] bg-gradient-to-r from-red-950 via-[#180a0e] to-red-950 border-b-4 border-red-500 text-white shadow-[0_10px_35px_rgba(239,68,68,0.7)] font-mono-tac transition-all duration-300">
+    <div style="padding-top: max(env(safe-area-inset-top, 0px), 8px);" class="max-w-7xl mx-auto px-3 sm:px-5 py-2.5">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="flex items-start sm:items-center gap-3 min-w-0">
+          <div class="w-10 h-10 rounded-full bg-red-600/30 border-2 border-red-500 flex items-center justify-center text-red-400 text-xl flex-shrink-0 animate-bounce">
+            🚨
+          </div>
+          <div class="min-w-0 space-y-0.5">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="px-2 py-0.5 rounded text-[10px] font-black bg-red-600 text-white tracking-widest animate-pulse">ACTIVE ALERT // DISPATCH</span>
+              <span id="heads-up-level-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-700">LEVEL 1 - FULL ACTIVATION</span>
+              <span id="heads-up-update-badge" class="text-[10px] text-slate-300 font-bold">UPDATE #1</span>
+              <span id="heads-up-time-badge" class="text-[10px] text-slate-400 font-mono-tac">18:45:00</span>
+            </div>
+            <h2 id="heads-up-title-text" class="text-sm sm:text-base font-black text-white truncate uppercase tracking-wide">
+              MAJOR EMERGENCY DISPATCH
+            </h2>
+            <div class="flex items-center gap-3 text-[11px] text-slate-300 truncate">
+              <span class="truncate"><strong class="text-amber-400">📍 STAGING:</strong> <span id="heads-up-staging-text">Fairfield EOC</span></span>
+              <span class="hidden md:inline">•</span>
+              <span class="hidden md:inline truncate"><strong class="text-emerald-400">SITREP:</strong> <span id="heads-up-sitrep-text">Emergency activation underway.</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 flex-shrink-0 self-end sm:self-center">
+          <button type="button" onclick="acknowledgeAndRespondAlert()" class="px-3.5 py-2 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 text-white rounded-lg text-xs font-black shadow flex items-center gap-1.5 transition cursor-pointer">
+            <span>📻</span><span>RESPOND / DETAILS</span>
+          </button>
+          <button type="button" onclick="muteAlertAudio()" class="px-2.5 py-2 bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 rounded-lg text-xs font-bold shadow flex items-center gap-1 transition cursor-pointer" title="Mute siren tone">
+            <span>🔇</span><span class="hidden sm:inline">MUTE</span>
+          </button>
+          <button type="button" onclick="dismissHeadsUpAlertBanner()" class="px-2.5 py-2 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-700 rounded-lg text-xs font-bold shadow transition cursor-pointer" title="Close banner">
+            <span>✕</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+
     <!-- TACTICAL APP HEADER BAR (OFFICIAL TOP BANNER LAYOUT: LOGO LEFT, TITLE CENTERED, MENU RIGHT, SLIM FULL-WIDTH ACTIVATION BAR UNDERNEATH) -->
   <header style="padding-top: max(env(safe-area-inset-top, 0px), 14px);" class="sticky top-0 z-40 bg-[#070a0f]/95 backdrop-blur-md border-b border-emerald-500/30 shadow-lg font-mono-tac">
     <div class="max-w-7xl mx-auto px-2.5 sm:px-4 py-1.5 space-y-1">
@@ -1716,10 +1757,13 @@
             </select>
           </div>
           <div class="flex items-center gap-2 flex-shrink-0">
-            <button id="btn-test-siren" type="button" onclick="playSelectedSiren()" class="flex-1 sm:flex-initial px-4 py-2 bg-red-600 hover:bg-red-500 text-white font-bold rounded-lg flex items-center justify-center gap-1.5 transition shadow cursor-pointer">
+            <button id="btn-test-siren" type="button" onclick="playSelectedSiren()" class="flex-1 sm:flex-initial px-3.5 py-2 bg-red-600 hover:bg-red-500 text-white font-bold rounded-lg flex items-center justify-center gap-1.5 transition shadow cursor-pointer text-xs">
               <span>🔊 TEST TONE</span>
             </button>
-            <button id="btn-stop-siren" type="button" onclick="stopSirenAudio()" class="hidden flex-1 sm:flex-initial px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg flex items-center justify-center gap-1.5 transition shadow cursor-pointer">
+            <button id="btn-test-active-alert" type="button" onclick="testActiveAlertDispatcher()" class="flex-1 sm:flex-initial px-3.5 py-2 bg-gradient-to-r from-red-700 to-amber-700 hover:from-red-600 text-white font-bold rounded-lg flex items-center justify-center gap-1.5 transition shadow cursor-pointer text-xs" title="Test Active Alert banner, tones, and vibration">
+              <span>🚨 TEST ACTIVE ALERT</span>
+            </button>
+            <button id="btn-stop-siren" type="button" onclick="stopSirenAudio()" class="hidden flex-1 sm:flex-initial px-3.5 py-2 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg flex items-center justify-center gap-1.5 transition shadow cursor-pointer text-xs">
               <span>⏹️ STOP</span>
             </button>
           </div>
@@ -8926,10 +8970,35 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
           currentSirenOscs.push(osc1, osc2);
 
           sirenTimer = setTimeout(() => stopSirenAudio(), 3100);
+        } else if (type === 'beep') {
+          // 1000 Hz Alert Beep Pulses (4 x 0.35s pulses)
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(1000, now);
+          gain.gain.setValueAtTime(0, now);
+
+          for (let b = 0; b < 4; b++) {
+            const bt = now + b * 0.6;
+            gain.gain.setValueAtTime(0.3, bt);
+            gain.gain.setValueAtTime(0.3, bt + 0.35);
+            gain.gain.exponentialRampToValueAtTime(0.0001, bt + 0.4);
+          }
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 2.6);
+          currentSirenOscs.push(osc);
+          sirenTimer = setTimeout(() => stopSirenAudio(), 2700);
+        }
+
+        // Hardware tactical vibration for emergency dispatch
+        if (navigator.vibrate) {
+          try { navigator.vibrate([600, 200, 600, 200, 800, 200, 1000]); } catch(ve) {}
         }
       } catch(e) {
         console.warn("Web Audio error:", e);
-        alert("🚨 EMERGENCY SIREN BROADCAST: Audio tone sounding on mobile device!");
       }
     }
 
@@ -11804,7 +11873,196 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
 
     // 6. ActiveAlerts Collapsible UI Renderer
     let isIncidentDetailsExpanded = false;
-    function toggleIncidentDetailsExpanded() {
+    
+    // ======================================================================
+    // ACTIVE ALERT EMERGENCY DISPATCH & HEADS-UP ENGINE (ActiveAlert Style)
+    // ======================================================================
+
+    function isOperatorOnDuty() {
+      if (!appState.isLoggedIn) return false;
+      const call = (appState.myCall || '').toUpperCase();
+      if (!call || call === 'GUEST') return false;
+      const st = appState.myOperationalStatus || safeStorage.getItem('fc_ares_op_status_' + call) || 'available';
+      return st !== 'off_duty';
+    }
+
+    function showActiveAlertHeadsUpBanner(inc) {
+      const banner = document.getElementById('active-alert-heads-up-banner');
+      if (!banner || !inc) return;
+
+      const lvlBadge = document.getElementById('heads-up-level-badge');
+      const upBadge = document.getElementById('heads-up-update-badge');
+      const timeBadge = document.getElementById('heads-up-time-badge');
+      const titleEl = document.getElementById('heads-up-title-text');
+      const stagingEl = document.getElementById('heads-up-staging-text');
+      const sitrepEl = document.getElementById('heads-up-sitrep-text');
+
+      if (lvlBadge) lvlBadge.textContent = inc.level || 'LEVEL 1 - FULL ACTIVATION';
+      if (upBadge) upBadge.textContent = `UPDATE #${inc.updateCount || 1}`;
+      if (timeBadge) timeBadge.textContent = inc.lastUpdated || 'ACTIVE';
+      if (titleEl) titleEl.textContent = inc.title || 'MAJOR EMERGENCY DISPATCH';
+      if (stagingEl) stagingEl.textContent = inc.staging || 'Standby';
+
+      const topUpdate = (inc.updates && inc.updates.length > 0) ? inc.updates[0] : {};
+      if (sitrepEl) sitrepEl.textContent = topUpdate.sitrep || inc.mission || 'Active emergency callout dispatched across Freestone County.';
+
+      banner.classList.remove('hidden');
+    }
+
+    function dismissHeadsUpAlertBanner() {
+      stopSirenAudio();
+      const banner = document.getElementById('active-alert-heads-up-banner');
+      if (banner) banner.classList.add('hidden');
+    }
+
+    function muteAlertAudio() {
+      stopSirenAudio();
+      showTacticalBannerNotification('🔇 ALERT SIREN MUTED (BANNER ACTIVE)');
+    }
+
+    function acknowledgeAndRespondAlert() {
+      dismissHeadsUpAlertBanner();
+      switchTab('dash');
+      const detailsBlock = document.getElementById('active-incident-details-collapsible');
+      if (detailsBlock && detailsBlock.classList.contains('hidden')) {
+        toggleIncidentDetailsExpanded();
+      }
+      setTimeout(() => {
+        const target = document.getElementById('active-alerts-feed-container') || document.getElementById('active-incident-details-collapsible');
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      }, 150);
+    }
+
+    function testActiveAlertDispatcher() {
+      if (!isOperatorOnDuty()) {
+        alert('ℹ️ You are currently OFF DUTY.\n\nTo test the Active Alert audio and banner, switch your status to AVAILABLE or ON DUTY on the roster/profile first!');
+        return;
+      }
+      const testIncident = {
+        title: 'TEST EMERGENCY ACTIVATION // DRILL',
+        level: 'LEVEL 1 - FULL ACTIVATION',
+        staging: 'Fairfield EOC / Station 1',
+        mission: 'Tactical comms readiness drill for Freestone ARES.',
+        updateCount: 1,
+        lastUpdated: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+        updates: [{
+          sitrep: 'This is a live test of the Active Alert emergency dispatch system. Motorola Quick-Call II paging tones, heads-up banner, and vibration verified active.',
+          timeLocal: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          author: appState.myCall || 'KG5TZT'
+        }],
+        isClosed: false
+      };
+      playSelectedSiren();
+      showActiveAlertHeadsUpBanner(testIncident);
+      showSystemPushNotification(testIncident);
+    }
+
+    function requestNotificationPermission() {
+      if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'default') {
+        try {
+          Notification.requestPermission().then(function(perm) {
+            console.log('System notification permission granted:', perm);
+          });
+        } catch(e) {}
+      }
+    }
+
+    function showSystemPushNotification(inc) {
+      if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+        try {
+          const topUpdate = (inc.updates && inc.updates.length > 0) ? inc.updates[0] : {};
+          const title = `🚨 [${inc.level || 'ARES ALERT'}] ${inc.title || 'EMERGENCY DISPATCH'}`;
+          const body = `📍 Staging: ${inc.staging || 'Standby'}\nSitrep: ${topUpdate.sitrep || inc.mission || 'Active callout dispatched.'}`;
+          const notif = new Notification(title, {
+            body: body,
+            icon: './icon-192.png',
+            tag: 'fc-ares-active-alert-' + (inc.updateCount || Date.now()),
+            requireInteraction: true
+          });
+          notif.onclick = function() {
+            window.focus();
+            acknowledgeAndRespondAlert();
+            notif.close();
+          };
+        } catch(e) {
+          console.warn('System push notification note:', e);
+        }
+      }
+    }
+
+    // Screen WakeLock Keep-Alive (ActiveAlert Style: prevents device from sleeping while on duty)
+    let tacticalWakeLock = null;
+    async function requestTacticalWakeLock() {
+      try {
+        if (typeof navigator !== 'undefined' && 'wakeLock' in navigator && isOperatorOnDuty()) {
+          if (!tacticalWakeLock || tacticalWakeLock.released) {
+            tacticalWakeLock = await navigator.wakeLock.request('screen');
+            console.log('💡 Active Alert Screen WakeLock acquired (Always Receiving)');
+            tacticalWakeLock.addEventListener('release', function() {
+              console.log('💡 Active Alert Screen WakeLock released');
+            });
+          }
+        }
+      } catch (err) {
+        console.log('WakeLock note:', err);
+      }
+    }
+
+    function releaseTacticalWakeLock() {
+      if (tacticalWakeLock) {
+        try { tacticalWakeLock.release(); } catch(e) {}
+        tacticalWakeLock = null;
+      }
+    }
+
+    function setupActiveAlertReceivingEngine() {
+      // 1. Reconnect & resync immediately when app comes to foreground or screen unlocks
+      document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+          console.log('📱 App resumed: Re-syncing Firebase RTDB and checking alerts...');
+          if (fbDb) { try { fbDb.goOnline(); } catch(e){} }
+          syncRosterWithCloud(false);
+          if (isOperatorOnDuty()) {
+            requestTacticalWakeLock();
+          }
+        }
+      });
+
+      // 2. Reconnect & resync immediately when network recovers (Wi-Fi/Cellular)
+      window.addEventListener('online', function() {
+        console.log('🌐 Network connected: Re-syncing Firebase RTDB and checking alerts...');
+        if (fbDb) { try { fbDb.goOnline(); } catch(e){} }
+        syncRosterWithCloud(false);
+      });
+
+      // 3. Resync on window focus
+      window.addEventListener('focus', function() {
+        syncRosterWithCloud(false);
+      });
+
+      // 4. Prime Web Audio on first user interaction for unblocked background paging tones
+      function primeTacticalAudio() {
+        try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (!window.tacticalPrimedAudioCtx) {
+            window.tacticalPrimedAudioCtx = new AudioContext();
+          }
+          if (window.tacticalPrimedAudioCtx.state === 'suspended') {
+            window.tacticalPrimedAudioCtx.resume();
+          }
+        } catch(e){}
+      }
+      ['touchstart', 'touchend', 'click', 'keydown'].forEach(function(evt) {
+        document.addEventListener(evt, primeTacticalAudio, { once: true, passive: true });
+      });
+
+      // 5. Acquire Screen WakeLock if on duty
+      if (isOperatorOnDuty()) {
+        requestTacticalWakeLock();
+      }
+    }
+
+function toggleIncidentDetailsExpanded() {
       isIncidentDetailsExpanded = !isIncidentDetailsExpanded;
       const detailsBlock = document.getElementById('active-incident-details-collapsible');
       const toggleBtn = document.getElementById('btn-toggle-incident-details');
@@ -11952,6 +12210,16 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       await fbRestPut('roster_status/' + call, payload);
 
       showTacticalBannerNotification(`✓ Operational status set to: ${stObj.label}`);
+
+      // ActiveAlert Duty Management: WakeLock and Push Notifications
+      if (stObj.id === 'off_duty') {
+        releaseTacticalWakeLock();
+        dismissHeadsUpAlertBanner();
+        stopSirenAudio();
+      } else {
+        requestTacticalWakeLock();
+        requestNotificationPermission();
+      }
     }
 
     // 8. Cloud Account Persistence (Photos, Custom Passwords, Profile Details)
@@ -12141,6 +12409,9 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       if (!fbPresenceTimer) {
         fbPresenceTimer = setInterval(sendPresenceHeartbeat, 20000);
       }
+
+      // ActiveAlert Continuous Receiving & WakeLock Engine
+      setupActiveAlertReceivingEngine();
     }
 
     // Presence Beacon: broadcasts that operator is actively viewing app
@@ -12609,6 +12880,35 @@ Your console is now authorized and unlocked.`);
       appState.activeIncident = remoteInc;
       safeStorage.setItem('fc_ares_active_incident', JSON.stringify(remoteInc));
       renderActiveIncidentUI();
+      renderActiveAlertsCardFeed();
+
+      // Check if this incident is an active emergency callout (not routine steady state and not closed)
+      const isRoutine = (!remoteInc.level || remoteInc.level.includes('LEVEL 4')) && (!remoteInc.updates || remoteInc.updates.length === 0) && (!remoteInc.updateCount || remoteInc.updateCount === 0);
+      const isEmergency = !remoteInc.isClosed && !isRoutine;
+
+      if (!isEmergency) {
+        dismissHeadsUpAlertBanner();
+        return;
+      }
+
+      // Compute unique alert fingerprint to trigger sound and banner on NEW alerts and updates
+      const topUpdate = (remoteInc.updates && remoteInc.updates.length > 0) ? remoteInc.updates[0] : {};
+      const alertFingerprint = `${remoteInc.title || ''}_${remoteInc.level || ''}_${remoteInc.updateCount || 0}_${remoteInc.lastUpdated || ''}_${topUpdate.timestamp || topUpdate.timeLocal || topUpdate.sitrep || ''}`;
+      const lastSeenKey = safeStorage.getItem('fc_ares_last_heard_alert_key') || '';
+
+      if (alertFingerprint !== lastSeenKey) {
+        safeStorage.setItem('fc_ares_last_heard_alert_key', alertFingerprint);
+
+        // ActiveAlert Duty Check: On-Duty stations receive audible tones, banner, and vibration!
+        if (isOperatorOnDuty()) {
+          console.log('🚨 ON DUTY: Emergency dispatch alert received! Triggering Active Alert audio & banner...');
+          playSelectedSiren();
+          showActiveAlertHeadsUpBanner(remoteInc);
+          showSystemPushNotification(remoteInc);
+        } else {
+          console.log('💤 OFF DUTY: Alert received in background, audible tone suppressed.');
+        }
+      }
     }
 
     async function pushRosterSyncToCloud() {

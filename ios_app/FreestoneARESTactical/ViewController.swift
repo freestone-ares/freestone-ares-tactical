@@ -20,6 +20,9 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, WKSc
             self.preferredContentSize = CGSize(width: 1280, height: 850)
         }
 
+        // ActiveAlert Keep-Screen-On: Prevents screen from dimming/sleeping while monitoring CAD dispatch
+        UIApplication.shared.isIdleTimerDisabled = true
+
         setupWebView()
         loadLocalApp()
     }
