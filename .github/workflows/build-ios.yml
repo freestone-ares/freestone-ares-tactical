@@ -74,7 +74,7 @@ jobs:
             PROVISIONING_PROFILE_SPECIFIER="Freestone ARES Distribution" \
             PROVISIONING_PROFILE="b7c5ddd0-f4b4-4e6b-bf56-91dcd9d2a6e1" \
             CODE_SIGN_IDENTITY="Apple Distribution" \
-            CURRENT_PROJECT_VERSION=51 \
+            CURRENT_PROJECT_VERSION=52 \
             MARKETING_VERSION=7.9.8
 
       - name: Export IPA
@@ -107,6 +107,7 @@ jobs:
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
           tag_name: v7.9.8
+          overwrite: true
           files: |
             Freestone-ARES-Tactical.ipa
             Freestone-ARES-Tactical-v7.9.8.ipa

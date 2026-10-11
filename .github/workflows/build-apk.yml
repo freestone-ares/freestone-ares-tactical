@@ -66,10 +66,10 @@ jobs:
         with:
           tag_name: v7.9.8
           target_commitish: ${{ github.sha }}
-          name: "Freestone ARES Tactical v7.9.8 Build 51 (Active Alert Paging, Roster Boxes, Level 3+ Net Control, Field Medical & ICE Audit)"
+          name: "Freestone ARES Tactical v7.9.8 Build 52 (Active Alert Paging, Roster Boxes, Level 3+ Net Control, Field Medical & ICE Audit)"
           make_latest: true
           body: |
-            ## Freestone County ARES - Tactical Operations Field Build (v7.9.8 / Build 51)
+            ## Freestone County ARES - Tactical Operations Field Build (v7.9.8 / Build 52)
             
             Universal release for Android Phones & Tablets and Apple iOS, iPadOS, and macOS (Designed for iPad).
             
