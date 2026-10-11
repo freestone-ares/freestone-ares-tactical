@@ -32,30 +32,9 @@
       font-family: 'JetBrains Mono', monospace;
     }
     
-    /* Real Optical Night Vision Optical Screen Filters */
-    body.mode-nv-green {
-      --tac-accent: #22c55e;
-      --tac-border: rgba(34, 197, 94, 0.4);
-      --tac-glow: rgba(34, 197, 94, 0.25);
-      filter: grayscale(100%) sepia(100%) hue-rotate(85deg) saturate(650%) brightness(0.95) contrast(1.08);
-      background-color: #030805 !important;
-    }
-    body.mode-nv-amber {
-      --tac-accent: #f59e0b;
-      --tac-border: rgba(245, 158, 11, 0.4);
-      --tac-glow: rgba(245, 158, 11, 0.25);
-      filter: grayscale(100%) sepia(100%) hue-rotate(5deg) saturate(650%) brightness(0.95) contrast(1.08);
-      background-color: #080602 !important;
-    }
-    body.mode-nv-red {
-      --tac-accent: #ef4444;
-      --tac-border: rgba(239, 68, 68, 0.5);
-      --tac-glow: rgba(239, 68, 68, 0.3);
-      filter: grayscale(100%) sepia(100%) hue-rotate(315deg) saturate(850%) brightness(0.92) contrast(1.12);
-      background-color: #0a0202 !important;
-    }
-    body.mode-nv-normal {
-      filter: none;
+    /* Standard Full-Color Tactical Day Mode (Night Vision optical filters disabled) */
+    body.mode-nv-normal, body {
+      filter: none !important;
     }
 
     /* iOS Safe-Area Notch and Dynamic Island Adaptations */
@@ -532,16 +511,7 @@
 
       <!-- Drawer Footer: Night Vision & Utilities -->
       <div class="space-y-2 pt-2 border-t border-slate-800">
-        <!-- Night Vision Quick Mode Row -->
-        <div class="flex items-center justify-between text-[11px] px-1">
-          <span class="text-slate-400 font-bold">NIGHT VISION:</span>
-          <div class="flex items-center gap-1 flex-wrap">
-            <button id="nv-btn-green" onclick="setTheme('green')" class="px-2 py-0.5 rounded text-emerald-400 bg-slate-900 hover:bg-slate-800 border border-slate-700 font-bold text-[10px] cursor-pointer" title="Night Vision Green (P-43 Phosphor)">NV-G</button>
-            <button id="nv-btn-amber" onclick="setTheme('amber')" class="px-2 py-0.5 rounded text-amber-400 bg-slate-900 hover:bg-slate-800 border border-slate-700 font-bold text-[10px] cursor-pointer" title="Amber Cockpit Low-Light">AMB</button>
-            <button id="nv-btn-red" onclick="setTheme('red')" class="px-2 py-0.5 rounded text-red-400 bg-slate-900 hover:bg-slate-800 border border-slate-700 font-bold text-[10px] cursor-pointer" title="Tactical Red Dark Adaptation">RED</button>
-            <button id="nv-btn-normal" onclick="setTheme('normal')" class="px-2 py-0.5 rounded text-slate-300 bg-slate-900 hover:bg-slate-800 border border-slate-700 font-bold text-[10px] cursor-pointer" title="Full Standard Color Day/Night Mode">DAY</button>
-          </div>
-        </div>
+
 
         <!-- Utilities divider -->
         <div class="flex items-center justify-between gap-2">
@@ -3340,36 +3310,98 @@
 
       <!-- FORM CONTAINER: ICS-213 (General Message) -->
       <div id="form-ics-213" class="hidden bg-[#10151d] border border-slate-800 rounded-xl p-5 space-y-4 font-mono-tac text-xs">
-        <div class="border-b border-slate-800 pb-3 flex justify-between items-center">
+        <div class="border-b border-slate-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
           <div>
-            <span class="text-blue-400 font-bold text-sm">ICS FORM 213 — GENERAL MESSAGE</span>
-            <div class="text-slate-400 text-[11px]">Standard emergency radiogram format</div>
+            <span class="text-blue-400 font-black text-sm flex items-center gap-1.5">
+              <span>📝</span>
+              <span>ICS FORM 213 — GENERAL MESSAGE RADIOGRAM</span>
+            </span>
+            <div class="text-slate-400 text-[11px]">Direct tactical message transmission to Emergency Coordinator Brian Davis (KG5TZT)</div>
           </div>
-          <div class="flex gap-2">
-            <button onclick="dispatchIcsEmail('ICS-213')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded font-bold">📧 TRANSMIT EMAIL</button>
-            <button onclick="dispatchIcsSms('ICS-213')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded font-bold">📱 TRANSMIT SMS</button>
+          <div class="flex flex-wrap items-center gap-1.5">
+            <button type="button" onclick="transmitIcs213ToEc()" class="px-3.5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black rounded-lg shadow-lg flex items-center gap-1.5 cursor-pointer">
+              <span>🚀</span><span>SEND DIRECTLY TO EC</span>
+            </button>
+            <button type="button" onclick="dispatchIcsEmail('ICS-213')" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold rounded-lg flex items-center gap-1 cursor-pointer" title="Email to fcares@pm.me">
+              <span>📧</span><span>EMAIL EC</span>
+            </button>
+            <button type="button" onclick="dispatchIcsSms('ICS-213')" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold rounded-lg flex items-center gap-1 cursor-pointer" title="SMS to 903-644-5856">
+              <span>💬</span><span>SMS EC</span>
+            </button>
+            <button type="button" onclick="copyIcsRadiogram('ICS-213')" class="px-2.5 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-bold rounded-lg flex items-center gap-1 cursor-pointer" title="Copy formatted text for Winlink / Net">
+              <span>📋</span><span>COPY</span>
+            </button>
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="text-slate-400 block mb-1">TO (INCIDENT POSITION / NAME)</label>
-            <input type="text" value="Logistics Section Chief - County EOC" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
+            <label class="text-slate-400 block mb-1 font-bold">1. TO (INCIDENT POSITION / OFFICIAL)</label>
+            <input type="text" id="ics213-to" value="Emergency Coordinator Brian Davis (KG5TZT)" class="w-full bg-[#0b0e14] border border-slate-700 rounded-lg p-2 text-white font-bold focus:outline-none focus:border-blue-500">
           </div>
           <div>
-            <label class="text-slate-400 block mb-1">FROM (CALLSIGN / POSITION)</label>
-            <input type="text" value="KG5TZT - Shelter Alpha Comms" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
+            <label class="text-slate-400 block mb-1 font-bold">2. FROM (YOUR CALLSIGN / NAME / ROLE)</label>
+            <input type="text" id="ics213-from" placeholder="e.g. Robert Cockerell (AI5OX - AEC)" class="w-full bg-[#0b0e14] border border-slate-700 rounded-lg p-2 text-slate-200 focus:outline-none focus:border-blue-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="text-slate-400 block mb-1 font-bold">3. SENDER FIELD LOCATION / STAGING SPOT</label>
+            <input type="text" id="ics213-position" placeholder="e.g. Fairfield Shelter Alpha / Sector 2 Mobile Spotter" class="w-full bg-[#0b0e14] border border-slate-700 rounded-lg p-2 text-slate-200 focus:outline-none focus:border-blue-500">
+          </div>
+          <div>
+            <label class="text-slate-400 block mb-1 font-bold">4. REPLY REQUESTED</label>
+            <select id="ics213-reply" class="w-full bg-[#0b0e14] border border-slate-700 rounded-lg p-2 text-white font-bold focus:outline-none focus:border-blue-500">
+              <option value="YES">REPLY REQUESTED (URGENT)</option>
+              <option value="NO" selected>INFORMATION ONLY (NO REPLY REQUIRED)</option>
+            </select>
           </div>
         </div>
 
         <div>
-          <label class="text-slate-400 block mb-1">SUBJECT</label>
-          <input type="text" value="URGENT: Request for 200 Cots and Water Pallet at Shelter 1" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
+          <label class="text-slate-400 block mb-1 font-bold">5. SUBJECT</label>
+          <input type="text" id="ics213-subject" placeholder="e.g. Tactical Repeater Status / Supply Request" class="w-full bg-[#0b0e14] border border-slate-700 rounded-lg p-2 text-white font-bold focus:outline-none focus:border-blue-500">
         </div>
 
         <div>
-          <label class="text-slate-400 block mb-1">MESSAGE TEXT</label>
-          <textarea rows="3" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">Shelter reached 85% capacity due to river rise on Sector 4. Need 200 cots, blankets, and 1 pallet drinking water. Direct transport to north loading dock via Hwy 12 bypass.</textarea>
+          <label class="text-slate-400 block mb-1 font-bold">6. MESSAGE TEXT (RADIOGRAM BODY)</label>
+          <textarea id="ics213-message" rows="4" placeholder="Enter clear, concise tactical message to the Emergency Coordinator..." class="w-full bg-[#0b0e14] border border-slate-700 rounded-lg p-2.5 text-slate-100 font-mono text-xs focus:outline-none focus:border-blue-500"></textarea>
+        </div>
+
+        <div class="p-3 bg-blue-950/40 rounded-lg border border-blue-800/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px] text-blue-200">
+          <div class="flex items-center gap-2">
+            <span>ℹ️</span>
+            <span>Tapping <strong>SEND DIRECTLY TO EC</strong> transmits this message across the Freestone ARES network instantly and notifies Brian Davis.</span>
+          </div>
+          <button type="button" onclick="transmitIcs213ToEc()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded flex items-center gap-1 self-end sm:self-center cursor-pointer shadow">
+            <span>🚀 TRANSMIT NOW</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- LIVE EOC TRANSMISSIONS & SUBMITTED ICS FORMS INBOX (EC COMMAND INBOX) -->
+      <div id="ics-inbox-section" class="bg-[#10151d] border border-slate-800 rounded-xl p-5 space-y-3 font-mono-tac text-xs hud-border">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
+          <div class="flex items-center gap-2">
+            <span class="text-amber-400 text-base">📥</span>
+            <div>
+              <h4 class="font-bold text-sm text-slate-100 tracking-wide">EOC TRANSMISSIONS &amp; SUBMITTED ICS FORMS (REAL-TIME EC INBOX)</h4>
+              <p class="text-[11px] text-slate-400">All field radiograms and ICS unit logs submitted by operators across Freestone County.</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span id="ics-inbox-count-badge" class="px-2 py-0.5 rounded-full text-[10px] bg-blue-950 text-blue-300 border border-blue-700 font-bold">
+              0 FORMS ON FILE
+            </span>
+            <button type="button" onclick="refreshIcsInbox()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 rounded text-[11px] font-bold flex items-center gap-1 cursor-pointer">
+              <span>🔄</span><span>REFRESH</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="ics-inbox-feed" class="space-y-2.5">
+          <!-- Dynamically populated via renderIcsInbox() -->
         </div>
       </div>
     </section>
@@ -3469,17 +3501,17 @@
 
         <div>
           <label class="text-slate-400 block mb-1 font-bold">INCIDENT TITLE / OPERATION NAME</label>
-          <input type="text" id="b-title" value="SEVERE WEATHER & FLASH FLOODING // FREESTONE CO. COMM SUPPORT" class="w-full bg-[#0b0e14] border border-slate-700 rounded-lg p-2.5 text-white font-bold text-xs focus:outline-none focus:border-red-500">
+          <input type="text" id="b-title" value="" placeholder="e.g. SEVERE THUNDERSTORM // SKYWARN ACTIVATION" class="w-full bg-[#0b0e14] border border-slate-700 rounded-lg p-2.5 text-white font-bold text-xs focus:outline-none focus:border-red-500">
         </div>
 
         <div>
           <label class="text-slate-400 block mb-1 font-bold">STAGING LOCATION & GPS</label>
-          <input type="text" id="b-staging" value="Freestone County EOC - Fairfield, TX (31.7249° N, 96.1652° W) - Grid: EM11xq" class="w-full bg-[#0b0e14] border border-slate-700 rounded-lg p-2.5 text-slate-200 text-xs focus:outline-none focus:border-red-500">
+          <input type="text" id="b-staging" value="" placeholder="e.g. Fairfield Municipal Complex / County EOC (Grid: EM11xq)" class="w-full bg-[#0b0e14] border border-slate-700 rounded-lg p-2.5 text-slate-200 text-xs focus:outline-none focus:border-red-500">
         </div>
 
         <div>
           <label class="text-slate-400 block mb-1 font-bold">MISSION DIRECTIVE</label>
-          <textarea id="b-mission" rows="2" class="w-full bg-[#0b0e14] border border-slate-700 rounded-lg p-2.5 text-slate-200 text-xs focus:outline-none focus:border-red-500">Establish primary Winlink email station and VHF voice gateway between Fairfield Shelter and County EOC. Standby for Skywarn reports.</textarea>
+          <textarea id="b-mission" rows="2" placeholder="e.g. Monitor Fairfield 145.110 repeater. Deploy mobile spotters to designated sectors." class="w-full bg-[#0b0e14] border border-slate-700 rounded-lg p-2.5 text-slate-200 text-xs focus:outline-none focus:border-red-500"></textarea>
         </div>
 
         <!-- SITREP / ALERT UPDATE REASON (VISIBLE WHEN UPDATING ALERT) -->
@@ -5702,6 +5734,7 @@ assignedSpots: [
       accounts[targetCall].claimed = true;
       accounts[targetCall].status = 'AUTHORIZED';
       accounts[targetCall].lastProfileVerified = now;
+      accounts[targetCall].medicalVerified = true;
       if (photo) accounts[targetCall].photo = photo;
 
       safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(accounts));
@@ -5723,12 +5756,6 @@ assignedSpots: [
         mem.power = powerList.join(' & ');
         mem.capabilities = capabilitiesList;
         mem.isSpotter = isSpotter;
-        mem.bloodType = seBVal;
-        mem.medicalConditions = seMedCondVal;
-        mem.allergies = seAllergiesVal;
-        mem.medications = seMedsVal;
-        mem.iceName = seIceNameVal;
-        mem.icePhone = seIcePhoneVal;
         mem.bloodType = vBlood;
         mem.medicalConditions = vMedCond;
         mem.allergies = vAllergies;
@@ -5737,13 +5764,8 @@ assignedSpots: [
         mem.icePhone = vIcePhone;
         mem.claimed = true;
         mem.lastProfileVerified = now;
+        mem.medicalVerified = true;
         if (photo) mem.photo = photo;
-        mem.bloodType = ecBVal;
-        mem.medicalConditions = ecMedCondVal;
-        mem.allergies = ecAllergiesVal;
-        mem.medications = ecMedsVal;
-        mem.iceName = ecIceNameVal;
-        mem.icePhone = ecIcePhoneVal;
       }
 
       saveRosterMembers();
@@ -7045,25 +7067,114 @@ D. Out-of-County stations and visitors.
 
     // Binder Chapter Switching (All 9 Chapters)
 
-    // Set responder status
-    function setMyStatus(statusText, colorClass) {
+    // Helper: Determine if an incident is routine / steady state / closed
+    function isRoutineIncident(inc) {
+      if (!inc) return true;
+      if (inc.isClosed === true) return true;
+      const lvl = String(inc.level || '').toUpperCase();
+      const title = String(inc.title || '').toUpperCase();
+      if (title.includes('ROUTINE') || title.includes('STEADY')) return true;
+      if (lvl.includes('LEVEL 4') || lvl.includes('LEVEL 3') || lvl.includes('MONITORING') || lvl.includes('STEADY')) {
+        if (!inc.updates || inc.updates.length === 0) return true;
+      }
+      return false;
+    }
+
+    // Helper: Update or add a responder into appState.responders
+    function updateOrAddResponder(respObj) {
+      if (!respObj || !respObj.call) return;
+      if (!appState.responders) appState.responders = [];
+      const callUpper = respObj.call.toUpperCase();
+      const idx = appState.responders.findIndex(r => (r.call || '').toUpperCase() === callUpper);
+      if (idx >= 0) {
+        appState.responders[idx] = Object.assign({}, appState.responders[idx], respObj);
+      } else {
+        appState.responders.push(respObj);
+      }
+    }
+
+    // Set responder status (Cloud-Synced across Android, iOS & Desktop)
+    async function setMyStatus(statusText, colorClass) {
+      const call = (appState.myCall || '').toUpperCase().trim();
+      if (!call || call === 'GUEST') {
+        alert('Please sign into your callsign before transmitting your response status.');
+        return;
+      }
+
       appState.myStatus = statusText;
       const statusBadge = document.getElementById('my-current-status');
-      statusBadge.textContent = statusText;
-      statusBadge.className = 'font-bold px-2 py-0.5 rounded text-white text-xs ' + colorClass;
+      if (statusBadge) {
+        statusBadge.textContent = statusText;
+        statusBadge.className = 'font-bold px-2 py-0.5 rounded text-white text-xs ' + colorClass;
+      }
 
       const now = new Date();
       const local24 = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
       const zulu = now.toISOString().substring(11, 16) + 'Z';
       const timeStr = `${local24} (${zulu})`;
 
-      // Update in table
-      const myRow = appState.responders.find(r => r.call === appState.myCall);
-      if (myRow) {
-        myRow.status = statusText;
-        myRow.time = timeStr;
+      // Look up member profile details
+      const member = (appState.members || []).find(m => (m.call || '').toUpperCase() === call);
+      const name = member ? member.name : (appState.myName || call);
+      const phone = member ? (member.phone || '') : '';
+      const gear = member ? (member.notes || 'VHF/UHF Mobile Station') : 'VHF/UHF Mobile Station';
+
+      // Determine spot and ETA cues based on status selected
+      let spot = 'Staging Point (County EOC)';
+      let eta = 'Standby';
+      let dist = '0.0 mi';
+
+      if (statusText.includes('STAGING')) {
+        spot = 'Staging Point (County EOC)';
+        eta = '15-20 Mins';
+        dist = 'En Route';
+      } else if (statusText.includes('REMOTE')) {
+        spot = 'Remote Station (Home QTH)';
+        eta = 'On-Air Now';
+        dist = 'Home Shack';
+      } else if (statusText.includes('ON SCENE')) {
+        spot = 'On Scene / Net Control EOC';
+        eta = 'Arrived';
+        dist = 'At Staging';
+      } else if (statusText.includes('DELAYED')) {
+        spot = 'Delayed / Mobilizing Later';
+        eta = '30-60 Mins';
+        dist = 'Delayed';
+      } else if (statusText.includes('UNAVAILABLE')) {
+        spot = 'Unavailable';
+        eta = 'Off Duty';
+        dist = 'N/A';
       }
+
+      const respObj = {
+        call: call,
+        name: name,
+        status: statusText,
+        colorClass: colorClass,
+        time: timeStr,
+        timestamp: Date.now(),
+        assignedSpot: spot,
+        eta: eta,
+        distToStaging: dist,
+        phone: phone,
+        gear: gear
+      };
+
+      // 1. Update in local array
+      updateOrAddResponder(respObj);
       renderResponderTable();
+
+      // 2. Transmit to Firebase Realtime Database
+      if (fbDb) {
+        try {
+          await fbDb.ref('incident_responses/' + call).set(respObj);
+        } catch(e) {
+          console.warn('Firebase SDK incident_responses set error:', e);
+        }
+      }
+      await fbRestPut('incident_responses/' + call, respObj);
+
+      showTacticalBannerNotification(`✓ Transmitted response: ${statusText}`);
     }
 
     // Filter responder table by status chip
@@ -7443,16 +7554,17 @@ D. Out-of-County stations and visitors.
       let delayedCount = 0;
 
       appState.responders.forEach(r => {
-        if (r.status.includes('STAGING')) {
+        const st = String(r.status || '').toUpperCase();
+        if (st.includes('STAGING') || st.includes('RESPONDING')) {
           activeCount++;
           respondingCount++;
-        } else if (r.status.includes('ON SCENE')) {
+        } else if (st.includes('ON SCENE')) {
           activeCount++;
           onSceneCount++;
-        } else if (r.status.includes('REMOTE')) {
+        } else if (st.includes('REMOTE') || st.includes('STATIONARY')) {
           activeCount++;
           remoteCount++;
-        } else if (r.status.includes('DELAYED')) {
+        } else if (st.includes('DELAYED')) {
           activeCount++;
           delayedCount++;
         }
@@ -7476,11 +7588,12 @@ D. Out-of-County stations and visitors.
       // Apply filter
       const filter = appState.responderFilter || 'ALL';
       const filtered = appState.responders.filter(r => {
+        const st = String(r.status || '').toUpperCase();
         if (filter === 'ALL') return true;
-        if (filter === 'RESPONDING') return r.status.includes('STAGING');
-        if (filter === 'ON SCENE') return r.status.includes('ON SCENE');
-        if (filter === 'REMOTE') return r.status.includes('REMOTE');
-        if (filter === 'DELAYED') return r.status.includes('DELAYED');
+        if (filter === 'RESPONDING') return st.includes('STAGING') || st.includes('RESPONDING');
+        if (filter === 'ON SCENE') return st.includes('ON SCENE');
+        if (filter === 'REMOTE') return st.includes('REMOTE') || st.includes('STATIONARY');
+        if (filter === 'DELAYED') return st.includes('DELAYED');
         return true;
       });
 
@@ -7639,34 +7752,70 @@ D. Out-of-County stations and visitors.
         countBadge.textContent = `${appState.members.length} VERIFIED MEMBERS`;
       }
 
-      // Render Mandatory 2026 Profile & Medical Audit Banner
+      // Render Mandatory 2026 Profile & Medical Audit Status Banner
       const auditBannerContainer = document.getElementById('roster-audit-banner-container');
       if (auditBannerContainer) {
-        const curUserCall = (appState.myCall || 'KG5TZT').toUpperCase();
-        auditBannerContainer.innerHTML = `
-          <div class="bg-gradient-to-r from-rose-950/90 via-[#180a0e] to-slate-900 border-2 border-rose-500/80 rounded-xl p-3 sm:p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-[0_0_20px_rgba(244,63,94,0.25)] font-mono-tac">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-lg bg-rose-500/20 border border-rose-500/60 flex items-center justify-center text-rose-400 text-lg flex-shrink-0 animate-pulse">
-                🩸
-              </div>
-              <div>
-                <div class="text-rose-400 font-extrabold text-xs flex items-center gap-2">
-                  <span>MANDATORY 2026 FIELD PROFILE &amp; MEDICAL AUDIT ACTIVE</span>
-                  <span class="px-1.5 py-0.2 rounded bg-rose-500 text-black text-[9px] font-black tracking-wider animate-pulse">ACTION REQUIRED</span>
+        const curUserCall = String(appState.myCall || 'KG5TZT').toUpperCase().trim();
+        const accounts = getRegisteredAccounts();
+        const myAcc = accounts[curUserCall] || {};
+        const myMem = (appState.members || []).find(m => String(m.call || '').toUpperCase().trim() === curUserCall) || {};
+
+        const isVerified = Boolean(
+          myAcc.medicalVerified ||
+          myMem.medicalVerified ||
+          (myAcc.bloodType && myAcc.bloodType !== 'Unknown') ||
+          (myMem.bloodType && myMem.bloodType !== 'Unknown') ||
+          (myAcc.lastProfileVerified && (Date.now() - myAcc.lastProfileVerified < 180 * 86400000))
+        );
+
+        if (isVerified) {
+          // Profile is up to date! Display green confirmation with edit option
+          auditBannerContainer.innerHTML = `
+            <div class="bg-gradient-to-r from-emerald-950/70 via-[#0a1510] to-[#0b0e14] border border-emerald-500/60 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow font-mono-tac">
+              <div class="flex items-center gap-2.5">
+                <span class="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/60 flex items-center justify-center text-emerald-400 text-sm flex-shrink-0">✓</span>
+                <div>
+                  <div class="text-emerald-400 font-bold text-xs flex items-center gap-2">
+                    <span>2026 FIELD PROFILE &amp; MEDICAL AUDIT COMPLETE</span>
+                    <span class="px-1.5 py-0.2 rounded bg-emerald-900 text-emerald-200 border border-emerald-700 text-[9px] font-bold">VERIFIED</span>
+                  </div>
+                  <div class="text-slate-400 text-[10px]">
+                    Operator <strong class="text-slate-200">${curUserCall}</strong>: Emergency Contact (ICE), Blood Type, and Medical readiness recorded on file.
+                  </div>
                 </div>
-                <div class="text-slate-300 text-[11px] mt-0.5">
-                  All active operators must record Blood Type, Allergies, Major Medical, Medications, and Emergency Contact (ICE) for field deployment.
-                </div>
               </div>
-            </div>
-            <div class="flex items-center gap-2 self-end sm:self-center">
-              <button type="button" onclick="openOperatorProfileVerifyModal('${curUserCall}', 'mandatory_audit')" class="px-3.5 py-2 bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 text-white font-black rounded-lg text-xs font-mono-tac shadow-lg transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
-                <span>📋</span>
-                <span>UPDATE MY MEDICAL &amp; PROFILE</span>
+              <button type="button" onclick="openOperatorProfileVerifyModal('${curUserCall}', 'update')" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white rounded text-[11px] font-bold transition flex items-center gap-1 self-end sm:self-center cursor-pointer">
+                <span>✏️</span><span>EDIT MEDICAL / ICE</span>
               </button>
             </div>
-          </div>
-        `;
+          `;
+        } else {
+          // Action required banner
+          auditBannerContainer.innerHTML = `
+            <div class="bg-gradient-to-r from-rose-950/90 via-[#180a0e] to-slate-900 border-2 border-rose-500/80 rounded-xl p-3 sm:p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-[0_0_20px_rgba(244,63,94,0.25)] font-mono-tac">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-rose-500/20 border border-rose-500/60 flex items-center justify-center text-rose-400 text-lg flex-shrink-0 animate-pulse">
+                  🩸
+                </div>
+                <div>
+                  <div class="text-rose-400 font-extrabold text-xs flex items-center gap-2">
+                    <span>MANDATORY 2026 FIELD PROFILE &amp; MEDICAL AUDIT ACTIVE</span>
+                    <span class="px-1.5 py-0.2 rounded bg-rose-500 text-black text-[9px] font-black tracking-wider animate-pulse">ACTION REQUIRED</span>
+                  </div>
+                  <div class="text-slate-300 text-[11px] mt-0.5">
+                    All active operators must record Blood Type, Allergies, Major Medical, Medications, and Emergency Contact (ICE) for field deployment.
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 self-end sm:self-center">
+                <button type="button" onclick="openOperatorProfileVerifyModal('${curUserCall}', 'mandatory_audit')" class="px-3.5 py-2 bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 text-white font-black rounded-lg text-xs font-mono-tac shadow-lg transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+                  <span>📋</span>
+                  <span>UPDATE MY MEDICAL &amp; PROFILE</span>
+                </button>
+              </div>
+            </div>
+          `;
+        }
       }
 
       // Render ActiveAlerts-style Operational Status Bar for Logged-In Operator
@@ -8989,35 +9138,265 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
 
       document.getElementById('form-ics-' + formNum).classList.remove('hidden');
       document.getElementById('ics-btn-' + formNum).className = 'px-3 py-1.5 rounded text-xs font-mono-tac font-bold bg-emerald-600 text-white';
+
+      if (formNum === '213') {
+        const fromEl = document.getElementById('ics213-from');
+        if (fromEl && !fromEl.value) {
+          fromEl.value = `${appState.myName || 'Operator'} (${appState.myCall || 'KG5TZT'})`;
+        }
+      }
+      renderIcsInbox();
     }
 
+    // ==========================================
+    // ICS FORMS TRANSMISSION & EC DISPATCH ENGINE
+    // ==========================================
+    const EC_CONTACT_EMAIL = 'fcares@pm.me';
+    const EC_CONTACT_PHONE = '903-644-5856';
+    const COUNTY_EMC_EMAIL = 'freestone.emc@co.freestone.tx.us';
+
+    // Transmit ICS-213 General Message directly to EC Brian Davis via Cloud & In-App Dispatch
+    async function transmitIcs213ToEc() {
+      const toVal = document.getElementById('ics213-to') ? document.getElementById('ics213-to').value.trim() : 'Emergency Coordinator Brian Davis (KG5TZT)';
+      let fromVal = document.getElementById('ics213-from') ? document.getElementById('ics213-from').value.trim() : '';
+      const posVal = document.getElementById('ics213-position') ? document.getElementById('ics213-position').value.trim() : 'Field Station';
+      const subjVal = document.getElementById('ics213-subject') ? document.getElementById('ics213-subject').value.trim() : '';
+      const msgVal = document.getElementById('ics213-message') ? document.getElementById('ics213-message').value.trim() : '';
+      const replyVal = document.getElementById('ics213-reply') ? document.getElementById('ics213-reply').value : 'NO';
+
+      const authorCall = (appState.myCall || '').toUpperCase().trim();
+      const authorName = appState.myName || 'Field Operator';
+
+      if (!fromVal) {
+        fromVal = `${authorName} (${authorCall || 'OPERATOR'})`;
+        const fromEl = document.getElementById('ics213-from');
+        if (fromEl) fromEl.value = fromVal;
+      }
+
+      if (!subjVal) {
+        alert('Please enter a message Subject before sending.');
+        const sEl = document.getElementById('ics213-subject');
+        if (sEl) sEl.focus();
+        return;
+      }
+
+      if (!msgVal) {
+        alert('Please enter the Message Text before sending.');
+        const mEl = document.getElementById('ics213-message');
+        if (mEl) mEl.focus();
+        return;
+      }
+
+      const formId = 'ICS213_' + Date.now();
+      const now = new Date();
+      const localTimeStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      const formPayload = {
+        id: formId,
+        formType: 'ICS-213',
+        formTitle: 'ICS FORM 213 — GENERAL MESSAGE',
+        timestamp: Date.now(),
+        dateLocal: localTimeStr,
+        to: toVal,
+        from: fromVal,
+        position: posVal,
+        subject: subjVal,
+        message: msgVal,
+        replyRequired: replyVal,
+        authorCall: authorCall || 'FIELD-OP',
+        authorName: authorName,
+        status: 'SUBMITTED TO EC'
+      };
+
+      // 1. Store locally
+      if (!appState.submittedIcsForms) appState.submittedIcsForms = [];
+      appState.submittedIcsForms.unshift(formPayload);
+      safeStorage.setItem('fc_ares_ics_forms', JSON.stringify(appState.submittedIcsForms));
+
+      // 2. Transmit to Firebase Realtime Database
+      if (fbDb) {
+        try {
+          await fbDb.ref('ics_forms/' + formId).set(formPayload);
+        } catch(e) {
+          console.warn('Firebase SDK ICS set notice:', e);
+        }
+      }
+      await fbRestPut('ics_forms/' + formId, formPayload);
+
+      renderIcsInbox();
+      showTacticalBannerNotification('✓ ICS-213 Message transmitted directly to EC Brian Davis!');
+
+      alert(`✅ ICS-213 GENERAL MESSAGE TRANSMITTED DIRECTLY TO EC!\n\nTo: ${toVal}\nFrom: ${fromVal}\nSubject: ${subjVal}\nDate/Time: ${localTimeStr}\n\nYour message has been securely recorded in the Freestone County ARES dispatch queue and is now visible in the EC Command Inbox.`);
+
+      // Clear subject and message text for next message
+      const subjEl = document.getElementById('ics213-subject');
+      const msgEl = document.getElementById('ics213-message');
+      if (subjEl) subjEl.value = '';
+      if (msgEl) msgEl.value = '';
+    }
+
+    // Transmit ICS Form via Email to EC Brian Davis & EMC
     function dispatchIcsEmail(formName) {
-      alert(`Preparing ${formName} PDF Attachment & formatted text dispatch to Emergency Operations Center mail list.`);
+      let subj = '';
+      let body = '';
+
+      if (formName === 'ICS-213') {
+        const toVal = document.getElementById('ics213-to') ? document.getElementById('ics213-to').value.trim() : 'EC Brian Davis (KG5TZT)';
+        const fromVal = document.getElementById('ics213-from') ? document.getElementById('ics213-from').value.trim() : (appState.myName + ' (' + appState.myCall + ')');
+        const posVal = document.getElementById('ics213-position') ? document.getElementById('ics213-position').value.trim() : 'Field Location';
+        const subjVal = document.getElementById('ics213-subject') ? document.getElementById('ics213-subject').value.trim() : 'Tactical Field Radiogram';
+        const msgVal = document.getElementById('ics213-message') ? document.getElementById('ics213-message').value.trim() : '';
+        const replyVal = document.getElementById('ics213-reply') ? document.getElementById('ics213-reply').value : 'NO';
+
+        subj = `[ICS-213] ${subjVal} (From: ${fromVal})`;
+        body = `FREESTONE COUNTY EMERGENCY MANAGEMENT / ARES\n`;
+        body += `FEMA ICS FORM 213 — GENERAL MESSAGE RADIOGRAM\n`;
+        body += `========================================================\n\n`;
+        body += `1. TO: ${toVal}\n`;
+        body += `2. FROM: ${fromVal}\n`;
+        body += `3. FIELD LOCATION / SPOT: ${posVal}\n`;
+        body += `4. DATE / TIME: ${new Date().toLocaleString()}\n`;
+        body += `5. REPLY REQUESTED: ${replyVal}\n`;
+        body += `6. SUBJECT: ${subjVal}\n\n`;
+        body += `MESSAGE TEXT:\n--------------------------------------------------------\n`;
+        body += `${msgVal || '(No message text provided)'}\n\n`;
+        body += `========================================================\n`;
+        body += `Transmitted via Freestone County ARES Tactical Console`;
+      } else if (formName === 'ICS-205') {
+        subj = `[ICS-205] Freestone County Incident Radio Communications Plan`;
+        body = `FREESTONE COUNTY ARES — ICS-205 COMMUNICATIONS PLAN\n`;
+        body += `Operational Frequencies: Primary FF 110 (145.110 TSQ 146.2), Alternate WRTM 760 (146.760 T136.5), Mutual Aid MEX 390 (145.390 T146.2).\n`;
+        body += `Reviewed and dispatched by: ${appState.myName} (${appState.myCall})`;
+      } else {
+        subj = `[FEMA ${formName}] Freestone County ARES Incident Form`;
+        body = `FEMA ${formName} form submitted by ${appState.myName} (${appState.myCall}) on ${new Date().toLocaleString()}.`;
+      }
+
+      const mailtoUrl = `mailto:${EC_CONTACT_EMAIL}?cc=${COUNTY_EMC_EMAIL}&subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailtoUrl;
     }
 
+    // Transmit ICS Form via SMS to EC Brian Davis (903-644-5856)
     function dispatchIcsSms(formName) {
-      alert(`Formatting ${formName} concise summary to send via SMS / Winlink packet broadcast.`);
+      let smsText = '';
+
+      if (formName === 'ICS-213') {
+        const fromVal = document.getElementById('ics213-from') ? document.getElementById('ics213-from').value.trim() : (appState.myName + ' (' + appState.myCall + ')');
+        const subjVal = document.getElementById('ics213-subject') ? document.getElementById('ics213-subject').value.trim() : 'Status Report';
+        const msgVal = document.getElementById('ics213-message') ? document.getElementById('ics213-message').value.trim() : '';
+        smsText = `[ICS-213 to EC Brian Davis] From: ${fromVal} | Subj: ${subjVal} | Msg: ${msgVal}`;
+      } else {
+        smsText = `[Freestone ARES ${formName}] Sent by ${appState.myName} (${appState.myCall}): Form submitted for incident review.`;
+      }
+
+      const cleanPhone = EC_CONTACT_PHONE.replace(/[^0-9]/g, '');
+      window.location.href = `sms:${cleanPhone}?body=${encodeURIComponent(smsText)}`;
     }
 
-    // Tactical Night Vision Optical Filter Controller
+    // Copy Radiogram Text to Clipboard (for Winlink, Packet, or Voice Net)
+    function copyIcsRadiogram(formName) {
+      if (formName === 'ICS-213') {
+        const toVal = document.getElementById('ics213-to') ? document.getElementById('ics213-to').value.trim() : 'EC Brian Davis (KG5TZT)';
+        const fromVal = document.getElementById('ics213-from') ? document.getElementById('ics213-from').value.trim() : (appState.myName + ' (' + appState.myCall + ')');
+        const subjVal = document.getElementById('ics213-subject') ? document.getElementById('ics213-subject').value.trim() : 'Tactical Radiogram';
+        const msgVal = document.getElementById('ics213-message') ? document.getElementById('ics213-message').value.trim() : '';
+
+        const text = `FEMA ICS-213 RADIOGRAM\nTO: ${toVal}\nFROM: ${fromVal}\nDATE: ${new Date().toLocaleString()}\nSUBJ: ${subjVal}\nMSG: ${msgVal}`;
+        navigator.clipboard.writeText(text).then(() => {
+          showTacticalBannerNotification('✓ Formatted ICS-213 Radiogram copied to clipboard!');
+          alert('📋 Formatted ICS-213 radiogram copied to clipboard! Ready to paste into Winlink Express or read over the net.');
+        }).catch(() => {
+          alert('Radiogram:\n\n' + text);
+        });
+      }
+    }
+
+    // Render Live Submitted ICS Forms Inbox
+    function renderIcsInbox() {
+      const feed = document.getElementById('ics-inbox-feed');
+      const badge = document.getElementById('ics-inbox-count-badge');
+      if (!feed) return;
+
+      const list = (appState.submittedIcsForms || []);
+      if (badge) badge.textContent = `${list.length} FORMS ON FILE`;
+
+      if (list.length === 0) {
+        feed.innerHTML = `
+          <div class="p-4 rounded-lg bg-[#0b0e14] border border-slate-800 text-center text-slate-400 space-y-1">
+            <span class="text-lg">📭</span>
+            <div>No transmitted ICS forms logged yet for this operational period.</div>
+            <div class="text-[10px] text-slate-500">When operators submit an ICS-213 or ICS-214, they appear here instantly in real time.</div>
+          </div>
+        `;
+        return;
+      }
+
+      feed.innerHTML = list.map((item, idx) => {
+        const typeBadge = item.formType === 'ICS-213' 
+          ? '<span class="px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-700 font-bold">ICS-213 MESSAGE</span>'
+          : '<span class="px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-700 font-bold">ICS-214 LOG</span>';
+
+        return `
+          <div class="p-3 sm:p-3.5 rounded-xl bg-[#0b0e14] border border-slate-800 space-y-2 hover:border-blue-500/50 transition">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 border-b border-slate-800 pb-2">
+              <div class="flex items-center gap-2 flex-wrap">
+                ${typeBadge}
+                <span class="text-white font-bold text-xs">${item.subject || 'Incident Radiogram'}</span>
+                <span class="text-[10px] text-emerald-400 bg-emerald-950/80 px-1.5 py-0.2 rounded border border-emerald-800">✓ SUBMITTED TO EC</span>
+              </div>
+              <div class="text-[10px] text-slate-400 font-mono">
+                ⏰ ${item.dateLocal || 'Recently'}
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[11px] text-slate-300">
+              <div><strong class="text-slate-400">FROM:</strong> <span class="text-emerald-300 font-bold">${item.from || item.authorCall}</span></div>
+              <div><strong class="text-slate-400">TO:</strong> <span class="text-slate-200">${item.to || 'EC Brian Davis'}</span></div>
+            </div>
+
+            <div class="bg-black/60 p-2.5 rounded border border-slate-800 text-[11px] text-slate-200 font-mono whitespace-pre-wrap">
+              ${item.message || '(No message text)'}
+            </div>
+
+            <div class="flex items-center justify-between pt-1 text-[10px] text-slate-400">
+              <span>Author: <strong class="text-slate-300">${item.authorName || item.authorCall}</strong> • Position: ${item.position || 'Field'}</span>
+              <div class="flex items-center gap-2">
+                <a href="mailto:${EC_CONTACT_EMAIL}?subject=[Reply] ${encodeURIComponent(item.subject || 'ICS-213')}" class="text-blue-400 hover:underline font-bold">REPLY EMAIL</a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function refreshIcsInbox() {
+      syncRosterWithCloud(true);
+    }
+
+    function onRemoteIcsFormsReceived(remoteData) {
+      if (!remoteData) return;
+      let list = [];
+      if (Array.isArray(remoteData)) {
+        list = remoteData.filter(Boolean);
+      } else if (typeof remoteData === 'object') {
+        list = Object.values(remoteData).filter(Boolean);
+      }
+      if (list.length === 0) return;
+
+      list.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+      appState.submittedIcsForms = list;
+      safeStorage.setItem('fc_ares_ics_forms', JSON.stringify(list));
+      renderIcsInbox();
+    }
+
+    // Standard Day Mode Theme Controller (Night Vision mode permanently removed)
     function setTheme(color) {
       const b = document.getElementById('app-body');
-      if (!b) return;
-      b.classList.remove('mode-nv-green', 'mode-nv-amber', 'mode-nv-red', 'mode-nv-normal');
-      b.classList.add('mode-nv-' + color);
-      safeStorage.setItem('fc_ares_nv_theme', color);
-
-      // Highlight active theme button in Hamburger menu
-      ['green', 'amber', 'red', 'normal'].forEach(c => {
-        const btn = document.getElementById('nv-btn-' + c);
-        if (btn) {
-          if (c === color) {
-            btn.classList.add('ring-2', 'ring-emerald-400', 'font-black');
-          } else {
-            btn.classList.remove('ring-2', 'ring-emerald-400', 'font-black');
-          }
-        }
-      });
+      if (b) {
+        b.classList.remove('mode-nv-green', 'mode-nv-amber', 'mode-nv-red');
+        b.classList.add('mode-nv-normal');
+      }
+      safeStorage.removeItem('fc_ares_nv_theme');
     }
 
     // Emergency Audio Paging Siren Synthesizer (Active911 Style)
@@ -9265,6 +9644,16 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
       }
       isAlertUpdateMode = false;
       populatePaceDropdowns();
+
+      // Explicitly blank out incident fields for brand-new alert
+      const bTitleInp = document.getElementById('b-title');
+      const bStagingInp = document.getElementById('b-staging');
+      const bMissionInp = document.getElementById('b-mission');
+      const bNoteInp = document.getElementById('b-update-note');
+      if (bTitleInp) bTitleInp.value = '';
+      if (bStagingInp) bStagingInp.value = '';
+      if (bMissionInp) bMissionInp.value = '';
+      if (bNoteInp) bNoteInp.value = '';
 
       const modal = document.getElementById('broadcast-modal');
       const icon = document.getElementById('b-modal-icon');
@@ -11932,18 +12321,20 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
     async function deleteActiveIncidentAlert(e) {
       if (e) e.stopPropagation();
       const clearance = getOperatorClearance();
-      if (clearance.levelNum < 6 && appState.myCall !== 'KG5TZT') {
+      const myCall = String(appState.myCall || '').toUpperCase().trim();
+      if (clearance.levelNum < 6 && myCall !== 'KG5TZT') {
         alert('🔒 Master Emergency Coordinator Brian Davis (KG5TZT) authorization required to delete incident alerts.');
         return;
       }
 
-      if (!confirm('🗑️ PERMANENTLY DELETE ACTIVE INCIDENT ALERT?\n\nThis will remove the alert completely across all devices and reset County Posture to Steady State (Level 4).\n\nProceed?')) {
+      if (!confirm('🗑️ PERMANENTLY DELETE ACTIVE INCIDENT ALERT?\n\nThis will purge the alert completely across all devices and reset County Posture to Steady State (Level 3).\n\nProceed?')) {
         return;
       }
 
       stopSirenAudio();
+      dismissHeadsUpAlertBanner();
 
-      // Reset local state to Level 4 routine
+      // Reset local state to Level 3 Routine Steady State
       appState.activeIncident = {
         level: 'LEVEL 3 - MONITORING',
         title: 'ROUTINE OPERATIONS // FREESTONE CO. ARES',
@@ -11956,21 +12347,39 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         isClosed: true
       };
       saveActiveIncident();
-      setCountyResponseLevel(3);
 
-      // Cloud purge
+      // Set county posture to 3 without redundant popups
+      safeStorage.setItem('fc_ares_response_level', 3);
+      safeStorage.setItem('fc_ares_response_level_ts', Date.now());
+      renderCountyResponseLevelUI();
+      broadcastActivationLevelToCloud(3);
+
+      // Reset responder statuses back to standby
+      if (appState.responders) {
+        appState.responders.forEach(r => {
+          r.status = 'STANDBY (NORMAL MONITORING)';
+          r.time = 'STEADY STATE';
+        });
+      }
+      renderResponderTable();
+
+      // Cloud purge: remove alerts, set active_incident to closed routine, clear incident_responses
       if (fbDb) {
         try {
           await fbDb.ref('active_incident').set(appState.activeIncident);
           await fbDb.ref('alerts').remove();
-        } catch(e) {}
+          await fbDb.ref('incident_responses').remove();
+        } catch(err) {
+          console.warn('Firebase SDK purge error:', err);
+        }
       }
       await fbRestPut('active_incident', appState.activeIncident);
       await fbRestPut('alerts', {});
+      await fbRestPut('incident_responses', {});
 
       renderActiveIncidentUI();
       renderActiveAlertsCardFeed();
-      alert('✓ Active alert purged completely from all devices and reset to Steady State.');
+      showTacticalBannerNotification('✓ Active alert purged completely and reset to Steady State.');
     }
 
     // 5. Delete Skywarn Storm Reports (EC Authorized)
@@ -12258,7 +12667,7 @@ function toggleIncidentDetailsExpanded() {
       if (!container) return;
 
       const inc = appState.activeIncident;
-      const isRoutine = (!inc || !inc.level || inc.level.includes('LEVEL 4')) && (!inc.updates || inc.updates.length === 0);
+      const isRoutine = isRoutineIncident(inc);
 
       if (isRoutine) {
         container.innerHTML = `
@@ -12566,6 +12975,18 @@ function toggleIncidentDetailsExpanded() {
               onRemoteNcsStaffingReceived(remoteNcs);
             }
           });
+
+          // 10. Live Incident Responders Telemetry Listener (All Phones & Consoles)
+          fbDb.ref('incident_responses').on('value', function(snap) {
+            const remoteResps = snap.val();
+            onRemoteIncidentResponsesReceived(remoteResps);
+          });
+
+          // 11. Live Submitted ICS Forms & Radiograms Listener (EC Inbox)
+          fbDb.ref('ics_forms').on('value', function(snap) {
+            const remoteIcs = snap.val();
+            onRemoteIcsFormsReceived(remoteIcs);
+          });
         } else {
           console.log('Firebase JS SDK not yet loaded; using high-speed REST sync');
         }
@@ -12662,6 +13083,14 @@ function toggleIncidentDetailsExpanded() {
         const remoteNcs = await fbRestGet('ncs_staffing');
         if (remoteNcs) {
           onRemoteNcsStaffingReceived(remoteNcs);
+        }
+
+        const remoteResps = await fbRestGet('incident_responses');
+        onRemoteIncidentResponsesReceived(remoteResps);
+
+        const remoteIcs = await fbRestGet('ics_forms');
+        if (remoteIcs) {
+          onRemoteIcsFormsReceived(remoteIcs);
         }
 
         lastRosterSyncTime = new Date();
@@ -13051,6 +13480,36 @@ Your console is now authorized and unlocked.`);
       }
     }
 
+    // Handler for incoming incident responses across all Android & iOS devices
+    function onRemoteIncidentResponsesReceived(remoteResps) {
+      if (!remoteResps || (typeof remoteResps === 'object' && Object.keys(remoteResps).length === 0)) {
+        return;
+      }
+      let list = [];
+      if (Array.isArray(remoteResps)) {
+        list = remoteResps.filter(Boolean);
+      } else if (typeof remoteResps === 'object') {
+        list = Object.values(remoteResps).filter(Boolean);
+      }
+      if (list.length === 0) return;
+
+      list.forEach(r => {
+        if (!r || !r.call) return;
+        updateOrAddResponder(r);
+        const myCall = String(appState.myCall || '').toUpperCase().trim();
+        if (myCall && String(r.call).toUpperCase().trim() === myCall) {
+          appState.myStatus = r.status;
+          const statusBadge = document.getElementById('my-current-status');
+          if (statusBadge && r.status) {
+            statusBadge.textContent = r.status;
+            if (r.colorClass) statusBadge.className = 'font-bold px-2 py-0.5 rounded text-white text-xs ' + r.colorClass;
+          }
+        }
+      });
+
+      renderResponderTable();
+    }
+
     function onRemoteIncidentReceived(remoteInc) {
       if (!remoteInc) return;
       appState.activeIncident = remoteInc;
@@ -13059,7 +13518,7 @@ Your console is now authorized and unlocked.`);
       renderActiveAlertsCardFeed();
 
       // Check if this incident is an active emergency callout (not routine steady state and not closed)
-      const isRoutine = (!remoteInc.level || remoteInc.level.includes('LEVEL 4')) && (!remoteInc.updates || remoteInc.updates.length === 0) && (!remoteInc.updateCount || remoteInc.updateCount === 0);
+      const isRoutine = isRoutineIncident(remoteInc);
       const isEmergency = !remoteInc.isClosed && !isRoutine;
 
       if (!isEmergency) {
@@ -13615,6 +14074,14 @@ Your console is now authorized and unlocked.`);
         mem.fema = femaList;
         mem.power = power;
         mem.isSpotter = isSpotter;
+        mem.bloodType = ecBVal;
+        mem.medicalConditions = ecMedCondVal;
+        mem.allergies = ecAllergiesVal;
+        mem.medications = ecMedsVal;
+        mem.iceName = ecIceNameVal;
+        mem.icePhone = ecIcePhoneVal;
+        mem.lastProfileVerified = Date.now();
+        mem.medicalVerified = true;
         if (photo) mem.photo = photo;
         mem.canSendAlerts = canSendAlerts;
       } else {
@@ -13843,7 +14310,15 @@ Your console is now authorized and unlocked.`);
         mem.power = power;
         mem.capabilities = capabilitiesList;
         mem.isSpotter = isSpotter;
+        mem.bloodType = seBVal;
+        mem.medicalConditions = seMedCondVal;
+        mem.allergies = seAllergiesVal;
+        mem.medications = seMedsVal;
+        mem.iceName = seIceNameVal;
+        mem.icePhone = seIcePhoneVal;
         mem.claimed = true;
+        mem.lastProfileVerified = Date.now();
+        mem.medicalVerified = true;
         if (photo) mem.photo = photo;
       }
 
@@ -14022,7 +14497,7 @@ Your console is now authorized and unlocked.`);
       const inc = appState.activeIncident;
       if (!inc) return;
 
-      const isRoutine = (!inc.updates || inc.updates.length === 0) && (!inc.level || inc.level.includes('LEVEL 4'));
+      const isRoutine = isRoutineIncident(inc);
 
       // Active Banner Card Styling
       const bannerCard = document.getElementById('active-incident-banner-card');
@@ -15304,9 +15779,8 @@ Your console is now authorized and unlocked.`);
     loadRosterMembers();
     loadCalendarEvents();
     populateAuthCallsignSelect();
-    // Restore saved Night Vision Optical Theme
-    const savedTheme = safeStorage.getItem('fc_ares_nv_theme') || 'normal';
-    setTheme(savedTheme);
+    // Ensure standard Day Mode on initialization
+    setTheme('normal');
 
     initAuthSession();
     renderCountyResponseLevelUI();

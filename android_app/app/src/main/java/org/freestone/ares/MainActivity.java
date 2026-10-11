@@ -55,6 +55,18 @@ public class MainActivity extends AppCompatActivity {
 
         requestAppPermissions();
 
+        // Start continuous background emergency dispatch monitoring service
+        try {
+            Intent serviceIntent = new Intent(this, EmergencyDispatchService.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(serviceIntent);
+            } else {
+                startService(serviceIntent);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);

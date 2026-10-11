@@ -124,3 +124,53 @@ self.addEventListener('fetch', (event) => {
     })
   );
 });
+
+// 4. Push Notification Event Listener (Web Push / Background Push)
+self.addEventListener('push', (event) => {
+  let title = '🚨 Freestone County ARES Emergency Alert';
+  let body = 'Emergency activation update received.';
+  let icon = './icon-192.png';
+  let badge = './icon-192.png';
+  let data = {};
+
+  if (event.data) {
+    try {
+      const json = event.data.json();
+      title = json.title || title;
+      body = json.body || body;
+      data = json;
+    } catch(e) {
+      body = event.data.text() || body;
+    }
+  }
+
+  const options = {
+    body: body,
+    icon: icon,
+    badge: badge,
+    vibrate: [0, 500, 200, 500, 200, 1000],
+    tag: 'ares-emergency-alert',
+    renotify: true,
+    requireInteraction: true,
+    data: data
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if (client.url && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      if (clients.openWindow) {
+        return clients.openWindow('./index.html');
+      }
+    })
+  );
+});
+
