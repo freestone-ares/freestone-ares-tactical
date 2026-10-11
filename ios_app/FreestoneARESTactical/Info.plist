@@ -19,7 +19,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>7.9.8</string>
 	<key>CFBundleVersion</key>
-	<string>50</string>
+	<string>51</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
