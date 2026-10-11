@@ -7742,40 +7742,59 @@ D. Out-of-County stations and visitors.
         // Operational status styling (Right Column - Box 1)
         let opStatusHtml = '';
         if (statusId === 'responding') {
-          opStatusHtml = '<div class="w-full bg-red-950/90 text-red-200 border border-red-500 rounded px-2.5 py-1.5 flex items-center justify-center gap-1.5 text-center shadow-[0_0_10px_rgba(239,68,68,0.4)] animate-pulse"><span class="w-2 h-2 rounded-full bg-red-400"></span><span class="text-[10px] font-black tracking-wider uppercase">RESPONDING</span></div>';
+          opStatusHtml = '<div class="w-full py-1.5 px-2.5 rounded-lg bg-red-950/90 text-red-200 border border-red-500 font-black text-xs flex items-center justify-between shadow-[0_0_10px_rgba(239,68,68,0.4)] animate-pulse truncate"><span class="flex items-center gap-1.5 truncate"><span class="w-2.5 h-2.5 rounded-full bg-red-400 flex-shrink-0"></span><span class="truncate">RESPONDING</span></span><span class="text-[9px] text-red-300 font-normal">ON DUTY</span></div>';
         } else if (statusId === 'on_scene') {
-          opStatusHtml = '<div class="w-full bg-amber-950/90 text-amber-200 border border-amber-500 rounded px-2.5 py-1.5 flex items-center justify-center gap-1.5 text-center shadow-sm"><span class="w-2 h-2 rounded-full bg-amber-400"></span><span class="text-[10px] font-black tracking-wider uppercase">ON SCENE</span></div>';
+          opStatusHtml = '<div class="w-full py-1.5 px-2.5 rounded-lg bg-amber-950/90 text-amber-200 border border-amber-500 font-black text-xs flex items-center justify-between shadow-sm truncate"><span class="flex items-center gap-1.5 truncate"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 flex-shrink-0"></span><span class="truncate">ON SCENE</span></span><span class="text-[9px] text-amber-300 font-normal">ON DUTY</span></div>';
         } else if (statusId === 'net_control') {
-          opStatusHtml = '<div class="w-full bg-purple-950/90 text-purple-200 border border-purple-500 rounded px-2.5 py-1.5 flex items-center justify-center gap-1.5 text-center shadow-sm"><span class="w-2 h-2 rounded-full bg-purple-400"></span><span class="text-[10px] font-black tracking-wider uppercase">NET CONTROL</span></div>';
+          opStatusHtml = '<div class="w-full py-1.5 px-2.5 rounded-lg bg-purple-950/90 text-purple-200 border border-purple-500 font-black text-xs flex items-center justify-between shadow-sm truncate"><span class="flex items-center gap-1.5 truncate"><span class="w-2.5 h-2.5 rounded-full bg-purple-400 flex-shrink-0"></span><span class="truncate">NET CONTROL</span></span><span class="text-[9px] text-purple-300 font-normal">ON DUTY</span></div>';
         } else if (statusId === 'en_route') {
-          opStatusHtml = '<div class="w-full bg-blue-950/90 text-blue-200 border border-blue-500 rounded px-2.5 py-1.5 flex items-center justify-center gap-1.5 text-center shadow-sm"><span class="w-2 h-2 rounded-full bg-blue-400"></span><span class="text-[10px] font-black tracking-wider uppercase">EN ROUTE</span></div>';
+          opStatusHtml = '<div class="w-full py-1.5 px-2.5 rounded-lg bg-blue-950/90 text-blue-200 border border-blue-500 font-black text-xs flex items-center justify-between shadow-sm truncate"><span class="flex items-center gap-1.5 truncate"><span class="w-2.5 h-2.5 rounded-full bg-blue-400 flex-shrink-0"></span><span class="truncate">EN ROUTE</span></span><span class="text-[9px] text-blue-300 font-normal">ON DUTY</span></div>';
         } else if (statusId === 'off_duty') {
-          opStatusHtml = '<div class="w-full bg-slate-900 text-slate-400 border border-slate-700 rounded px-2.5 py-1.5 flex items-center justify-center gap-1.5 text-center shadow-sm"><span>⚪</span><span class="text-[10px] font-semibold tracking-wider uppercase">OFF DUTY</span></div>';
+          opStatusHtml = '<div class="w-full py-1.5 px-2.5 rounded-lg bg-slate-900 text-slate-400 border border-slate-700 font-semibold text-xs flex items-center justify-between shadow-sm truncate"><span class="flex items-center gap-1.5 truncate"><span>⚪</span><span class="truncate">OFF DUTY</span></span><span class="text-[9px] text-slate-500">STANDBY</span></div>';
         } else {
-          opStatusHtml = '<div class="w-full bg-emerald-950/90 text-emerald-300 border border-emerald-500 rounded px-2.5 py-1.5 flex items-center justify-center gap-1.5 text-center shadow-[0_0_8px_rgba(16,185,129,0.3)]"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span class="text-[10px] font-black tracking-wider uppercase">AVAILABLE</span></div>';
+          opStatusHtml = '<div class="w-full py-1.5 px-2.5 rounded-lg bg-emerald-950/90 text-emerald-300 border border-emerald-500/80 font-black text-xs flex items-center justify-between shadow-[0_0_8px_rgba(16,185,129,0.3)] truncate"><span class="flex items-center gap-1.5 truncate"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0"></span><span class="truncate">AVAILABLE</span></span><span class="text-[9px] text-emerald-400/80 font-normal">ON DUTY</span></div>';
         }
 
         // Unclaimed Box: ONLY shown if NOT claimed. When claimed/created, disappears completely!
         let unclaimedBoxHtml = '';
         if (!isClaimed) {
-          unclaimedBoxHtml = '<div class="w-full bg-amber-950/90 text-amber-400 border border-amber-600 rounded px-2.5 py-1.5 flex items-center justify-center gap-1.5 text-center shadow-sm animate-pulse"><span>⚠️</span><span class="text-[10px] font-black tracking-wider uppercase">UNCLAIMED</span></div>';
+          unclaimedBoxHtml = '<div class="w-full py-1.5 px-2.5 rounded-lg bg-amber-950/90 text-amber-300 border border-amber-600/80 font-black text-xs flex items-center gap-1.5 shadow-sm animate-pulse truncate"><span>⚠️</span><span class="truncate">UNCLAIMED</span></div>';
         }
 
         // Storm Spotter Box
         let spotterBoxHtml = '';
         if (isSpotter) {
-          spotterBoxHtml = '<div class="w-full bg-sky-950/90 text-sky-300 border border-sky-500 rounded px-2.5 py-1.5 flex items-center justify-center gap-1.5 text-center shadow-[0_0_8px_rgba(56,189,248,0.25)]"><span>⛈️</span><span class="text-[10px] font-black tracking-wider uppercase">STORM SPOTTER</span></div>';
+          spotterBoxHtml = '<div class="w-full py-1.5 px-2.5 rounded-lg bg-sky-950/90 text-sky-300 border border-sky-500/80 font-black text-xs flex items-center gap-1.5 shadow-[0_0_8px_rgba(56,189,248,0.25)] truncate"><span>🌪️</span><span class="truncate">STORM SPOTTER</span></div>';
         }
 
         // Net Control Box
         let ncsBoxHtml = '';
         if (isNcs) {
-          ncsBoxHtml = '<div class="w-full bg-purple-950/90 text-purple-300 border border-purple-500 rounded px-2.5 py-1.5 flex items-center justify-center gap-1.5 text-center shadow-[0_0_8px_rgba(168,85,247,0.25)]"><span>🎙️</span><span class="text-[10px] font-black tracking-wider uppercase">NET CONTROL</span></div>';
+          ncsBoxHtml = '<div class="w-full py-1.5 px-2.5 rounded-lg bg-purple-950/90 text-purple-200 border border-purple-500/80 font-black text-xs flex items-center gap-1.5 shadow-[0_0_8px_rgba(168,85,247,0.25)] truncate"><span>🎙️</span><span class="truncate">NET CONTROL</span></div>';
         }
 
         // Level Badge Box
         let levelText = m.level || 'Level 1 - Operator';
-        let levelBoxHtml = `<div class="w-full bg-slate-900 text-slate-300 border border-slate-700 rounded px-2.5 py-1.5 flex items-center justify-center text-center shadow-sm"><span class="text-[10px] font-bold truncate">${levelText}</span></div>`;
+        let levelTag = 'CREW';
+        let isLevelAdmin = false;
+        if (m.call === 'KG5TZT' || (m.level && m.level.toLowerCase().includes('emergency coordinator')) || (m.role && m.role.toLowerCase().includes('emergency coordinator'))) {
+          levelText = 'LEVEL 6 - EC / RO';
+          levelTag = 'ADMIN';
+          isLevelAdmin = true;
+        } else if (m.level && m.level.toLowerCase().includes('assistant ec')) {
+          levelText = m.level;
+          levelTag = 'STAFF';
+        } else if (m.level && m.level.toLowerCase().includes('emc')) {
+          levelText = m.level;
+          levelTag = 'EMC';
+          isLevelAdmin = true;
+        } else if (m.level && m.level.toLowerCase().includes('ncs')) {
+          levelTag = 'NCS';
+        }
+
+        let levelBoxHtml = isLevelAdmin
+          ? `<div class="w-full py-1.5 px-2.5 rounded-lg bg-gradient-to-r from-amber-900/60 to-red-950/60 text-amber-200 border border-amber-500/70 font-black text-xs flex items-center justify-between shadow-sm truncate"><span class="flex items-center gap-1.5 truncate"><span>🛡️</span><span class="truncate">${levelText}</span></span><span class="text-[9px] text-amber-300 font-bold">${levelTag}</span></div>`
+          : `<div class="w-full py-1.5 px-2.5 rounded-lg bg-gradient-to-r from-slate-900 to-slate-800 text-slate-200 border border-slate-700 font-bold text-xs flex items-center justify-between shadow-sm truncate"><span class="flex items-center gap-1.5 truncate"><span>🛡️</span><span class="truncate">${levelText}</span></span><span class="text-[9px] text-emerald-400 font-bold">${levelTag}</span></div>`;
 
         // Left column identifiers: Callsign, Name, GMRS, ARES ID, RACES ID
         const aresIdDisp = m.ares || rAcc.ares || m.aresId || rAcc.aresId || (m.call === 'KG5TZT' ? 'TX-ARES-01' : 'TX-ARES');
@@ -7783,9 +7802,9 @@ D. Out-of-County stations and visitors.
         const gmrsVal = (m.call === 'AI5OX' ? 'WSEA569' : (m.gmrs || rAcc.gmrs || 'NONE'));
         const photo = m.photo || rAcc.photo || '';
 
-        const photoHtml = photo
-          ? `<img src="${photo}" class="w-6 h-6 rounded object-cover border border-emerald-500/60 flex-shrink-0" alt="${m.call}">`
-          : '';
+        const photoImageHtml = photo
+          ? `<img src="${photo}" class="w-full h-full object-cover" alt="${m.call}">`
+          : `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="w-full h-full"><rect width="120" height="120" fill="#131c26"/><circle cx="60" cy="44" r="22" fill="#334155"/><path d="M22,112 C22,80 40,74 60,74 C80,74 98,80 98,112 Z" fill="#334155"/><text x="60" y="114" fill="#10b981" font-size="11" font-family="monospace" font-weight="bold" text-anchor="middle">${m.call}</text></svg>`;
 
         let dispatchBadge = '';
         if (m.canSendAlerts) {
@@ -7859,43 +7878,50 @@ D. Out-of-County stations and visitors.
         const card = document.createElement('div');
         card.className = `bg-[#10151d] border ${isMe ? 'border-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.2)]' : 'border-slate-800 hover:border-emerald-500/50'} rounded-xl p-3.5 space-y-3 font-mono-tac text-xs transition hud-glow`;
         card.innerHTML = `
-          <!-- Header Split: Left Column (Identifiers) & Right Column (Badges) -->
-          <div class="grid grid-cols-2 gap-2.5 items-stretch">
+          <!-- Header Split: Left Column (Option B: Large Photo + 3 Stacked Boxes + ARES/RACES IDs) & Right Column (Badges) -->
+          <div class="grid grid-cols-[1.25fr_1fr] sm:grid-cols-2 gap-2.5 sm:gap-3 items-stretch">
             
-            <!-- LEFT COLUMN: Callsign, Name, GMRS, ARES ID, RACES ID in vertical line with equal width -->
-            <div class="space-y-1.5 flex flex-col justify-between">
-              <!-- Callsign -->
-              <div class="w-full bg-[#080b10] border border-emerald-500/80 rounded px-2.5 py-1.5 flex items-center justify-between shadow-sm">
-                <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wide">CALL:</span>
-                <div class="flex items-center gap-1.5">
-                  ${photoHtml}
-                  <span class="text-white font-extrabold text-xs tracking-wider">${m.call}</span>
+            <!-- LEFT COLUMN: Exact Match to roster_card_option_b_final_1791677604740.jpg (2x2 Grid) -->
+            <div class="grid grid-cols-[105px_1fr] sm:grid-cols-[120px_1fr] gap-2 items-stretch min-w-0">
+              <!-- Top-Left: Large Photo (120px) -->
+              <div class="w-full aspect-square rounded-lg border-2 border-emerald-500/80 bg-[#07090e] overflow-hidden relative shadow flex items-center justify-center flex-shrink-0">
+                ${photoImageHtml}
+              </div>
+
+              <!-- Top-Right: 3 Stacked Boxes beside Photo -->
+              <div class="flex flex-col justify-between gap-1.5 min-w-0">
+                <!-- Box 1: NAME -->
+                <div class="flex-1 px-2.5 py-1 rounded-lg bg-[#080b10] border border-slate-700/80 flex flex-col justify-center min-w-0 shadow-sm">
+                  <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wide leading-none">NAME:</span>
+                  <span class="text-slate-100 font-extrabold text-xs truncate mt-0.5" title="${m.name}">${m.name}</span>
+                </div>
+                <!-- Box 2: CALL -->
+                <div class="flex-1 px-2.5 py-1 rounded-lg bg-[#080b10] border border-emerald-500/80 flex flex-col justify-center min-w-0 shadow-sm">
+                  <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wide leading-none">CALL:</span>
+                  <span class="text-emerald-300 font-black text-xs tracking-wider truncate mt-0.5">${m.call}</span>
+                </div>
+                <!-- Box 3: GMRS -->
+                <div class="flex-1 px-2.5 py-1 rounded-lg bg-[#080b10] border border-slate-700/80 flex flex-col justify-center min-w-0 shadow-sm">
+                  <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wide leading-none">GMRS:</span>
+                  <span class="text-amber-400 font-bold text-xs truncate mt-0.5">${gmrsVal}</span>
                 </div>
               </div>
-              <!-- Name -->
-              <div class="w-full bg-[#080b10] border border-slate-700/80 rounded px-2.5 py-1.5 flex items-center justify-between shadow-sm">
-                <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wide">NAME:</span>
-                <span class="text-slate-200 font-bold text-xs truncate max-w-[110px]" title="${m.name}">${m.name}</span>
+
+              <!-- Bottom-Left: ARES ID (Directly Under Photo, Exact Width of Photo) -->
+              <div class="px-2 py-1.5 rounded-lg bg-[#080b10] border border-slate-700/80 flex flex-col justify-center text-center shadow-sm min-w-0">
+                <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wide leading-none">ARES ID:</span>
+                <span class="text-emerald-300 font-mono-tac font-bold text-xs truncate mt-0.5">${aresIdDisp}</span>
               </div>
-              <!-- GMRS -->
-              <div class="w-full bg-[#080b10] border border-slate-700/80 rounded px-2.5 py-1.5 flex items-center justify-between shadow-sm">
-                <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wide">GMRS:</span>
-                <span class="text-amber-400 font-bold text-xs">${gmrsVal}</span>
-              </div>
-              <!-- ARES ID -->
-              <div class="w-full bg-[#080b10] border border-slate-700/80 rounded px-2.5 py-1.5 flex items-center justify-between shadow-sm">
-                <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wide">ARES:</span>
-                <span class="text-emerald-300 font-bold text-xs">${aresIdDisp}</span>
-              </div>
-              <!-- RACES ID -->
-              <div class="w-full bg-[#080b10] border border-slate-700/80 rounded px-2.5 py-1.5 flex items-center justify-between shadow-sm">
-                <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wide">RACES:</span>
-                <span class="text-amber-300 font-bold text-xs">${racesIdDisp}</span>
+
+              <!-- Bottom-Right: RACES ID (Directly Under 3 Boxes, Exact Width of 3 Boxes) -->
+              <div class="px-2 py-1.5 rounded-lg bg-[#080b10] border border-slate-700/80 flex flex-col justify-center text-center shadow-sm min-w-0">
+                <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wide leading-none">RACES ID:</span>
+                <span class="text-amber-300 font-mono-tac font-bold text-xs truncate mt-0.5">${racesIdDisp}</span>
               </div>
             </div>
 
-            <!-- RIGHT COLUMN: Available, Unclaimed, Storm Spotter, NCS, Level in vertical line with equal width -->
-            <div class="space-y-1.5 flex flex-col justify-start">
+            <!-- RIGHT COLUMN: TACTICAL BADGE STACK (Equal Width, Vertical Line) -->
+            <div class="flex flex-col justify-between gap-1.5 min-w-0">
               ${opStatusHtml}
               ${unclaimedBoxHtml}
               ${spotterBoxHtml}
@@ -15636,7 +15662,7 @@ Your console is now authorized and unlocked.`);
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.3 (Build 45)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.7 (Build 49)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>
