@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Freestone County ARES Tactical Mobile v7.9.3</title>
+  <title>Freestone County ARES Tactical Mobile v7.9.8</title>
   <meta name="description" content="Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES">
   <meta name="theme-color" content="#0b0e14">
   <meta name="mobile-web-app-capable" content="yes">
@@ -2078,6 +2078,9 @@
           </button>
         </div>
       </div>
+
+      <!-- Mandatory 2026 Profile & Medical Audit Banner -->
+      <div id="roster-audit-banner-container" class="mb-3"></div>
 
       <!-- Roster Privacy Banner -->
       <div id="roster-privacy-status-box" class="mb-3"></div>
@@ -5386,10 +5389,10 @@ assignedSpots: [
         updates: []
       },
       members: [
-        { id: 1, call: 'KG5TZT', gmrs: 'WRPN302', races: 'TX-FREE-01', name: 'Brian Davis', class: 'Amateur Extra', role: 'Emergency Coordinator (EC)', level: 'Level 6 - Emergency Coordinator (EC)', verified: true, claimed: true, canSendAlerts: true, phone: '903-644-5856', email: 'fcares@pm.me', fema: ['IS-100', 'IS-200', 'IS-300', 'IS-400', 'IS-700', 'IS-800'], power: 'Commercial & Battery Backup & Emergency Generator', isSpotter: true },
-        { id: 2, call: 'AI5OX', gmrs: 'WSEA569', races: 'TX-FREE-02', name: 'Robert Cockerell', class: 'Amateur Extra', role: 'Assistant EC (AEC)', level: 'Level 4 - Assistant EC', verified: true, claimed: false, canSendAlerts: true, phone: '903-394-1772', email: 'AI5OX@yahoo.com', fema: ['IS-100', 'IS-200', 'IS-300', 'IS-700', 'IS-800'], power: 'Commercial & Battery Backup', isSpotter: true },
+        { id: 1, call: 'KG5TZT', gmrs: 'WRPN302', ares: 'TX-ARES-01', races: 'TX-FREE-01', name: 'Brian Davis', class: 'Amateur Extra', role: 'Emergency Coordinator (EC)', level: 'Level 6 - Emergency Coordinator (EC)', verified: true, claimed: true, canSendAlerts: true, phone: '903-644-5856', email: 'fcares@pm.me', fema: ['IS-100', 'IS-200', 'IS-300', 'IS-400', 'IS-700', 'IS-800'], power: 'Commercial & Battery Backup & Emergency Generator', isSpotter: true, bloodType: 'O+', allergies: 'Penicillin (PCN)', medicalConditions: 'None / Field Ready', medications: 'None', iceName: 'Jane Davis (Spouse)', icePhone: '903-644-5856' },
+        { id: 2, call: 'AI5OX', gmrs: 'WSEA569', ares: 'TX-ARES-02', races: 'TX-FREE-02', name: 'Robert Cockerell', class: 'Amateur Extra', role: 'Assistant EC (AEC)', level: 'Level 4 - Assistant EC', verified: true, claimed: false, canSendAlerts: true, phone: '903-394-1772', email: 'AI5OX@yahoo.com', fema: ['IS-100', 'IS-200', 'IS-300', 'IS-700', 'IS-800'], power: 'Commercial & Battery Backup', isSpotter: true, bloodType: 'A+', allergies: 'NKDA (None Known)', medicalConditions: 'None', medications: 'None', iceName: 'Sarah Cockerell (Spouse)', icePhone: '903-394-1772' },
         { id: 3, call: 'FC-EMC', gmrs: 'NONE', races: 'TX-FREE-EMC', name: 'Freestone County EMC', class: 'Liaison', role: 'County Emergency Management Coordinator (EMC)', level: 'Level 5 - County EMC', verified: true, claimed: false, canSendAlerts: false, phone: '903-389-3335', email: 'freestone.emc@co.freestone.tx.us', fema: ['IS-100', 'IS-200', 'IS-300', 'IS-400', 'IS-700', 'IS-800'], power: 'Commercial & Emergency Generator', isSpotter: false },
-        { id: 4, call: 'N5BED', gmrs: 'WSDI801', races: 'TX-FREE-04', name: 'Billy Bryant', class: 'General', role: 'Net Control Station (NCS)', level: 'Level 3 - NCS', verified: true, claimed: false, canSendAlerts: false, phone: '903-388-3470', email: 'bryant1969@yahoo.com', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800'], power: 'Commercial & Battery Backup', isSpotter: true },
+        { id: 4, call: 'N5BED', gmrs: 'WSDI801', ares: 'TX-ARES-04', races: 'TX-FREE-04', name: 'Billy Bryant', class: 'General', role: 'Net Control Station (NCS)', level: 'Level 3 - NCS', verified: true, claimed: false, canSendAlerts: false, phone: '903-388-3470', email: 'bryant1969@yahoo.com', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800'], power: 'Commercial & Battery Backup', isSpotter: true, bloodType: 'B+', allergies: 'NKDA (None Known)', medicalConditions: 'None', medications: 'None', iceName: 'Mary Bryant (Spouse)', icePhone: '903-388-3470' },
         { id: 5, call: 'KJ5HSS', gmrs: 'WSHS425', races: 'TX-FREE-05', name: 'Paul Parrish', class: 'General', role: 'Field Operator / Storm Spotter', level: 'Level 2 - Field Operator / Spotter', verified: true, claimed: false, canSendAlerts: false, phone: '903-875-6420', email: 'paulparrish@gmail.com', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800'], power: 'Commercial & Battery Backup', isSpotter: true },
         { id: 6, call: 'KJ5GPK', gmrs: 'WSHH865', races: 'TX-FREE-06', name: 'Leonard Smith', class: 'General', role: 'Field Operator / Storm Spotter', level: 'Level 2 - Field Operator / Spotter', verified: true, claimed: false, canSendAlerts: false, phone: '254-488-1431', email: 'kj5gpk@gmail.com', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800'], power: 'Commercial & Battery Backup', isSpotter: true },
         { id: 7, call: 'KI5YIG', gmrs: 'WROJ727', races: 'TX-FREE-07', name: 'Don Hall', class: 'General', role: 'Field Operator / Storm Spotter', level: 'Level 2 - Field Operator / Spotter', verified: true, claimed: false, canSendAlerts: false, phone: '903-366-0169', email: 'houndheadjr@gmail.com', fema: ['IS-100', 'IS-700'], power: 'Commercial & Battery Backup', isSpotter: true },
@@ -5539,6 +5542,20 @@ assignedSpots: [
       document.getElementById('verify-email').value = acc.email || mem.email || '';
       document.getElementById('verify-class').value = acc.class || mem.class || 'Technician';
 
+      // Field Medical & ICE Contact Questionnaire Population
+      const elBType = document.getElementById('verify-blood-type');
+      if (elBType) elBType.value = acc.bloodType || mem.bloodType || (targetCall === 'KG5TZT' ? 'O+' : 'Unknown');
+      const elMedCond = document.getElementById('verify-medical-conditions');
+      if (elMedCond) elMedCond.value = acc.medicalConditions || mem.medicalConditions || (targetCall === 'KG5TZT' ? 'None / Field Ready' : '');
+      const elAllergies = document.getElementById('verify-allergies');
+      if (elAllergies) elAllergies.value = acc.allergies || mem.allergies || (targetCall === 'KG5TZT' ? 'Penicillin (PCN)' : '');
+      const elMeds = document.getElementById('verify-medications');
+      if (elMeds) elMeds.value = acc.medications || mem.medications || (targetCall === 'KG5TZT' ? 'None' : '');
+      const elIceName = document.getElementById('verify-ice-name');
+      if (elIceName) elIceName.value = acc.iceName || mem.iceName || (targetCall === 'KG5TZT' ? 'Jane Davis (Spouse)' : '');
+      const elIcePhone = document.getElementById('verify-ice-phone');
+      if (elIcePhone) elIcePhone.value = acc.icePhone || mem.icePhone || (targetCall === 'KG5TZT' ? '903-644-5856' : '');
+
       // LOCKED ASSIGNED OPERATOR LEVEL (Display Only - Master EC Only)
       const curLevel = acc.level || mem.level || 'Level 1 - Operator';
       const levelDisp = document.getElementById('verify-level-display');
@@ -5668,6 +5685,20 @@ assignedSpots: [
       accounts[targetCall].power = powerList.join(' & ');
       accounts[targetCall].capabilities = capabilitiesList;
       accounts[targetCall].isSpotter = isSpotter;
+
+      const vBlood = document.getElementById('verify-blood-type') ? document.getElementById('verify-blood-type').value : 'Unknown';
+      const vMedCond = document.getElementById('verify-medical-conditions') ? document.getElementById('verify-medical-conditions').value.trim() : '';
+      const vAllergies = document.getElementById('verify-allergies') ? document.getElementById('verify-allergies').value.trim() : '';
+      const vMeds = document.getElementById('verify-medications') ? document.getElementById('verify-medications').value.trim() : '';
+      const vIceName = document.getElementById('verify-ice-name') ? document.getElementById('verify-ice-name').value.trim() : '';
+      const vIcePhone = document.getElementById('verify-ice-phone') ? document.getElementById('verify-ice-phone').value.trim() : '';
+
+      accounts[targetCall].bloodType = vBlood;
+      accounts[targetCall].medicalConditions = vMedCond;
+      accounts[targetCall].allergies = vAllergies;
+      accounts[targetCall].medications = vMeds;
+      accounts[targetCall].iceName = vIceName;
+      accounts[targetCall].icePhone = vIcePhone;
       accounts[targetCall].claimed = true;
       accounts[targetCall].status = 'AUTHORIZED';
       accounts[targetCall].lastProfileVerified = now;
@@ -5692,9 +5723,27 @@ assignedSpots: [
         mem.power = powerList.join(' & ');
         mem.capabilities = capabilitiesList;
         mem.isSpotter = isSpotter;
+        mem.bloodType = seBVal;
+        mem.medicalConditions = seMedCondVal;
+        mem.allergies = seAllergiesVal;
+        mem.medications = seMedsVal;
+        mem.iceName = seIceNameVal;
+        mem.icePhone = seIcePhoneVal;
+        mem.bloodType = vBlood;
+        mem.medicalConditions = vMedCond;
+        mem.allergies = vAllergies;
+        mem.medications = vMeds;
+        mem.iceName = vIceName;
+        mem.icePhone = vIcePhone;
         mem.claimed = true;
         mem.lastProfileVerified = now;
         if (photo) mem.photo = photo;
+        mem.bloodType = ecBVal;
+        mem.medicalConditions = ecMedCondVal;
+        mem.allergies = ecAllergiesVal;
+        mem.medications = ecMedsVal;
+        mem.iceName = ecIceNameVal;
+        mem.icePhone = ecIcePhoneVal;
       }
 
       saveRosterMembers();
@@ -7590,6 +7639,36 @@ D. Out-of-County stations and visitors.
         countBadge.textContent = `${appState.members.length} VERIFIED MEMBERS`;
       }
 
+      // Render Mandatory 2026 Profile & Medical Audit Banner
+      const auditBannerContainer = document.getElementById('roster-audit-banner-container');
+      if (auditBannerContainer) {
+        const curUserCall = (appState.myCall || 'KG5TZT').toUpperCase();
+        auditBannerContainer.innerHTML = `
+          <div class="bg-gradient-to-r from-rose-950/90 via-[#180a0e] to-slate-900 border-2 border-rose-500/80 rounded-xl p-3 sm:p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-[0_0_20px_rgba(244,63,94,0.25)] font-mono-tac">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg bg-rose-500/20 border border-rose-500/60 flex items-center justify-center text-rose-400 text-lg flex-shrink-0 animate-pulse">
+                🩸
+              </div>
+              <div>
+                <div class="text-rose-400 font-extrabold text-xs flex items-center gap-2">
+                  <span>MANDATORY 2026 FIELD PROFILE &amp; MEDICAL AUDIT ACTIVE</span>
+                  <span class="px-1.5 py-0.2 rounded bg-rose-500 text-black text-[9px] font-black tracking-wider animate-pulse">ACTION REQUIRED</span>
+                </div>
+                <div class="text-slate-300 text-[11px] mt-0.5">
+                  All active operators must record Blood Type, Allergies, Major Medical, Medications, and Emergency Contact (ICE) for field deployment.
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 self-end sm:self-center">
+              <button type="button" onclick="openOperatorProfileVerifyModal('${curUserCall}', 'mandatory_audit')" class="px-3.5 py-2 bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 text-white font-black rounded-lg text-xs font-mono-tac shadow-lg transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+                <span>📋</span>
+                <span>UPDATE MY MEDICAL &amp; PROFILE</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
       // Render ActiveAlerts-style Operational Status Bar for Logged-In Operator
       const statusSelectorContainer = document.getElementById('roster-status-selector-container');
       if (statusSelectorContainer) {
@@ -7720,7 +7799,7 @@ D. Out-of-County stations and visitors.
         const rAcc = rosterAccounts[m.call.toUpperCase()] || {};
         const isMe = isLoggedIn && (m.call === appState.myCall);
         
-        // Claimed evaluation: checks local member, master EC, accounts registry, verified date, and password setup
+        // Claimed evaluation
         const isClaimed = !!m.claimed || 
                           (m.call === 'KG5TZT') || 
                           (rAcc.status === 'AUTHORIZED') || 
@@ -7734,71 +7813,91 @@ D. Out-of-County stations and visitors.
         const isOnline = pres && pres.online && (Date.now() - (pres.lastSeen || 0) < 300000);
         const statusId = pres.statusId || m.statusId || 'available';
 
-        const isNcs = (m.role && (m.role.toLowerCase().includes('ncs') || m.role.toLowerCase().includes('net control'))) ||
-                      (m.level && (m.level.toLowerCase().includes('ncs') || m.level.toLowerCase().includes('net control'))) ||
-                      (m.call === 'N5BED') ||
-                      (statusId === 'net_control');
+        // Precise Operational Level Number Extraction (1 to 6)
+        let levelNum = 1;
+        const lvlLower = ((m.level || rAcc.level || '') + ' ' + (m.role || rAcc.role || '')).toLowerCase();
+        if (m.call === 'KG5TZT' || lvlLower.includes('level 6') || lvlLower.includes('emergency coordinator')) {
+          levelNum = 6;
+        } else if (lvlLower.includes('level 5') || lvlLower.includes('emc')) {
+          levelNum = 5;
+        } else if (lvlLower.includes('level 4') || lvlLower.includes('assistant ec') || lvlLower.includes('aec') || m.call === 'AI5OX') {
+          levelNum = 4;
+        } else if (lvlLower.includes('level 3') || lvlLower.includes('ncs') || lvlLower.includes('net control') || m.call === 'N5BED') {
+          levelNum = 3;
+        } else if (lvlLower.includes('level 2') || lvlLower.includes('spotter') || lvlLower.includes('field operator')) {
+          levelNum = 2;
+        }
+
+        // Net Control Qualified: Level 3+ NCS OR operational status Net Control
+        const isNcs = (levelNum >= 3) || 
+                      (statusId === 'net_control') ||
+                      (m.role && (m.role.toLowerCase().includes('ncs') || m.role.toLowerCase().includes('net control'))) ||
+                      (m.level && (m.level.toLowerCase().includes('ncs') || m.level.toLowerCase().includes('net control')));
 
         // Operational status styling (Right Column - Box 1)
         let opStatusHtml = '';
         if (statusId === 'responding') {
-          opStatusHtml = '<div class="w-full py-1.5 px-2.5 rounded-lg bg-red-950/90 text-red-200 border border-red-500 font-black text-xs flex items-center justify-between shadow-[0_0_10px_rgba(239,68,68,0.4)] animate-pulse truncate"><span class="flex items-center gap-1.5 truncate"><span class="w-2.5 h-2.5 rounded-full bg-red-400 flex-shrink-0"></span><span class="truncate">RESPONDING</span></span><span class="text-[9px] text-red-300 font-normal">ON DUTY</span></div>';
+          opStatusHtml = '<div class="w-full py-1 px-1.5 rounded bg-red-950/90 text-red-200 border border-red-500 font-black text-[9px] sm:text-[10px] flex items-center justify-between shadow-sm animate-pulse truncate"><span class="flex items-center gap-1 truncate"><span class="w-2 h-2 rounded-full bg-red-400 flex-shrink-0"></span><span class="truncate">RESPOND</span></span></div>';
         } else if (statusId === 'on_scene') {
-          opStatusHtml = '<div class="w-full py-1.5 px-2.5 rounded-lg bg-amber-950/90 text-amber-200 border border-amber-500 font-black text-xs flex items-center justify-between shadow-sm truncate"><span class="flex items-center gap-1.5 truncate"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 flex-shrink-0"></span><span class="truncate">ON SCENE</span></span><span class="text-[9px] text-amber-300 font-normal">ON DUTY</span></div>';
+          opStatusHtml = '<div class="w-full py-1 px-1.5 rounded bg-amber-950/90 text-amber-200 border border-amber-500 font-black text-[9px] sm:text-[10px] flex items-center justify-between shadow-sm truncate"><span class="flex items-center gap-1 truncate"><span class="w-2 h-2 rounded-full bg-amber-400 flex-shrink-0"></span><span class="truncate">ON SCENE</span></span></div>';
         } else if (statusId === 'net_control') {
-          opStatusHtml = '<div class="w-full py-1.5 px-2.5 rounded-lg bg-purple-950/90 text-purple-200 border border-purple-500 font-black text-xs flex items-center justify-between shadow-sm truncate"><span class="flex items-center gap-1.5 truncate"><span class="w-2.5 h-2.5 rounded-full bg-purple-400 flex-shrink-0"></span><span class="truncate">NET CONTROL</span></span><span class="text-[9px] text-purple-300 font-normal">ON DUTY</span></div>';
+          opStatusHtml = '<div class="w-full py-1 px-1.5 rounded bg-purple-950/90 text-purple-200 border border-purple-500 font-black text-[9px] sm:text-[10px] flex items-center justify-between shadow-sm truncate"><span class="flex items-center gap-1 truncate"><span class="w-2 h-2 rounded-full bg-purple-400 flex-shrink-0"></span><span class="truncate">NET CTRL</span></span></div>';
         } else if (statusId === 'en_route') {
-          opStatusHtml = '<div class="w-full py-1.5 px-2.5 rounded-lg bg-blue-950/90 text-blue-200 border border-blue-500 font-black text-xs flex items-center justify-between shadow-sm truncate"><span class="flex items-center gap-1.5 truncate"><span class="w-2.5 h-2.5 rounded-full bg-blue-400 flex-shrink-0"></span><span class="truncate">EN ROUTE</span></span><span class="text-[9px] text-blue-300 font-normal">ON DUTY</span></div>';
+          opStatusHtml = '<div class="w-full py-1 px-1.5 rounded bg-blue-950/90 text-blue-200 border border-blue-500 font-black text-[9px] sm:text-[10px] flex items-center justify-between shadow-sm truncate"><span class="flex items-center gap-1 truncate"><span class="w-2 h-2 rounded-full bg-blue-400 flex-shrink-0"></span><span class="truncate">EN ROUTE</span></span></div>';
         } else if (statusId === 'off_duty') {
-          opStatusHtml = '<div class="w-full py-1.5 px-2.5 rounded-lg bg-slate-900 text-slate-400 border border-slate-700 font-semibold text-xs flex items-center justify-between shadow-sm truncate"><span class="flex items-center gap-1.5 truncate"><span>⚪</span><span class="truncate">OFF DUTY</span></span><span class="text-[9px] text-slate-500">STANDBY</span></div>';
+          opStatusHtml = '<div class="w-full py-1 px-1.5 rounded bg-slate-900 text-slate-400 border border-slate-700 font-semibold text-[9px] sm:text-[10px] flex items-center justify-between shadow-sm truncate"><span class="flex items-center gap-1 truncate"><span>⚪</span><span class="truncate">OFF DUTY</span></span></div>';
         } else {
-          opStatusHtml = '<div class="w-full py-1.5 px-2.5 rounded-lg bg-emerald-950/90 text-emerald-300 border border-emerald-500/80 font-black text-xs flex items-center justify-between shadow-[0_0_8px_rgba(16,185,129,0.3)] truncate"><span class="flex items-center gap-1.5 truncate"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0"></span><span class="truncate">AVAILABLE</span></span><span class="text-[9px] text-emerald-400/80 font-normal">ON DUTY</span></div>';
+          opStatusHtml = '<div class="w-full py-1 px-1.5 rounded bg-emerald-950/90 text-emerald-300 border border-emerald-500/80 font-black text-[9px] sm:text-[10px] flex items-center justify-between shadow-sm truncate"><span class="flex items-center gap-1 truncate"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0"></span><span class="truncate">AVAILABLE</span></span></div>';
         }
 
-        // Unclaimed Box: ONLY shown if NOT claimed. When claimed/created, disappears completely!
+        // Unclaimed Box
         let unclaimedBoxHtml = '';
         if (!isClaimed) {
-          unclaimedBoxHtml = '<div class="w-full py-1.5 px-2.5 rounded-lg bg-amber-950/90 text-amber-300 border border-amber-600/80 font-black text-xs flex items-center gap-1.5 shadow-sm animate-pulse truncate"><span>⚠️</span><span class="truncate">UNCLAIMED</span></div>';
+          unclaimedBoxHtml = '<div class="w-full py-1 px-1.5 rounded bg-amber-950/90 text-amber-300 border border-amber-600/80 font-black text-[9px] sm:text-[10px] flex items-center gap-1 shadow-sm animate-pulse truncate"><span>⚠️</span><span class="truncate">UNCLAIMED</span></div>';
         }
 
         // Storm Spotter Box
         let spotterBoxHtml = '';
         if (isSpotter) {
-          spotterBoxHtml = '<div class="w-full py-1.5 px-2.5 rounded-lg bg-sky-950/90 text-sky-300 border border-sky-500/80 font-black text-xs flex items-center gap-1.5 shadow-[0_0_8px_rgba(56,189,248,0.25)] truncate"><span>🌪️</span><span class="truncate">STORM SPOTTER</span></div>';
+          spotterBoxHtml = '<div class="w-full py-1 px-1.5 rounded bg-sky-950/90 text-sky-300 border border-sky-500/80 font-black text-[9px] sm:text-[10px] flex items-center gap-1 shadow-sm truncate"><span>🌪️</span><span class="truncate">SPOTTER</span></div>';
         }
 
-        // Net Control Box
+        // Net Control Box: Level 3+ gets Net Control purple box directly above Level
         let ncsBoxHtml = '';
         if (isNcs) {
-          ncsBoxHtml = '<div class="w-full py-1.5 px-2.5 rounded-lg bg-purple-950/90 text-purple-200 border border-purple-500/80 font-black text-xs flex items-center gap-1.5 shadow-[0_0_8px_rgba(168,85,247,0.25)] truncate"><span>🎙️</span><span class="truncate">NET CONTROL</span></div>';
+          ncsBoxHtml = '<div class="w-full py-1 px-1.5 rounded bg-purple-950/90 text-purple-200 border border-purple-500/80 font-black text-[9px] sm:text-[10px] flex items-center justify-center gap-1 shadow-[0_0_8px_rgba(168,85,247,0.25)] truncate"><span>🎙️</span><span class="truncate">NET CONTROL</span></div>';
         }
 
         // Level Badge Box
-        let levelText = m.level || 'Level 1 - Operator';
-        let levelTag = 'CREW';
+        let levelText = 'LEVEL 1';
+        let levelTag = 'OPER';
         let isLevelAdmin = false;
-        if (m.call === 'KG5TZT' || (m.level && m.level.toLowerCase().includes('emergency coordinator')) || (m.role && m.role.toLowerCase().includes('emergency coordinator'))) {
-          levelText = 'LEVEL 6 - EC / RO';
-          levelTag = 'ADMIN';
+        if (levelNum === 6) {
+          levelText = 'LEVEL 6';
+          levelTag = 'EC';
           isLevelAdmin = true;
-        } else if (m.level && m.level.toLowerCase().includes('assistant ec')) {
-          levelText = m.level;
-          levelTag = 'STAFF';
-        } else if (m.level && m.level.toLowerCase().includes('emc')) {
-          levelText = m.level;
+        } else if (levelNum === 5) {
+          levelText = 'LEVEL 5';
           levelTag = 'EMC';
           isLevelAdmin = true;
-        } else if (m.level && m.level.toLowerCase().includes('ncs')) {
+        } else if (levelNum === 4) {
+          levelText = 'LEVEL 4';
+          levelTag = 'AEC';
+        } else if (levelNum === 3) {
+          levelText = 'LEVEL 3';
           levelTag = 'NCS';
+        } else if (levelNum === 2) {
+          levelText = 'LEVEL 2';
+          levelTag = 'FIELD';
         }
 
         let levelBoxHtml = isLevelAdmin
-          ? `<div class="w-full py-1.5 px-2.5 rounded-lg bg-gradient-to-r from-amber-900/60 to-red-950/60 text-amber-200 border border-amber-500/70 font-black text-xs flex items-center justify-between shadow-sm truncate"><span class="flex items-center gap-1.5 truncate"><span>🛡️</span><span class="truncate">${levelText}</span></span><span class="text-[9px] text-amber-300 font-bold">${levelTag}</span></div>`
-          : `<div class="w-full py-1.5 px-2.5 rounded-lg bg-gradient-to-r from-slate-900 to-slate-800 text-slate-200 border border-slate-700 font-bold text-xs flex items-center justify-between shadow-sm truncate"><span class="flex items-center gap-1.5 truncate"><span>🛡️</span><span class="truncate">${levelText}</span></span><span class="text-[9px] text-emerald-400 font-bold">${levelTag}</span></div>`;
+          ? `<div class="w-full py-1 px-1.5 rounded bg-gradient-to-r from-amber-900/60 to-red-950/60 text-amber-200 border border-amber-500/70 font-black text-[9px] sm:text-[10px] flex items-center justify-between shadow-sm truncate"><span class="flex items-center gap-1 truncate"><span>🛡️</span><span class="truncate">${levelText}</span></span><span class="text-[8px] text-amber-300 font-bold flex-shrink-0">${levelTag}</span></div>`
+          : `<div class="w-full py-1 px-1.5 rounded bg-gradient-to-r from-slate-900 to-slate-800 text-slate-200 border border-slate-700 font-bold text-[9px] sm:text-[10px] flex items-center justify-between shadow-sm truncate"><span class="flex items-center gap-1 truncate"><span>🛡️</span><span class="truncate">${levelText}</span></span><span class="text-[8px] text-emerald-400 font-bold flex-shrink-0">${levelTag}</span></div>`;
 
         // Left column identifiers: Callsign, Name, GMRS, ARES ID, RACES ID
-        const aresIdDisp = m.ares || rAcc.ares || m.aresId || rAcc.aresId || (m.call === 'KG5TZT' ? 'TX-ARES-01' : 'TX-ARES');
-        const racesIdDisp = m.races || rAcc.races || m.racesId || rAcc.racesId || (m.call === 'KG5TZT' ? 'TX-FREE-01' : 'TX-FREE');
+        const aresIdDisp = m.ares || rAcc.ares || m.aresId || rAcc.aresId || (m.call === 'KG5TZT' ? 'TX-ARES-01' : (m.call === 'AI5OX' ? 'TX-ARES-02' : (m.call === 'N5BED' ? 'TX-ARES-04' : 'TX-ARES')));
+        const racesIdDisp = m.races || rAcc.races || m.racesId || rAcc.racesId || (m.call === 'KG5TZT' ? 'TX-FREE-01' : (m.call === 'AI5OX' ? 'TX-FREE-02' : (m.call === 'N5BED' ? 'TX-FREE-04' : 'TX-FREE')));
         const gmrsVal = (m.call === 'AI5OX' ? 'WSEA569' : (m.gmrs || rAcc.gmrs || 'NONE'));
         const photo = m.photo || rAcc.photo || '';
 
@@ -7807,7 +7906,7 @@ D. Out-of-County stations and visitors.
           : `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="w-full h-full"><rect width="120" height="120" fill="#131c26"/><circle cx="60" cy="44" r="22" fill="#334155"/><path d="M22,112 C22,80 40,74 60,74 C80,74 98,80 98,112 Z" fill="#334155"/><text x="60" y="114" fill="#10b981" font-size="11" font-family="monospace" font-weight="bold" text-anchor="middle">${m.call}</text></svg>`;
 
         let dispatchBadge = '';
-        if (m.canSendAlerts) {
+        if (m.canSendAlerts || levelNum >= 4) {
           dispatchBadge = '<span class="px-2 py-0.5 rounded text-[9px] font-bold bg-red-950 text-red-300 border border-red-700 flex items-center gap-1 shadow-[0_0_10px_rgba(239,68,68,0.3)]"><span>⚡</span><span>DISPATCH AUTH</span></span>';
         } else {
           dispatchBadge = '<span class="px-2 py-0.5 rounded text-[9px] font-semibold bg-slate-900 text-slate-400 border border-slate-800">RECEIVE ONLY</span>';
@@ -7875,53 +7974,69 @@ D. Out-of-County stations and visitors.
           `;
         }
 
+        // Field Medical & ICE Contact Data Resolution
+        const bloodTypeDisp = m.bloodType || rAcc.bloodType || (m.call === 'KG5TZT' ? 'O+' : (m.call === 'AI5OX' ? 'A+' : (m.call === 'N5BED' ? 'B+' : 'Unknown')));
+        const allergiesDisp = m.allergies || rAcc.allergies || (m.call === 'KG5TZT' ? 'Penicillin (PCN)' : 'None');
+        const medConditionsDisp = m.medicalConditions || rAcc.medicalConditions || (m.call === 'KG5TZT' ? 'None / Field Ready' : 'None');
+        const medsDisp = m.medications || rAcc.medications || 'None';
+        const iceNameDisp = m.iceName || rAcc.iceName || (m.call === 'KG5TZT' ? 'Jane Davis (Spouse)' : (m.call === 'AI5OX' ? 'Sarah Cockerell (Spouse)' : (m.call === 'N5BED' ? 'Mary Bryant (Spouse)' : 'Family Contact')));
+        const rawIcePhone = m.icePhone || rAcc.icePhone || m.phone || '903-555-0100';
+        const icePhoneAction = isLoggedIn
+          ? `<a href="tel:${rawIcePhone}" class="text-rose-400 hover:underline font-bold flex items-center gap-1"><span>📞</span><span>${rawIcePhone}</span></a>`
+          : `<span class="text-slate-400 font-mono">${maskPhone(rawIcePhone)} 🔒</span>`;
+
         const card = document.createElement('div');
-        card.className = `bg-[#10151d] border ${isMe ? 'border-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.2)]' : 'border-slate-800 hover:border-emerald-500/50'} rounded-xl p-3.5 space-y-3 font-mono-tac text-xs transition hud-glow`;
+        card.className = `bg-[#10151d] border ${isMe ? 'border-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.2)]' : 'border-slate-800 hover:border-emerald-500/50'} rounded-xl p-3 sm:p-3.5 space-y-2.5 font-mono-tac text-xs transition hud-glow`;
         card.innerHTML = `
-          <!-- Header Split: Left Column (Option B: Large Photo + 3 Stacked Boxes + ARES/RACES IDs) & Right Column (Badges) -->
-          <div class="grid grid-cols-[1.25fr_1fr] sm:grid-cols-2 gap-2.5 sm:gap-3 items-stretch">
+          <!-- Header Split: Left Section (Large Photo + 3 Stacked Boxes + ARES/RACES IDs) & Right Narrow Badge Column -->
+          <div class="flex gap-2 items-stretch">
             
-            <!-- LEFT COLUMN: Exact Match to roster_card_option_b_final_1791677604740.jpg (2x2 Grid) -->
-            <div class="grid grid-cols-[105px_1fr] sm:grid-cols-[120px_1fr] gap-2 items-stretch min-w-0">
-              <!-- Top-Left: Large Photo (120px) -->
-              <div class="w-full aspect-square rounded-lg border-2 border-emerald-500/80 bg-[#07090e] overflow-hidden relative shadow flex items-center justify-center flex-shrink-0">
-                ${photoImageHtml}
+            <!-- LEFT SECTION: Photo (80px) + 3 Stacked Boxes (Flex-1) + IDs (Flex-1 takes all available width) -->
+            <div class="flex-1 min-w-0 space-y-1.5">
+              <!-- Top Row: Photo + 3 Stacked Boxes -->
+              <div class="flex gap-2 items-stretch">
+                <!-- Top-Left: Large Photo (80px square) -->
+                <div class="w-[80px] h-[80px] rounded-lg border-2 border-emerald-500/80 bg-[#07090e] overflow-hidden relative shadow flex items-center justify-center flex-shrink-0">
+                  ${photoImageHtml}
+                </div>
+
+                <!-- Top-Right: 3 Stacked Boxes beside Photo -->
+                <div class="flex-1 flex flex-col justify-between min-w-0 gap-1">
+                  <!-- Box 1: NAME (Full width, zero truncation) -->
+                  <div class="flex-1 px-2 py-0.5 rounded-lg bg-[#080b10] border border-slate-700/80 flex flex-col justify-center min-w-0 shadow-sm">
+                    <span class="text-[8.5px] text-slate-400 font-bold uppercase tracking-wide leading-none">NAME:</span>
+                    <span class="text-slate-100 font-extrabold text-xs truncate leading-tight mt-0.5" title="${m.name}">${m.name}</span>
+                  </div>
+                  <!-- Box 2: CALL -->
+                  <div class="flex-1 px-2 py-0.5 rounded-lg bg-[#080b10] border border-emerald-500/80 flex flex-col justify-center min-w-0 shadow-sm">
+                    <span class="text-[8.5px] text-slate-400 font-bold uppercase tracking-wide leading-none">CALL:</span>
+                    <span class="text-emerald-300 font-black text-xs tracking-wider truncate leading-tight mt-0.5">${m.call}</span>
+                  </div>
+                  <!-- Box 3: GMRS -->
+                  <div class="flex-1 px-2 py-0.5 rounded-lg bg-[#080b10] border border-slate-700/80 flex flex-col justify-center min-w-0 shadow-sm">
+                    <span class="text-[8.5px] text-slate-400 font-bold uppercase tracking-wide leading-none">GMRS:</span>
+                    <span class="text-amber-400 font-bold text-xs truncate leading-tight mt-0.5">${gmrsVal}</span>
+                  </div>
+                </div>
               </div>
 
-              <!-- Top-Right: 3 Stacked Boxes beside Photo -->
-              <div class="flex flex-col justify-between gap-1.5 min-w-0">
-                <!-- Box 1: NAME -->
-                <div class="flex-1 px-2.5 py-1 rounded-lg bg-[#080b10] border border-slate-700/80 flex flex-col justify-center min-w-0 shadow-sm">
-                  <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wide leading-none">NAME:</span>
-                  <span class="text-slate-100 font-extrabold text-xs truncate mt-0.5" title="${m.name}">${m.name}</span>
+              <!-- Bottom Row: ARES ID & RACES ID -->
+              <div class="flex gap-2">
+                <!-- Under Photo: ARES ID (80px width) -->
+                <div class="w-[80px] px-1.5 py-1 rounded-lg bg-[#080b10] border border-slate-700/80 flex flex-col justify-center text-center shadow-sm flex-shrink-0">
+                  <span class="text-[8px] text-slate-400 font-bold uppercase tracking-wide leading-none">ARES ID:</span>
+                  <span class="text-emerald-300 font-mono-tac font-bold text-[10px] truncate mt-0.5 leading-tight">${aresIdDisp}</span>
                 </div>
-                <!-- Box 2: CALL -->
-                <div class="flex-1 px-2.5 py-1 rounded-lg bg-[#080b10] border border-emerald-500/80 flex flex-col justify-center min-w-0 shadow-sm">
-                  <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wide leading-none">CALL:</span>
-                  <span class="text-emerald-300 font-black text-xs tracking-wider truncate mt-0.5">${m.call}</span>
+                <!-- Under 3 Boxes: RACES ID (flex-1 width) -->
+                <div class="flex-1 px-1.5 py-1 rounded-lg bg-[#080b10] border border-slate-700/80 flex flex-col justify-center text-center shadow-sm min-w-0">
+                  <span class="text-[8px] text-slate-400 font-bold uppercase tracking-wide leading-none">RACES ID:</span>
+                  <span class="text-amber-300 font-mono-tac font-bold text-[10px] truncate mt-0.5 leading-tight">${racesIdDisp}</span>
                 </div>
-                <!-- Box 3: GMRS -->
-                <div class="flex-1 px-2.5 py-1 rounded-lg bg-[#080b10] border border-slate-700/80 flex flex-col justify-center min-w-0 shadow-sm">
-                  <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wide leading-none">GMRS:</span>
-                  <span class="text-amber-400 font-bold text-xs truncate mt-0.5">${gmrsVal}</span>
-                </div>
-              </div>
-
-              <!-- Bottom-Left: ARES ID (Directly Under Photo, Exact Width of Photo) -->
-              <div class="px-2 py-1.5 rounded-lg bg-[#080b10] border border-slate-700/80 flex flex-col justify-center text-center shadow-sm min-w-0">
-                <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wide leading-none">ARES ID:</span>
-                <span class="text-emerald-300 font-mono-tac font-bold text-xs truncate mt-0.5">${aresIdDisp}</span>
-              </div>
-
-              <!-- Bottom-Right: RACES ID (Directly Under 3 Boxes, Exact Width of 3 Boxes) -->
-              <div class="px-2 py-1.5 rounded-lg bg-[#080b10] border border-slate-700/80 flex flex-col justify-center text-center shadow-sm min-w-0">
-                <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wide leading-none">RACES ID:</span>
-                <span class="text-amber-300 font-mono-tac font-bold text-xs truncate mt-0.5">${racesIdDisp}</span>
               </div>
             </div>
 
-            <!-- RIGHT COLUMN: TACTICAL BADGE STACK (Equal Width, Vertical Line) -->
-            <div class="flex flex-col justify-between gap-1.5 min-w-0">
+            <!-- RIGHT NARROW BADGE COLUMN (w-[84px] sm:w-[100px] flex-shrink-0) -->
+            <div class="w-[84px] sm:w-[100px] flex-shrink-0 flex flex-col justify-between gap-1">
               ${opStatusHtml}
               ${unclaimedBoxHtml}
               ${spotterBoxHtml}
@@ -7936,8 +8051,43 @@ D. Out-of-County stations and visitors.
             ${contactSectionHtml}
           </div>
 
+          <!-- FIELD MEDICAL & ICE CONTACT SECTION -->
+          <div class="p-2 sm:p-2.5 rounded-lg bg-[#070b10] border border-rose-500/40 text-[9.5px] space-y-1 font-mono-tac shadow-sm">
+            <div class="flex items-center justify-between border-b border-rose-950/60 pb-1">
+              <div class="flex items-center gap-1.5 text-rose-400 font-extrabold text-[9.5px] tracking-wider uppercase">
+                <span>🩸</span><span>FIELD MEDICAL &amp; ICE CONTACT</span>
+              </div>
+              <span class="px-1.5 py-0.2 rounded bg-rose-950 text-rose-300 border border-rose-800 text-[8.5px] font-black tracking-wider">
+                BLOOD: ${bloodTypeDisp}
+              </span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[9px] leading-tight">
+              <div>
+                <span class="text-slate-400">ALLERGIES:</span>
+                <span class="text-amber-300 font-bold ml-1">${allergiesDisp}</span>
+              </div>
+              <div>
+                <span class="text-slate-400">CONDITIONS:</span>
+                <span class="text-slate-200 font-bold ml-1">${medConditionsDisp}</span>
+              </div>
+            </div>
+            <div class="text-[9px] leading-tight">
+              <span class="text-slate-400">MEDS:</span>
+              <span class="text-slate-300 ml-1">${medsDisp}</span>
+            </div>
+            <div class="flex items-center justify-between pt-1 border-t border-slate-800/60 text-[9.5px]">
+              <div class="truncate">
+                <span class="text-rose-400 font-bold">ICE:</span>
+                <span class="text-slate-200 font-bold ml-1">${iceNameDisp}</span>
+              </div>
+              <div class="flex-shrink-0">
+                ${icePhoneAction}
+              </div>
+            </div>
+          </div>
+
           <!-- Quick Action Buttons -->
-          <div class="flex gap-2 pt-1">
+          <div class="flex gap-2 pt-0.5">
             ${actionButtonsHtml}
           </div>
         `;
@@ -13313,6 +13463,19 @@ Your console is now authorized and unlocked.`);
       document.getElementById('ec-edit-phone').value = acc.phone || mem.phone || '';
       document.getElementById('ec-edit-email').value = acc.email || mem.email || '';
       document.getElementById('ec-edit-class').value = acc.class || mem.class || 'General';
+
+      const ecBType = document.getElementById('ec-edit-blood-type');
+      if (ecBType) ecBType.value = acc.bloodType || mem.bloodType || (targetCall === 'KG5TZT' ? 'O+' : 'Unknown');
+      const ecMedCond = document.getElementById('ec-edit-medical-conditions');
+      if (ecMedCond) ecMedCond.value = acc.medicalConditions || mem.medicalConditions || (targetCall === 'KG5TZT' ? 'None / Field Ready' : '');
+      const ecAllergies = document.getElementById('ec-edit-allergies');
+      if (ecAllergies) ecAllergies.value = acc.allergies || mem.allergies || (targetCall === 'KG5TZT' ? 'Penicillin (PCN)' : '');
+      const ecMeds = document.getElementById('ec-edit-medications');
+      if (ecMeds) ecMeds.value = acc.medications || mem.medications || (targetCall === 'KG5TZT' ? 'None' : '');
+      const ecIceName = document.getElementById('ec-edit-ice-name');
+      if (ecIceName) ecIceName.value = acc.iceName || mem.iceName || (targetCall === 'KG5TZT' ? 'Jane Davis (Spouse)' : '');
+      const ecIcePhone = document.getElementById('ec-edit-ice-phone');
+      if (ecIcePhone) ecIcePhone.value = acc.icePhone || mem.icePhone || (targetCall === 'KG5TZT' ? '903-644-5856' : '');
       setSelectedFemaCheckboxes('ec-edit-fema-group', acc.fema || mem.fema || ['IS-100', 'IS-700']);
       setSelectedPowerCheckboxes('ec-edit-power-group', acc.power || mem.power || 'Commercial & Battery Backup');
 
@@ -13372,6 +13535,12 @@ Your console is now authorized and unlocked.`);
       const power = powerList.join(' & ');
       const isSpotter = document.getElementById('ec-edit-is-spotter') ? document.getElementById('ec-edit-is-spotter').checked : false;
       const photo = document.getElementById('ec-edit-photo-data') ? document.getElementById('ec-edit-photo-data').value : '';
+      const ecBVal = document.getElementById('ec-edit-blood-type') ? document.getElementById('ec-edit-blood-type').value : 'Unknown';
+      const ecMedCondVal = document.getElementById('ec-edit-medical-conditions') ? document.getElementById('ec-edit-medical-conditions').value.trim() : '';
+      const ecAllergiesVal = document.getElementById('ec-edit-allergies') ? document.getElementById('ec-edit-allergies').value.trim() : '';
+      const ecMedsVal = document.getElementById('ec-edit-medications') ? document.getElementById('ec-edit-medications').value.trim() : '';
+      const ecIceNameVal = document.getElementById('ec-edit-ice-name') ? document.getElementById('ec-edit-ice-name').value.trim() : '';
+      const ecIcePhoneVal = document.getElementById('ec-edit-ice-phone') ? document.getElementById('ec-edit-ice-phone').value.trim() : '';
 
       if (!name) {
         alert('Please enter the full legal name.');
@@ -13421,6 +13590,12 @@ Your console is now authorized and unlocked.`);
       accounts[call].power = power;
       accounts[call].isSpotter = isSpotter;
       if (photo) accounts[call].photo = photo;
+      accounts[call].bloodType = ecBVal;
+      accounts[call].medicalConditions = ecMedCondVal;
+      accounts[call].allergies = ecAllergiesVal;
+      accounts[call].medications = ecMedsVal;
+      accounts[call].iceName = ecIceNameVal;
+      accounts[call].icePhone = ecIcePhoneVal;
       accounts[call].canSendAlerts = canSendAlerts;
       safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(accounts));
 
@@ -13501,6 +13676,19 @@ Your console is now authorized and unlocked.`);
       document.getElementById('self-edit-phone').value = acc.phone || mem.phone || '';
       document.getElementById('self-edit-email').value = acc.email || mem.email || '';
       document.getElementById('self-edit-class').value = acc.class || mem.class || 'Technician';
+
+      const seBType = document.getElementById('self-edit-blood-type');
+      if (seBType) seBType.value = acc.bloodType || mem.bloodType || (myCall === 'KG5TZT' ? 'O+' : 'Unknown');
+      const seMedCond = document.getElementById('self-edit-medical-conditions');
+      if (seMedCond) seMedCond.value = acc.medicalConditions || mem.medicalConditions || (myCall === 'KG5TZT' ? 'None / Field Ready' : '');
+      const seAllergies = document.getElementById('self-edit-allergies');
+      if (seAllergies) seAllergies.value = acc.allergies || mem.allergies || (myCall === 'KG5TZT' ? 'Penicillin (PCN)' : '');
+      const seMeds = document.getElementById('self-edit-medications');
+      if (seMeds) seMeds.value = acc.medications || mem.medications || (myCall === 'KG5TZT' ? 'None' : '');
+      const seIceName = document.getElementById('self-edit-ice-name');
+      if (seIceName) seIceName.value = acc.iceName || mem.iceName || (myCall === 'KG5TZT' ? 'Jane Davis (Spouse)' : '');
+      const seIcePhone = document.getElementById('self-edit-ice-phone');
+      if (seIcePhone) seIcePhone.value = acc.icePhone || mem.icePhone || (myCall === 'KG5TZT' ? '903-644-5856' : '');
 
       // Display locked assigned operational level (Master EC Only)
       const curLevel = acc.level || mem.level || 'Level 1 - Operator';
@@ -13620,6 +13808,20 @@ Your console is now authorized and unlocked.`);
       accounts[myCall].power = power;
       accounts[myCall].capabilities = capabilitiesList;
       accounts[myCall].isSpotter = isSpotter;
+
+      const seBVal = document.getElementById('self-edit-blood-type') ? document.getElementById('self-edit-blood-type').value : 'Unknown';
+      const seMedCondVal = document.getElementById('self-edit-medical-conditions') ? document.getElementById('self-edit-medical-conditions').value.trim() : '';
+      const seAllergiesVal = document.getElementById('self-edit-allergies') ? document.getElementById('self-edit-allergies').value.trim() : '';
+      const seMedsVal = document.getElementById('self-edit-medications') ? document.getElementById('self-edit-medications').value.trim() : '';
+      const seIceNameVal = document.getElementById('self-edit-ice-name') ? document.getElementById('self-edit-ice-name').value.trim() : '';
+      const seIcePhoneVal = document.getElementById('self-edit-ice-phone') ? document.getElementById('self-edit-ice-phone').value.trim() : '';
+
+      accounts[myCall].bloodType = seBVal;
+      accounts[myCall].medicalConditions = seMedCondVal;
+      accounts[myCall].allergies = seAllergiesVal;
+      accounts[myCall].medications = seMedsVal;
+      accounts[myCall].iceName = seIceNameVal;
+      accounts[myCall].icePhone = seIcePhoneVal;
       accounts[myCall].claimed = true;
       accounts[myCall].status = 'AUTHORIZED';
       accounts[myCall].lastProfileVerified = accounts[myCall].lastProfileVerified || Date.now();
@@ -15328,6 +15530,59 @@ Your console is now authorized and unlocked.`);
           </div>
         </div>
 
+        <!-- FIELD MEDICAL & EMERGENCY CONTACT (ICE) QUESTIONNAIRE -->
+        <div class="p-3 bg-[#080b10] border border-amber-500/70 rounded-xl space-y-2.5 text-xs">
+          <div class="flex items-center justify-between border-b border-amber-950/80 pb-1.5">
+            <span class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+              <span>🩸</span><span>FIELD MEDICAL &amp; EMERGENCY (ICE) QUESTIONNAIRE</span>
+            </span>
+            <span class="px-1.5 py-0.2 rounded bg-amber-950 text-amber-300 border border-amber-800 text-[9px] font-bold">EC MASTER</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label class="text-[10px] text-slate-300 font-bold block mb-1">BLOOD TYPE:</label>
+              <select id="ec-edit-blood-type" class="w-full bg-[#0b0f17] border border-slate-700 rounded-lg p-2 text-xs text-white">
+                <option value="O+">O Positive (O+)</option>
+                <option value="O-">O Negative (O-)</option>
+                <option value="A+">A Positive (A+)</option>
+                <option value="A-">A Negative (A-)</option>
+                <option value="B+">B Positive (B+)</option>
+                <option value="B-">B Negative (B-)</option>
+                <option value="AB+">AB Positive (AB+)</option>
+                <option value="AB-">AB Negative (AB-)</option>
+                <option value="Unknown">Unknown / Pending Test</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-300 font-bold block mb-1">MAJOR MEDICAL CONDITIONS:</label>
+              <input type="text" id="ec-edit-medical-conditions" placeholder="e.g. Diabetes, Cardiac / Heart, Asthma, or None" class="w-full bg-[#0b0f17] border border-slate-700 rounded-lg p-2 text-xs text-white">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label class="text-[10px] text-slate-300 font-bold block mb-1">ALLERGIES (DRUGS, STINGS, FOOD):</label>
+              <input type="text" id="ec-edit-allergies" placeholder="e.g. Penicillin, Bee stings, Latex, or None" class="w-full bg-[#0b0f17] border border-slate-700 rounded-lg p-2 text-xs text-white">
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-300 font-bold block mb-1">CURRENT MEDICATIONS (IF ANY):</label>
+              <input type="text" id="ec-edit-medications" placeholder="e.g. Daily prescriptions, Inhaler, Insulin, or None" class="w-full bg-[#0b0f17] border border-slate-700 rounded-lg p-2 text-xs text-white">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label class="text-[10px] text-amber-300 font-bold block mb-1">EMERGENCY CONTACT NAME &amp; RELATION:</label>
+              <input type="text" id="ec-edit-ice-name" placeholder="e.g. Jane Davis (Spouse)" class="w-full bg-[#0b0f17] border border-amber-500/60 rounded-lg p-2 text-xs text-white">
+            </div>
+            <div>
+              <label class="text-[10px] text-amber-300 font-bold block mb-1">EMERGENCY CONTACT PHONE:</label>
+              <input type="tel" id="ec-edit-ice-phone" placeholder="e.g. 903-644-5856" class="w-full bg-[#0b0f17] border border-amber-500/60 rounded-lg p-2 text-xs text-white">
+            </div>
+          </div>
+        </div>
+
         <!-- STORM SPOTTER ADDITIONAL LEVEL / ENDORSEMENT -->
         <div class="p-2.5 bg-[#080b10] rounded-xl border border-amber-500/50 flex items-center justify-between">
           <div>
@@ -15558,6 +15813,59 @@ Your console is now authorized and unlocked.`);
           </div>
         </div>
 
+        <!-- FIELD MEDICAL & EMERGENCY CONTACT (ICE) QUESTIONNAIRE -->
+        <div class="p-3 bg-[#080b10] border border-rose-500/70 rounded-xl space-y-2.5 text-xs">
+          <div class="flex items-center justify-between border-b border-rose-950/80 pb-1.5">
+            <span class="text-xs font-bold text-rose-400 flex items-center gap-1.5">
+              <span>🩸</span><span>FIELD MEDICAL &amp; EMERGENCY (ICE) QUESTIONNAIRE</span>
+            </span>
+            <span class="px-1.5 py-0.2 rounded bg-rose-950 text-rose-300 border border-rose-800 text-[9px] font-bold">SAFETY</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label class="text-[10px] text-slate-300 font-bold block mb-1">BLOOD TYPE *:</label>
+              <select id="self-edit-blood-type" class="w-full bg-[#0b0f17] border border-slate-700 rounded-lg p-2 text-xs text-white">
+                <option value="O+">O Positive (O+)</option>
+                <option value="O-">O Negative (O-)</option>
+                <option value="A+">A Positive (A+)</option>
+                <option value="A-">A Negative (A-)</option>
+                <option value="B+">B Positive (B+)</option>
+                <option value="B-">B Negative (B-)</option>
+                <option value="AB+">AB Positive (AB+)</option>
+                <option value="AB-">AB Negative (AB-)</option>
+                <option value="Unknown">Unknown / Pending Test</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-300 font-bold block mb-1">MAJOR MEDICAL CONDITIONS:</label>
+              <input type="text" id="self-edit-medical-conditions" placeholder="e.g. Diabetes, Cardiac / Heart, Asthma, or None" class="w-full bg-[#0b0f17] border border-slate-700 rounded-lg p-2 text-xs text-white">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label class="text-[10px] text-slate-300 font-bold block mb-1">ALLERGIES (DRUGS, STINGS, FOOD):</label>
+              <input type="text" id="self-edit-allergies" placeholder="e.g. Penicillin, Bee stings, Latex, or None" class="w-full bg-[#0b0f17] border border-slate-700 rounded-lg p-2 text-xs text-white">
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-300 font-bold block mb-1">CURRENT MEDICATIONS (IF ANY):</label>
+              <input type="text" id="self-edit-medications" placeholder="e.g. Daily prescriptions, Inhaler, Insulin, or None" class="w-full bg-[#0b0f17] border border-slate-700 rounded-lg p-2 text-xs text-white">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label class="text-[10px] text-rose-300 font-bold block mb-1">EMERGENCY CONTACT NAME &amp; RELATION *:</label>
+              <input type="text" id="self-edit-ice-name" placeholder="e.g. Jane Davis (Spouse)" class="w-full bg-[#0b0f17] border border-rose-500/60 rounded-lg p-2 text-xs text-white">
+            </div>
+            <div>
+              <label class="text-[10px] text-rose-300 font-bold block mb-1">EMERGENCY CONTACT PHONE *:</label>
+              <input type="tel" id="self-edit-ice-phone" placeholder="e.g. 903-644-5856" class="w-full bg-[#0b0f17] border border-rose-500/60 rounded-lg p-2 text-xs text-white">
+            </div>
+          </div>
+        </div>
+
         <!-- BIOMETRIC ACCESS TOGGLES (DEVICE SPECIFIC) -->
         <div class="space-y-1.5 p-3 rounded-xl bg-[#080b10] border border-slate-700">
           <div class="flex items-center justify-between">
@@ -15662,7 +15970,7 @@ Your console is now authorized and unlocked.`);
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.7 (Build 49)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.8 (Build 50)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>
@@ -15926,6 +16234,62 @@ Your console is now authorized and unlocked.`);
             <span id="verify-spotter-status-badge" class="px-2.5 py-1 rounded text-xs font-bold font-mono-tac bg-slate-900 border border-slate-700 text-slate-400">
               🔒 EC KG5TZT ONLY
             </span>
+          </div>
+        </div>
+
+        <!-- MANDATORY FIELD MEDICAL & EMERGENCY CONTACT (ICE) -->
+        <div class="p-3 bg-[#080b10] border-2 border-rose-500/70 rounded-xl space-y-2.5 text-xs">
+          <div class="flex items-center justify-between border-b border-rose-950/80 pb-1.5">
+            <span class="text-xs font-bold text-rose-400 flex items-center gap-1.5">
+              <span>🩸</span><span>FIELD MEDICAL &amp; EMERGENCY (ICE) QUESTIONNAIRE</span>
+            </span>
+            <span class="px-1.5 py-0.2 rounded bg-rose-950 text-rose-300 border border-rose-800 text-[9px] font-bold">MANDATORY AUDIT</span>
+          </div>
+          <p class="text-[10px] text-slate-300 leading-relaxed">
+            Essential tactical safety data for field deployments, disaster response, and mutual-aid operations.
+          </p>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label class="text-[10px] text-slate-300 font-bold block mb-1">BLOOD TYPE *:</label>
+              <select id="verify-blood-type" class="w-full bg-[#0b0f17] border border-slate-700 rounded-lg p-2 text-xs text-white">
+                <option value="O+">O Positive (O+)</option>
+                <option value="O-">O Negative (O-)</option>
+                <option value="A+">A Positive (A+)</option>
+                <option value="A-">A Negative (A-)</option>
+                <option value="B+">B Positive (B+)</option>
+                <option value="B-">B Negative (B-)</option>
+                <option value="AB+">AB Positive (AB+)</option>
+                <option value="AB-">AB Negative (AB-)</option>
+                <option value="Unknown">Unknown / Pending Test</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-300 font-bold block mb-1">MAJOR MEDICAL CONDITIONS:</label>
+              <input type="text" id="verify-medical-conditions" placeholder="e.g. Diabetes, Cardiac / Heart, Asthma, or None" class="w-full bg-[#0b0f17] border border-slate-700 rounded-lg p-2 text-xs text-white">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label class="text-[10px] text-slate-300 font-bold block mb-1">ALLERGIES (DRUGS, STINGS, FOOD):</label>
+              <input type="text" id="verify-allergies" placeholder="e.g. Penicillin, Bee stings, Latex, or None" class="w-full bg-[#0b0f17] border border-slate-700 rounded-lg p-2 text-xs text-white">
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-300 font-bold block mb-1">CURRENT MEDICATIONS (IF ANY):</label>
+              <input type="text" id="verify-medications" placeholder="e.g. Daily prescriptions, Inhaler, Insulin, or None" class="w-full bg-[#0b0f17] border border-slate-700 rounded-lg p-2 text-xs text-white">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label class="text-[10px] text-rose-300 font-bold block mb-1">EMERGENCY CONTACT NAME &amp; RELATION *:</label>
+              <input type="text" id="verify-ice-name" placeholder="e.g. Jane Davis (Spouse)" class="w-full bg-[#0b0f17] border border-rose-500/60 rounded-lg p-2 text-xs text-white">
+            </div>
+            <div>
+              <label class="text-[10px] text-rose-300 font-bold block mb-1">EMERGENCY CONTACT PHONE *:</label>
+              <input type="tel" id="verify-ice-phone" placeholder="e.g. 903-644-5856" class="w-full bg-[#0b0f17] border border-rose-500/60 rounded-lg p-2 text-xs text-white">
+            </div>
           </div>
         </div>
 

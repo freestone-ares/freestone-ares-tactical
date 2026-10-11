@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exact iPhone Replica — Freestone County ARES Roster Card</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800;900&display=swap');
+    .font-mono-tac {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Smooth custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 p-4 sm:p-6 flex flex-col items-center justify-center min-h-screen">
+
+  <!-- Header Banner -->
+  <div class="max-w-2xl w-full mb-5 text-center font-mono-tac">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950 border border-emerald-500/80 text-emerald-300 text-xs font-bold mb-2 shadow">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span>100% EXACT IPHONE 15 PRO VIEWPORT REPLICA (393px)</span>
+    </div>
+    <h1 class="text-xl sm:text-2xl font-black text-white tracking-wide">
+      TACTICAL ROSTER CARD &amp; MEDICAL AUDIT
+    </h1>
+    <p class="text-xs text-slate-400 mt-1">
+      Zero Truncation &bull; 84px Narrow Badges &bull; Purple Net Control Box (Level 3+) &bull; Field Medical &amp; ICE Section
+    </p>
+  </div>
+
+  <!-- Interactive Control Toggles -->
+  <div class="max-w-md w-full mb-4 flex items-center justify-between gap-2 font-mono-tac text-xs">
+    <button onclick="toggleModal(false)" class="flex-1 py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+      <span>📱</span><span>Roster Cards View</span>
+    </button>
+    <button onclick="toggleModal(true)" class="flex-1 py-2 px-3 rounded-lg bg-rose-950/80 hover:bg-rose-900 text-rose-200 border border-rose-600 font-bold transition flex items-center justify-center gap-1.5 cursor-pointer shadow">
+      <span>🩸</span><span>Test Medical Questionnaire</span>
+    </button>
+  </div>
+
+  <!-- IPHONE 15 PRO PHYSICAL FRAME -->
+  <div class="relative w-[393px] h-[852px] bg-black rounded-[52px] p-3 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9),0_0_0_10px_#27272a,0_0_0_12px_#3f3f46] flex flex-col overflow-hidden border-[3px] border-slate-700 select-none">
+    
+    <!-- Dynamic Island Pill -->
+    <div class="absolute top-3.5 left-1/2 -translate-x-1/2 w-[122px] h-[35px] bg-black rounded-full z-50 flex items-center justify-between px-3 border border-slate-900">
+      <div class="w-3 h-3 rounded-full bg-[#080808] border border-slate-800 flex items-center justify-center">
+        <div class="w-1.5 h-1.5 rounded-full bg-[#0a1a2f]"></div>
+      </div>
+      <div class="w-2.5 h-2.5 rounded-full bg-emerald-500/80 animate-pulse"></div>
+    </div>
+
+    <!-- iOS Status Bar (9:41) -->
+    <div class="w-full h-11 pt-1.5 px-6 flex justify-between items-center text-xs font-semibold text-white z-40 font-sans flex-shrink-0">
+      <span class="tracking-tight text-[13px] font-bold">9:41</span>
+      <div class="flex items-center gap-2">
+        <span class="text-[11px] font-bold">5G</span>
+        <svg class="w-4 h-3 fill-current" viewBox="0 0 16 12">
+          <path d="M0 10h2.5v2H0zm3.5-3h2.5v5H3.5zm3.5-3h2.5v8H7zm3.5-3h2.5v11h-2.5zm3.5-1h2.5v12H14z"/>
+        </svg>
+        <svg class="w-4 h-3 fill-current" viewBox="0 0 16 12">
+          <path d="M8 2.5C5.2 2.5 2.7 3.6.8 5.4l1.4 1.4C3.8 5.3 5.8 4.5 8 4.5s4.2.8 5.8 2.3l1.4-1.4C13.3 3.6 10.8 2.5 8 2.5zm0 4c-1.7 0-3.2.7-4.2 1.8l1.4 1.4c.7-.7 1.7-1.2 2.8-1.2s2.1.5 2.8 1.2l1.4-1.4C11.2 7.2 9.7 6.5 8 6.5zm0 4c-.8 0-1.5.7-1.5 1.5S7.2 13.5 8 13.5s1.5-.7 1.5-1.5S8.8 10.5 8 10.5z"/>
+        </svg>
+        <!-- Battery Icon -->
+        <div class="w-5 h-2.5 border border-white rounded-[3px] p-[1px] flex items-center">
+          <div class="w-full h-full bg-emerald-400 rounded-[1px]"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN CONTENT (Scrollable iOS Viewport) -->
+    <div id="iphone-screen-scroll" class="flex-1 overflow-y-auto px-2 pb-6 space-y-3 font-mono-tac text-xs text-slate-100">
+
+      <!-- App Header Bar -->
+      <div class="bg-gradient-to-r from-[#0b0e14] via-[#10151d] to-[#0b0e14] border border-slate-800 rounded-xl p-2.5 flex items-center justify-between shadow">
+        <div class="flex items-center gap-2">
+          <span class="text-emerald-400 text-sm">⚡</span>
+          <div>
+            <div class="text-[11px] font-black text-white tracking-wider">FREESTONE COUNTY ARES</div>
+            <div class="text-[9px] text-slate-400">TACTICAL EMERGENCY SYSTEM</div>
+          </div>
+        </div>
+        <div class="text-right">
+          <span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700 text-[9px] font-black">
+            16 VERIFIED
+          </span>
+        </div>
+      </div>
+
+      <!-- MANDATORY 2026 FIELD PROFILE & MEDICAL AUDIT BANNER -->
+      <div class="bg-gradient-to-r from-rose-950/90 via-[#180a0e] to-slate-900 border-2 border-rose-500/80 rounded-xl p-2.5 shadow-[0_0_15px_rgba(244,63,94,0.3)] space-y-1.5">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-1.5 text-rose-400 font-black text-[10.5px]">
+            <span class="text-base animate-pulse">🩸</span>
+            <span>MANDATORY 2026 PROFILE &amp; MEDICAL AUDIT</span>
+          </div>
+          <span class="px-1.5 py-0.2 rounded bg-rose-500 text-black text-[8.5px] font-black animate-pulse">REQUIRED</span>
+        </div>
+        <p class="text-[9.5px] text-slate-300 leading-tight">
+          All active operators must record Blood Type, Allergies, Major Medical, Medications, and Emergency Contact (ICE).
+        </p>
+        <button onclick="toggleModal(true)" class="w-full py-1.5 bg-gradient-to-r from-rose-600 to-rose-500 text-white font-black text-[10px] rounded-lg shadow transition flex items-center justify-center gap-1.5 cursor-pointer">
+          <span>📋</span><span>UPDATE MY MEDICAL &amp; PROFILE</span>
+        </button>
+      </div>
+
+      <!-- ROSTER CARD 1: BRIAN DAVIS (KG5TZT) — EC -->
+      <div class="bg-[#10151d] border-2 border-cyan-500/90 rounded-xl p-3 space-y-2.5 shadow-[0_0_15px_rgba(6,182,212,0.25)]">
+        
+        <!-- TOP SECTION: Photo (80px) + Stacked Boxes (Flex-1) + Right Badges (84px) -->
+        <div class="flex gap-2 items-stretch">
+          
+          <!-- LEFT SECTION: Takes all available width (~155px for boxes) -->
+          <div class="flex-1 min-w-0 space-y-1.5">
+            <!-- Top Row: Photo + 3 Stacked Boxes -->
+            <div class="flex gap-2 items-stretch">
+              <!-- Photo: 80px square -->
+              <div class="w-[80px] h-[80px] rounded-lg border-2 border-emerald-500/80 bg-[#07090e] overflow-hidden flex items-center justify-center flex-shrink-0 shadow">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="w-full h-full">
+                  <rect width="120" height="120" fill="#131c26"/>
+                  <circle cx="60" cy="44" r="22" fill="#334155"/>
+                  <path d="M22,112 C22,80 40,74 60,74 C80,74 98,80 98,112 Z" fill="#334155"/>
+                  <text x="60" y="114" fill="#10b981" font-size="11" font-family="monospace" font-weight="bold" text-anchor="middle">KG5TZT</text>
+                </svg>
+              </div>
+
+              <!-- 3 Stacked Boxes (Name, Call, GMRS) -->
+              <div class="flex-1 flex flex-col justify-between min-w-0 gap-1">
+                <!-- Box 1: NAME (Full width, zero truncation) -->
+                <div class="flex-1 px-2 py-0.5 rounded-lg bg-[#080b10] border border-slate-700/80 flex flex-col justify-center min-w-0 shadow-sm">
+                  <span class="text-[8.5px] text-slate-400 font-bold uppercase tracking-wide leading-none">NAME:</span>
+                  <span class="text-slate-100 font-extrabold text-[11px] truncate leading-tight mt-0.5">Brian Davis (EC)</span>
+                </div>
+                <!-- Box 2: CALL -->
+                <div class="flex-1 px-2 py-0.5 rounded-lg bg-[#080b10] border border-emerald-500/80 flex flex-col justify-center min-w-0 shadow-sm">
+                  <span class="text-[8.5px] text-slate-400 font-bold uppercase tracking-wide leading-none">CALL:</span>
+                  <span class="text-emerald-300 font-black text-[11px] tracking-wider truncate leading-tight mt-0.5">KG5TZT</span>
+                </div>
+                <!-- Box 3: GMRS -->
+                <div class="flex-1 px-2 py-0.5 rounded-lg bg-[#080b10] border border-slate-700/80 flex flex-col justify-center min-w-0 shadow-sm">
+                  <span class="text-[8.5px] text-slate-400 font-bold uppercase tracking-wide leading-none">GMRS:</span>
+                  <span class="text-amber-400 font-bold text-[11px] truncate leading-tight mt-0.5">WRPN302</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom Row: ARES ID & RACES ID -->
+            <div class="flex gap-2">
+              <div class="w-[80px] px-1 py-1 rounded-lg bg-[#080b10] border border-slate-700/80 flex flex-col justify-center text-center shadow-sm flex-shrink-0">
+                <span class="text-[7.5px] text-slate-400 font-bold uppercase leading-none">ARES ID:</span>
+                <span class="text-emerald-300 font-bold text-[9.5px] truncate mt-0.5 leading-tight">TX-ARES-01</span>
+              </div>
+              <div class="flex-1 px-1 py-1 rounded-lg bg-[#080b10] border border-slate-700/80 flex flex-col justify-center text-center shadow-sm min-w-0">
+                <span class="text-[7.5px] text-slate-400 font-bold uppercase leading-none">RACES ID:</span>
+                <span class="text-amber-300 font-bold text-[9.5px] truncate mt-0.5 leading-tight">TX-FREE-01</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT NARROW BADGE COLUMN (w-[84px] flex-shrink-0) -->
+          <div class="w-[84px] flex-shrink-0 flex flex-col justify-between gap-1">
+            <!-- Box 1: Status -->
+            <div class="w-full py-1 px-1.5 rounded bg-emerald-950/90 text-emerald-300 border border-emerald-500/80 font-black text-[9px] flex items-center justify-between shadow-sm">
+              <span class="flex items-center gap-1 truncate">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0"></span>
+                <span class="truncate">AVAILABLE</span>
+              </span>
+            </div>
+
+            <!-- Box 2: Spotter -->
+            <div class="w-full py-1 px-1.5 rounded bg-sky-950/90 text-sky-300 border border-sky-500/80 font-black text-[9px] flex items-center gap-1 shadow-sm truncate">
+              <span>🌪️</span>
+              <span class="truncate">SPOTTER</span>
+            </div>
+
+            <!-- Box 3: Purple NET CONTROL Box (Level 3+ qualification) directly above Level -->
+            <div class="w-full py-1 px-1 rounded bg-purple-950/90 text-purple-200 border border-purple-500 font-black text-[9px] flex items-center justify-center gap-1 shadow-[0_0_8px_rgba(168,85,247,0.3)] truncate">
+              <span>🎙️</span>
+              <span class="truncate">NET CONTROL</span>
+            </div>
+
+            <!-- Box 4: Level 6 Admin Box -->
+            <div class="w-full py-1 px-1.5 rounded bg-gradient-to-r from-amber-900/60 to-red-950/60 text-amber-200 border border-amber-500/70 font-black text-[9px] flex items-center justify-between shadow-sm truncate">
+              <span class="flex items-center gap-1 truncate">
+                <span>🛡️</span>
+                <span class="truncate">LEVEL 6</span>
+              </span>
+              <span class="text-[8px] text-amber-300 font-bold flex-shrink-0">EC</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Contact & Station Details -->
+        <div class="text-[10px] text-slate-400 space-y-1 bg-[#0b0e14] p-2 rounded-lg border border-slate-800/80 leading-snug">
+          <div class="flex justify-between items-center">
+            <span>ROLE: <strong class="text-slate-200">Emergency Coordinator (EC)</strong></span>
+            <span class="px-1.5 py-0.2 rounded text-[8.5px] font-bold bg-red-950 text-red-300 border border-red-700">⚡ DISPATCH AUTH</span>
+          </div>
+          <div class="flex justify-between items-center text-[9.5px]">
+            <span>FEMA: <strong class="text-emerald-400">IS-100, 200, 300, 400, 700, 800</strong></span>
+            <span class="text-[8.5px] text-emerald-400 font-bold bg-emerald-950 px-1 py-0.2 rounded border border-emerald-800">✓ VERIFIED</span>
+          </div>
+          <div class="text-[9.5px] text-slate-400 truncate"><span>PWR: </span><span class="text-slate-300 font-semibold">Commercial &amp; Battery Backup &amp; Generator</span></div>
+          <div>PHONE: <a href="tel:903-644-5856" class="text-emerald-400 hover:underline font-bold">903-644-5856</a></div>
+          <div>EMAIL: <a href="mailto:fcares@pm.me" class="text-slate-300 hover:underline">fcares@pm.me</a></div>
+        </div>
+
+        <!-- FIELD MEDICAL & ICE CONTACT SECTION -->
+        <div class="p-2 rounded-lg bg-[#070b10] border border-rose-500/40 text-[9.5px] space-y-1 font-mono-tac shadow-sm">
+          <div class="flex items-center justify-between border-b border-rose-950/60 pb-1">
+            <div class="flex items-center gap-1 text-rose-400 font-extrabold text-[9.5px] tracking-wider uppercase">
+              <span>🩸</span><span>FIELD MEDICAL &amp; ICE CONTACT</span>
+            </div>
+            <span class="px-1.5 py-0.2 rounded bg-rose-950 text-rose-300 border border-rose-800 text-[8.5px] font-black tracking-wider">
+              BLOOD: O+
+            </span>
+          </div>
+          <div class="grid grid-cols-2 gap-1 text-[9px] leading-tight">
+            <div>
+              <span class="text-slate-400">ALLERGIES:</span>
+              <span class="text-amber-300 font-bold ml-0.5">Penicillin (PCN)</span>
+            </div>
+            <div>
+              <span class="text-slate-400">CONDITIONS:</span>
+              <span class="text-slate-200 font-bold ml-0.5">None / Field Ready</span>
+            </div>
+          </div>
+          <div class="text-[9px] leading-tight">
+            <span class="text-slate-400">MEDS:</span>
+            <span class="text-slate-300 ml-0.5">None (Daily Prescriptions: None)</span>
+          </div>
+          <div class="flex items-center justify-between pt-1 border-t border-slate-800/60 text-[9.5px]">
+            <div class="truncate">
+              <span class="text-rose-400 font-bold">ICE:</span>
+              <span class="text-slate-200 font-bold ml-0.5">Jane Davis (Spouse)</span>
+            </div>
+            <a href="tel:903-644-5856" class="text-emerald-400 hover:underline font-bold flex items-center gap-1 flex-shrink-0">
+              <span>📞</span><span>903-644-5856</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Quick Action Buttons -->
+        <div class="flex gap-1.5 pt-0.5">
+          <button class="flex-1 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-center rounded text-[10px] font-bold shadow transition">📞 CALL</button>
+          <button class="flex-1 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-center rounded text-[10px] font-bold shadow transition">💬 SMS</button>
+          <button onclick="toggleModal(true)" class="px-2.5 py-1.5 bg-slate-800 hover:bg-emerald-600 text-slate-300 hover:text-white rounded text-[10px] font-bold transition flex items-center gap-1 cursor-pointer">
+            <span>✏️</span><span>EDIT</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- ROSTER CARD 2: ROBERT COCKERELL (AI5OX) — LEVEL 4 ASSISTANT EC -->
+      <div class="bg-[#10151d] border border-slate-800 rounded-xl p-3 space-y-2.5 shadow">
+        
+        <div class="flex gap-2 items-stretch">
+          <div class="flex-1 min-w-0 space-y-1.5">
+            <div class="flex gap-2 items-stretch">
+              <div class="w-[80px] h-[80px] rounded-lg border-2 border-emerald-500/80 bg-[#07090e] overflow-hidden flex items-center justify-center flex-shrink-0 shadow">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="w-full h-full">
+                  <rect width="120" height="120" fill="#131c26"/>
+                  <circle cx="60" cy="44" r="22" fill="#334155"/>
+                  <path d="M22,112 C22,80 40,74 60,74 C80,74 98,80 98,112 Z" fill="#334155"/>
+                  <text x="60" y="114" fill="#10b981" font-size="11" font-family="monospace" font-weight="bold" text-anchor="middle">AI5OX</text>
+                </svg>
+              </div>
+
+              <div class="flex-1 flex flex-col justify-between min-w-0 gap-1">
+                <div class="flex-1 px-2 py-0.5 rounded-lg bg-[#080b10] border border-slate-700/80 flex flex-col justify-center min-w-0 shadow-sm">
+                  <span class="text-[8.5px] text-slate-400 font-bold uppercase leading-none">NAME:</span>
+                  <span class="text-slate-100 font-extrabold text-[11px] truncate leading-tight mt-0.5">Robert Cockerell</span>
+                </div>
+                <div class="flex-1 px-2 py-0.5 rounded-lg bg-[#080b10] border border-emerald-500/80 flex flex-col justify-center min-w-0 shadow-sm">
+                  <span class="text-[8.5px] text-slate-400 font-bold uppercase leading-none">CALL:</span>
+                  <span class="text-emerald-300 font-black text-[11px] tracking-wider truncate leading-tight mt-0.5">AI5OX</span>
+                </div>
+                <div class="flex-1 px-2 py-0.5 rounded-lg bg-[#080b10] border border-slate-700/80 flex flex-col justify-center min-w-0 shadow-sm">
+                  <span class="text-[8.5px] text-slate-400 font-bold uppercase leading-none">GMRS:</span>
+                  <span class="text-amber-400 font-bold text-[11px] truncate leading-tight mt-0.5">WSEA569</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex gap-2">
+              <div class="w-[80px] px-1 py-1 rounded-lg bg-[#080b10] border border-slate-700/80 flex flex-col justify-center text-center shadow-sm flex-shrink-0">
+                <span class="text-[7.5px] text-slate-400 font-bold uppercase leading-none">ARES ID:</span>
+                <span class="text-emerald-300 font-bold text-[9.5px] truncate mt-0.5 leading-tight">TX-ARES-02</span>
+              </div>
+              <div class="flex-1 px-1 py-1 rounded-lg bg-[#080b10] border border-slate-700/80 flex flex-col justify-center text-center shadow-sm min-w-0">
+                <span class="text-[7.5px] text-slate-400 font-bold uppercase leading-none">RACES ID:</span>
+                <span class="text-amber-300 font-bold text-[9.5px] truncate mt-0.5 leading-tight">TX-FREE-02</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT NARROW BADGES: Shows purple Net Control box because Level 4 >= 3 -->
+          <div class="w-[84px] flex-shrink-0 flex flex-col justify-between gap-1">
+            <div class="w-full py-1 px-1.5 rounded bg-emerald-950/90 text-emerald-300 border border-emerald-500/80 font-black text-[9px] flex items-center justify-between shadow-sm">
+              <span class="flex items-center gap-1 truncate"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0"></span><span class="truncate">AVAILABLE</span></span>
+            </div>
+            <div class="w-full py-1 px-1.5 rounded bg-sky-950/90 text-sky-300 border border-sky-500/80 font-black text-[9px] flex items-center gap-1 shadow-sm truncate">
+              <span>🌪️</span><span class="truncate">SPOTTER</span>
+            </div>
+            <!-- Purple Net Control badge for Level 4 AEC -->
+            <div class="w-full py-1 px-1 rounded bg-purple-950/90 text-purple-200 border border-purple-500 font-black text-[9px] flex items-center justify-center gap-1 shadow-[0_0_8px_rgba(168,85,247,0.3)] truncate">
+              <span>🎙️</span><span class="truncate">NET CONTROL</span>
+            </div>
+            <div class="w-full py-1 px-1.5 rounded bg-slate-900 text-slate-200 border border-slate-700 font-bold text-[9px] flex items-center justify-between shadow-sm truncate">
+              <span class="flex items-center gap-1 truncate"><span>🛡️</span><span class="truncate">LEVEL 4</span></span>
+              <span class="text-[8px] text-emerald-400 font-bold flex-shrink-0">AEC</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-2 rounded-lg bg-[#070b10] border border-rose-500/40 text-[9.5px] space-y-1 font-mono-tac shadow-sm">
+          <div class="flex items-center justify-between border-b border-rose-950/60 pb-1">
+            <div class="flex items-center gap-1 text-rose-400 font-extrabold text-[9.5px] uppercase">
+              <span>🩸</span><span>FIELD MEDICAL &amp; ICE CONTACT</span>
+            </div>
+            <span class="px-1.5 py-0.2 rounded bg-rose-950 text-rose-300 border border-rose-800 text-[8.5px] font-black">
+              BLOOD: A+
+            </span>
+          </div>
+          <div class="grid grid-cols-2 gap-1 text-[9px]">
+            <div><span class="text-slate-400">ALLERGIES:</span> <span class="text-amber-300 font-bold">NKDA (None)</span></div>
+            <div><span class="text-slate-400">CONDITIONS:</span> <span class="text-slate-200 font-bold">None</span></div>
+          </div>
+          <div class="flex items-center justify-between pt-1 border-t border-slate-800/60 text-[9.5px]">
+            <div class="truncate"><span class="text-rose-400 font-bold">ICE:</span> <span class="text-slate-200">Sarah Cockerell (Spouse)</span></div>
+            <a href="tel:903-394-1772" class="text-emerald-400 font-bold">📞 903-394-1772</a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Home Indicator Bar -->
+    <div class="w-full h-5 flex justify-center items-center z-50 flex-shrink-0">
+      <div class="w-32 h-1 bg-white/70 rounded-full"></div>
+    </div>
+
+    <!-- INTERACTIVE PROFILE QUESTIONNAIRE MODAL OVERLAY -->
+    <div id="interactive-modal-overlay" class="absolute inset-0 bg-black/90 backdrop-blur-md z-[100] flex flex-col p-3 font-mono-tac hidden">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-2 mt-8">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">📋</span>
+          <div>
+            <h4 class="text-rose-400 font-black text-xs">FIELD MEDICAL &amp; PROFILE AUDIT</h4>
+            <span class="text-[9px] text-slate-400">OPERATIONAL READINESS QUESTIONNAIRE</span>
+          </div>
+        </div>
+        <button onclick="toggleModal(false)" class="text-slate-400 hover:text-white p-1 text-sm font-bold cursor-pointer">✕</button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto space-y-2.5 pr-1 text-xs">
+        <!-- Callsign & Name -->
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="text-[9.5px] text-slate-400 font-bold block mb-0.5">CALLSIGN:</label>
+            <input type="text" value="KG5TZT" readonly class="w-full bg-[#080b10] border border-slate-700 rounded p-1.5 text-xs text-amber-400 font-bold">
+          </div>
+          <div>
+            <label class="text-[9.5px] text-slate-400 font-bold block mb-0.5">LEGAL NAME:</label>
+            <input type="text" value="Brian Davis" class="w-full bg-[#080b10] border border-slate-700 rounded p-1.5 text-xs text-white">
+          </div>
+        </div>
+
+        <!-- 6 MEDICAL QUESTIONS REQUESTED BY BRIAN -->
+        <div class="p-2.5 bg-[#080b10] border border-rose-500/70 rounded-xl space-y-2">
+          <div class="flex items-center justify-between border-b border-rose-950 pb-1">
+            <span class="text-rose-400 font-extrabold text-[10px]">🩸 MANDATORY MEDICAL DATA</span>
+            <span class="text-[8.5px] bg-rose-950 text-rose-300 border border-rose-800 px-1 rounded font-bold">SAFETY</span>
+          </div>
+
+          <!-- Q1: Blood Type & Q2: Major Medical -->
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="text-[9.5px] text-slate-300 font-bold block mb-0.5">BLOOD TYPE *:</label>
+              <select class="w-full bg-[#0b0f17] border border-slate-700 rounded p-1.5 text-xs text-white">
+                <option selected>O Positive (O+)</option>
+                <option>O Negative (O-)</option>
+                <option>A Positive (A+)</option>
+                <option>A Negative (A-)</option>
+                <option>B Positive (B+)</option>
+                <option>B Negative (B-)</option>
+                <option>AB Positive (AB+)</option>
+                <option>AB Negative (AB-)</option>
+                <option>Unknown</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-[9.5px] text-slate-300 font-bold block mb-0.5">MAJOR CONDITIONS:</label>
+              <input type="text" value="None / Field Ready" placeholder="Diabetes, Cardiac, etc." class="w-full bg-[#0b0f17] border border-slate-700 rounded p-1.5 text-xs text-white">
+            </div>
+          </div>
+
+          <!-- Q3: Allergies & Q4: Medications -->
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="text-[9.5px] text-slate-300 font-bold block mb-0.5">ALLERGIES:</label>
+              <input type="text" value="Penicillin (PCN)" placeholder="Penicillin, Bee stings, etc." class="w-full bg-[#0b0f17] border border-slate-700 rounded p-1.5 text-xs text-white">
+            </div>
+            <div>
+              <label class="text-[9.5px] text-slate-300 font-bold block mb-0.5">MEDICATIONS:</label>
+              <input type="text" value="None" placeholder="Daily prescriptions" class="w-full bg-[#0b0f17] border border-slate-700 rounded p-1.5 text-xs text-white">
+            </div>
+          </div>
+
+          <!-- Q5: ICE Name & Q6: ICE Phone -->
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="text-[9.5px] text-rose-300 font-bold block mb-0.5">ICE CONTACT *:</label>
+              <input type="text" value="Jane Davis (Spouse)" placeholder="Name & relation" class="w-full bg-[#0b0f17] border border-rose-500/60 rounded p-1.5 text-xs text-white">
+            </div>
+            <div>
+              <label class="text-[9.5px] text-rose-300 font-bold block mb-0.5">ICE PHONE *:</label>
+              <input type="tel" value="903-644-5856" placeholder="Emergency phone" class="w-full bg-[#0b0f17] border border-rose-500/60 rounded p-1.5 text-xs text-white">
+            </div>
+          </div>
+        </div>
+
+        <button onclick="saveAndCloseModal()" class="w-full py-2.5 bg-gradient-to-r from-emerald-600 to-emerald-500 text-slate-950 font-black rounded-xl text-xs shadow-lg transition flex items-center justify-center gap-1.5 cursor-pointer">
+          <span>✅</span><span>VERIFY &amp; RECORD PROFILE</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- DIMENSION & ARCHITECTURE BREAKDOWN FOR BRIAN DAVIS -->
+  <div class="max-w-2xl w-full mt-6 bg-[#10151d] border border-slate-800 rounded-2xl p-4 font-mono-tac text-xs space-y-3 shadow-lg">
+    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+      <span class="text-emerald-400 font-bold flex items-center gap-1.5 text-sm">
+        <span>📐</span><span>IPHONE 15 PRO VIEWPORT SPECIFICATIONS &amp; BOX MATH</span>
+      </span>
+      <span class="px-2 py-0.5 bg-slate-800 text-slate-300 rounded text-[10px] font-bold">VERIFIED</span>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div class="p-2.5 rounded-lg bg-[#080b10] border border-slate-800 space-y-1">
+        <span class="text-[10px] text-slate-400 font-bold block">3 STACKED BOXES WIDTH</span>
+        <div class="text-emerald-400 font-black text-sm">~155px to 165px</div>
+        <p class="text-[10px] text-slate-400 leading-tight">
+          More than DOUBLE the previous 76px. "Brian Davis (EC)" and all callsigns render in full with zero truncation.
+        </p>
+      </div>
+      <div class="p-2.5 rounded-lg bg-[#080b10] border border-slate-800 space-y-1">
+        <span class="text-[10px] text-slate-400 font-bold block">RIGHT BADGE STACK</span>
+        <div class="text-cyan-400 font-black text-sm">84px Narrow</div>
+        <p class="text-[10px] text-slate-400 leading-tight">
+          Narrow tactical column leaves maximum space for photo and operator credentials on mobile screens.
+        </p>
+      </div>
+      <div class="p-2.5 rounded-lg bg-[#080b10] border border-purple-500/40 space-y-1">
+        <span class="text-[10px] text-purple-300 font-bold block">NET CONTROL QUALIFIED</span>
+        <div class="text-purple-300 font-black text-sm">Level 3+ (EC, AEC, NCS)</div>
+        <p class="text-[10px] text-slate-400 leading-tight">
+          Purple Net Control badge now displays directly above Level 6 for Brian (KG5TZT) and Level 4 for AEC (AI5OX).
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleModal(show) {
+      const modal = document.getElementById('interactive-modal-overlay');
+      if (modal) {
+        if (show) modal.classList.remove('hidden');
+        else modal.classList.add('hidden');
+      }
+    }
+    function saveAndCloseModal() {
+      alert("✅ PROFILE & MEDICAL AUDIT VERIFIED!\n\n• Blood Type: O+\n• Allergies: Penicillin (PCN)\n• Conditions: None / Field Ready\n• Medications: None\n• ICE: Jane Davis (Spouse) - 903-644-5856\n\nRecorded to Freestone County ARES tactical system.");
+      toggleModal(false);
+    }
+  </script>
+</body>
+</html>
