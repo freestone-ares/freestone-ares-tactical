@@ -7314,6 +7314,7 @@ D. Out-of-County stations and visitors.
       saveActiveIncident();
       broadcastIncidentToCloud(appState.activeIncident);
       renderActiveIncidentUI();
+      triggerApnsPushNotification('🛑 INCIDENT DEMOBILIZATION', `All-Clear: ${directive || 'Incident operations secured. Units standing down.'}`);
 
       // Update Banner UI to Closed State
       const badge = document.getElementById('incident-level-badge');
@@ -12240,7 +12241,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
     // ==========================================
     // APPLE APNS REMOTE PUSH NOTIFICATION RELAY
     // ==========================================
-    let apnsRelayUrl = safeStorage.getItem('fc_ares_apns_relay_url') || 'https://fcares-apns.brian-davis.workers.dev';
+    let apnsRelayUrl = safeStorage.getItem('fc_ares_apns_relay_url') || 'https://fcares-apns.badavis17.workers.dev';
 
     function setApnsRelayUrl(newUrl) {
       if (newUrl) {
