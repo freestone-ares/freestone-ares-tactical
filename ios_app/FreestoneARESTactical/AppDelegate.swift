@@ -20,6 +20,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if granted {
                 NSLog("[Freestone ARES] Notification authorization granted by operator.")
+                DispatchQueue.main.async {
+                    UIApplication.shared.registerForRemoteNotifications()
+                }
             } else if let error = error {
                 NSLog("[Freestone ARES] Notification authorization error: \(error.localizedDescription)")
             }
@@ -189,6 +192,50 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         // Force immediate check on foreground return
         checkActivationLevel()
         checkActiveIncident()
+    }
+
+    // MARK: - APNs Remote Push Notifications (ActiveAlert Cloud Push)
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
+        let token = tokenParts.joined()
+        NSLog("[Freestone ARES] Successfully received APNs device token: \(token)")
+        registerTokenWithFirebase(token: token)
+    }
+
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        NSLog("[Freestone ARES] Failed to register for remote notifications: \(error.localizedDescription)")
+    }
+
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        NSLog("[Freestone ARES] Received remote push notification from Apple APNs: \(userInfo)")
+        // Immediate priority check and alert sound
+        checkActivationLevel()
+        checkActiveIncident()
+        completionHandler(.newData)
+    }
+
+    private func registerTokenWithFirebase(token: String) {
+        guard let url = URL(string: "\(firebaseUrl)/device_tokens/\(token).json") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let payload: [String: Any] = [
+            "token": token,
+            "platform": "iOS",
+            "model": UIDevice.current.model,
+            "systemVersion": UIDevice.current.systemVersion,
+            "lastSeen": Int(Date().timeIntervalSince1970)
+        ]
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: payload, options: [])
+            URLSession.shared.dataTask(with: request) { _, _, error in
+                if let error = error {
+                    NSLog("[Freestone ARES] Error saving APNs token to Firebase: \(error.localizedDescription)")
+                } else {
+                    NSLog("[Freestone ARES] APNs device token registered in Firebase RTDB.")
+                }
+            }.resume()
+        } catch {}
     }
 
     // MARK: UISceneSession Lifecycle
