@@ -216,8 +216,11 @@
           <button type="button" onclick="muteAlertAudio()" class="px-2.5 py-2 bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 rounded-lg text-xs font-bold shadow flex items-center gap-1 transition cursor-pointer" title="Mute siren tone">
             <span>🔇</span><span class="hidden sm:inline">MUTE</span>
           </button>
-          <button type="button" onclick="dismissHeadsUpAlertBanner()" class="px-2.5 py-2 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-700 rounded-lg text-xs font-bold shadow transition cursor-pointer" title="Close banner">
-            <span>✕</span>
+          <button type="button" onclick="toggleHamburgerMenu(event); dismissHeadsUpAlertBanner();" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black rounded-lg text-xs shadow flex items-center gap-1.5 transition cursor-pointer" title="Open Navigation Menu">
+            <span>☰</span><span class="hidden sm:inline">MENU</span>
+          </button>
+          <button type="button" onclick="dismissHeadsUpAlertBanner()" class="px-3 py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 rounded-lg text-xs font-black shadow transition cursor-pointer flex items-center gap-1" title="Close banner">
+            <span>✕</span><span class="hidden sm:inline">CLOSE</span>
           </button>
         </div>
       </div>
@@ -906,6 +909,124 @@
           <span>🔑</span>
           <span>SIGN IN / CLAIM CALLSIGN</span>
         </button>
+      </div>
+      
+      <!-- ACTIVE INCIDENT & QUICK RESPONSE CONSOLE (DASHBOARD) -->
+      <div id="dash-active-incident-card" class="bg-gradient-to-r from-red-950/80 via-[#160d13] to-[#0f141d] border-2 border-red-500 rounded-xl p-4 sm:p-5 shadow-[0_0_25px_rgba(239,68,68,0.35)] space-y-4 font-mono-tac transition-all duration-300">
+        <!-- Header Row: Incident Level, Title, Live Status -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-slate-800 pb-3">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="w-3.5 h-3.5 rounded-full bg-red-500 animate-ping flex-shrink-0"></span>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span id="dash-inc-level-badge" class="px-2.5 py-0.5 rounded text-[10px] font-black bg-red-600 text-white tracking-wider animate-pulse">LEVEL 1 - FULL ACTIVATION</span>
+                <span id="dash-inc-update-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-700">UPDATE #1 ACTIVE</span>
+                <span id="dash-inc-time-badge" class="text-[10px] text-slate-400">18:45 LOCAL</span>
+              </div>
+              <h2 id="dash-inc-title-text" class="text-base sm:text-lg font-black text-white truncate mt-1 uppercase tracking-wide">
+                MAJOR EMERGENCY DISPATCH
+              </h2>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 self-end sm:self-center">
+            <button type="button" onclick="switchTab('alert')" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 text-xs font-bold transition flex items-center gap-1.5 shadow cursor-pointer">
+              <span>📋</span><span>FULL ALERTS LOG</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Incident Quick Info: Staging, PACE Primary, Sitrep Summary -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+          <div class="p-2.5 bg-black/40 rounded-lg border border-slate-800 space-y-0.5">
+            <span class="text-[10px] text-amber-400 font-bold block">📍 DESIGNATED STAGING POINT:</span>
+            <div id="dash-inc-staging-text" class="text-white font-bold truncate">Fairfield EOC (31.7249° N, 96.1652° W)</div>
+          </div>
+          <div class="p-2.5 bg-black/40 rounded-lg border border-slate-800 space-y-0.5">
+            <span class="text-[10px] text-emerald-400 font-bold block">📻 PRIMARY PACE FREQUENCY:</span>
+            <div id="dash-inc-pace-text" class="text-emerald-300 font-bold truncate">Ch 01 - FF 110 (145.110 T146.2)</div>
+          </div>
+          <div class="p-2.5 bg-black/40 rounded-lg border border-slate-800 space-y-0.5">
+            <span class="text-[10px] text-slate-400 font-bold block">⚡ LATEST SITREP CUE:</span>
+            <div id="dash-inc-sitrep-summary" class="text-amber-200 font-semibold truncate">Emergency activation underway. Units mobilizing.</div>
+          </div>
+        </div>
+
+        <!-- Interactive Operator Action Block (Response Buttons + Rapid SITREP Input) -->
+        <div id="dash-inc-actions-block" class="space-y-3">
+          <!-- 1-TAP OPERATOR RESPONSE SECTION -->
+          <div class="pt-2 border-t border-slate-800/80 space-y-2">
+            <div class="flex items-center justify-between text-xs text-slate-400">
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-slate-300">MY RESPONSE STATUS:</span>
+                <span id="dash-active-incident-my-status" class="text-slate-400 font-bold px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-xs">NOT RESPONDED</span>
+              </div>
+              <div class="text-[11px] text-slate-400 hidden sm:inline">Tap 1-click status to transmit to Net Control:</div>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs">
+              <button type="button" onclick="setMyStatus('RESPONDING (STAGING)', 'bg-emerald-600')" class="status-btn p-2.5 rounded-lg bg-emerald-950/70 hover:bg-emerald-600 border border-emerald-500/50 text-emerald-200 hover:text-white font-bold transition flex flex-col items-center justify-center gap-1 group shadow cursor-pointer">
+                <span class="text-xs group-hover:scale-105 transition-transform">🚗 RESPONDING</span>
+                <span class="text-[10px] font-normal text-emerald-400 group-hover:text-emerald-100">To Staging EOC</span>
+              </button>
+              <button type="button" onclick="setMyStatus('RESPONDING (REMOTE)', 'bg-blue-600')" class="status-btn p-2.5 rounded-lg bg-blue-950/70 hover:bg-blue-600 border border-blue-500/50 text-blue-200 hover:text-white font-bold transition flex flex-col items-center justify-center gap-1 group shadow cursor-pointer">
+                <span class="text-xs group-hover:scale-105 transition-transform">🏠 STATIONARY</span>
+                <span class="text-[10px] font-normal text-blue-400 group-hover:text-blue-100">From Home Shack</span>
+              </button>
+              <button type="button" onclick="setMyStatus('ON SCENE', 'bg-cyan-600')" class="status-btn p-2.5 rounded-lg bg-cyan-950/70 hover:bg-cyan-600 border border-cyan-500/50 text-cyan-200 hover:text-white font-bold transition flex flex-col items-center justify-center gap-1 group shadow cursor-pointer">
+                <span class="text-xs group-hover:scale-105 transition-transform">📍 ON SCENE</span>
+                <span class="text-[10px] font-normal text-cyan-400 group-hover:text-cyan-100">At Net Control</span>
+              </button>
+              <button type="button" onclick="setMyStatus('DELAYED', 'bg-amber-600')" class="status-btn p-2.5 rounded-lg bg-amber-950/70 hover:bg-amber-600 border border-amber-500/50 text-amber-200 hover:text-white font-bold transition flex flex-col items-center justify-center gap-1 group shadow cursor-pointer">
+                <span class="text-xs group-hover:scale-105 transition-transform">⏳ DELAYED</span>
+                <span class="text-[10px] font-normal text-amber-400 group-hover:text-amber-100">ETA 30-60 Mins</span>
+              </button>
+              <button type="button" onclick="setMyStatus('UNAVAILABLE', 'bg-slate-700')" class="status-btn p-2.5 rounded-lg bg-slate-900 hover:bg-slate-700 border border-slate-700 text-slate-400 hover:text-white font-bold transition flex flex-col items-center justify-center gap-1 col-span-2 sm:col-span-1 group shadow cursor-pointer">
+                <span class="text-xs group-hover:scale-105 transition-transform">❌ UNAVAILABLE</span>
+                <span class="text-[10px] font-normal text-slate-500 group-hover:text-slate-200">Cannot Deploy</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- QUICK SITREP / RAPID FIELD UPDATE INPUT -->
+          <div class="pt-2 border-t border-slate-800/80 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] text-amber-400 font-bold uppercase tracking-wider">POST QUICK SITREP / FIELD UPDATE:</span>
+              <span class="text-[10px] text-slate-400">Broadcasts live to Net Control & all operators</span>
+            </div>
+
+            <!-- Quick Tag Chips -->
+            <div class="flex flex-wrap gap-1.5 text-[10px]">
+              <button type="button" onclick="insertDashboardSitrepTag('[EN ROUTE] ')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-slate-700 transition cursor-pointer">🚗 [EN ROUTE]</button>
+              <button type="button" onclick="insertDashboardSitrepTag('[ON SCENE] ')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 transition cursor-pointer">📍 [ON SCENE]</button>
+              <button type="button" onclick="insertDashboardSitrepTag('[WX REPORT] ')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-sky-300 border border-slate-700 transition cursor-pointer">🌧️ [WX REPORT]</button>
+              <button type="button" onclick="insertDashboardSitrepTag('[RADIO CHECK] ')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 transition cursor-pointer">📻 [RADIO CHECK]</button>
+              <button type="button" onclick="insertDashboardSitrepTag('[HAZARD] ')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-red-300 border border-slate-700 transition cursor-pointer">⚠️ [HAZARD]</button>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-2">
+              <input type="text" id="dash-quick-sitrep-input" placeholder="e.g. W5XXX en route US-84, mobile VHF active, tree blocking FM 488..." class="flex-1 bg-[#080b10] border border-slate-700 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 shadow" onkeydown="if(event.key==='Enter') submitQuickDashboardSitrep()" />
+              <button type="button" onclick="submitQuickDashboardSitrep()" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black rounded-lg text-xs shadow flex items-center justify-center gap-1.5 transition cursor-pointer whitespace-nowrap">
+                <span>🚀</span><span>TRANSMIT SITREP</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RECENT LIVE SITREPS STREAM (DASHBOARD) -->
+        <div id="dash-recent-sitreps-box" class="pt-2 border-t border-slate-800/80 space-y-2">
+          <div class="flex items-center justify-between text-xs">
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>LIVE INCIDENT SITREPS (<span id="dash-sitrep-count-badge">0</span> LOGGED):</span>
+            </span>
+            <button type="button" onclick="toggleDashSitrepHistory()" id="btn-toggle-dash-sitreps" class="text-[10px] text-amber-400 hover:text-amber-300 font-bold transition cursor-pointer">
+              HIDE STREAM ▲
+            </button>
+          </div>
+          <div id="dash-sitreps-stream-container" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+            <!-- Dynamically populated via renderDashboardSitrepStream() -->
+          </div>
+        </div>
       </div>
       
       <!-- MASTER CLOCKS & HUD BANNER (LARGE SYNCHRONIZED READOUT) -->
@@ -7109,6 +7230,11 @@ D. Out-of-County stations and visitors.
         statusBadge.textContent = statusText;
         statusBadge.className = 'font-bold px-2 py-0.5 rounded text-white text-xs ' + colorClass;
       }
+      const dashStatusBadge = document.getElementById('dash-active-incident-my-status');
+      if (dashStatusBadge) {
+        dashStatusBadge.textContent = statusText;
+        dashStatusBadge.className = 'font-bold px-2 py-0.5 rounded text-white text-xs shadow ' + colorClass;
+      }
 
       const now = new Date();
       const local24 = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
@@ -7177,6 +7303,265 @@ D. Out-of-County stations and visitors.
       await fbRestPut('incident_responses/' + call, respObj);
 
       showTacticalBannerNotification(`✓ Transmitted response: ${statusText}`);
+    }
+
+    // Helper: Reset and clear all responder CAD statuses across consoles and cloud
+    async function clearAllResponderStatuses(syncToCloud = true) {
+      console.log('🧹 Clearing all operator CAD response statuses...');
+      appState.responders = [];
+      appState.myStatus = 'NOT RESPONDED';
+
+      const statusBadge = document.getElementById('my-current-status');
+      if (statusBadge) {
+        statusBadge.textContent = 'NOT RESPONDED';
+        statusBadge.className = 'text-slate-400 font-bold px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-xs';
+      }
+
+      const dashStatusBadge = document.getElementById('dash-active-incident-my-status');
+      if (dashStatusBadge) {
+        dashStatusBadge.textContent = 'NOT RESPONDED';
+        dashStatusBadge.className = 'text-slate-400 font-bold px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-xs';
+      }
+
+      renderResponderTable();
+
+      if (syncToCloud) {
+        if (fbDb) {
+          try {
+            await fbDb.ref('incident_responses').remove();
+          } catch(e) {
+            console.warn('Firebase SDK clear incident_responses error:', e);
+          }
+        }
+        await fbRestPut('incident_responses', {});
+      }
+    }
+
+    // Submit Quick Field SITREP from Dashboard
+    async function submitQuickDashboardSitrep() {
+      const input = document.getElementById('dash-quick-sitrep-input');
+      if (!input) return;
+      const sitrepText = input.value.trim();
+      if (!sitrepText) {
+        alert('Please enter a SITREP or operational update message before transmitting.');
+        return;
+      }
+
+      const myCall = (appState.myCall || '').toUpperCase().trim();
+      if (!myCall || myCall === 'GUEST') {
+        alert('Please sign in or claim your callsign to post operational incident updates.');
+        return;
+      }
+
+      const member = (appState.members || []).find(m => (m.call || '').toUpperCase() === myCall);
+      const authorName = member ? `${member.name} (${myCall})` : (appState.myName ? `${appState.myName} (${myCall})` : myCall);
+
+      const now = new Date();
+      const timeLocal = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} LOCAL`;
+      const timeZulu = now.toISOString().substring(11, 19) + 'Z';
+
+      if (!appState.activeIncident) {
+        appState.activeIncident = {
+          level: 'LEVEL 1 - FULL ACTIVATION',
+          title: 'EMERGENCY INCIDENT // FREESTONE CO. ARES',
+          staging: 'Fairfield EOC',
+          mission: 'Tactical communications activation.',
+          updateCount: 0,
+          updates: [],
+          isClosed: false
+        };
+      }
+
+      appState.activeIncident.updateCount = (appState.activeIncident.updateCount || 0) + 1;
+      appState.activeIncident.lastUpdated = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+      appState.activeIncident.isClosed = false;
+
+      const findCh = (num) => (appState.channels || []).find(c => c.ch === num) || { ch: '01', name: 'FF 110' };
+      const pace = appState.activeIncident.pace || { p: '01', a: '02', c: '09', e: '06' };
+      const chP = findCh(pace.p || '01');
+      const chA = findCh(pace.a || '02');
+
+      const newEntry = {
+        updateNum: appState.activeIncident.updateCount,
+        timeLocal: timeLocal,
+        timeZulu: timeZulu,
+        author: authorName,
+        level: appState.activeIncident.level || 'TACTICAL UPDATE',
+        sitrep: sitrepText,
+        primaryCh: `Ch ${chP.ch} - ${chP.name}`,
+        alternateCh: `Ch ${chA.ch} - ${chA.name}`,
+        contingencyCh: 'Normal Simplex',
+        emergencyCh: 'Normal Standby',
+        broadcastSummary: `Field SITREP transmitted by ${myCall} • Real-time cloud synced`
+      };
+
+      if (!Array.isArray(appState.activeIncident.updates)) {
+        appState.activeIncident.updates = [];
+      }
+      appState.activeIncident.updates.unshift(newEntry);
+
+      input.value = '';
+      saveActiveIncident();
+      await broadcastIncidentToCloud(appState.activeIncident);
+      renderActiveIncidentUI();
+      renderActiveAlertsCardFeed();
+      showTacticalBannerNotification(`✓ SITREP #${newEntry.updateNum} broadcasted to all units & Net Control`);
+    }
+
+    // Helper: Insert quick-tag chip into dashboard SITREP text box
+    function insertDashboardSitrepTag(tag) {
+      const input = document.getElementById('dash-quick-sitrep-input');
+      if (!input) return;
+      if (!input.value.startsWith(tag)) {
+        input.value = tag + input.value;
+      }
+      input.focus();
+    }
+
+    // Toggle Dashboard SITREP stream container
+    let isDashSitrepExpanded = true;
+    function toggleDashSitrepHistory() {
+      isDashSitrepExpanded = !isDashSitrepExpanded;
+      const stream = document.getElementById('dash-sitreps-stream-container');
+      const btn = document.getElementById('btn-toggle-dash-sitreps');
+      if (stream) {
+        if (isDashSitrepExpanded) {
+          stream.classList.remove('hidden');
+          if (btn) btn.textContent = 'HIDE STREAM ▲';
+        } else {
+          stream.classList.add('hidden');
+          if (btn) btn.textContent = 'SHOW STREAM ▼';
+        }
+      }
+    }
+
+    // Render Dashboard Active Incident & Response Console
+    function renderDashboardActiveIncidentCard() {
+      const card = document.getElementById('dash-active-incident-card');
+      if (!card) return;
+
+      const inc = appState.activeIncident;
+      const isRoutine = isRoutineIncident(inc);
+
+      const lvlBadge = document.getElementById('dash-inc-level-badge');
+      const upBadge = document.getElementById('dash-inc-update-badge');
+      const timeBadge = document.getElementById('dash-inc-time-badge');
+      const titleEl = document.getElementById('dash-inc-title-text');
+      const stagingEl = document.getElementById('dash-inc-staging-text');
+      const paceEl = document.getElementById('dash-inc-pace-text');
+      const sitrepEl = document.getElementById('dash-inc-sitrep-summary');
+      const actionsBlock = document.getElementById('dash-inc-actions-block');
+      const statusBadge = document.getElementById('dash-active-incident-my-status');
+      const sitrepsBox = document.getElementById('dash-recent-sitreps-box');
+
+      if (isRoutine) {
+        // Routine / Steady State / Closed Posture
+        card.className = 'bg-gradient-to-r from-emerald-950/40 via-[#0e141c] to-[#10151d] border-2 border-emerald-500/50 rounded-xl p-4 sm:p-5 shadow-[0_0_20px_rgba(16,185,129,0.15)] space-y-4 font-mono-tac transition-all duration-300';
+        if (lvlBadge) {
+          lvlBadge.textContent = 'LEVEL 3 - MONITORING';
+          lvlBadge.className = 'px-2.5 py-0.5 rounded text-[10px] font-bold bg-emerald-900 text-emerald-200 border border-emerald-700';
+        }
+        if (upBadge) {
+          upBadge.textContent = 'STEADY STATE';
+          upBadge.className = 'px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold text-[10px]';
+        }
+        if (timeBadge) timeBadge.textContent = 'ALL SYSTEMS NORMAL';
+        if (titleEl) titleEl.textContent = 'ROUTINE OPERATIONS // FREESTONE CO. ARES';
+        if (stagingEl) stagingEl.textContent = 'Standby / Home QTH';
+        if (paceEl) paceEl.textContent = 'Ch 01 - FF 110 (145.110 TSQ 146.2)';
+        if (sitrepEl) sitrepEl.textContent = 'All repeaters operational. County in steady-state standby.';
+        if (actionsBlock) actionsBlock.classList.add('hidden');
+        if (sitrepsBox) sitrepsBox.classList.add('hidden');
+      } else {
+        // Emergency Active Incident
+        card.className = 'bg-gradient-to-r from-red-950/80 via-[#160d13] to-[#0f141d] border-2 border-red-500 rounded-xl p-4 sm:p-5 shadow-[0_0_30px_rgba(239,68,68,0.4)] space-y-4 font-mono-tac transition-all duration-300';
+        if (lvlBadge) {
+          lvlBadge.textContent = inc.level || 'LEVEL 1 - FULL ACTIVATION';
+          if (inc.level && inc.level.includes('LEVEL 1')) {
+            lvlBadge.className = 'px-2.5 py-0.5 rounded text-[10px] font-black bg-red-600 text-white tracking-wider animate-pulse';
+          } else if (inc.level && inc.level.includes('LEVEL 2')) {
+            lvlBadge.className = 'px-2.5 py-0.5 rounded text-[10px] font-black bg-orange-600 text-white tracking-wider';
+          } else {
+            lvlBadge.className = 'px-2.5 py-0.5 rounded text-[10px] font-bold bg-amber-600 text-white tracking-wider';
+          }
+        }
+        if (upBadge) {
+          upBadge.textContent = `UPDATE #${inc.updateCount || 1} ACTIVE`;
+          upBadge.className = 'px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-700 font-bold text-[10px]';
+        }
+        if (timeBadge) timeBadge.textContent = inc.lastUpdated && inc.lastUpdated !== '--:--:--' ? inc.lastUpdated : 'ACTIVE';
+        if (titleEl) titleEl.textContent = inc.title || 'MAJOR EMERGENCY DISPATCH';
+        if (stagingEl) stagingEl.textContent = inc.staging || 'Fairfield EOC';
+
+        const findCh = (num) => (appState.channels || []).find(c => c.ch === num) || { ch: '01', name: 'FF 110', rx: '145.110' };
+        const pace = inc.pace || { p: '01', a: '02' };
+        const chP = findCh(pace.p || '01');
+        if (paceEl) paceEl.textContent = `Ch ${chP.ch} - ${chP.name} (${chP.rx || '145.110'})`;
+
+        const topUpdate = (inc.updates && inc.updates.length > 0) ? inc.updates[0] : {};
+        if (sitrepEl) sitrepEl.textContent = topUpdate.sitrep || inc.mission || 'Active emergency callout dispatched.';
+
+        if (actionsBlock) actionsBlock.classList.remove('hidden');
+        if (sitrepsBox) sitrepsBox.classList.remove('hidden');
+      }
+
+      // Sync operator status badge
+      if (statusBadge) {
+        if (appState.myStatus && appState.myStatus !== 'NOT RESPONDED') {
+          statusBadge.textContent = appState.myStatus;
+          let col = 'bg-emerald-950 text-emerald-300 border-emerald-800';
+          if (appState.myStatus.includes('STAGING')) col = 'bg-emerald-600 text-white';
+          else if (appState.myStatus.includes('REMOTE')) col = 'bg-blue-600 text-white';
+          else if (appState.myStatus.includes('ON SCENE')) col = 'bg-cyan-600 text-white';
+          else if (appState.myStatus.includes('DELAYED')) col = 'bg-amber-600 text-white';
+          else if (appState.myStatus.includes('UNAVAILABLE')) col = 'bg-slate-700 text-white';
+          statusBadge.className = 'font-bold px-2 py-0.5 rounded text-xs shadow ' + col;
+        } else {
+          statusBadge.textContent = 'NOT RESPONDED';
+          statusBadge.className = 'text-slate-400 font-bold px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-xs';
+        }
+      }
+
+      renderDashboardSitrepStream();
+    }
+
+    // Render Dashboard Live SITREPs Stream
+    function renderDashboardSitrepStream() {
+      const container = document.getElementById('dash-sitreps-stream-container');
+      const countBadge = document.getElementById('dash-sitrep-count-badge');
+      if (!container) return;
+
+      const updates = (appState.activeIncident && appState.activeIncident.updates) || [];
+      if (countBadge) countBadge.textContent = updates.length;
+
+      if (updates.length === 0) {
+        container.innerHTML = `
+          <div class="text-slate-500 text-[11px] text-center py-3 bg-black/30 rounded border border-slate-800">
+            No field SITREPs posted yet. Type an update above and tap TRANSMIT SITREP.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = updates.slice(0, 8).map((u, idx) => {
+        const isLatest = idx === 0;
+        return `
+          <div class="p-2.5 rounded-lg bg-[#0b0e14] border ${isLatest ? 'border-amber-500/80 shadow-[0_0_10px_rgba(245,158,11,0.2)]' : 'border-slate-800'} text-xs space-y-1">
+            <div class="flex items-center justify-between text-[10px]">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="px-1.5 py-0.2 rounded font-black ${isLatest ? 'bg-amber-500 text-black' : 'bg-slate-800 text-slate-300'}">
+                  ${isLatest ? '⚡ UPDATE #' + u.updateNum : '#' + u.updateNum}
+                </span>
+                <span class="text-emerald-400 font-bold">${u.author}</span>
+              </div>
+              <span class="text-slate-400 font-mono">${u.timeLocal}</span>
+            </div>
+            <div class="text-slate-200 text-[11px] leading-relaxed">
+              ${u.sitrep}
+            </div>
+          </div>
+        `;
+      }).join('');
     }
 
     // Filter responder table by status chip
@@ -7322,6 +7707,7 @@ D. Out-of-County stations and visitors.
       renderActiveIncidentUI();
       triggerApnsPushNotification('🛑 INCIDENT DEMOBILIZATION', `All-Clear: ${directive || 'Incident operations secured. Units standing down.'}`, 'default', 0);
       clearNativeAppBadge();
+      clearAllResponderStatuses(true);
 
       // Update Banner UI to Closed State
       const badge = document.getElementById('incident-level-badge');
@@ -12472,22 +12858,19 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       broadcastActivationLevelToCloud(3);
 
       // Reset responder statuses completely until new responses arrive
-      appState.responders = [];
-      renderResponderTable();
+      await clearAllResponderStatuses(true);
 
-      // Cloud purge: remove alerts, set active_incident to closed routine, clear incident_responses
+      // Cloud purge: remove alerts, set active_incident to closed routine
       if (fbDb) {
         try {
           await fbDb.ref('active_incident').set(appState.activeIncident);
           await fbDb.ref('alerts').remove();
-          await fbDb.ref('incident_responses').remove();
         } catch(err) {
           console.warn('Firebase SDK purge error:', err);
         }
       }
       await fbRestPut('active_incident', appState.activeIncident);
       await fbRestPut('alerts', {});
-      await fbRestPut('incident_responses', {});
 
       renderActiveIncidentUI();
       renderActiveAlertsCardFeed();
@@ -12584,6 +12967,19 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       return true;
     }
 
+    // Global: Clear Native iOS Notification Badge on App Icon
+    function clearNativeAppBadge() {
+      try {
+        if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.tacticalNativeBridge) {
+          window.webkit.messageHandlers.tacticalNativeBridge.postMessage({ action: 'clearBadge' });
+        }
+        if (typeof navigator !== 'undefined' && 'clearAppBadge' in navigator) {
+          navigator.clearAppBadge().catch(function() {});
+        }
+      } catch(e) {}
+    }
+    window.clearNativeAppBadge = clearNativeAppBadge;
+
     function showActiveAlertHeadsUpBanner(inc) {
       const banner = document.getElementById('active-alert-heads-up-banner');
       if (!banner || !inc) return;
@@ -12608,28 +13004,40 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
     }
 
     function dismissHeadsUpAlertBanner() {
-      stopSirenAudio();
-      clearNativeAppBadge();
+      try {
+        stopSirenAudio();
+      } catch(e) {
+        console.warn('stopSirenAudio error:', e);
+      }
+      try {
+        clearNativeAppBadge();
+      } catch(e) {
+        console.warn('clearNativeAppBadge error:', e);
+      }
       const banner = document.getElementById('active-alert-heads-up-banner');
-      if (banner) banner.classList.add('hidden');
+      if (banner) {
+        banner.classList.add('hidden');
+      }
     }
 
     function muteAlertAudio() {
-      stopSirenAudio();
+      try {
+        stopSirenAudio();
+      } catch(e) {}
       showTacticalBannerNotification('🔇 ALERT SIREN MUTED (BANNER ACTIVE)');
     }
 
     function acknowledgeAndRespondAlert() {
-      dismissHeadsUpAlertBanner();
+      try {
+        dismissHeadsUpAlertBanner();
+      } catch(e) {}
       switchTab('dash');
-      const detailsBlock = document.getElementById('active-incident-details-collapsible');
-      if (detailsBlock && detailsBlock.classList.contains('hidden')) {
-        toggleIncidentDetailsExpanded();
-      }
       setTimeout(() => {
-        const target = document.getElementById('active-alerts-feed-container') || document.getElementById('active-incident-details-collapsible');
-        if (target) target.scrollIntoView({ behavior: 'smooth' });
-      }, 150);
+        const target = document.getElementById('dash-active-incident-card') || document.getElementById('view-dash');
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
     }
 
     function testActiveAlertDispatcher() {
@@ -13615,8 +14023,7 @@ Your console is now authorized and unlocked.`);
     // Handler for incoming incident responses across all Android & iOS devices
     function onRemoteIncidentResponsesReceived(remoteResps) {
       if (!remoteResps || (typeof remoteResps === 'object' && Object.keys(remoteResps).length === 0)) {
-        appState.responders = [];
-        renderResponderTable();
+        clearAllResponderStatuses(false);
         return;
       }
       let list = [];
@@ -13626,8 +14033,7 @@ Your console is now authorized and unlocked.`);
         list = Object.values(remoteResps).filter(Boolean);
       }
       if (list.length === 0) {
-        appState.responders = [];
-        renderResponderTable();
+        clearAllResponderStatuses(false);
         return;
       }
 
@@ -13641,6 +14047,11 @@ Your console is now authorized and unlocked.`);
           if (statusBadge && r.status) {
             statusBadge.textContent = r.status;
             if (r.colorClass) statusBadge.className = 'font-bold px-2 py-0.5 rounded text-white text-xs ' + r.colorClass;
+          }
+          const dashStatusBadge = document.getElementById('dash-active-incident-my-status');
+          if (dashStatusBadge && r.status) {
+            dashStatusBadge.textContent = r.status;
+            if (r.colorClass) dashStatusBadge.className = 'font-bold px-2 py-0.5 rounded text-white text-xs shadow ' + r.colorClass;
           }
         }
       });
@@ -13661,6 +14072,7 @@ Your console is now authorized and unlocked.`);
 
       if (!isEmergency) {
         dismissHeadsUpAlertBanner();
+        clearAllResponderStatuses(false);
         return;
       }
 
@@ -14742,9 +15154,12 @@ Your console is now authorized and unlocked.`);
 
       // Timeline Feed
       renderIncidentUpdates();
+
+      // Dashboard Incident Card & Live SITREPs
+      renderDashboardActiveIncidentCard();
     }
 
-    function clearAllIncidentAlerts() {
+    async function clearAllIncidentAlerts() {
       const clearance = getOperatorClearance();
       if (clearance.levelNum !== 6 && appState.myCall !== 'KG5TZT') {
         alert('🔒 EC RESTRICTION:\n\nOnly Master Emergency Coordinator Brian Davis (KG5TZT) can purge all alerts.');
@@ -14768,10 +15183,12 @@ Your console is now authorized and unlocked.`);
           e: '06'
         },
         updates: [],
-        isClosed: false
+        isClosed: true
       };
 
       saveActiveIncident();
+      await broadcastIncidentToCloud(appState.activeIncident);
+      await clearAllResponderStatuses(true);
       renderActiveIncidentUI();
 
       // Reset Demob button if previously closed
@@ -14783,7 +15200,7 @@ Your console is now authorized and unlocked.`);
       }
 
       pushRosterSyncToCloud();
-      alert('✅ ALL ALERTS PURGED SUCCESSFULLY\n\nIncident counter reset to 0.\nStatus set to Level 4 (Routine Monitoring / Steady State).');
+      alert('✅ ALL ALERTS PURGED SUCCESSFULLY\n\nIncident counter reset to 0.\nStatus set to Level 3 (Routine Monitoring / Steady State). Responders cleared.');
     }
 
     // ==========================================
@@ -16582,7 +16999,7 @@ Your console is now authorized and unlocked.`);
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.8 (Build 56)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.8 (Build 57)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>
