@@ -51,7 +51,7 @@ jobs:
       - name: Install Mobileprovision
         run: |
           mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
-          cp ios_app/certs/Freestone_ARES_Distribution.mobileprovision "$HOME/Library/MobileDevice/Provisioning Profiles/b7c5ddd0-f4b4-4e6b-bf56-91dcd9d2a6e1.mobileprovision"
+          cp ios_app/certs/Freestone_ARES_Distribution.mobileprovision "$HOME/Library/MobileDevice/Provisioning Profiles/e751b47c-c688-4a5a-8489-2af3f1181483.mobileprovision"
 
       - name: Ensure Web Assets Synced
         run: |
@@ -72,7 +72,7 @@ jobs:
             CODE_SIGN_STYLE=Manual \
             DEVELOPMENT_TEAM=LSMMV8JFAJ \
             PROVISIONING_PROFILE_SPECIFIER="Freestone ARES Distribution" \
-            PROVISIONING_PROFILE="b7c5ddd0-f4b4-4e6b-bf56-91dcd9d2a6e1" \
+            PROVISIONING_PROFILE="e751b47c-c688-4a5a-8489-2af3f1181483" \
             CODE_SIGN_IDENTITY="Apple Distribution" \
             CODE_SIGN_ENTITLEMENTS="FreestoneARESTactical/FreestoneARESTactical.entitlements" \
             CURRENT_PROJECT_VERSION=53 \
