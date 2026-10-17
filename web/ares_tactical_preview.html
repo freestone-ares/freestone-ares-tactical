@@ -7316,6 +7316,7 @@ D. Out-of-County stations and visitors.
       if (!appState.activeIncident.updates) appState.activeIncident.updates = [];
       appState.activeIncident.updates.unshift(demobEntry);
       saveActiveIncident();
+      broadcastIncidentToCloud(appState.activeIncident);
       renderActiveIncidentUI();
 
       // Update Banner UI to Closed State
@@ -9691,12 +9692,20 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
       const paceE = document.getElementById('b-pace-e').value;
 
       // Update state tracking
+      appState.activeIncident.isClosed = false;
+      appState.activeIncident.status = 'ACTIVE';
       appState.activeIncident.level = level;
       appState.activeIncident.title = title;
       appState.activeIncident.staging = staging;
       appState.activeIncident.mission = mission;
       appState.activeIncident.pace = { p: paceP, a: paceA, c: paceC, e: paceE };
-      appState.activeIncident.updateCount = (appState.activeIncident.updateCount || 1) + 1;
+      if (!isAlertUpdateMode) {
+        appState.activeIncident.updateCount = 1;
+        appState.activeIncident.updates = [];
+        appState.activeIncident.createdAt = Date.now();
+      } else {
+        appState.activeIncident.updateCount = (appState.activeIncident.updateCount || 1) + 1;
+      }
       const now = new Date();
       const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
       appState.activeIncident.lastUpdated = timeStr;
@@ -12224,6 +12233,8 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       const cfg = COUNTY_RESPONSE_CONFIG[num] || COUNTY_RESPONSE_CONFIG[3];
       const payload = {
         level: num,
+        badgeText: cfg.badgeText,
+        dashSubtext: cfg.dashSubtext,
         title: cfg.badgeText,
         posture: cfg.dashSubtext,
         updatedAt: Date.now(),
