@@ -1726,7 +1726,7 @@
           <div class="flex-1 min-w-0">
             <label class="text-[10px] text-slate-400 font-bold block mb-1">SELECT ALERT PAGING TONE:</label>
             <select id="siren-type-select" class="w-full bg-[#080b10] border border-slate-700 text-amber-300 font-bold rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-red-500 shadow">
-              <option value="quickcall">🔊 Quick-Call II (707.3 / 953.7 Hz)</option>
+              <option value="quickcall">🔊 Motorola Minitor Fire Pager Alert</option>
               <option value="warble">🚨 Tactical Warble Siren</option>
               <option value="eas">📢 EAS Signal (853 / 960 Hz)</option>
               <option value="beep">📻 1000 Hz Alert Beep</option>
@@ -9486,25 +9486,54 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
         if (stopBtn) stopBtn.classList.remove('hidden');
 
         if (type === 'quickcall') {
-          // Motorola Quick-Call II (Two-Tone Sequential Alert)
-          // Tone A: 707.3 Hz (1.0 sec), Tone B: 953.7 Hz (3.0 sec)
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(707.3, now);
-          osc.frequency.setValueAtTime(953.7, now + 1.0);
+          // Motorola Minitor Fire Pager Alert Sequence
+          // Tone A: 707.3 Hz (0.75s) -> Tone B: 953.7 Hz (1.4s) -> Minitor 2,205 Hz Pulsing Alert Beeps
+          const oscA = ctx.createOscillator();
+          const gainA = ctx.createGain();
+          oscA.type = 'sine';
+          oscA.frequency.setValueAtTime(707.3, now);
+          gainA.gain.setValueAtTime(0.35, now);
+          gainA.gain.setValueAtTime(0.35, now + 0.72);
+          gainA.gain.exponentialRampToValueAtTime(0.0001, now + 0.75);
+          oscA.connect(gainA);
+          gainA.connect(ctx.destination);
+          oscA.start(now);
+          oscA.stop(now + 0.75);
+          currentSirenOscs.push(oscA);
 
-          gain.gain.setValueAtTime(0.3, now);
-          gain.gain.setValueAtTime(0.3, now + 3.8);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + 4.0);
+          const oscB = ctx.createOscillator();
+          const gainB = ctx.createGain();
+          oscB.type = 'sine';
+          oscB.frequency.setValueAtTime(953.7, now + 0.80);
+          gainB.gain.setValueAtTime(0.0, now);
+          gainB.gain.setValueAtTime(0.35, now + 0.80);
+          gainB.gain.setValueAtTime(0.35, now + 2.15);
+          gainB.gain.exponentialRampToValueAtTime(0.0001, now + 2.20);
+          oscB.connect(gainB);
+          gainB.connect(ctx.destination);
+          oscB.start(now + 0.80);
+          oscB.stop(now + 2.20);
+          currentSirenOscs.push(oscB);
 
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(now);
-          osc.stop(now + 4.0);
-          currentSirenOscs.push(osc);
+          // Minitor Fire Pager 2,205 Hz Pulsing Alert Beeps
+          const oscP = ctx.createOscillator();
+          const gainP = ctx.createGain();
+          oscP.type = 'sine';
+          oscP.frequency.setValueAtTime(2205.0, now + 2.35);
+          gainP.gain.setValueAtTime(0.0, now);
+          for (let b = 0; b < 18; b++) {
+            const bt = now + 2.35 + b * 0.115;
+            gainP.gain.setValueAtTime(0.4, bt);
+            gainP.gain.setValueAtTime(0.4, bt + 0.070);
+            gainP.gain.setValueAtTime(0.0, bt + 0.075);
+          }
+          oscP.connect(gainP);
+          gainP.connect(ctx.destination);
+          oscP.start(now + 2.35);
+          oscP.stop(now + 4.5);
+          currentSirenOscs.push(oscP);
 
-          sirenTimer = setTimeout(() => stopSirenAudio(), 4100);
+          sirenTimer = setTimeout(() => stopSirenAudio(), 4600);
         } else if (type === 'warble') {
           // Hi-Lo European/Tactical Warble (rapid alternation)
           const osc = ctx.createOscillator();
@@ -16553,7 +16582,7 @@ Your console is now authorized and unlocked.`);
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.8 (Build 55)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.8 (Build 56)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>
