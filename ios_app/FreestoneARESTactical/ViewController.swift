@@ -44,13 +44,13 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, WKSc
         webView.backgroundColor = UIColor(red: 10/255, green: 13/255, blue: 18/255, alpha: 1.0)
         webView.isOpaque = false
         webView.scrollView.bounces = false
+        webView.scrollView.alwaysBounceHorizontal = false
+        webView.scrollView.showsHorizontalScrollIndicator = false
         webView.scrollView.contentInsetAdjustmentBehavior = .automatic
 
-        // Optimize page zoom on larger Mac & iPad displays (iPhone remains at default 1.0)
+        // Optimize page zoom on larger Mac desktop displays (iPad & iPhone remain at standard 1.0 responsive layout)
         if ProcessInfo.processInfo.isiOSAppOnMac {
             webView.pageZoom = 1.20
-        } else if UIDevice.current.userInterfaceIdiom == .pad {
-            webView.pageZoom = 1.15
         }
 
         view.addSubview(webView)
@@ -82,6 +82,16 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, WKSc
         if message.name == "tacticalNativeBridge", let dict = message.body as? [String: Any], let action = dict["action"] as? String {
             if action == "authenticateBiometrics" {
                 authenticateWithBiometrics()
+            } else if action == "playEmergencySiren" {
+                (UIApplication.shared.delegate as? AppDelegate)?.playEmergencySiren()
+            } else if action == "stopEmergencySiren" {
+                (UIApplication.shared.delegate as? AppDelegate)?.stopEmergencySiren()
+            } else if action == "clearBadge" {
+                if #available(iOS 17.0, *) {
+                    UNUserNotificationCenter.current().setBadgeCount(0, withCompletionHandler: nil)
+                } else {
+                    UIApplication.shared.applicationIconBadgeNumber = 0
+                }
             }
         }
     }

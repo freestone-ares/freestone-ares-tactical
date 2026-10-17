@@ -111,8 +111,8 @@ export default {
         const body = await request.json();
         const title = body.title || '🚨 FREESTONE ARES EMERGENCY DISPATCH';
         const message = body.body || body.message || 'Urgent incident callout transmitted.';
-        const sound = body.sound || 'default';
-        const badge = body.badge || 1;
+        const sound = body.sound || 'siren.caf';
+        const badge = (body.badge !== undefined && body.badge !== null) ? Number(body.badge) : 1;
 
         // 1. Fetch registered device tokens from Firebase RTDB
         const fbRes = await fetch(`${FIREBASE_DB_URL}/device_tokens.json`);

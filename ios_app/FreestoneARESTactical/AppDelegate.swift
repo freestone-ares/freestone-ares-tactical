@@ -10,6 +10,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     private var lastKnownLevel: Int = -1
     private var lastIncidentFingerprint: String? = nil
     private var bgTask: UIBackgroundTaskIdentifier = .invalid
+    private var sirenPlayer: AVAudioPlayer?
 
     private let firebaseUrl = "https://freestone-ares-tactical-default-rtdb.firebaseio.com"
 
@@ -144,11 +145,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }.resume()
     }
 
+    // MARK: - Native Siren Audio Player (Bypasses Hardware Mute Switch)
+    func playEmergencySiren() {
+        guard let url = Bundle.main.url(forResource: "siren", withExtension: "caf") ?? Bundle.main.url(forResource: "siren", withExtension: "wav") else {
+            NSLog("[Freestone ARES] Siren audio file (siren.caf / siren.wav) not found in bundle.")
+            return
+        }
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.mixWithOthers])
+            try AVAudioSession.sharedInstance().setActive(true)
+            sirenPlayer?.stop()
+            sirenPlayer = try AVAudioPlayer(contentsOf: url)
+            sirenPlayer?.numberOfLoops = 0 // Play the 4.5s two-tone alert
+            sirenPlayer?.volume = 1.0
+            sirenPlayer?.play()
+            NSLog("[Freestone ARES] Playing native emergency siren via AVAudioPlayer (bypasses silent switch).")
+        } catch {
+            NSLog("[Freestone ARES] Failed to play siren audio: \(error.localizedDescription)")
+        }
+    }
+
+    func stopEmergencySiren() {
+        sirenPlayer?.stop()
+        sirenPlayer = nil
+    }
+
     private func sendLocalEmergencyAlert(title: String, body: String) {
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
-        content.sound = UNNotificationSound.default
+        content.sound = UNNotificationSound(named: UNNotificationSoundName("siren.caf"))
         content.badge = 1
 
         let request = UNNotificationRequest(
@@ -162,6 +188,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 NSLog("[Freestone ARES] Notification delivery error: \(error.localizedDescription)")
             }
         }
+
+        // Also play loud siren directly through media speaker (bypasses silent switch)
+        playEmergencySiren()
     }
 
     // MARK: - UNUserNotificationCenterDelegate
@@ -192,6 +221,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         // Force immediate check on foreground return
         checkActivationLevel()
         checkActiveIncident()
+    }
+
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        if #available(iOS 17.0, *) {
+            UNUserNotificationCenter.current().setBadgeCount(0, withCompletionHandler: nil)
+        } else {
+            application.applicationIconBadgeNumber = 0
+        }
+        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
     }
 
     // MARK: - APNs Remote Push Notifications (ActiveAlert Cloud Push)

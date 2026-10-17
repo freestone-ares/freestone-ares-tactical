@@ -51,35 +51,41 @@
       padding-top: max(env(safe-area-inset-top, 0px), 16px) !important;
     }
 
-    /* Prevent all horizontal sliding / scrolling on mobile devices */
+    /* Prevent all horizontal sliding / scrolling on mobile devices and iPads */
     html, body {
       max-width: 100vw;
+      width: 100%;
       overflow-x: hidden !important;
+      position: relative;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
     }
 
     /* Responsive Desktop & Tablet Scaling: iPad, MacBook & iMac (Phones < 768px remain 100% untouched) */
     @media (min-width: 1024px) {
       html {
-        font-size: 17.5px;
+        font-size: 16px;
       }
       .max-w-7xl {
-        max-width: 90rem !important;
+        max-width: min(100%, 80rem) !important;
       }
     }
     @media (min-width: 1440px) {
       html {
-        font-size: 18.5px;
+        font-size: 17px;
       }
       .max-w-7xl {
-        max-width: 98rem !important;
+        max-width: min(100%, 90rem) !important;
       }
     }
     @media (min-width: 1920px) {
       html {
-        font-size: 19.5px;
+        font-size: 18px;
       }
       .max-w-7xl {
-        max-width: 110rem !important;
+        max-width: min(100%, 100rem) !important;
       }
     }
 
@@ -5308,11 +5314,7 @@
       ],
       pendingMembers: [],
       myStatus: 'STANDBY',
-      responders: [
-        { call: 'KG5TZT', name: 'Brian Davis', status: 'STANDBY (NORMAL MONITORING)', time: 'STEADY STATE', gear: 'EC Station / HF/VHF Mobile, Winlink, LiFePO4', phone: '903-644-5856', lat: 31.7249, lng: -96.1652, grid: 'EM11xq', spotId: 'staging', assignedSpot: 'Staging Point (County EOC)', distToStaging: '0.0 mi', eta: 'Standby', speedHeading: 'Stationary' },
-        { call: 'AI5OX', name: 'Robert Cockerell', status: 'STANDBY (NORMAL MONITORING)', time: 'STEADY STATE', gear: 'AEC / Mobile 50W, Crossband Gateway', phone: '903-394-1772', lat: 31.7302, lng: -96.1550, grid: 'EM11xq', spotId: 'spot1', assignedSpot: 'Fairfield HS Shelter Alpha', distToStaging: '1.4 mi', eta: 'Standby', speedHeading: 'Stationary' },
-        { call: 'N5BED', name: 'Billy Bryant', status: 'STANDBY (NORMAL MONITORING)', time: 'STEADY STATE', gear: 'EOC Net Control Console, VHF/UHF', phone: '903-388-3470', lat: 31.7252, lng: -96.1660, grid: 'EM11xq', spotId: 'staging', assignedSpot: 'Staging Point (County EOC)', distToStaging: '0.1 mi', eta: 'Standby', speedHeading: 'Stationary' }
-      ],
+      responders: [],
 assignedSpots: [
         {
           id: 'staging',
@@ -7316,7 +7318,10 @@ D. Out-of-County stations and visitors.
       if (!appState.activeIncident.updates) appState.activeIncident.updates = [];
       appState.activeIncident.updates.unshift(demobEntry);
       saveActiveIncident();
+      broadcastIncidentToCloud(appState.activeIncident);
       renderActiveIncidentUI();
+      triggerApnsPushNotification('🛑 INCIDENT DEMOBILIZATION', `All-Clear: ${directive || 'Incident operations secured. Units standing down.'}`, 'default', 0);
+      clearNativeAppBadge();
 
       // Update Banner UI to Closed State
       const badge = document.getElementById('incident-level-badge');
@@ -7596,6 +7601,20 @@ D. Out-of-County stations and visitors.
         if (filter === 'DELAYED') return st.includes('DELAYED');
         return true;
       });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="py-8 text-center text-slate-500 font-mono-tac text-xs">
+              <div class="flex flex-col items-center justify-center gap-1.5">
+                <span class="text-amber-400/90 font-bold text-xs tracking-wide">⏳ AWAITING LIVE OPERATOR RESPONSES</span>
+                <span class="text-slate-400 text-[11px]">No responders checked in yet. Responders will appear here in real time as operators click their response status buttons (Responding to Staging, On Scene, Stationary / Home QTH, or Delayed).</span>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
 
       filtered.forEach(r => {
         let statusBadge = '';
@@ -9429,12 +9448,26 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
       if (playingBadge) playingBadge.classList.add('hidden');
       if (testBtn) testBtn.classList.remove('hidden');
       if (stopBtn) stopBtn.classList.add('hidden');
+
+      // Native iOS Bridge: Stop native siren audio if active
+      try {
+        if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.tacticalNativeBridge) {
+          window.webkit.messageHandlers.tacticalNativeBridge.postMessage({ action: 'stopEmergencySiren' });
+        }
+      } catch(ne) {}
     }
 
     function playSelectedSiren() {
       const select = document.getElementById('siren-type-select');
       const type = select ? select.value : 'quickcall';
       stopSirenAudio();
+
+      // Native iOS Bridge: Play siren through AVAudioPlayer (bypasses silent switch)
+      try {
+        if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.tacticalNativeBridge) {
+          window.webkit.messageHandlers.tacticalNativeBridge.postMessage({ action: 'playEmergencySiren' });
+        }
+      } catch(ne) {}
 
       try {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -9691,12 +9724,20 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
       const paceE = document.getElementById('b-pace-e').value;
 
       // Update state tracking
+      appState.activeIncident.isClosed = false;
+      appState.activeIncident.status = 'ACTIVE';
       appState.activeIncident.level = level;
       appState.activeIncident.title = title;
       appState.activeIncident.staging = staging;
       appState.activeIncident.mission = mission;
       appState.activeIncident.pace = { p: paceP, a: paceA, c: paceC, e: paceE };
-      appState.activeIncident.updateCount = (appState.activeIncident.updateCount || 1) + 1;
+      if (!isAlertUpdateMode) {
+        appState.activeIncident.updateCount = 1;
+        appState.activeIncident.updates = [];
+        appState.activeIncident.createdAt = Date.now();
+      } else {
+        appState.activeIncident.updateCount = (appState.activeIncident.updateCount || 1) + 1;
+      }
       const now = new Date();
       const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
       appState.activeIncident.lastUpdated = timeStr;
@@ -12218,12 +12259,40 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       }
     }
 
+    // ==========================================
+    // APPLE APNS REMOTE PUSH NOTIFICATION RELAY
+    // ==========================================
+    const APNS_RELAY_URL = 'https://fcares-apns.badavis17.workers.dev';
+
+    async function triggerApnsPushNotification(title, body, sound = 'siren.caf', badge = 1) {
+      try {
+        console.log('📣 Beaming Apple APNs Push Notification via Relay:', title);
+        const res = await fetch(APNS_RELAY_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: title,
+            body: body,
+            sound: sound,
+            badge: badge
+          })
+        });
+        const data = await res.json();
+        console.log('✓ APNs Push delivered to Apple:', data);
+        return data;
+      } catch (err) {
+        console.warn('APNs Push relay notice:', err);
+      }
+    }
+
     // 2. Realtime Firebase Activation Level Broadcast
     async function broadcastActivationLevelToCloud(levelNum) {
       const num = parseInt(levelNum, 10);
       const cfg = COUNTY_RESPONSE_CONFIG[num] || COUNTY_RESPONSE_CONFIG[3];
       const payload = {
         level: num,
+        badgeText: cfg.badgeText,
+        dashSubtext: cfg.dashSubtext,
         title: cfg.badgeText,
         posture: cfg.dashSubtext,
         updatedAt: Date.now(),
@@ -12240,6 +12309,16 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         }
       }
       await fbRestPut('activation_level', payload);
+
+      // Trigger APNs Siren Push to all closed iPhones
+      if (num === 1) {
+        triggerApnsPushNotification('🚨 EMERGENCY ACTIVATION: LEVEL 1', 'Freestone County ARES escalated to Level 1 Full Activation. All verified operators mobilize.', 'siren.caf', 1);
+      } else if (num === 2) {
+        triggerApnsPushNotification('⚠️ EMERGENCY POSTURE: LEVEL 2', 'Freestone County ARES placed on Level 2 Standby. Monitor primary PACE repeater.', 'siren.caf', 1);
+      } else if (num === 3) {
+        triggerApnsPushNotification('🟢 FREESTONE ARES: STEADY STATE', 'Emergency posture secured. County returned to Level 3 Monitoring standby.', 'default', 0);
+        clearNativeAppBadge();
+      }
     }
 
     function onRemoteActivationLevelReceived(remoteAct) {
@@ -12303,6 +12382,15 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         }
         await fbRestPut('alerts/' + alertId, alertRecord);
       }
+
+      // Beam APNs Siren Push to all closed iPhones
+      const isRoutine = isRoutineIncident(incidentObj);
+      if (!incidentObj.isClosed && !isRoutine) {
+        const topUpdate = (incidentObj.updates && incidentObj.updates.length > 0) ? incidentObj.updates[0] : {};
+        const pushTitle = `🚨 [${incidentObj.level || 'ARES DISPATCH'}] ${incidentObj.title || 'EMERGENCY CALLOUT'}`;
+        const pushBody = `📍 Staging: ${incidentObj.staging || 'Standby'}\nSitrep: ${topUpdate.sitrep || incidentObj.mission || 'Active incident callout dispatched.'}`;
+        triggerApnsPushNotification(pushTitle, pushBody, 'siren.caf', 1);
+      }
     }
 
     function onRemoteAlertsReceived(remoteAlerts) {
@@ -12354,13 +12442,8 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       renderCountyResponseLevelUI();
       broadcastActivationLevelToCloud(3);
 
-      // Reset responder statuses back to standby
-      if (appState.responders) {
-        appState.responders.forEach(r => {
-          r.status = 'STANDBY (NORMAL MONITORING)';
-          r.time = 'STEADY STATE';
-        });
-      }
+      // Reset responder statuses completely until new responses arrive
+      appState.responders = [];
       renderResponderTable();
 
       // Cloud purge: remove alerts, set active_incident to closed routine, clear incident_responses
@@ -12464,11 +12547,12 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
     // ======================================================================
 
     function isOperatorOnDuty() {
-      if (!appState.isLoggedIn) return false;
       const call = (appState.myCall || '').toUpperCase();
-      if (!call || call === 'GUEST') return false;
-      const st = appState.myOperationalStatus || safeStorage.getItem('fc_ares_op_status_' + call) || 'available';
-      return st !== 'off_duty';
+      if (call && call !== 'GUEST') {
+        const st = appState.myOperationalStatus || safeStorage.getItem('fc_ares_op_status_' + call);
+        if (st === 'off_duty') return false;
+      }
+      return true;
     }
 
     function showActiveAlertHeadsUpBanner(inc) {
@@ -12496,6 +12580,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
 
     function dismissHeadsUpAlertBanner() {
       stopSirenAudio();
+      clearNativeAppBadge();
       const banner = document.getElementById('active-alert-heads-up-banner');
       if (banner) banner.classList.add('hidden');
     }
@@ -12605,6 +12690,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       document.addEventListener('visibilitychange', function() {
         if (!document.hidden) {
           console.log('📱 App resumed: Re-syncing Firebase RTDB and checking alerts...');
+          clearNativeAppBadge();
           if (fbDb) { try { fbDb.goOnline(); } catch(e){} }
           syncRosterWithCloud(false);
           if (isOperatorOnDuty()) {
@@ -12616,17 +12702,34 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       // 2. Reconnect & resync immediately when network recovers (Wi-Fi/Cellular)
       window.addEventListener('online', function() {
         console.log('🌐 Network connected: Re-syncing Firebase RTDB and checking alerts...');
+        clearNativeAppBadge();
         if (fbDb) { try { fbDb.goOnline(); } catch(e){} }
         syncRosterWithCloud(false);
       });
 
       // 3. Resync on window focus
       window.addEventListener('focus', function() {
+        clearNativeAppBadge();
         syncRosterWithCloud(false);
       });
 
-      // 4. Prime Web Audio on first user interaction for unblocked background paging tones
+      // 4. Clear Native iOS Notification Badge on App Icon
+      function clearNativeAppBadge() {
+        try {
+          if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.tacticalNativeBridge) {
+            window.webkit.messageHandlers.tacticalNativeBridge.postMessage({ action: 'clearBadge' });
+          }
+          if (typeof navigator !== 'undefined' && 'clearAppBadge' in navigator) {
+            navigator.clearAppBadge().catch(function() {});
+          }
+        } catch(e) {}
+      }
+      window.clearNativeAppBadge = clearNativeAppBadge;
+      clearNativeAppBadge();
+
+      // 5. Prime Web Audio on first user interaction for unblocked background paging tones
       function primeTacticalAudio() {
+        clearNativeAppBadge();
         try {
           const AudioContext = window.AudioContext || window.webkitAudioContext;
           if (!window.tacticalPrimedAudioCtx) {
@@ -12641,7 +12744,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         document.addEventListener(evt, primeTacticalAudio, { once: true, passive: true });
       });
 
-      // 5. Acquire Screen WakeLock if on duty
+      // 6. Acquire Screen WakeLock if on duty
       if (isOperatorOnDuty()) {
         requestTacticalWakeLock();
       }
@@ -13483,6 +13586,8 @@ Your console is now authorized and unlocked.`);
     // Handler for incoming incident responses across all Android & iOS devices
     function onRemoteIncidentResponsesReceived(remoteResps) {
       if (!remoteResps || (typeof remoteResps === 'object' && Object.keys(remoteResps).length === 0)) {
+        appState.responders = [];
+        renderResponderTable();
         return;
       }
       let list = [];
@@ -13491,11 +13596,15 @@ Your console is now authorized and unlocked.`);
       } else if (typeof remoteResps === 'object') {
         list = Object.values(remoteResps).filter(Boolean);
       }
-      if (list.length === 0) return;
+      if (list.length === 0) {
+        appState.responders = [];
+        renderResponderTable();
+        return;
+      }
 
+      appState.responders = list;
       list.forEach(r => {
         if (!r || !r.call) return;
-        updateOrAddResponder(r);
         const myCall = String(appState.myCall || '').toUpperCase().trim();
         if (myCall && String(r.call).toUpperCase().trim() === myCall) {
           appState.myStatus = r.status;
@@ -16444,7 +16553,7 @@ Your console is now authorized and unlocked.`);
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.8 (Build 50)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.8 (Build 55)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>
