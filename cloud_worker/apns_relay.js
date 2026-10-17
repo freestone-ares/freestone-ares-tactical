@@ -134,17 +134,20 @@ export default {
         const jwt = await getApnsJwt();
 
         // 3. Construct APNs High-Priority Alert Payload
-        const apnsPayload = JSON.stringify({
-          aps: {
-            alert: {
-              title: title,
-              body: message
-            },
-            sound: sound,
-            badge: badge,
-            'interruption-level': 'time-sensitive'
-          }
-        });
+        const aps = {
+          alert: {
+            title: title,
+            body: message
+          },
+          sound: sound,
+          badge: badge
+        };
+
+        if (body.interruptionLevel) {
+          aps['interruption-level'] = body.interruptionLevel;
+        }
+
+        const apnsPayload = JSON.stringify({ aps });
 
         // 4. Send APNs Push to all devices simultaneously
         const deliveryPromises = tokens.map(async (token) => {
