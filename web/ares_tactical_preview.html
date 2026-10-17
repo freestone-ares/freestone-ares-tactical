@@ -12241,21 +12241,12 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
     // ==========================================
     // APPLE APNS REMOTE PUSH NOTIFICATION RELAY
     // ==========================================
-    let apnsRelayUrl = safeStorage.getItem('fc_ares_apns_relay_url') || 'https://fcares-apns.badavis17.workers.dev';
-
-    function setApnsRelayUrl(newUrl) {
-      if (newUrl) {
-        apnsRelayUrl = newUrl.trim();
-        safeStorage.setItem('fc_ares_apns_relay_url', apnsRelayUrl);
-        console.log('✓ APNs Relay URL configured:', apnsRelayUrl);
-      }
-    }
+    const APNS_RELAY_URL = 'https://fcares-apns.badavis17.workers.dev';
 
     async function triggerApnsPushNotification(title, body, sound = 'default') {
-      if (!apnsRelayUrl) return;
       try {
         console.log('📣 Beaming Apple APNs Push Notification via Relay:', title);
-        fetch(apnsRelayUrl, {
+        const res = await fetch(APNS_RELAY_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -12264,12 +12255,13 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
             sound: sound,
             badge: 1
           })
-        }).then(r => r.json()).then(data => {
-          console.log('✓ APNs Push delivered to Apple:', data);
-        }).catch(err => {
-          console.log('APNs Push relay notice:', err.message);
         });
-      } catch (e) {}
+        const data = await res.json();
+        console.log('✓ APNs Push delivered to Apple:', data);
+        return data;
+      } catch (err) {
+        console.warn('APNs Push relay notice:', err);
+      }
     }
 
     // 2. Realtime Firebase Activation Level Broadcast
