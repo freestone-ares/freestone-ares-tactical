@@ -5308,11 +5308,7 @@
       ],
       pendingMembers: [],
       myStatus: 'STANDBY',
-      responders: [
-        { call: 'KG5TZT', name: 'Brian Davis', status: 'STANDBY (NORMAL MONITORING)', time: 'STEADY STATE', gear: 'EC Station / HF/VHF Mobile, Winlink, LiFePO4', phone: '903-644-5856', lat: 31.7249, lng: -96.1652, grid: 'EM11xq', spotId: 'staging', assignedSpot: 'Staging Point (County EOC)', distToStaging: '0.0 mi', eta: 'Standby', speedHeading: 'Stationary' },
-        { call: 'AI5OX', name: 'Robert Cockerell', status: 'STANDBY (NORMAL MONITORING)', time: 'STEADY STATE', gear: 'AEC / Mobile 50W, Crossband Gateway', phone: '903-394-1772', lat: 31.7302, lng: -96.1550, grid: 'EM11xq', spotId: 'spot1', assignedSpot: 'Fairfield HS Shelter Alpha', distToStaging: '1.4 mi', eta: 'Standby', speedHeading: 'Stationary' },
-        { call: 'N5BED', name: 'Billy Bryant', status: 'STANDBY (NORMAL MONITORING)', time: 'STEADY STATE', gear: 'EOC Net Control Console, VHF/UHF', phone: '903-388-3470', lat: 31.7252, lng: -96.1660, grid: 'EM11xq', spotId: 'staging', assignedSpot: 'Staging Point (County EOC)', distToStaging: '0.1 mi', eta: 'Standby', speedHeading: 'Stationary' }
-      ],
+      responders: [],
 assignedSpots: [
         {
           id: 'staging',
@@ -7597,6 +7593,20 @@ D. Out-of-County stations and visitors.
         if (filter === 'DELAYED') return st.includes('DELAYED');
         return true;
       });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="py-8 text-center text-slate-500 font-mono-tac text-xs">
+              <div class="flex flex-col items-center justify-center gap-1.5">
+                <span class="text-amber-400/90 font-bold text-xs tracking-wide">⏳ AWAITING LIVE OPERATOR RESPONSES</span>
+                <span class="text-slate-400 text-[11px]">No responders checked in yet. Responders will appear here in real time as operators click their response status buttons (Responding to Staging, On Scene, Stationary / Home QTH, or Delayed).</span>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
 
       filtered.forEach(r => {
         let statusBadge = '';
@@ -12365,13 +12375,8 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       renderCountyResponseLevelUI();
       broadcastActivationLevelToCloud(3);
 
-      // Reset responder statuses back to standby
-      if (appState.responders) {
-        appState.responders.forEach(r => {
-          r.status = 'STANDBY (NORMAL MONITORING)';
-          r.time = 'STEADY STATE';
-        });
-      }
+      // Reset responder statuses completely until new responses arrive
+      appState.responders = [];
       renderResponderTable();
 
       // Cloud purge: remove alerts, set active_incident to closed routine, clear incident_responses
@@ -13494,6 +13499,8 @@ Your console is now authorized and unlocked.`);
     // Handler for incoming incident responses across all Android & iOS devices
     function onRemoteIncidentResponsesReceived(remoteResps) {
       if (!remoteResps || (typeof remoteResps === 'object' && Object.keys(remoteResps).length === 0)) {
+        appState.responders = [];
+        renderResponderTable();
         return;
       }
       let list = [];
@@ -13502,11 +13509,15 @@ Your console is now authorized and unlocked.`);
       } else if (typeof remoteResps === 'object') {
         list = Object.values(remoteResps).filter(Boolean);
       }
-      if (list.length === 0) return;
+      if (list.length === 0) {
+        appState.responders = [];
+        renderResponderTable();
+        return;
+      }
 
+      appState.responders = list;
       list.forEach(r => {
         if (!r || !r.call) return;
-        updateOrAddResponder(r);
         const myCall = String(appState.myCall || '').toUpperCase().trim();
         if (myCall && String(r.call).toUpperCase().trim() === myCall) {
           appState.myStatus = r.status;
