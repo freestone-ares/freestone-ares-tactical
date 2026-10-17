@@ -12237,6 +12237,40 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       }
     }
 
+    // ==========================================
+    // APPLE APNS REMOTE PUSH NOTIFICATION RELAY
+    // ==========================================
+    let apnsRelayUrl = safeStorage.getItem('fc_ares_apns_relay_url') || 'https://fcares-apns.brian-davis.workers.dev';
+
+    function setApnsRelayUrl(newUrl) {
+      if (newUrl) {
+        apnsRelayUrl = newUrl.trim();
+        safeStorage.setItem('fc_ares_apns_relay_url', apnsRelayUrl);
+        console.log('✓ APNs Relay URL configured:', apnsRelayUrl);
+      }
+    }
+
+    async function triggerApnsPushNotification(title, body, sound = 'default') {
+      if (!apnsRelayUrl) return;
+      try {
+        console.log('📣 Beaming Apple APNs Push Notification via Relay:', title);
+        fetch(apnsRelayUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: title,
+            body: body,
+            sound: sound,
+            badge: 1
+          })
+        }).then(r => r.json()).then(data => {
+          console.log('✓ APNs Push delivered to Apple:', data);
+        }).catch(err => {
+          console.log('APNs Push relay notice:', err.message);
+        });
+      } catch (e) {}
+    }
+
     // 2. Realtime Firebase Activation Level Broadcast
     async function broadcastActivationLevelToCloud(levelNum) {
       const num = parseInt(levelNum, 10);
@@ -12261,6 +12295,15 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         }
       }
       await fbRestPut('activation_level', payload);
+
+      // Trigger APNs Siren Push to all closed iPhones
+      if (num === 1) {
+        triggerApnsPushNotification('🚨 EMERGENCY ACTIVATION: LEVEL 1', 'Freestone County ARES escalated to Level 1 Full Activation. All verified operators mobilize.');
+      } else if (num === 2) {
+        triggerApnsPushNotification('⚠️ EMERGENCY POSTURE: LEVEL 2', 'Freestone County ARES placed on Level 2 Standby. Monitor primary PACE repeater.');
+      } else if (num === 3) {
+        triggerApnsPushNotification('🟢 FREESTONE ARES: STEADY STATE', 'Emergency posture secured. County returned to Level 3 Monitoring standby.');
+      }
     }
 
     function onRemoteActivationLevelReceived(remoteAct) {
@@ -12323,6 +12366,15 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
           } catch(e) {}
         }
         await fbRestPut('alerts/' + alertId, alertRecord);
+      }
+
+      // Beam APNs Siren Push to all closed iPhones
+      const isRoutine = isRoutineIncident(incidentObj);
+      if (!incidentObj.isClosed && !isRoutine) {
+        const topUpdate = (incidentObj.updates && incidentObj.updates.length > 0) ? incidentObj.updates[0] : {};
+        const pushTitle = `🚨 [${incidentObj.level || 'ARES DISPATCH'}] ${incidentObj.title || 'EMERGENCY CALLOUT'}`;
+        const pushBody = `📍 Staging: ${incidentObj.staging || 'Standby'}\nSitrep: ${topUpdate.sitrep || incidentObj.mission || 'Active incident callout dispatched.'}`;
+        triggerApnsPushNotification(pushTitle, pushBody);
       }
     }
 
