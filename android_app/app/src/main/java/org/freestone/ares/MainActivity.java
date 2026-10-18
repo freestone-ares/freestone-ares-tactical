@@ -75,9 +75,11 @@ public class MainActivity extends AppCompatActivity {
         settings.setAllowContentAccess(true);
         settings.setGeolocationEnabled(true);
         settings.setMediaPlaybackRequiresUserGesture(false);
-        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        settings.setSupportZoom(false);
         settings.setBuiltInZoomControls(false);
         settings.setDisplayZoomControls(false);
+        webView.setHorizontalScrollBarEnabled(false);
+        webView.setOverScrollMode(WebView.OVER_SCROLL_NEVER);
 
         // Native Link & Intent Handler (for direct CALL and SMS action buttons)
         webView.setWebViewClient(new WebViewClient() {

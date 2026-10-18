@@ -49,10 +49,7 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, WKSc
         webView.scrollView.showsHorizontalScrollIndicator = false
         webView.scrollView.contentInsetAdjustmentBehavior = .automatic
 
-        // Optimize page zoom on larger Mac desktop displays (iPad & iPhone remain at standard 1.0 responsive layout)
-        if ProcessInfo.processInfo.isiOSAppOnMac {
-            webView.pageZoom = 1.20
-        }
+        // Keep standard 1.0 responsive viewport scaling on Mac, iPad & iPhone (prevents horizontal overflow)
 
         view.addSubview(webView)
 
