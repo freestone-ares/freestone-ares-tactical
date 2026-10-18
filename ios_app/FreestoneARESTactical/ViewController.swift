@@ -2,7 +2,7 @@ import UIKit
 import WebKit
 import LocalAuthentication
 
-class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler {
+class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler, UIScrollViewDelegate {
     var webView: WKWebView!
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -43,6 +43,7 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, WKSc
         webView.navigationDelegate = self
         webView.backgroundColor = UIColor(red: 10/255, green: 13/255, blue: 18/255, alpha: 1.0)
         webView.isOpaque = false
+        webView.scrollView.delegate = self
         webView.scrollView.bounces = false
         webView.scrollView.alwaysBounceHorizontal = false
         webView.scrollView.showsHorizontalScrollIndicator = false
@@ -152,5 +153,12 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, WKSc
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in completionHandler(nil) })
         alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in completionHandler(alert.textFields?.first?.text) })
         present(alert, animated: true)
+    }
+
+    // MARK: - UIScrollViewDelegate (Hard Lock Horizontal Scrolling on iOS/iPadOS)
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.x != 0 {
+            scrollView.contentOffset.x = 0
+        }
     }
 }

@@ -75,7 +75,7 @@ jobs:
             PROVISIONING_PROFILE="e751b47c-c688-4a5a-8489-2af3f1181483" \
             CODE_SIGN_IDENTITY="Apple Distribution" \
             CODE_SIGN_ENTITLEMENTS="FreestoneARESTactical/FreestoneARESTactical.entitlements" \
-            CURRENT_PROJECT_VERSION=57 \
+            CURRENT_PROJECT_VERSION=58 \
             MARKETING_VERSION=7.9.8
 
       - name: Export IPA

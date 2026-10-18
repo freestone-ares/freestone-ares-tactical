@@ -51,12 +51,22 @@
       padding-top: max(env(safe-area-inset-top, 0px), 16px) !important;
     }
 
-    /* Prevent all horizontal sliding / scrolling on mobile devices and iPads */
+    /* Lock all horizontal sliding / scrolling on iPhone & iPad */
     html, body {
-      max-width: 100vw;
-      width: 100%;
+      width: 100% !important;
+      max-width: 100% !important;
       overflow-x: hidden !important;
       position: relative;
+      touch-action: pan-y !important;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: none !important;
+    }
+
+    #app-body, main, header, footer {
+      width: 100% !important;
+      max-width: 100% !important;
+      overflow-x: hidden !important;
+      touch-action: pan-y !important;
     }
 
     *, *::before, *::after {
@@ -209,7 +219,7 @@
             </div>
           </div>
         </div>
-        <div class="flex items-center gap-2 flex-shrink-0 self-end sm:self-center">
+        <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap justify-end w-full sm:w-auto">
           <button type="button" onclick="acknowledgeAndRespondAlert()" class="px-3.5 py-2 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 text-white rounded-lg text-xs font-black shadow flex items-center gap-1.5 transition cursor-pointer">
             <span>📻</span><span>RESPOND / DETAILS</span>
           </button>
@@ -7388,6 +7398,7 @@ D. Out-of-County stations and visitors.
         author: authorName,
         level: appState.activeIncident.level || 'TACTICAL UPDATE',
         sitrep: sitrepText,
+        isSitrepOnly: true,
         primaryCh: `Ch ${chP.ch} - ${chP.name}`,
         alternateCh: `Ch ${chA.ch} - ${chA.name}`,
         contingencyCh: 'Normal Simplex',
@@ -7402,10 +7413,15 @@ D. Out-of-County stations and visitors.
 
       input.value = '';
       saveActiveIncident();
-      await broadcastIncidentToCloud(appState.activeIncident);
+
+      // Suppress local audio/banner on sender device
+      const alertFingerprint = `${appState.activeIncident.title || ''}_${appState.activeIncident.level || ''}_${appState.activeIncident.updateCount || 0}_${appState.activeIncident.lastUpdated || ''}_${newEntry.timeLocal || newEntry.sitrep || ''}`;
+      safeStorage.setItem('fc_ares_last_heard_alert_key', alertFingerprint);
+
+      await broadcastIncidentToCloud(appState.activeIncident, false);
       renderActiveIncidentUI();
       renderActiveAlertsCardFeed();
-      showTacticalBannerNotification(`✓ SITREP #${newEntry.updateNum} broadcasted to all units & Net Control`);
+      showTacticalBannerNotification(`✓ Field SITREP #${newEntry.updateNum} transmitted to Response Board & EC`);
     }
 
     // Helper: Insert quick-tag chip into dashboard SITREP text box
@@ -7708,6 +7724,11 @@ D. Out-of-County stations and visitors.
       triggerApnsPushNotification('🛑 INCIDENT DEMOBILIZATION', `All-Clear: ${directive || 'Incident operations secured. Units standing down.'}`, 'default', 0);
       clearNativeAppBadge();
       clearAllResponderStatuses(true);
+      safeStorage.setItem('fc_ares_response_level', 3);
+      safeStorage.setItem('fc_ares_response_level_ts', Date.now());
+      renderCountyResponseLevelUI();
+      broadcastActivationLevelToCloud(3);
+      dismissHeadsUpAlertBanner();
 
       // Update Banner UI to Closed State
       const badge = document.getElementById('incident-level-badge');
@@ -9872,54 +9893,59 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
         if (stopBtn) stopBtn.classList.remove('hidden');
 
         if (type === 'quickcall') {
-          // Motorola Minitor Fire Pager Alert Sequence
-          // Tone A: 707.3 Hz (0.75s) -> Tone B: 953.7 Hz (1.4s) -> Minitor 2,205 Hz Pulsing Alert Beeps
+          // Authentic Studio Motorola Minitor Fire Pager Alert Sequence
+          // Tone A: 707.3 Hz (1.00s) -> 50ms gap -> Tone B: 953.7 Hz (2.20s) -> 4 Smooth 1050 Hz Attention Chimes
+          
+          // Tone A: 707.3 Hz with smooth raised-cosine ramps
           const oscA = ctx.createOscillator();
           const gainA = ctx.createGain();
           oscA.type = 'sine';
           oscA.frequency.setValueAtTime(707.3, now);
-          gainA.gain.setValueAtTime(0.35, now);
-          gainA.gain.setValueAtTime(0.35, now + 0.72);
-          gainA.gain.exponentialRampToValueAtTime(0.0001, now + 0.75);
+          gainA.gain.setValueAtTime(0.0001, now);
+          gainA.gain.linearRampToValueAtTime(0.32, now + 0.025);
+          gainA.gain.setValueAtTime(0.32, now + 0.975);
+          gainA.gain.exponentialRampToValueAtTime(0.0001, now + 1.00);
           oscA.connect(gainA);
           gainA.connect(ctx.destination);
           oscA.start(now);
-          oscA.stop(now + 0.75);
+          oscA.stop(now + 1.00);
           currentSirenOscs.push(oscA);
 
+          // Tone B: 953.7 Hz with smooth raised-cosine ramps
           const oscB = ctx.createOscillator();
           const gainB = ctx.createGain();
           oscB.type = 'sine';
-          oscB.frequency.setValueAtTime(953.7, now + 0.80);
-          gainB.gain.setValueAtTime(0.0, now);
-          gainB.gain.setValueAtTime(0.35, now + 0.80);
-          gainB.gain.setValueAtTime(0.35, now + 2.15);
-          gainB.gain.exponentialRampToValueAtTime(0.0001, now + 2.20);
+          oscB.frequency.setValueAtTime(953.7, now + 1.05);
+          gainB.gain.setValueAtTime(0.0001, now);
+          gainB.gain.setValueAtTime(0.0001, now + 1.05);
+          gainB.gain.linearRampToValueAtTime(0.32, now + 1.075);
+          gainB.gain.setValueAtTime(0.32, now + 3.20);
+          gainB.gain.exponentialRampToValueAtTime(0.0001, now + 3.25);
           oscB.connect(gainB);
           gainB.connect(ctx.destination);
-          oscB.start(now + 0.80);
-          oscB.stop(now + 2.20);
+          oscB.start(now + 1.05);
+          oscB.stop(now + 3.25);
           currentSirenOscs.push(oscB);
 
-          // Minitor Fire Pager 2,205 Hz Pulsing Alert Beeps
+          // 4 Crisp, Warm Attention Alert Pips at 1,050 Hz (100ms tone, 110ms gap)
           const oscP = ctx.createOscillator();
           const gainP = ctx.createGain();
           oscP.type = 'sine';
-          oscP.frequency.setValueAtTime(2205.0, now + 2.35);
-          gainP.gain.setValueAtTime(0.0, now);
-          for (let b = 0; b < 18; b++) {
-            const bt = now + 2.35 + b * 0.115;
-            gainP.gain.setValueAtTime(0.4, bt);
-            gainP.gain.setValueAtTime(0.4, bt + 0.070);
-            gainP.gain.setValueAtTime(0.0, bt + 0.075);
+          oscP.frequency.setValueAtTime(1050.0, now + 3.37);
+          gainP.gain.setValueAtTime(0.0001, now);
+          for (let b = 0; b < 4; b++) {
+            const bt = now + 3.37 + b * 0.21;
+            gainP.gain.setValueAtTime(0.0001, bt);
+            gainP.gain.linearRampToValueAtTime(0.28, bt + 0.015);
+            gainP.gain.exponentialRampToValueAtTime(0.0001, bt + 0.10);
           }
           oscP.connect(gainP);
           gainP.connect(ctx.destination);
-          oscP.start(now + 2.35);
-          oscP.stop(now + 4.5);
+          oscP.start(now + 3.37);
+          oscP.stop(now + 4.20);
           currentSirenOscs.push(oscP);
 
-          sirenTimer = setTimeout(() => stopSirenAudio(), 4600);
+          sirenTimer = setTimeout(() => stopSirenAudio(), 4250);
         } else if (type === 'warble') {
           // Hi-Lo European/Tactical Warble (rapid alternation)
           const osc = ctx.createOscillator();
@@ -10221,7 +10247,19 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
       if (!appState.activeIncident.updates) appState.activeIncident.updates = [];
       appState.activeIncident.updates.unshift(newEntry);
       saveActiveIncident();
-      broadcastIncidentToCloud(appState.activeIncident);
+
+      // Synchronize County Activation Level with Incident Posture
+      const targetLvl = level.includes('LEVEL 1') ? 1 : (level.includes('LEVEL 2') ? 2 : 3);
+      safeStorage.setItem('fc_ares_response_level', targetLvl);
+      safeStorage.setItem('fc_ares_response_level_ts', Date.now());
+      renderCountyResponseLevelUI();
+      broadcastActivationLevelToCloud(targetLvl);
+
+      // Register alert fingerprint locally on sender so this device stays silent on cloud echo
+      const alertFingerprint = `${appState.activeIncident.title || ''}_${appState.activeIncident.level || ''}_${appState.activeIncident.updateCount || 0}_${appState.activeIncident.lastUpdated || ''}_${newEntry.timeLocal || newEntry.sitrep || ''}`;
+      safeStorage.setItem('fc_ares_last_heard_alert_key', alertFingerprint);
+
+      broadcastIncidentToCloud(appState.activeIncident, true);
       renderActiveIncidentUI();
       renderActiveAlertsCardFeed();
 
@@ -10236,10 +10274,9 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
 
       closeBroadcastModal();
       
-      // RE-ALERT: Sound siren audio immediately on every update!
-      playSelectedSiren();
+      // SENDER SILENCE: Sender device does NOT play siren audio in operator's ear upon transmitting
 
-      // Show high-visibility notification
+      // Show high-visibility confirmation
       const isUp = isAlertUpdateMode;
       alert(`🚨 ${isUp ? `INCIDENT ALERT UPDATE #${appState.activeIncident.updateCount} TRANSMITTED` : 'EMERGENCY ACTIVATION BROADCASTED'}!
 
@@ -10249,7 +10286,7 @@ Title: ${title}
 Primary PACE Channel: Ch ${chP.ch} - ${chP.name} (${chP.rx} MHz / ${chP.tone})
 Alternate Net: Ch ${chA.ch} - ${chA.name}
 
-Notice: Emergency siren sound re-triggered and high-priority push notifications + SMS dispatched to all 5 active Freestone County ARES responders!`);
+Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES responders. Local console audio suppressed for operator comfort.`);
     }
 
     // Turn-by-Turn Routing Console Functions
@@ -12762,7 +12799,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
     }
 
     // 3. Realtime Cloud Incident / Alert Broadcast
-    async function broadcastIncidentToCloud(incidentObj) {
+    async function broadcastIncidentToCloud(incidentObj, isEmergencyAlert = true) {
       if (!incidentObj) return;
       console.log('🛰️ Broadcasting Incident to Firebase RTDB:', incidentObj);
       if (fbDb) {
@@ -12798,10 +12835,11 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         await fbRestPut('alerts/' + alertId, alertRecord);
       }
 
-      // Beam APNs Siren Push to all closed iPhones
+      // Beam APNs Siren Push ONLY for genuine emergency alert dispatches (never for field SITREPs or routine monitoring)
       const isRoutine = isRoutineIncident(incidentObj);
-      if (!incidentObj.isClosed && !isRoutine) {
-        const topUpdate = (incidentObj.updates && incidentObj.updates.length > 0) ? incidentObj.updates[0] : {};
+      const topUpdate = (incidentObj.updates && incidentObj.updates.length > 0) ? incidentObj.updates[0] : {};
+      const isSitrepOnly = Boolean(topUpdate.isSitrepOnly === true || !isEmergencyAlert);
+      if (isEmergencyAlert && !incidentObj.isClosed && !isRoutine && !isSitrepOnly) {
         const pushTitle = `🚨 [${incidentObj.level || 'ARES DISPATCH'}] ${incidentObj.title || 'EMERGENCY CALLOUT'}`;
         const pushBody = `📍 Staging: ${incidentObj.staging || 'Standby'}\nSitrep: ${topUpdate.sitrep || incidentObj.mission || 'Active incident callout dispatched.'}`;
         triggerApnsPushNotification(pushTitle, pushBody, 'siren.caf', 1);
@@ -14066,14 +14104,22 @@ Your console is now authorized and unlocked.`);
       renderActiveIncidentUI();
       renderActiveAlertsCardFeed();
 
-      // Check if this incident is an active emergency callout (not routine steady state and not closed)
+      // Synchronize County Response Level with active incident posture
       const isRoutine = isRoutineIncident(remoteInc);
       const isEmergency = !remoteInc.isClosed && !isRoutine;
 
       if (!isEmergency) {
+        safeStorage.setItem('fc_ares_response_level', 3);
+        safeStorage.setItem('fc_ares_response_level_ts', Date.now());
+        renderCountyResponseLevelUI();
         dismissHeadsUpAlertBanner();
         clearAllResponderStatuses(false);
         return;
+      } else {
+        const targetLvl = (remoteInc.level && remoteInc.level.includes('LEVEL 1')) ? 1 : ((remoteInc.level && remoteInc.level.includes('LEVEL 2')) ? 2 : 3);
+        safeStorage.setItem('fc_ares_response_level', targetLvl);
+        safeStorage.setItem('fc_ares_response_level_ts', Date.now());
+        renderCountyResponseLevelUI();
       }
 
       // Compute unique alert fingerprint to trigger sound and banner on NEW alerts and updates
@@ -14081,18 +14127,36 @@ Your console is now authorized and unlocked.`);
       const alertFingerprint = `${remoteInc.title || ''}_${remoteInc.level || ''}_${remoteInc.updateCount || 0}_${remoteInc.lastUpdated || ''}_${topUpdate.timestamp || topUpdate.timeLocal || topUpdate.sitrep || ''}`;
       const lastSeenKey = safeStorage.getItem('fc_ares_last_heard_alert_key') || '';
 
-      if (alertFingerprint !== lastSeenKey) {
-        safeStorage.setItem('fc_ares_last_heard_alert_key', alertFingerprint);
+      if (alertFingerprint === lastSeenKey) {
+        return;
+      }
+      safeStorage.setItem('fc_ares_last_heard_alert_key', alertFingerprint);
 
-        // ActiveAlert Duty Check: On-Duty stations receive audible tones, banner, and vibration!
-        if (isOperatorOnDuty()) {
-          console.log('🚨 ON DUTY: Emergency dispatch alert received! Triggering Active Alert audio & banner...');
-          playSelectedSiren();
-          showActiveAlertHeadsUpBanner(remoteInc);
-          showSystemPushNotification(remoteInc);
-        } else {
-          console.log('💤 OFF DUTY: Alert received in background, audible tone suppressed.');
-        }
+      // 1. SUPPRESSION FOR SENDER: The device that transmitted this update/incident never sounds sirens or alerts
+      const myCall = (appState.myCall || '').toUpperCase().trim();
+      const authorStr = ((topUpdate.author || '') + ' ' + (remoteInc.author || '')).toUpperCase();
+      const isSentByMe = Boolean(myCall && myCall !== 'GUEST' && authorStr.includes(myCall));
+      if (isSentByMe) {
+        console.log(`🔇 Incident update transmitted by this station (${myCall}) - suppressing siren and heads-up banner on sender device.`);
+        return;
+      }
+
+      // 2. SUPPRESSION FOR SITREPs: Field SITREPs go to response board & dashboard stream silently without sirens or alert heads-up banner
+      const isSitrepOnly = Boolean(topUpdate.isSitrepOnly === true || topUpdate.isSitrep === true);
+      if (isSitrepOnly) {
+        console.log('📋 Field SITREP received: updated response board & dashboard stream.');
+        showTacticalBannerNotification(`📻 Field SITREP #${topUpdate.updateNum || ''} from ${topUpdate.author || 'Field Station'}`);
+        return;
+      }
+
+      // 3. Genuine Emergency Incident Callout: Sound tone & show banner for On-Duty stations
+      if (isOperatorOnDuty()) {
+        console.log('🚨 ON DUTY: Emergency dispatch alert received! Triggering Active Alert audio & banner...');
+        playSelectedSiren();
+        showActiveAlertHeadsUpBanner(remoteInc);
+        showSystemPushNotification(remoteInc);
+      } else {
+        console.log('💤 OFF DUTY: Alert received in background, audible tone suppressed.');
       }
     }
 
@@ -15157,6 +15221,15 @@ Your console is now authorized and unlocked.`);
 
       // Dashboard Incident Card & Live SITREPs
       renderDashboardActiveIncidentCard();
+
+      // Synchronize County Response Level UI with active incident status
+      if (isRoutine || inc.isClosed) {
+        safeStorage.setItem('fc_ares_response_level', 3);
+      } else {
+        const targetLvl = (inc.level && inc.level.includes('LEVEL 1')) ? 1 : ((inc.level && inc.level.includes('LEVEL 2')) ? 2 : 3);
+        safeStorage.setItem('fc_ares_response_level', targetLvl);
+      }
+      renderCountyResponseLevelUI();
     }
 
     async function clearAllIncidentAlerts() {
@@ -15187,7 +15260,12 @@ Your console is now authorized and unlocked.`);
       };
 
       saveActiveIncident();
-      await broadcastIncidentToCloud(appState.activeIncident);
+      safeStorage.setItem('fc_ares_response_level', 3);
+      safeStorage.setItem('fc_ares_response_level_ts', Date.now());
+      renderCountyResponseLevelUI();
+      broadcastActivationLevelToCloud(3);
+      dismissHeadsUpAlertBanner();
+      await broadcastIncidentToCloud(appState.activeIncident, false);
       await clearAllResponderStatuses(true);
       renderActiveIncidentUI();
 
@@ -16999,7 +17077,7 @@ Your console is now authorized and unlocked.`);
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.8 (Build 57)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.8 (Build 58)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>
