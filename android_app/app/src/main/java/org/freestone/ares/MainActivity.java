@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         settings.setDisplayZoomControls(false);
         webView.setHorizontalScrollBarEnabled(false);
         webView.setOverScrollMode(WebView.OVER_SCROLL_NEVER);
+        webView.addJavascriptInterface(new AndroidBridge(), "AndroidBridge");
 
         // Native Link & Intent Handler (for direct CALL and SMS action buttons)
         webView.setWebViewClient(new WebViewClient() {
@@ -316,6 +317,13 @@ public class MainActivity extends AppCompatActivity {
             webView.goBack();
         } else {
             super.onBackPressed();
+        }
+    }
+
+    public class AndroidBridge {
+        @android.webkit.JavascriptInterface
+        public void suppressSenderAlert(int seconds) {
+            EmergencyDispatchService.senderSuppressedUntil = System.currentTimeMillis() + (seconds * 1000L);
         }
     }
 }

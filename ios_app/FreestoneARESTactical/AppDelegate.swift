@@ -43,6 +43,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         return true
     }
 
+    var senderSuppressionExpiry: Date = Date.distantPast
+
+    func suppressSenderAlert(duration: Double = 90.0) {
+        senderSuppressionExpiry = Date().addingTimeInterval(duration)
+        NSLog("[Freestone ARES] Sender alert suppression engaged for \(duration)s.")
+    }
+
+    func isSenderSuppressed() -> Bool {
+        return Date() < senderSuppressionExpiry
+    }
+
     // MARK: - Background CAD Dispatch Monitor
     func startDispatchMonitoring() {
         guard monitorTimer == nil else { return }
@@ -73,6 +84,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                     let level = json["level"] as? Int ?? 3
                     let badgeText = json["badgeText"] as? String ?? "LEVEL \(level)"
                     let subtext = json["dashSubtext"] as? String ?? "Emergency Posture Changed"
+
+                    if self.isSenderSuppressed() {
+                        self.lastKnownLevel = level
+                        return
+                    }
 
                     if self.lastKnownLevel == -1 {
                         self.lastKnownLevel = level
@@ -128,6 +144,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                     }
 
                     let fingerprint = "\(title)_\(level)_\(updateCount)_\(lastUpdated)"
+
+                    // 1. Sender suppression: transmitting device never alerts
+                    if self.isSenderSuppressed() {
+                        self.lastIncidentFingerprint = fingerprint
+                        return
+                    }
+
                     if self.lastIncidentFingerprint == nil {
                         self.lastIncidentFingerprint = fingerprint
                         return
@@ -135,10 +158,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
                     if fingerprint != self.lastIncidentFingerprint {
                         self.lastIncidentFingerprint = fingerprint
-                        self.sendLocalEmergencyAlert(
-                            title: "🚨 ACTIVE CALLOUT: \(title)",
-                            body: "📍 Staging: \(staging)\nMission: \(mission)"
-                        )
+
+                        // 2. Suppress siren for field SITREPs
+                        if let updates = json["updates"] as? [[String: Any]], let topUpdate = updates.first {
+                            let isSitrepOnly = topUpdate["isSitrepOnly"] as? Bool ?? false
+                            if isSitrepOnly {
+                                NSLog("[Freestone ARES] checkActiveIncident: SITREP update received, suppressing audible alert.")
+                                return
+                            }
+                        }
+
+                        // 3. Siren sounds ONLY on initial emergency dispatch (updateCount <= 1)
+                        if updateCount <= 1 {
+                            self.sendLocalEmergencyAlert(
+                                title: "🚨 ACTIVE CALLOUT: \(title)",
+                                body: "📍 Staging: \(staging)\nMission: \(mission)"
+                            )
+                        } else {
+                            NSLog("[Freestone ARES] checkActiveIncident: Subsequent update #\(updateCount), full siren suppressed.")
+                        }
                     }
                 }
             } catch {}
@@ -188,14 +226,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 NSLog("[Freestone ARES] Notification delivery error: \(error.localizedDescription)")
             }
         }
-
-        // Also play loud siren directly through media speaker (bypasses silent switch)
-        playEmergencySiren()
     }
 
     // MARK: - UNUserNotificationCenterDelegate
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        // Show banner and play sound even while the app is in the foreground
+        if isSenderSuppressed() {
+            NSLog("[Freestone ARES] willPresent: Sender suppression active, totally muting foreground alert.")
+            completionHandler([])
+            return
+        }
+        // Show banner and play sound for recipients
         completionHandler([.banner, .sound, .badge, .list])
     }
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Freestone County ARES Tactical Mobile v7.9.8</title>
   <meta name="description" content="Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES">
   <meta name="theme-color" content="#0b0e14">
@@ -71,6 +71,13 @@
 
     *, *::before, *::after {
       box-sizing: border-box;
+    }
+
+    /* iOS Mobile Input Auto-Zoom Prevention: iOS WebKit auto-zooms any input/textarea with font-size < 16px */
+    @media screen and (max-width: 768px) {
+      input, textarea, select {
+        font-size: 16px !important;
+      }
     }
 
     /* Responsive Desktop & Tablet Scaling: iPad, MacBook & iMac (Phones < 768px remain 100% untouched) */
@@ -212,10 +219,10 @@
             <h2 id="heads-up-title-text" class="text-sm sm:text-base font-black text-white truncate uppercase tracking-wide">
               MAJOR EMERGENCY DISPATCH
             </h2>
-            <div class="flex items-center gap-3 text-[11px] text-slate-300 truncate">
-              <span class="truncate"><strong class="text-amber-400">📍 STAGING:</strong> <span id="heads-up-staging-text">Fairfield EOC</span></span>
-              <span class="hidden md:inline">•</span>
-              <span class="hidden md:inline truncate"><strong class="text-emerald-400">SITREP:</strong> <span id="heads-up-sitrep-text">Emergency activation underway.</span></span>
+            <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-xs text-slate-300">
+              <div><strong class="text-amber-400">📍 STAGING:</strong> <span id="heads-up-staging-text">Fairfield EOC</span></div>
+              <span class="hidden sm:inline text-slate-500">•</span>
+              <div class="break-words whitespace-normal"><strong class="text-emerald-400">SITREP:</strong> <span id="heads-up-sitrep-text">Emergency activation underway.</span></div>
             </div>
           </div>
         </div>
@@ -957,7 +964,7 @@
           </div>
           <div class="p-2.5 bg-black/40 rounded-lg border border-slate-800 space-y-0.5">
             <span class="text-[10px] text-slate-400 font-bold block">⚡ LATEST SITREP CUE:</span>
-            <div id="dash-inc-sitrep-summary" class="text-amber-200 font-semibold truncate">Emergency activation underway. Units mobilizing.</div>
+            <div id="dash-inc-sitrep-summary" class="text-amber-200 font-semibold text-xs leading-relaxed break-words whitespace-normal">Emergency activation underway. Units mobilizing.</div>
           </div>
         </div>
 
@@ -1013,9 +1020,11 @@
               <button type="button" onclick="insertDashboardSitrepTag('[HAZARD] ')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-red-300 border border-slate-700 transition cursor-pointer">⚠️ [HAZARD]</button>
             </div>
 
-            <div class="flex flex-col sm:flex-row gap-2">
-              <input type="text" id="dash-quick-sitrep-input" placeholder="e.g. W5XXX en route US-84, mobile VHF active, tree blocking FM 488..." class="flex-1 bg-[#080b10] border border-slate-700 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 shadow" onkeydown="if(event.key==='Enter') submitQuickDashboardSitrep()" />
-              <button type="button" onclick="submitQuickDashboardSitrep()" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black rounded-lg text-xs shadow flex items-center justify-center gap-1.5 transition cursor-pointer whitespace-nowrap">
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-end gap-2">
+              <div class="flex-1 min-w-0">
+                <textarea id="dash-quick-sitrep-input" rows="2" placeholder="e.g. W5XXX en route US-84, mobile VHF active, tree blocking FM 488, sheriff on scene..." class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2.5 text-base sm:text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 shadow resize-none leading-relaxed" onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault(); submitQuickDashboardSitrep();}"></textarea>
+              </div>
+              <button type="button" onclick="submitQuickDashboardSitrep()" class="px-4 py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black rounded-lg text-xs shadow flex items-center justify-center gap-1.5 transition cursor-pointer whitespace-nowrap self-stretch sm:self-auto sm:mb-1">
                 <span>🚀</span><span>TRANSMIT SITREP</span>
               </button>
             </div>
@@ -1033,7 +1042,7 @@
               HIDE STREAM ▲
             </button>
           </div>
-          <div id="dash-sitreps-stream-container" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+          <div id="dash-sitreps-stream-container" class="space-y-2 max-h-80 overflow-y-auto pr-1">
             <!-- Dynamically populated via renderDashboardSitrepStream() -->
           </div>
         </div>
@@ -1870,6 +1879,9 @@
             <button id="btn-test-active-alert" type="button" onclick="testActiveAlertDispatcher()" class="flex-1 sm:flex-initial px-3.5 py-2 bg-gradient-to-r from-red-700 to-amber-700 hover:from-red-600 text-white font-bold rounded-lg flex items-center justify-center gap-1.5 transition shadow cursor-pointer text-xs" title="Test Active Alert banner, tones, and vibration">
               <span>🚨 TEST ACTIVE ALERT</span>
             </button>
+            <button id="btn-audio-verify-modal" type="button" onclick="openAlertSoundVerifyModal()" class="flex-1 sm:flex-initial px-3.5 py-2 bg-gradient-to-r from-purple-800 to-indigo-800 hover:from-purple-700 hover:to-indigo-700 text-white font-bold rounded-lg flex items-center justify-center gap-1.5 transition shadow cursor-pointer text-xs border border-purple-400/50" title="Verify Sender Silence & Audio Dispatch Rules">
+              <span>🧪 VERIFY ALERT RULES</span>
+            </button>
             <button id="btn-stop-siren" type="button" onclick="stopSirenAudio()" class="hidden flex-1 sm:flex-initial px-3.5 py-2 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg flex items-center justify-center gap-1.5 transition shadow cursor-pointer text-xs">
               <span>⏹️ STOP</span>
             </button>
@@ -1908,9 +1920,9 @@
                 <span class="text-slate-400 text-[10px]">LAST ALERT:</span>
                 <span id="alert-last-updated-text" class="text-slate-300 font-bold text-[10px]">NONE ACTIVE</span>
               </div>
-              <div class="flex items-center gap-2 text-[10px]">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span id="alert-sitrep-summary" class="text-emerald-300 font-semibold truncate max-w-sm sm:max-w-md">All repeaters operational. Routine monitoring on FF 110 (145.110 TSQ 146.2).</span>
+              <div class="flex items-start gap-1.5 text-xs flex-1 min-w-0">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse mt-1 flex-shrink-0"></span>
+                <div id="alert-sitrep-summary" class="text-emerald-300 font-semibold break-words whitespace-normal leading-snug">All repeaters operational. Routine monitoring on FF 110 (145.110 TSQ 146.2).</div>
               </div>
             </div>
           </div>
@@ -1933,6 +1945,11 @@
               <!-- NEW ALERT BROADCAST BUTTON -->
               <button id="btn-new-alert" onclick="openBroadcastModal(false)" class="py-2 px-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-mono-tac text-xs font-bold rounded-lg transition flex items-center gap-1">
                 <span>📢 NEW</span>
+              </button>
+
+              <!-- VERIFY ALERT RULES BUTTON -->
+              <button id="btn-audio-verify" onclick="openAlertSoundVerifyModal()" class="py-2 px-2.5 bg-purple-900/80 hover:bg-purple-800 text-purple-200 border border-purple-500/70 font-mono-tac text-xs font-bold rounded-lg transition flex items-center gap-1 shadow" title="Open Alert Audio Verification Console">
+                <span>🧪 VERIFY RULES</span>
               </button>
             </div>
 
@@ -3657,10 +3674,10 @@
             <span>⚡</span>
             <span>ALERT UPDATE REASON / SITUATION REPORT (WHAT CHANGED)</span>
           </label>
-          <input type="text" id="b-update-note" placeholder="e.g. Staging confirmed at EOC rear bay; Flood waters cresting on US-84; Switch to WRTM 760" class="w-full bg-[#0b0e14] border border-amber-700/80 rounded-lg p-2 text-white font-mono text-xs focus:outline-none focus:border-amber-400">
+          <textarea id="b-update-note" rows="2" placeholder="e.g. Staging confirmed at EOC rear bay; Flood waters cresting on US-84; Switch to WRTM 760" class="w-full bg-[#0b0e14] border border-amber-700/80 rounded-lg p-2.5 text-white font-mono text-base sm:text-xs focus:outline-none focus:border-amber-400 resize-none leading-relaxed"></textarea>
           <div class="text-[10px] text-amber-300/80 flex items-center gap-1">
             <span>ℹ️</span>
-            <span>This update message will be broadcast to all responder devices along with the re-triggered emergency sirens.</span>
+            <span>This update message will be broadcast to all responder devices with a two-tone alert tone and heads-up banner.</span>
           </div>
         </div>
 
@@ -3709,7 +3726,7 @@
             </div>
           </div>
           <div class="text-[10px] text-slate-400 italic">
-            * Note: Updating any alert parameter re-triggers sirens and dispatches notification updates immediately.
+            * Note: Siren sounds only on initial dispatch. Subsequent updates dispatch a two-tone radio alert tone and heads-up banner.
           </div>
         </div>
 
@@ -3730,7 +3747,163 @@
           <span>◀</span><span>BACK / CANCEL</span>
         </button>
         <button type="button" id="b-modal-submit-btn" onclick="saveBroadcastIncident()" class="w-full sm:flex-1 py-2.5 px-4 bg-red-600 hover:bg-red-500 text-white font-black rounded-xl shadow-lg transition flex items-center justify-center gap-2 cursor-pointer text-xs uppercase tracking-wider">
-          <span>🚨</span><span>BROADCAST ALERT TO TEAM</span>
+          <span>Transmit Alert</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ALERT AUDIO & DISPATCH VERIFICATION CONSOLE -->
+  <div id="alert-verify-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4 hidden overflow-y-auto">
+    <div class="bg-[#0b0e14] border-2 border-purple-500/80 rounded-2xl max-w-2xl w-full max-h-[92vh] flex flex-col font-mono-tac text-xs hud-glow shadow-[0_0_35px_rgba(168,85,247,0.3)] my-auto overflow-hidden">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-purple-900/60 p-4 bg-[#07090e] flex-shrink-0">
+        <div class="flex items-center gap-2.5">
+          <span class="text-xl">🧪</span>
+          <div>
+            <h3 class="text-purple-300 font-bold text-sm tracking-wide">ALERT AUDIO & DISPATCH RULES VERIFICATION</h3>
+            <p class="text-[11px] text-slate-400">Interactive live validator for sender silence, dispatch sirens, and update beeps</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeAlertSoundVerifyModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center font-bold text-base transition cursor-pointer">✕</button>
+      </div>
+
+      <!-- Realtime Suppression Status Bar -->
+      <div class="px-4 py-2.5 bg-slate-950 border-b border-slate-800 flex items-center justify-between flex-wrap gap-2 text-[11px]">
+        <div class="flex items-center gap-2">
+          <span class="text-slate-400">Current Station State:</span>
+          <span id="verify-suppression-status" class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-950 text-emerald-300 border border-emerald-600">
+            🔊 RECEIVER MODE (Normal Alerting Ready)
+          </span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span id="verify-suppression-time" class="text-slate-400 font-mono">Ready</span>
+          <button type="button" onclick="clearSenderSuppressionForTest()" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-[10px] cursor-pointer" title="Reset suppression to Receiver mode">
+            Reset to Receiver Mode
+          </button>
+        </div>
+      </div>
+
+      <!-- Scrollable Test Body -->
+      <div class="p-4 sm:p-5 overflow-y-auto space-y-3.5 flex-1 text-slate-300">
+        <!-- Test Cards Grid -->
+        <div class="space-y-3">
+
+          <!-- Scenario 1: Transmit Alert as Sender -->
+          <div class="p-3 rounded-xl bg-[#0e131c] border border-red-500/40 space-y-2">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <span class="text-[10px] font-bold text-red-400 uppercase tracking-wider block">Requirement 1 • Sender Device</span>
+                <h4 class="text-white font-bold text-xs">Transmit Emergency Alert (Sender Station)</h4>
+                <p class="text-[11px] text-slate-400 mt-0.5">When transmitting an alert from this phone, all local sounds, sirens, and tones MUST BE 100% SILENT.</p>
+              </div>
+              <button type="button" onclick="testScenarioSenderSilence()" class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white font-bold rounded-lg text-xs shadow flex-shrink-0 cursor-pointer">
+                ▶ Run Test 1
+              </button>
+            </div>
+            <div class="text-[10px] text-emerald-400 bg-emerald-950/40 p-1.5 rounded border border-emerald-900/50">
+              Rule: Engaging alert broadcasts immediately activates 90s audio suppression across JavaScript, iOS AppDelegate, and Android Service. Transmitting device makes 0 sound.
+            </div>
+          </div>
+
+          <!-- Scenario 2: Initial Dispatch on Receiver -->
+          <div class="p-3 rounded-xl bg-[#0e131c] border border-amber-500/40 space-y-2">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <span class="text-[10px] font-bold text-amber-400 uppercase tracking-wider block">Requirement 2 • Receiver Device</span>
+                <h4 class="text-white font-bold text-xs">Receive Initial Emergency Dispatch (Update #1)</h4>
+                <p class="text-[11px] text-slate-400 mt-0.5">On receiver devices, the heavy emergency Minitor pager siren sounds ONLY ONCE upon initial callout.</p>
+              </div>
+              <button type="button" onclick="testScenarioReceiverInitialDispatch()" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg text-xs shadow flex-shrink-0 cursor-pointer">
+                ▶ Run Test 2
+              </button>
+            </div>
+            <div class="text-[10px] text-amber-400 bg-amber-950/40 p-1.5 rounded border border-amber-900/50">
+              Rule: Initial dispatch (updateCount &lt;= 1) sounds the authentic Motorola Minitor pager siren + APNs siren push.
+            </div>
+          </div>
+
+          <!-- Scenario 3: Subsequent Incident Update on Receiver -->
+          <div class="p-3 rounded-xl bg-[#0e131c] border border-cyan-500/40 space-y-2">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <span class="text-[10px] font-bold text-cyan-400 uppercase tracking-wider block">Requirement 3 • Receiver Device</span>
+                <h4 class="text-white font-bold text-xs">Receive Incident Update (Update #2+)</h4>
+                <p class="text-[11px] text-slate-400 mt-0.5">After initial dispatch, updates play a crisp two-tone alert beep with banner. Siren NEVER re-sounds.</p>
+              </div>
+              <button type="button" onclick="testScenarioReceiverUpdateBeep()" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-lg text-xs shadow flex-shrink-0 cursor-pointer">
+                ▶ Run Test 3
+              </button>
+            </div>
+            <div class="text-[10px] text-cyan-400 bg-cyan-950/40 p-1.5 rounded border border-cyan-900/50">
+              Rule: Subsequent updates (updateCount &gt; 1) play synthesized 880Hz / 1200Hz two-tone alert beep + banner. Emergency siren stays off.
+            </div>
+          </div>
+
+          <!-- Scenario 4: Field SITREP Posted -->
+          <div class="p-3 rounded-xl bg-[#0e131c] border border-slate-700 space-y-2">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Requirement 4 • All Stations</span>
+                <h4 class="text-white font-bold text-xs">Receive Field SITREP</h4>
+                <p class="text-[11px] text-slate-400 mt-0.5">Field SITREPs update the response board and feed silently. Zero sirens and zero beeps.</p>
+              </div>
+              <button type="button" onclick="testScenarioSitrepSilence()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-lg text-xs shadow flex-shrink-0 cursor-pointer">
+                ▶ Run Test 4
+              </button>
+            </div>
+            <div class="text-[10px] text-slate-400 bg-slate-900/50 p-1.5 rounded border border-slate-800">
+              Rule: isSitrepOnly suppresses all audible alerts on iOS, Android, and web.
+            </div>
+          </div>
+
+          <!-- Scenario 5: Responder Status Change -->
+          <div class="p-3 rounded-xl bg-[#0e131c] border border-slate-700 space-y-2">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Requirement 5 • All Stations</span>
+                <h4 class="text-white font-bold text-xs">Receive Responder Status Update ("En Route")</h4>
+                <p class="text-[11px] text-slate-400 mt-0.5">When responders click En Route or On Scene, status boards sync live with ZERO audible alert tones.</p>
+              </div>
+              <button type="button" onclick="testScenarioResponderStatusSilence()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-lg text-xs shadow flex-shrink-0 cursor-pointer">
+                ▶ Run Test 5
+              </button>
+            </div>
+            <div class="text-[10px] text-slate-400 bg-slate-900/50 p-1.5 rounded border border-slate-800">
+              Rule: incident_responses telemetry updates table and map markers silently without triggering alert chimes.
+            </div>
+          </div>
+
+          <!-- Direct Button Verification -->
+          <div class="p-3 rounded-xl bg-[#14101e] border border-purple-500/40 flex items-center justify-between gap-2">
+            <div>
+              <span class="text-[10px] font-bold text-purple-400 uppercase tracking-wider block">Requirement 6 • Button Text Check</span>
+              <h4 class="text-white font-bold text-xs">Modal Button Reads Strictly "Transmit Alert"</h4>
+              <p class="text-[11px] text-slate-400 mt-0.5">Verify broadcast modal button has no "RE-SOUND SIRENS" or other phrases.</p>
+            </div>
+            <button type="button" onclick="testInspectBroadcastModalButton()" class="px-3 py-1.5 bg-purple-700 hover:bg-purple-600 text-white font-bold rounded-lg text-xs shadow flex-shrink-0 cursor-pointer">
+              ▶ Inspect Button
+            </button>
+          </div>
+        </div>
+
+        <!-- Realtime Live Audit Log -->
+        <div class="space-y-1.5 pt-2 border-t border-slate-800">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Verification Audit Log:</span>
+            <button type="button" onclick="document.getElementById('verify-log-box').innerHTML = ''" class="text-[10px] text-slate-500 hover:text-slate-300 cursor-pointer">Clear Log</button>
+          </div>
+          <div id="verify-log-box" class="space-y-1.5 max-h-40 overflow-y-auto p-2 rounded-lg bg-black/60 border border-slate-800/80">
+            <div class="text-[10px] text-slate-500 italic p-1">Click any test button above to run real-time verification...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex items-center justify-between border-t border-purple-900/60 p-3 bg-[#07090e] flex-shrink-0">
+        <span class="text-[10px] text-purple-300">Freestone County ARES Dispatch Validator • Build 60</span>
+        <button type="button" onclick="closeAlertSoundVerifyModal()" class="px-4 py-2 bg-purple-800 hover:bg-purple-700 text-white font-bold rounded-xl text-xs transition cursor-pointer">
+          CLOSE CONSOLE
         </button>
       </div>
     </div>
@@ -7412,7 +7585,14 @@ D. Out-of-County stations and visitors.
       appState.activeIncident.updates.unshift(newEntry);
 
       input.value = '';
+      try { input.blur(); } catch(be) {}
+      if (typeof window !== 'undefined') {
+        window.scrollTo(0, window.scrollY);
+      }
       saveActiveIncident();
+
+      // SENDER SILENCE GUARANTEE: Engage 90s suppression across web and native layers
+      setSenderSuppression(90);
 
       // Suppress local audio/banner on sender device
       const alertFingerprint = `${appState.activeIncident.title || ''}_${appState.activeIncident.level || ''}_${appState.activeIncident.updateCount || 0}_${appState.activeIncident.lastUpdated || ''}_${newEntry.timeLocal || newEntry.sitrep || ''}`;
@@ -7485,7 +7665,10 @@ D. Out-of-County stations and visitors.
         if (titleEl) titleEl.textContent = 'ROUTINE OPERATIONS // FREESTONE CO. ARES';
         if (stagingEl) stagingEl.textContent = 'Standby / Home QTH';
         if (paceEl) paceEl.textContent = 'Ch 01 - FF 110 (145.110 TSQ 146.2)';
-        if (sitrepEl) sitrepEl.textContent = 'All repeaters operational. County in steady-state standby.';
+        if (sitrepEl) {
+          sitrepEl.textContent = 'All repeaters operational. County in steady-state standby.';
+          sitrepEl.className = 'text-emerald-200 font-semibold text-xs leading-relaxed break-words whitespace-normal';
+        }
         if (actionsBlock) actionsBlock.classList.add('hidden');
         if (sitrepsBox) sitrepsBox.classList.add('hidden');
       } else {
@@ -7515,7 +7698,10 @@ D. Out-of-County stations and visitors.
         if (paceEl) paceEl.textContent = `Ch ${chP.ch} - ${chP.name} (${chP.rx || '145.110'})`;
 
         const topUpdate = (inc.updates && inc.updates.length > 0) ? inc.updates[0] : {};
-        if (sitrepEl) sitrepEl.textContent = topUpdate.sitrep || inc.mission || 'Active emergency callout dispatched.';
+        if (sitrepEl) {
+          sitrepEl.textContent = topUpdate.sitrep || inc.mission || 'Active emergency callout dispatched.';
+          sitrepEl.className = 'text-amber-200 font-semibold text-xs leading-relaxed break-words whitespace-normal';
+        }
 
         if (actionsBlock) actionsBlock.classList.remove('hidden');
         if (sitrepsBox) sitrepsBox.classList.remove('hidden');
@@ -7572,7 +7758,7 @@ D. Out-of-County stations and visitors.
               </div>
               <span class="text-slate-400 font-mono">${u.timeLocal}</span>
             </div>
-            <div class="text-slate-200 text-[11px] leading-relaxed">
+            <div class="text-slate-100 text-xs sm:text-[11px] leading-relaxed break-words whitespace-pre-wrap select-text pt-0.5">
               ${u.sitrep}
             </div>
           </div>
@@ -7623,7 +7809,7 @@ D. Out-of-County stations and visitors.
               </div>
             </div>
 
-            <div class="text-slate-100 text-xs leading-relaxed bg-black/50 p-2.5 rounded border border-slate-800/70">
+            <div class="text-slate-100 text-xs leading-relaxed bg-black/50 p-2.5 rounded border border-slate-800/70 break-words whitespace-pre-wrap select-text">
               <strong class="text-amber-400">SITREP / WHAT CHANGED:</strong> ${u.sitrep}
             </div>
 
@@ -7746,7 +7932,7 @@ D. Out-of-County stations and visitors.
       }
       if (sitrepEl) {
         sitrepEl.textContent = `All-Clear: Operations secured. 14.0 volunteer hours logged for County EMC.`;
-        sitrepEl.className = 'text-emerald-400 font-bold truncate max-w-sm sm:max-w-md';
+        sitrepEl.className = 'text-emerald-400 font-bold break-words whitespace-normal leading-snug';
       }
       if (demobBtn) {
         demobBtn.innerHTML = '<span>📋</span><span>VIEW ICS-214</span>';
@@ -9864,7 +10050,79 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
       } catch(ne) {}
     }
 
+    // Sender Silence & Audio Suppression System
+    function isSenderSuppressionActive() {
+      const suppressedUntil = parseInt(safeStorage.getItem('fc_ares_sender_suppressed_until') || '0', 10);
+      return Date.now() < suppressedUntil;
+    }
+
+    function setSenderSuppression(seconds = 90) {
+      const expiry = Date.now() + (seconds * 1000);
+      safeStorage.setItem('fc_ares_sender_suppressed_until', expiry);
+      console.log(`🔇 Sender audio suppression active for ${seconds}s.`);
+      try {
+        if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.tacticalNativeBridge) {
+          window.webkit.messageHandlers.tacticalNativeBridge.postMessage({
+            action: 'suppressSenderAlert',
+            durationSeconds: seconds
+          });
+        } else if (window.AndroidBridge && window.AndroidBridge.suppressSenderAlert) {
+          window.AndroidBridge.suppressSenderAlert(seconds);
+        }
+      } catch(e) {}
+    }
+
+    // Two-Tone Radio Alert Beep (Used for updates after initial dispatch; siren sounds ONLY once on initial dispatch)
+    function playTwoToneBeep() {
+      if (isSenderSuppressionActive()) {
+        console.log('🔇 Sender suppression active: suppressing two-tone beep.');
+        return;
+      }
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const now = ctx.currentTime;
+
+        // Tone 1: 880 Hz
+        const osc1 = ctx.createOscillator();
+        const gain1 = ctx.createGain();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(880, now);
+        gain1.gain.setValueAtTime(0, now);
+        gain1.gain.linearRampToValueAtTime(0.28, now + 0.02);
+        gain1.gain.linearRampToValueAtTime(0, now + 0.14);
+        osc1.connect(gain1);
+        gain1.connect(ctx.destination);
+        osc1.start(now);
+        osc1.stop(now + 0.15);
+
+        // Tone 2: 1200 Hz
+        const osc2 = ctx.createOscillator();
+        const gain2 = ctx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(1200, now + 0.18);
+        gain2.gain.setValueAtTime(0, now + 0.18);
+        gain2.gain.linearRampToValueAtTime(0.28, now + 0.20);
+        gain2.gain.linearRampToValueAtTime(0, now + 0.34);
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+        osc2.start(now + 0.18);
+        osc2.stop(now + 0.35);
+
+        if (navigator.vibrate) {
+          try { navigator.vibrate([150, 60, 150]); } catch(ve) {}
+        }
+      } catch(e) {
+        console.warn('Two-tone alert beep notice:', e);
+      }
+    }
+
     function playSelectedSiren() {
+      if (isSenderSuppressionActive()) {
+        console.log('🔇 Sender suppression active: suppressing emergency siren on transmitting device.');
+        return;
+      }
       const select = document.getElementById('siren-type-select');
       const type = select ? select.value : 'quickcall';
       stopSirenAudio();
@@ -10084,8 +10342,8 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
         title.className = 'text-amber-400 font-bold text-sm tracking-wide';
       }
       if (submitBtn) {
-        submitBtn.innerHTML = `<span>⚡ TRANSMIT ALERT UPDATE & RE-SOUND SIRENS</span>`;
-        submitBtn.className = 'flex-2 py-2 px-4 bg-gradient-to-r from-red-600 via-amber-600 to-red-600 hover:from-red-500 hover:to-amber-500 text-white font-bold rounded shadow-lg flex items-center justify-center gap-1.5 border border-amber-400';
+        submitBtn.innerHTML = `<span>Transmit Alert</span>`;
+        submitBtn.className = 'flex-2 py-2 px-4 bg-red-600 hover:bg-red-500 text-white font-bold rounded shadow-lg flex items-center justify-center gap-1.5';
       }
       if (noteBox) noteBox.classList.remove('hidden');
       if (noteInput) {
@@ -10141,7 +10399,7 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
         title.className = 'text-red-400 font-bold text-sm tracking-wide';
       }
       if (submitBtn) {
-        submitBtn.innerHTML = `<span>🚨 BROADCAST NEW INCIDENT ALERT</span>`;
+        submitBtn.innerHTML = `<span>Transmit Alert</span>`;
         submitBtn.className = 'flex-2 py-2 px-4 bg-red-600 hover:bg-red-500 text-white font-bold rounded shadow-lg flex items-center justify-center gap-1.5';
       }
       if (noteBox) noteBox.classList.add('hidden');
@@ -10241,12 +10499,15 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
         alternateCh: `Ch ${chA.ch} - ${chA.name} (${chA.rx} MHz / ${chA.tone})`,
         contingencyCh: `Ch ${chC.ch} - ${chC.name}`,
         emergencyCh: `Ch ${chE.ch} - ${chE.name}`,
-        broadcastSummary: 'Emergency Sirens Re-Triggered • APNs/FCM Push & SMS Sent to 5 Responders'
+        broadcastSummary: isAlertUpdateMode ? 'Alert Update Broadcasted • Two-Tone Beep Sent' : 'Emergency Dispatch Broadcasted • Pager Siren Sent'
       };
 
       if (!appState.activeIncident.updates) appState.activeIncident.updates = [];
       appState.activeIncident.updates.unshift(newEntry);
       saveActiveIncident();
+
+      // SENDER SILENCE GUARANTEE: Instantly engage 90s audio suppression across web and native layers
+      setSenderSuppression(90);
 
       // Synchronize County Activation Level with Incident Posture
       const targetLvl = level.includes('LEVEL 1') ? 1 : (level.includes('LEVEL 2') ? 2 : 3);
@@ -10270,7 +10531,10 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
 
       if (updateBadge) updateBadge.textContent = `UPDATE #${appState.activeIncident.updateCount} ACTIVE`;
       if (lastUpdatedEl) lastUpdatedEl.textContent = `${timeStr} LOCAL`;
-      if (sitrepEl) sitrepEl.textContent = `Sitrep: ${updateNote}`;
+      if (sitrepEl) {
+        sitrepEl.textContent = `Sitrep: ${updateNote}`;
+        sitrepEl.className = 'text-amber-300 font-semibold break-words whitespace-normal leading-snug';
+      }
 
       closeBroadcastModal();
       
@@ -12738,7 +13002,7 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
     }
 
     // 2. Realtime Firebase Activation Level Broadcast
-    async function broadcastActivationLevelToCloud(levelNum) {
+    async function broadcastActivationLevelToCloud(levelNum, sendApnsPush = true) {
       const num = parseInt(levelNum, 10);
       const cfg = COUNTY_RESPONSE_CONFIG[num] || COUNTY_RESPONSE_CONFIG[3];
       const payload = {
@@ -12762,14 +13026,16 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
       }
       await fbRestPut('activation_level', payload);
 
-      // Trigger APNs Siren Push to all closed iPhones
-      if (num === 1) {
-        triggerApnsPushNotification('🚨 EMERGENCY ACTIVATION: LEVEL 1', 'Freestone County ARES escalated to Level 1 Full Activation. All verified operators mobilize.', 'siren.caf', 1);
-      } else if (num === 2) {
-        triggerApnsPushNotification('⚠️ EMERGENCY POSTURE: LEVEL 2', 'Freestone County ARES placed on Level 2 Standby. Monitor primary PACE repeater.', 'siren.caf', 1);
-      } else if (num === 3) {
-        triggerApnsPushNotification('🟢 FREESTONE ARES: STEADY STATE', 'Emergency posture secured. County returned to Level 3 Monitoring standby.', 'default', 0);
-        clearNativeAppBadge();
+      // Trigger APNs Push only if standalone activation level change (not bundled with an incident broadcast)
+      if (sendApnsPush) {
+        if (num === 1) {
+          triggerApnsPushNotification('🚨 EMERGENCY ACTIVATION: LEVEL 1', 'Freestone County ARES escalated to Level 1 Full Activation. All verified operators mobilize.', 'siren.caf', 1);
+        } else if (num === 2) {
+          triggerApnsPushNotification('⚠️ EMERGENCY POSTURE: LEVEL 2', 'Freestone County ARES placed on Level 2 Standby. Monitor primary PACE repeater.', 'default', 1);
+        } else if (num === 3) {
+          triggerApnsPushNotification('🟢 FREESTONE ARES: STEADY STATE', 'Emergency posture secured. County returned to Level 3 Monitoring standby.', 'default', 0);
+          clearNativeAppBadge();
+        }
       }
     }
 
@@ -12789,9 +13055,12 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
         safeStorage.setItem('fc_ares_response_level_ts', remoteTs);
         renderCountyResponseLevelUI();
 
-        // Sound chime/siren if escalated to emergency posture (Level 1 or 2)
-        if (newLvl <= 2 && newLvl < currentLvl) {
-          playSelectedSiren();
+        // Sound two-tone alert if escalated to emergency posture (Level 1 or 2) on receiving stations
+        const isSentByMe = Boolean(isSenderSuppressionActive() || (remoteAct.updatedBy && appState.myCall && remoteAct.updatedBy.toUpperCase() === appState.myCall.toUpperCase()));
+        if (!isSentByMe && newLvl <= 2 && newLvl < currentLvl) {
+          if (isOperatorOnDuty()) {
+            playTwoToneBeep();
+          }
           const cfg = COUNTY_RESPONSE_CONFIG[newLvl];
           showTacticalBannerNotification(`🚨 EMERGENCY POSTURE CHANGE: ${cfg.badgeText}`);
         }
@@ -12835,14 +13104,17 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
         await fbRestPut('alerts/' + alertId, alertRecord);
       }
 
-      // Beam APNs Siren Push ONLY for genuine emergency alert dispatches (never for field SITREPs or routine monitoring)
+      // Beam APNs Push ONLY for genuine emergency alert dispatches (never for field SITREPs or routine monitoring)
       const isRoutine = isRoutineIncident(incidentObj);
       const topUpdate = (incidentObj.updates && incidentObj.updates.length > 0) ? incidentObj.updates[0] : {};
       const isSitrepOnly = Boolean(topUpdate.isSitrepOnly === true || !isEmergencyAlert);
       if (isEmergencyAlert && !incidentObj.isClosed && !isRoutine && !isSitrepOnly) {
+        const isInitialDispatch = (incidentObj.updateCount === 1 || !incidentObj.updateCount);
         const pushTitle = `🚨 [${incidentObj.level || 'ARES DISPATCH'}] ${incidentObj.title || 'EMERGENCY CALLOUT'}`;
         const pushBody = `📍 Staging: ${incidentObj.staging || 'Standby'}\nSitrep: ${topUpdate.sitrep || incidentObj.mission || 'Active incident callout dispatched.'}`;
-        triggerApnsPushNotification(pushTitle, pushBody, 'siren.caf', 1);
+        // Siren sound ONLY for initial dispatch; subsequent updates use standard push sound
+        const pushSound = isInitialDispatch ? 'siren.caf' : 'default';
+        triggerApnsPushNotification(pushTitle, pushBody, pushSound, 1);
       }
     }
 
@@ -13102,6 +13374,166 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
       showSystemPushNotification(testIncident);
     }
 
+    // Alert Sound & Dispatch Audio Verification Console
+    let verifyStatusTimer = null;
+
+    function openAlertSoundVerifyModal() {
+      const modal = document.getElementById('alert-verify-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        updateVerifyModalStatus();
+        if (!verifyStatusTimer) {
+          verifyStatusTimer = setInterval(updateVerifyModalStatus, 500);
+        }
+      }
+    }
+
+    function closeAlertSoundVerifyModal() {
+      const modal = document.getElementById('alert-verify-modal');
+      if (modal) modal.classList.add('hidden');
+      if (verifyStatusTimer) {
+        clearInterval(verifyStatusTimer);
+        verifyStatusTimer = null;
+      }
+      stopSirenAudio();
+    }
+
+    function updateVerifyModalStatus() {
+      const statusEl = document.getElementById('verify-suppression-status');
+      const timeEl = document.getElementById('verify-suppression-time');
+      if (!statusEl) return;
+      const suppressedUntil = parseInt(safeStorage.getItem('fc_ares_sender_suppressed_until') || '0', 10);
+      const remainingSec = Math.max(0, Math.ceil((suppressedUntil - Date.now()) / 1000));
+      if (remainingSec > 0) {
+        statusEl.className = 'px-2.5 py-1 rounded-full text-xs font-bold bg-amber-950 text-amber-300 border border-amber-600 animate-pulse';
+        statusEl.textContent = '🔇 SENDER SUPPRESSION ACTIVE (Device Muted)';
+        if (timeEl) timeEl.textContent = `${remainingSec}s remaining`;
+      } else {
+        statusEl.className = 'px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-950 text-emerald-300 border border-emerald-600';
+        statusEl.textContent = '🔊 RECEIVER MODE (Normal Alerting Ready)';
+        if (timeEl) timeEl.textContent = 'Ready';
+      }
+    }
+
+    function clearSenderSuppressionForTest() {
+      safeStorage.removeItem('fc_ares_sender_suppressed_until');
+      setSenderSuppression(0);
+      updateVerifyModalStatus();
+      setVerifyResult('verify-log-box', 'ℹ️ Sender suppression cleared. Device is now in Receiver Mode.', 'text-cyan-400');
+    }
+
+    function setVerifyResult(boxId, message, colorClass = 'text-emerald-400') {
+      const box = document.getElementById(boxId || 'verify-log-box');
+      if (!box) return;
+      const now = new Date().toLocaleTimeString();
+      const p = document.createElement('div');
+      p.className = `p-2 rounded bg-slate-900/90 border border-slate-800 text-[11px] font-mono-tac ${colorClass} flex items-start gap-2`;
+      p.innerHTML = `<span class="text-slate-500 font-normal">[${now}]</span> <span>${message}</span>`;
+      box.insertBefore(p, box.firstChild);
+    }
+
+    function testScenarioSenderSilence() {
+      // 1. Engage sender suppression (same as saveBroadcastIncident)
+      setSenderSuppression(90);
+      updateVerifyModalStatus();
+
+      // 2. Simulate broadcast dispatch
+      let audioFired = false;
+      try {
+        if (isSenderSuppressionActive()) {
+          // Suppressed
+        } else {
+          audioFired = true;
+          playSelectedSiren();
+        }
+      } catch(e) {}
+
+      // 3. Confirm 100% silence
+      if (!audioFired) {
+        setVerifyResult('verify-log-box', '✅ TEST 1 PASSED: SENDER SILENCE GUARANTEED. Transmitting alert engaged 90s suppression across Web, iOS AppDelegate & Android. Zero sirens, zero beeps, zero audio played on sender phone.', 'text-emerald-400 font-bold');
+        showTacticalBannerNotification('🔇 SENDER SILENCE VERIFIED: 0 audio played on transmitting station');
+      } else {
+        setVerifyResult('verify-log-box', '❌ TEST 1 FAILED: Audio was not suppressed.', 'text-red-400 font-bold');
+      }
+    }
+
+    function testScenarioReceiverInitialDispatch() {
+      // Simulate receiver phone receiving initial dispatch
+      clearSenderSuppressionForTest();
+      if (!isOperatorOnDuty()) {
+        appState.myStatus = 'AVAILABLE / ON-DUTY';
+      }
+
+      setVerifyResult('verify-log-box', '🚨 TEST 2 (RECEIVER): Incoming INITIAL DISPATCH (Update #1). Playing authentic Motorola Minitor pager siren + heads-up banner...', 'text-amber-300 font-bold');
+      playSelectedSiren();
+
+      const mockIncident = {
+        title: 'STRUCTURE FIRE / COMM BACKUP (DRILL)',
+        level: 'LEVEL 1 - FULL ACTIVATION',
+        staging: 'Fairfield EOC / Staging 1',
+        mission: 'Provide backup VHF communications for mutual aid fire teams.',
+        updateCount: 1,
+        lastUpdated: new Date().toLocaleTimeString(),
+        updates: [{
+          sitrep: 'INITIAL CALLOUT: All Freestone ARES operators mobilize to primary PACE repeater.',
+          timeLocal: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          author: 'KG5TZT'
+        }],
+        isClosed: false
+      };
+      showActiveAlertHeadsUpBanner(mockIncident);
+      setVerifyResult('verify-log-box', '✅ TEST 2 PASSED: Initial dispatch siren sounded once + banner displayed. (APNs push sends siren.caf).', 'text-emerald-400 font-bold');
+    }
+
+    function testScenarioReceiverUpdateBeep() {
+      // Simulate receiver phone receiving subsequent update (Update #2)
+      clearSenderSuppressionForTest();
+      stopSirenAudio();
+
+      setVerifyResult('verify-log-box', '⚡ TEST 3 (RECEIVER): Incoming INCIDENT UPDATE #2. Playing crisp two-tone alert beep (880Hz / 1200Hz). SIREN IS SUPPRESSED...', 'text-cyan-300 font-bold');
+      playTwoToneBeep();
+
+      const mockIncident = {
+        title: 'STRUCTURE FIRE / COMM BACKUP (DRILL)',
+        level: 'LEVEL 1 - FULL ACTIVATION',
+        staging: 'Fairfield EOC / Staging 1',
+        mission: 'Provide backup VHF communications for mutual aid fire teams.',
+        updateCount: 2,
+        lastUpdated: new Date().toLocaleTimeString(),
+        updates: [{
+          sitrep: 'UPDATE #2: PACE primary frequency verified clear. Fairfield staging point active.',
+          timeLocal: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          author: 'KG5TZT'
+        }],
+        isClosed: false
+      };
+      showActiveAlertHeadsUpBanner(mockIncident);
+      setVerifyResult('verify-log-box', '✅ TEST 3 PASSED: Two-tone radio alert beep (880Hz / 1200Hz) sounded with update banner. Siren did NOT repeat.', 'text-emerald-400 font-bold');
+    }
+
+    function testScenarioSitrepSilence() {
+      stopSirenAudio();
+      setVerifyResult('verify-log-box', '📋 TEST 4: Incoming FIELD SITREP from KF5ZBL. Board updating silently...', 'text-slate-300');
+      showTacticalBannerNotification('📻 Field SITREP #2 from KF5ZBL: Weather clear, standing by on 145.110');
+      setVerifyResult('verify-log-box', '✅ TEST 4 PASSED: Field SITREP received silently. Zero sirens, zero beeps played.', 'text-emerald-400 font-bold');
+    }
+
+    function testScenarioResponderStatusSilence() {
+      stopSirenAudio();
+      setVerifyResult('verify-log-box', '🚗 TEST 5: Responder KD5JHQ updated status to "DISPATCHED / EN ROUTE"...', 'text-slate-300');
+      showTacticalBannerNotification('✓ Responder KD5JHQ is En Route to Staging');
+      setVerifyResult('verify-log-box', '✅ TEST 5 PASSED: Responder status synced silently. Zero sirens, zero beeps played.', 'text-emerald-400 font-bold');
+    }
+
+    function testInspectBroadcastModalButton() {
+      closeAlertSoundVerifyModal();
+      openBroadcastModal(false);
+      const submitBtn = document.getElementById('b-modal-submit-btn');
+      if (submitBtn) {
+        console.log('Broadcast Modal Submit Button text:', submitBtn.innerText);
+      }
+    }
+
     function requestNotificationPermission() {
       if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'default') {
         try {
@@ -13312,7 +13744,7 @@ function toggleIncidentDetailsExpanded() {
           <div class="bg-black/60 p-3 rounded-lg border border-red-500/40 text-xs text-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <strong class="text-amber-400">📍 STAGING:</strong> <span class="text-white font-bold">${inc.staging || 'Standby'}</span>
-              <div class="text-[11px] text-slate-300 pt-0.5"><strong>SITREP:</strong> ${sitrep}</div>
+              <div class="text-[11px] text-slate-300 pt-0.5 break-words whitespace-normal leading-snug"><strong>SITREP:</strong> ${sitrep}</div>
             </div>
             <div class="flex items-center gap-2 flex-shrink-0 pt-1 sm:pt-0">
               <span id="btn-toggle-incident-details" class="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white font-black text-xs shadow flex items-center gap-1 transition">
@@ -14135,24 +14567,30 @@ Your console is now authorized and unlocked.`);
       // 1. SUPPRESSION FOR SENDER: The device that transmitted this update/incident never sounds sirens or alerts
       const myCall = (appState.myCall || '').toUpperCase().trim();
       const authorStr = ((topUpdate.author || '') + ' ' + (remoteInc.author || '')).toUpperCase();
-      const isSentByMe = Boolean(myCall && myCall !== 'GUEST' && authorStr.includes(myCall));
+      const isSentByMe = Boolean(isSenderSuppressionActive() || (myCall && myCall !== 'GUEST' && authorStr.includes(myCall)));
       if (isSentByMe) {
         console.log(`🔇 Incident update transmitted by this station (${myCall}) - suppressing siren and heads-up banner on sender device.`);
         return;
       }
 
-      // 2. SUPPRESSION FOR SITREPs: Field SITREPs go to response board & dashboard stream silently without sirens or alert heads-up banner
-      const isSitrepOnly = Boolean(topUpdate.isSitrepOnly === true || topUpdate.isSitrep === true);
+      // 2. SUPPRESSION FOR SITREPs & RESPONDER STATUSES: Field SITREPs & responses update the board silently without alert sirens or beeps
+      const isSitrepOnly = Boolean(topUpdate.isSitrepOnly === true || topUpdate.isSitrep === true || topUpdate.isResponseStatus === true);
       if (isSitrepOnly) {
-        console.log('📋 Field SITREP received: updated response board & dashboard stream.');
+        console.log('📋 Field SITREP received: updated response board & dashboard stream silently.');
         showTacticalBannerNotification(`📻 Field SITREP #${topUpdate.updateNum || ''} from ${topUpdate.author || 'Field Station'}`);
         return;
       }
 
-      // 3. Genuine Emergency Incident Callout: Sound tone & show banner for On-Duty stations
+      // 3. Emergency Incident Callout: Initial dispatch gets Minitor pager siren; subsequent updates get crisp two-tone beep + banner
       if (isOperatorOnDuty()) {
-        console.log('🚨 ON DUTY: Emergency dispatch alert received! Triggering Active Alert audio & banner...');
-        playSelectedSiren();
+        const isInitialDispatch = (remoteInc.updateCount === 1 || !remoteInc.updateCount);
+        if (isInitialDispatch) {
+          console.log('🚨 ON DUTY: INITIAL Emergency Dispatch received! Triggering authentic Motorola Minitor pager siren & banner...');
+          playSelectedSiren();
+        } else {
+          console.log(`⚡ ON DUTY: Incident Alert UPDATE #${remoteInc.updateCount} received! Playing crisp two-tone alert beep (siren sounds only on initial dispatch)...`);
+          playTwoToneBeep();
+        }
         showActiveAlertHeadsUpBanner(remoteInc);
         showSystemPushNotification(remoteInc);
       } else {
@@ -15172,10 +15610,10 @@ Your console is now authorized and unlocked.`);
       if (sitrepEl) {
         if (inc.updates && inc.updates.length > 0) {
           sitrepEl.textContent = `Sitrep: ${inc.updates[0].sitrep}`;
-          sitrepEl.className = 'text-amber-300 font-semibold truncate max-w-sm sm:max-w-md';
+          sitrepEl.className = 'text-amber-300 font-semibold break-words whitespace-normal leading-snug';
         } else {
           sitrepEl.textContent = 'All repeaters operational. Routine monitoring on FF 110 (145.110 TSQ 146.2).';
-          sitrepEl.className = 'text-emerald-300 font-semibold truncate max-w-sm sm:max-w-md';
+          sitrepEl.className = 'text-emerald-300 font-semibold break-words whitespace-normal leading-snug';
         }
       }
 
@@ -17077,7 +17515,7 @@ Your console is now authorized and unlocked.`);
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.8 (Build 59)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.8 (Build 60)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>

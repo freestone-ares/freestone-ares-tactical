@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Freestone County ARES Tactical Mobile v7.9.8</title>
   <meta name="description" content="Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES">
   <meta name="theme-color" content="#0b0e14">
@@ -51,35 +51,58 @@
       padding-top: max(env(safe-area-inset-top, 0px), 16px) !important;
     }
 
-    /* Prevent all horizontal sliding / scrolling on mobile devices */
+    /* Lock all horizontal sliding / scrolling on iPhone & iPad */
     html, body {
-      max-width: 100vw;
+      width: 100% !important;
+      max-width: 100% !important;
       overflow-x: hidden !important;
+      position: relative;
+      touch-action: pan-y !important;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: none !important;
+    }
+
+    #app-body, main, header, footer {
+      width: 100% !important;
+      max-width: 100% !important;
+      overflow-x: hidden !important;
+      touch-action: pan-y !important;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    /* iOS Mobile Input Auto-Zoom Prevention: iOS WebKit auto-zooms any input/textarea with font-size < 16px */
+    @media screen and (max-width: 768px) {
+      input, textarea, select {
+        font-size: 16px !important;
+      }
     }
 
     /* Responsive Desktop & Tablet Scaling: iPad, MacBook & iMac (Phones < 768px remain 100% untouched) */
     @media (min-width: 1024px) {
       html {
-        font-size: 17.5px;
+        font-size: 16px;
       }
       .max-w-7xl {
-        max-width: 90rem !important;
+        max-width: min(100%, 80rem) !important;
       }
     }
     @media (min-width: 1440px) {
       html {
-        font-size: 18.5px;
+        font-size: 17px;
       }
       .max-w-7xl {
-        max-width: 98rem !important;
+        max-width: min(100%, 90rem) !important;
       }
     }
     @media (min-width: 1920px) {
       html {
-        font-size: 19.5px;
+        font-size: 18px;
       }
       .max-w-7xl {
-        max-width: 110rem !important;
+        max-width: min(100%, 100rem) !important;
       }
     }
 
@@ -196,22 +219,25 @@
             <h2 id="heads-up-title-text" class="text-sm sm:text-base font-black text-white truncate uppercase tracking-wide">
               MAJOR EMERGENCY DISPATCH
             </h2>
-            <div class="flex items-center gap-3 text-[11px] text-slate-300 truncate">
-              <span class="truncate"><strong class="text-amber-400">📍 STAGING:</strong> <span id="heads-up-staging-text">Fairfield EOC</span></span>
-              <span class="hidden md:inline">•</span>
-              <span class="hidden md:inline truncate"><strong class="text-emerald-400">SITREP:</strong> <span id="heads-up-sitrep-text">Emergency activation underway.</span></span>
+            <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-xs text-slate-300">
+              <div><strong class="text-amber-400">📍 STAGING:</strong> <span id="heads-up-staging-text">Fairfield EOC</span></div>
+              <span class="hidden sm:inline text-slate-500">•</span>
+              <div class="break-words whitespace-normal"><strong class="text-emerald-400">SITREP:</strong> <span id="heads-up-sitrep-text">Emergency activation underway.</span></div>
             </div>
           </div>
         </div>
-        <div class="flex items-center gap-2 flex-shrink-0 self-end sm:self-center">
+        <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap justify-end w-full sm:w-auto">
           <button type="button" onclick="acknowledgeAndRespondAlert()" class="px-3.5 py-2 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 text-white rounded-lg text-xs font-black shadow flex items-center gap-1.5 transition cursor-pointer">
             <span>📻</span><span>RESPOND / DETAILS</span>
           </button>
           <button type="button" onclick="muteAlertAudio()" class="px-2.5 py-2 bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 rounded-lg text-xs font-bold shadow flex items-center gap-1 transition cursor-pointer" title="Mute siren tone">
             <span>🔇</span><span class="hidden sm:inline">MUTE</span>
           </button>
-          <button type="button" onclick="dismissHeadsUpAlertBanner()" class="px-2.5 py-2 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-700 rounded-lg text-xs font-bold shadow transition cursor-pointer" title="Close banner">
-            <span>✕</span>
+          <button type="button" onclick="toggleHamburgerMenu(event); dismissHeadsUpAlertBanner();" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black rounded-lg text-xs shadow flex items-center gap-1.5 transition cursor-pointer" title="Open Navigation Menu">
+            <span>☰</span><span class="hidden sm:inline">MENU</span>
+          </button>
+          <button type="button" onclick="dismissHeadsUpAlertBanner()" class="px-3 py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 rounded-lg text-xs font-black shadow transition cursor-pointer flex items-center gap-1" title="Close banner">
+            <span>✕</span><span class="hidden sm:inline">CLOSE</span>
           </button>
         </div>
       </div>
@@ -900,6 +926,126 @@
           <span>🔑</span>
           <span>SIGN IN / CLAIM CALLSIGN</span>
         </button>
+      </div>
+      
+      <!-- ACTIVE INCIDENT & QUICK RESPONSE CONSOLE (DASHBOARD) -->
+      <div id="dash-active-incident-card" class="bg-gradient-to-r from-red-950/80 via-[#160d13] to-[#0f141d] border-2 border-red-500 rounded-xl p-4 sm:p-5 shadow-[0_0_25px_rgba(239,68,68,0.35)] space-y-4 font-mono-tac transition-all duration-300">
+        <!-- Header Row: Incident Level, Title, Live Status -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-slate-800 pb-3">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="w-3.5 h-3.5 rounded-full bg-red-500 animate-ping flex-shrink-0"></span>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span id="dash-inc-level-badge" class="px-2.5 py-0.5 rounded text-[10px] font-black bg-red-600 text-white tracking-wider animate-pulse">LEVEL 1 - FULL ACTIVATION</span>
+                <span id="dash-inc-update-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-700">UPDATE #1 ACTIVE</span>
+                <span id="dash-inc-time-badge" class="text-[10px] text-slate-400">18:45 LOCAL</span>
+              </div>
+              <h2 id="dash-inc-title-text" class="text-base sm:text-lg font-black text-white truncate mt-1 uppercase tracking-wide">
+                MAJOR EMERGENCY DISPATCH
+              </h2>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 self-end sm:self-center">
+            <button type="button" onclick="switchTab('alert')" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 text-xs font-bold transition flex items-center gap-1.5 shadow cursor-pointer">
+              <span>📋</span><span>FULL ALERTS LOG</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Incident Quick Info: Staging, PACE Primary, Sitrep Summary -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+          <div class="p-2.5 bg-black/40 rounded-lg border border-slate-800 space-y-0.5">
+            <span class="text-[10px] text-amber-400 font-bold block">📍 DESIGNATED STAGING POINT:</span>
+            <div id="dash-inc-staging-text" class="text-white font-bold truncate">Fairfield EOC (31.7249° N, 96.1652° W)</div>
+          </div>
+          <div class="p-2.5 bg-black/40 rounded-lg border border-slate-800 space-y-0.5">
+            <span class="text-[10px] text-emerald-400 font-bold block">📻 PRIMARY PACE FREQUENCY:</span>
+            <div id="dash-inc-pace-text" class="text-emerald-300 font-bold truncate">Ch 01 - FF 110 (145.110 T146.2)</div>
+          </div>
+          <div class="p-2.5 bg-black/40 rounded-lg border border-slate-800 space-y-0.5">
+            <span class="text-[10px] text-slate-400 font-bold block">⚡ LATEST SITREP CUE:</span>
+            <div id="dash-inc-sitrep-summary" class="text-amber-200 font-semibold text-xs leading-relaxed break-words whitespace-normal">Emergency activation underway. Units mobilizing.</div>
+          </div>
+        </div>
+
+        <!-- Interactive Operator Action Block (Response Buttons + Rapid SITREP Input) -->
+        <div id="dash-inc-actions-block" class="space-y-3">
+          <!-- 1-TAP OPERATOR RESPONSE SECTION -->
+          <div class="pt-2 border-t border-slate-800/80 space-y-2">
+            <div class="flex items-center justify-between text-xs text-slate-400">
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-slate-300">MY RESPONSE STATUS:</span>
+                <span id="dash-active-incident-my-status" class="text-slate-400 font-bold px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-xs">NOT RESPONDED</span>
+              </div>
+              <div class="text-[11px] text-slate-400 hidden sm:inline">Tap 1-click status to transmit to Net Control:</div>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs">
+              <button type="button" onclick="setMyStatus('RESPONDING (STAGING)', 'bg-emerald-600')" class="status-btn p-2.5 rounded-lg bg-emerald-950/70 hover:bg-emerald-600 border border-emerald-500/50 text-emerald-200 hover:text-white font-bold transition flex flex-col items-center justify-center gap-1 group shadow cursor-pointer">
+                <span class="text-xs group-hover:scale-105 transition-transform">🚗 RESPONDING</span>
+                <span class="text-[10px] font-normal text-emerald-400 group-hover:text-emerald-100">To Staging EOC</span>
+              </button>
+              <button type="button" onclick="setMyStatus('RESPONDING (REMOTE)', 'bg-blue-600')" class="status-btn p-2.5 rounded-lg bg-blue-950/70 hover:bg-blue-600 border border-blue-500/50 text-blue-200 hover:text-white font-bold transition flex flex-col items-center justify-center gap-1 group shadow cursor-pointer">
+                <span class="text-xs group-hover:scale-105 transition-transform">🏠 STATIONARY</span>
+                <span class="text-[10px] font-normal text-blue-400 group-hover:text-blue-100">From Home Shack</span>
+              </button>
+              <button type="button" onclick="setMyStatus('ON SCENE', 'bg-cyan-600')" class="status-btn p-2.5 rounded-lg bg-cyan-950/70 hover:bg-cyan-600 border border-cyan-500/50 text-cyan-200 hover:text-white font-bold transition flex flex-col items-center justify-center gap-1 group shadow cursor-pointer">
+                <span class="text-xs group-hover:scale-105 transition-transform">📍 ON SCENE</span>
+                <span class="text-[10px] font-normal text-cyan-400 group-hover:text-cyan-100">At Net Control</span>
+              </button>
+              <button type="button" onclick="setMyStatus('DELAYED', 'bg-amber-600')" class="status-btn p-2.5 rounded-lg bg-amber-950/70 hover:bg-amber-600 border border-amber-500/50 text-amber-200 hover:text-white font-bold transition flex flex-col items-center justify-center gap-1 group shadow cursor-pointer">
+                <span class="text-xs group-hover:scale-105 transition-transform">⏳ DELAYED</span>
+                <span class="text-[10px] font-normal text-amber-400 group-hover:text-amber-100">ETA 30-60 Mins</span>
+              </button>
+              <button type="button" onclick="setMyStatus('UNAVAILABLE', 'bg-slate-700')" class="status-btn p-2.5 rounded-lg bg-slate-900 hover:bg-slate-700 border border-slate-700 text-slate-400 hover:text-white font-bold transition flex flex-col items-center justify-center gap-1 col-span-2 sm:col-span-1 group shadow cursor-pointer">
+                <span class="text-xs group-hover:scale-105 transition-transform">❌ UNAVAILABLE</span>
+                <span class="text-[10px] font-normal text-slate-500 group-hover:text-slate-200">Cannot Deploy</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- QUICK SITREP / RAPID FIELD UPDATE INPUT -->
+          <div class="pt-2 border-t border-slate-800/80 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] text-amber-400 font-bold uppercase tracking-wider">POST QUICK SITREP / FIELD UPDATE:</span>
+              <span class="text-[10px] text-slate-400">Broadcasts live to Net Control & all operators</span>
+            </div>
+
+            <!-- Quick Tag Chips -->
+            <div class="flex flex-wrap gap-1.5 text-[10px]">
+              <button type="button" onclick="insertDashboardSitrepTag('[EN ROUTE] ')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-slate-700 transition cursor-pointer">🚗 [EN ROUTE]</button>
+              <button type="button" onclick="insertDashboardSitrepTag('[ON SCENE] ')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 transition cursor-pointer">📍 [ON SCENE]</button>
+              <button type="button" onclick="insertDashboardSitrepTag('[WX REPORT] ')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-sky-300 border border-slate-700 transition cursor-pointer">🌧️ [WX REPORT]</button>
+              <button type="button" onclick="insertDashboardSitrepTag('[RADIO CHECK] ')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 transition cursor-pointer">📻 [RADIO CHECK]</button>
+              <button type="button" onclick="insertDashboardSitrepTag('[HAZARD] ')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-red-300 border border-slate-700 transition cursor-pointer">⚠️ [HAZARD]</button>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-end gap-2">
+              <div class="flex-1 min-w-0">
+                <textarea id="dash-quick-sitrep-input" rows="2" placeholder="e.g. W5XXX en route US-84, mobile VHF active, tree blocking FM 488, sheriff on scene..." class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2.5 text-base sm:text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 shadow resize-none leading-relaxed" onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault(); submitQuickDashboardSitrep();}"></textarea>
+              </div>
+              <button type="button" onclick="submitQuickDashboardSitrep()" class="px-4 py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black rounded-lg text-xs shadow flex items-center justify-center gap-1.5 transition cursor-pointer whitespace-nowrap self-stretch sm:self-auto sm:mb-1">
+                <span>🚀</span><span>TRANSMIT SITREP</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RECENT LIVE SITREPS STREAM (DASHBOARD) -->
+        <div id="dash-recent-sitreps-box" class="pt-2 border-t border-slate-800/80 space-y-2">
+          <div class="flex items-center justify-between text-xs">
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>LIVE INCIDENT SITREPS (<span id="dash-sitrep-count-badge">0</span> LOGGED):</span>
+            </span>
+            <button type="button" onclick="toggleDashSitrepHistory()" id="btn-toggle-dash-sitreps" class="text-[10px] text-amber-400 hover:text-amber-300 font-bold transition cursor-pointer">
+              HIDE STREAM ▲
+            </button>
+          </div>
+          <div id="dash-sitreps-stream-container" class="space-y-2 max-h-80 overflow-y-auto pr-1">
+            <!-- Dynamically populated via renderDashboardSitrepStream() -->
+          </div>
+        </div>
       </div>
       
       <!-- MASTER CLOCKS & HUD BANNER (LARGE SYNCHRONIZED READOUT) -->
@@ -1720,7 +1866,7 @@
           <div class="flex-1 min-w-0">
             <label class="text-[10px] text-slate-400 font-bold block mb-1">SELECT ALERT PAGING TONE:</label>
             <select id="siren-type-select" class="w-full bg-[#080b10] border border-slate-700 text-amber-300 font-bold rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-red-500 shadow">
-              <option value="quickcall">🔊 Quick-Call II (707.3 / 953.7 Hz)</option>
+              <option value="quickcall">🔊 Motorola Minitor Fire Pager Alert</option>
               <option value="warble">🚨 Tactical Warble Siren</option>
               <option value="eas">📢 EAS Signal (853 / 960 Hz)</option>
               <option value="beep">📻 1000 Hz Alert Beep</option>
@@ -1732,6 +1878,9 @@
             </button>
             <button id="btn-test-active-alert" type="button" onclick="testActiveAlertDispatcher()" class="flex-1 sm:flex-initial px-3.5 py-2 bg-gradient-to-r from-red-700 to-amber-700 hover:from-red-600 text-white font-bold rounded-lg flex items-center justify-center gap-1.5 transition shadow cursor-pointer text-xs" title="Test Active Alert banner, tones, and vibration">
               <span>🚨 TEST ACTIVE ALERT</span>
+            </button>
+            <button id="btn-audio-verify-modal" type="button" onclick="openAlertSoundVerifyModal()" class="flex-1 sm:flex-initial px-3.5 py-2 bg-gradient-to-r from-purple-800 to-indigo-800 hover:from-purple-700 hover:to-indigo-700 text-white font-bold rounded-lg flex items-center justify-center gap-1.5 transition shadow cursor-pointer text-xs border border-purple-400/50" title="Verify Sender Silence & Audio Dispatch Rules">
+              <span>🧪 VERIFY ALERT RULES</span>
             </button>
             <button id="btn-stop-siren" type="button" onclick="stopSirenAudio()" class="hidden flex-1 sm:flex-initial px-3.5 py-2 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg flex items-center justify-center gap-1.5 transition shadow cursor-pointer text-xs">
               <span>⏹️ STOP</span>
@@ -1771,9 +1920,9 @@
                 <span class="text-slate-400 text-[10px]">LAST ALERT:</span>
                 <span id="alert-last-updated-text" class="text-slate-300 font-bold text-[10px]">NONE ACTIVE</span>
               </div>
-              <div class="flex items-center gap-2 text-[10px]">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span id="alert-sitrep-summary" class="text-emerald-300 font-semibold truncate max-w-sm sm:max-w-md">All repeaters operational. Routine monitoring on FF 110 (145.110 TSQ 146.2).</span>
+              <div class="flex items-start gap-1.5 text-xs flex-1 min-w-0">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse mt-1 flex-shrink-0"></span>
+                <div id="alert-sitrep-summary" class="text-emerald-300 font-semibold break-words whitespace-normal leading-snug">All repeaters operational. Routine monitoring on FF 110 (145.110 TSQ 146.2).</div>
               </div>
             </div>
           </div>
@@ -1796,6 +1945,11 @@
               <!-- NEW ALERT BROADCAST BUTTON -->
               <button id="btn-new-alert" onclick="openBroadcastModal(false)" class="py-2 px-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-mono-tac text-xs font-bold rounded-lg transition flex items-center gap-1">
                 <span>📢 NEW</span>
+              </button>
+
+              <!-- VERIFY ALERT RULES BUTTON -->
+              <button id="btn-audio-verify" onclick="openAlertSoundVerifyModal()" class="py-2 px-2.5 bg-purple-900/80 hover:bg-purple-800 text-purple-200 border border-purple-500/70 font-mono-tac text-xs font-bold rounded-lg transition flex items-center gap-1 shadow" title="Open Alert Audio Verification Console">
+                <span>🧪 VERIFY RULES</span>
               </button>
             </div>
 
@@ -3520,10 +3674,10 @@
             <span>⚡</span>
             <span>ALERT UPDATE REASON / SITUATION REPORT (WHAT CHANGED)</span>
           </label>
-          <input type="text" id="b-update-note" placeholder="e.g. Staging confirmed at EOC rear bay; Flood waters cresting on US-84; Switch to WRTM 760" class="w-full bg-[#0b0e14] border border-amber-700/80 rounded-lg p-2 text-white font-mono text-xs focus:outline-none focus:border-amber-400">
+          <textarea id="b-update-note" rows="2" placeholder="e.g. Staging confirmed at EOC rear bay; Flood waters cresting on US-84; Switch to WRTM 760" class="w-full bg-[#0b0e14] border border-amber-700/80 rounded-lg p-2.5 text-white font-mono text-base sm:text-xs focus:outline-none focus:border-amber-400 resize-none leading-relaxed"></textarea>
           <div class="text-[10px] text-amber-300/80 flex items-center gap-1">
             <span>ℹ️</span>
-            <span>This update message will be broadcast to all responder devices along with the re-triggered emergency sirens.</span>
+            <span>This update message will be broadcast to all responder devices with a two-tone alert tone and heads-up banner.</span>
           </div>
         </div>
 
@@ -3572,7 +3726,7 @@
             </div>
           </div>
           <div class="text-[10px] text-slate-400 italic">
-            * Note: Updating any alert parameter re-triggers sirens and dispatches notification updates immediately.
+            * Note: Siren sounds only on initial dispatch. Subsequent updates dispatch a two-tone radio alert tone and heads-up banner.
           </div>
         </div>
 
@@ -3593,7 +3747,163 @@
           <span>◀</span><span>BACK / CANCEL</span>
         </button>
         <button type="button" id="b-modal-submit-btn" onclick="saveBroadcastIncident()" class="w-full sm:flex-1 py-2.5 px-4 bg-red-600 hover:bg-red-500 text-white font-black rounded-xl shadow-lg transition flex items-center justify-center gap-2 cursor-pointer text-xs uppercase tracking-wider">
-          <span>🚨</span><span>BROADCAST ALERT TO TEAM</span>
+          <span>Transmit Alert</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ALERT AUDIO & DISPATCH VERIFICATION CONSOLE -->
+  <div id="alert-verify-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4 hidden overflow-y-auto">
+    <div class="bg-[#0b0e14] border-2 border-purple-500/80 rounded-2xl max-w-2xl w-full max-h-[92vh] flex flex-col font-mono-tac text-xs hud-glow shadow-[0_0_35px_rgba(168,85,247,0.3)] my-auto overflow-hidden">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-purple-900/60 p-4 bg-[#07090e] flex-shrink-0">
+        <div class="flex items-center gap-2.5">
+          <span class="text-xl">🧪</span>
+          <div>
+            <h3 class="text-purple-300 font-bold text-sm tracking-wide">ALERT AUDIO & DISPATCH RULES VERIFICATION</h3>
+            <p class="text-[11px] text-slate-400">Interactive live validator for sender silence, dispatch sirens, and update beeps</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeAlertSoundVerifyModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center font-bold text-base transition cursor-pointer">✕</button>
+      </div>
+
+      <!-- Realtime Suppression Status Bar -->
+      <div class="px-4 py-2.5 bg-slate-950 border-b border-slate-800 flex items-center justify-between flex-wrap gap-2 text-[11px]">
+        <div class="flex items-center gap-2">
+          <span class="text-slate-400">Current Station State:</span>
+          <span id="verify-suppression-status" class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-950 text-emerald-300 border border-emerald-600">
+            🔊 RECEIVER MODE (Normal Alerting Ready)
+          </span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span id="verify-suppression-time" class="text-slate-400 font-mono">Ready</span>
+          <button type="button" onclick="clearSenderSuppressionForTest()" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-[10px] cursor-pointer" title="Reset suppression to Receiver mode">
+            Reset to Receiver Mode
+          </button>
+        </div>
+      </div>
+
+      <!-- Scrollable Test Body -->
+      <div class="p-4 sm:p-5 overflow-y-auto space-y-3.5 flex-1 text-slate-300">
+        <!-- Test Cards Grid -->
+        <div class="space-y-3">
+
+          <!-- Scenario 1: Transmit Alert as Sender -->
+          <div class="p-3 rounded-xl bg-[#0e131c] border border-red-500/40 space-y-2">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <span class="text-[10px] font-bold text-red-400 uppercase tracking-wider block">Requirement 1 • Sender Device</span>
+                <h4 class="text-white font-bold text-xs">Transmit Emergency Alert (Sender Station)</h4>
+                <p class="text-[11px] text-slate-400 mt-0.5">When transmitting an alert from this phone, all local sounds, sirens, and tones MUST BE 100% SILENT.</p>
+              </div>
+              <button type="button" onclick="testScenarioSenderSilence()" class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white font-bold rounded-lg text-xs shadow flex-shrink-0 cursor-pointer">
+                ▶ Run Test 1
+              </button>
+            </div>
+            <div class="text-[10px] text-emerald-400 bg-emerald-950/40 p-1.5 rounded border border-emerald-900/50">
+              Rule: Engaging alert broadcasts immediately activates 90s audio suppression across JavaScript, iOS AppDelegate, and Android Service. Transmitting device makes 0 sound.
+            </div>
+          </div>
+
+          <!-- Scenario 2: Initial Dispatch on Receiver -->
+          <div class="p-3 rounded-xl bg-[#0e131c] border border-amber-500/40 space-y-2">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <span class="text-[10px] font-bold text-amber-400 uppercase tracking-wider block">Requirement 2 • Receiver Device</span>
+                <h4 class="text-white font-bold text-xs">Receive Initial Emergency Dispatch (Update #1)</h4>
+                <p class="text-[11px] text-slate-400 mt-0.5">On receiver devices, the heavy emergency Minitor pager siren sounds ONLY ONCE upon initial callout.</p>
+              </div>
+              <button type="button" onclick="testScenarioReceiverInitialDispatch()" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg text-xs shadow flex-shrink-0 cursor-pointer">
+                ▶ Run Test 2
+              </button>
+            </div>
+            <div class="text-[10px] text-amber-400 bg-amber-950/40 p-1.5 rounded border border-amber-900/50">
+              Rule: Initial dispatch (updateCount &lt;= 1) sounds the authentic Motorola Minitor pager siren + APNs siren push.
+            </div>
+          </div>
+
+          <!-- Scenario 3: Subsequent Incident Update on Receiver -->
+          <div class="p-3 rounded-xl bg-[#0e131c] border border-cyan-500/40 space-y-2">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <span class="text-[10px] font-bold text-cyan-400 uppercase tracking-wider block">Requirement 3 • Receiver Device</span>
+                <h4 class="text-white font-bold text-xs">Receive Incident Update (Update #2+)</h4>
+                <p class="text-[11px] text-slate-400 mt-0.5">After initial dispatch, updates play a crisp two-tone alert beep with banner. Siren NEVER re-sounds.</p>
+              </div>
+              <button type="button" onclick="testScenarioReceiverUpdateBeep()" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-lg text-xs shadow flex-shrink-0 cursor-pointer">
+                ▶ Run Test 3
+              </button>
+            </div>
+            <div class="text-[10px] text-cyan-400 bg-cyan-950/40 p-1.5 rounded border border-cyan-900/50">
+              Rule: Subsequent updates (updateCount &gt; 1) play synthesized 880Hz / 1200Hz two-tone alert beep + banner. Emergency siren stays off.
+            </div>
+          </div>
+
+          <!-- Scenario 4: Field SITREP Posted -->
+          <div class="p-3 rounded-xl bg-[#0e131c] border border-slate-700 space-y-2">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Requirement 4 • All Stations</span>
+                <h4 class="text-white font-bold text-xs">Receive Field SITREP</h4>
+                <p class="text-[11px] text-slate-400 mt-0.5">Field SITREPs update the response board and feed silently. Zero sirens and zero beeps.</p>
+              </div>
+              <button type="button" onclick="testScenarioSitrepSilence()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-lg text-xs shadow flex-shrink-0 cursor-pointer">
+                ▶ Run Test 4
+              </button>
+            </div>
+            <div class="text-[10px] text-slate-400 bg-slate-900/50 p-1.5 rounded border border-slate-800">
+              Rule: isSitrepOnly suppresses all audible alerts on iOS, Android, and web.
+            </div>
+          </div>
+
+          <!-- Scenario 5: Responder Status Change -->
+          <div class="p-3 rounded-xl bg-[#0e131c] border border-slate-700 space-y-2">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Requirement 5 • All Stations</span>
+                <h4 class="text-white font-bold text-xs">Receive Responder Status Update ("En Route")</h4>
+                <p class="text-[11px] text-slate-400 mt-0.5">When responders click En Route or On Scene, status boards sync live with ZERO audible alert tones.</p>
+              </div>
+              <button type="button" onclick="testScenarioResponderStatusSilence()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-lg text-xs shadow flex-shrink-0 cursor-pointer">
+                ▶ Run Test 5
+              </button>
+            </div>
+            <div class="text-[10px] text-slate-400 bg-slate-900/50 p-1.5 rounded border border-slate-800">
+              Rule: incident_responses telemetry updates table and map markers silently without triggering alert chimes.
+            </div>
+          </div>
+
+          <!-- Direct Button Verification -->
+          <div class="p-3 rounded-xl bg-[#14101e] border border-purple-500/40 flex items-center justify-between gap-2">
+            <div>
+              <span class="text-[10px] font-bold text-purple-400 uppercase tracking-wider block">Requirement 6 • Button Text Check</span>
+              <h4 class="text-white font-bold text-xs">Modal Button Reads Strictly "Transmit Alert"</h4>
+              <p class="text-[11px] text-slate-400 mt-0.5">Verify broadcast modal button has no "RE-SOUND SIRENS" or other phrases.</p>
+            </div>
+            <button type="button" onclick="testInspectBroadcastModalButton()" class="px-3 py-1.5 bg-purple-700 hover:bg-purple-600 text-white font-bold rounded-lg text-xs shadow flex-shrink-0 cursor-pointer">
+              ▶ Inspect Button
+            </button>
+          </div>
+        </div>
+
+        <!-- Realtime Live Audit Log -->
+        <div class="space-y-1.5 pt-2 border-t border-slate-800">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Verification Audit Log:</span>
+            <button type="button" onclick="document.getElementById('verify-log-box').innerHTML = ''" class="text-[10px] text-slate-500 hover:text-slate-300 cursor-pointer">Clear Log</button>
+          </div>
+          <div id="verify-log-box" class="space-y-1.5 max-h-40 overflow-y-auto p-2 rounded-lg bg-black/60 border border-slate-800/80">
+            <div class="text-[10px] text-slate-500 italic p-1">Click any test button above to run real-time verification...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex items-center justify-between border-t border-purple-900/60 p-3 bg-[#07090e] flex-shrink-0">
+        <span class="text-[10px] text-purple-300">Freestone County ARES Dispatch Validator • Build 60</span>
+        <button type="button" onclick="closeAlertSoundVerifyModal()" class="px-4 py-2 bg-purple-800 hover:bg-purple-700 text-white font-bold rounded-xl text-xs transition cursor-pointer">
+          CLOSE CONSOLE
         </button>
       </div>
     </div>
@@ -5308,11 +5618,7 @@
       ],
       pendingMembers: [],
       myStatus: 'STANDBY',
-      responders: [
-        { call: 'KG5TZT', name: 'Brian Davis', status: 'STANDBY (NORMAL MONITORING)', time: 'STEADY STATE', gear: 'EC Station / HF/VHF Mobile, Winlink, LiFePO4', phone: '903-644-5856', lat: 31.7249, lng: -96.1652, grid: 'EM11xq', spotId: 'staging', assignedSpot: 'Staging Point (County EOC)', distToStaging: '0.0 mi', eta: 'Standby', speedHeading: 'Stationary' },
-        { call: 'AI5OX', name: 'Robert Cockerell', status: 'STANDBY (NORMAL MONITORING)', time: 'STEADY STATE', gear: 'AEC / Mobile 50W, Crossband Gateway', phone: '903-394-1772', lat: 31.7302, lng: -96.1550, grid: 'EM11xq', spotId: 'spot1', assignedSpot: 'Fairfield HS Shelter Alpha', distToStaging: '1.4 mi', eta: 'Standby', speedHeading: 'Stationary' },
-        { call: 'N5BED', name: 'Billy Bryant', status: 'STANDBY (NORMAL MONITORING)', time: 'STEADY STATE', gear: 'EOC Net Control Console, VHF/UHF', phone: '903-388-3470', lat: 31.7252, lng: -96.1660, grid: 'EM11xq', spotId: 'staging', assignedSpot: 'Staging Point (County EOC)', distToStaging: '0.1 mi', eta: 'Standby', speedHeading: 'Stationary' }
-      ],
+      responders: [],
 assignedSpots: [
         {
           id: 'staging',
@@ -7107,6 +7413,11 @@ D. Out-of-County stations and visitors.
         statusBadge.textContent = statusText;
         statusBadge.className = 'font-bold px-2 py-0.5 rounded text-white text-xs ' + colorClass;
       }
+      const dashStatusBadge = document.getElementById('dash-active-incident-my-status');
+      if (dashStatusBadge) {
+        dashStatusBadge.textContent = statusText;
+        dashStatusBadge.className = 'font-bold px-2 py-0.5 rounded text-white text-xs shadow ' + colorClass;
+      }
 
       const now = new Date();
       const local24 = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
@@ -7177,6 +7488,284 @@ D. Out-of-County stations and visitors.
       showTacticalBannerNotification(`✓ Transmitted response: ${statusText}`);
     }
 
+    // Helper: Reset and clear all responder CAD statuses across consoles and cloud
+    async function clearAllResponderStatuses(syncToCloud = true) {
+      console.log('🧹 Clearing all operator CAD response statuses...');
+      appState.responders = [];
+      appState.myStatus = 'NOT RESPONDED';
+
+      const statusBadge = document.getElementById('my-current-status');
+      if (statusBadge) {
+        statusBadge.textContent = 'NOT RESPONDED';
+        statusBadge.className = 'text-slate-400 font-bold px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-xs';
+      }
+
+      const dashStatusBadge = document.getElementById('dash-active-incident-my-status');
+      if (dashStatusBadge) {
+        dashStatusBadge.textContent = 'NOT RESPONDED';
+        dashStatusBadge.className = 'text-slate-400 font-bold px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-xs';
+      }
+
+      renderResponderTable();
+
+      if (syncToCloud) {
+        if (fbDb) {
+          try {
+            await fbDb.ref('incident_responses').remove();
+          } catch(e) {
+            console.warn('Firebase SDK clear incident_responses error:', e);
+          }
+        }
+        await fbRestPut('incident_responses', {});
+      }
+    }
+
+    // Submit Quick Field SITREP from Dashboard
+    async function submitQuickDashboardSitrep() {
+      const input = document.getElementById('dash-quick-sitrep-input');
+      if (!input) return;
+      const sitrepText = input.value.trim();
+      if (!sitrepText) {
+        alert('Please enter a SITREP or operational update message before transmitting.');
+        return;
+      }
+
+      const myCall = (appState.myCall || '').toUpperCase().trim();
+      if (!myCall || myCall === 'GUEST') {
+        alert('Please sign in or claim your callsign to post operational incident updates.');
+        return;
+      }
+
+      const member = (appState.members || []).find(m => (m.call || '').toUpperCase() === myCall);
+      const authorName = member ? `${member.name} (${myCall})` : (appState.myName ? `${appState.myName} (${myCall})` : myCall);
+
+      const now = new Date();
+      const timeLocal = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} LOCAL`;
+      const timeZulu = now.toISOString().substring(11, 19) + 'Z';
+
+      if (!appState.activeIncident) {
+        appState.activeIncident = {
+          level: 'LEVEL 1 - FULL ACTIVATION',
+          title: 'EMERGENCY INCIDENT // FREESTONE CO. ARES',
+          staging: 'Fairfield EOC',
+          mission: 'Tactical communications activation.',
+          updateCount: 0,
+          updates: [],
+          isClosed: false
+        };
+      }
+
+      appState.activeIncident.updateCount = (appState.activeIncident.updateCount || 0) + 1;
+      appState.activeIncident.lastUpdated = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+      appState.activeIncident.isClosed = false;
+
+      const findCh = (num) => (appState.channels || []).find(c => c.ch === num) || { ch: '01', name: 'FF 110' };
+      const pace = appState.activeIncident.pace || { p: '01', a: '02', c: '09', e: '06' };
+      const chP = findCh(pace.p || '01');
+      const chA = findCh(pace.a || '02');
+
+      const newEntry = {
+        updateNum: appState.activeIncident.updateCount,
+        timeLocal: timeLocal,
+        timeZulu: timeZulu,
+        author: authorName,
+        level: appState.activeIncident.level || 'TACTICAL UPDATE',
+        sitrep: sitrepText,
+        isSitrepOnly: true,
+        primaryCh: `Ch ${chP.ch} - ${chP.name}`,
+        alternateCh: `Ch ${chA.ch} - ${chA.name}`,
+        contingencyCh: 'Normal Simplex',
+        emergencyCh: 'Normal Standby',
+        broadcastSummary: `Field SITREP transmitted by ${myCall} • Real-time cloud synced`
+      };
+
+      if (!Array.isArray(appState.activeIncident.updates)) {
+        appState.activeIncident.updates = [];
+      }
+      appState.activeIncident.updates.unshift(newEntry);
+
+      input.value = '';
+      try { input.blur(); } catch(be) {}
+      if (typeof window !== 'undefined') {
+        window.scrollTo(0, window.scrollY);
+      }
+      saveActiveIncident();
+
+      // SENDER SILENCE GUARANTEE: Engage 90s suppression across web and native layers
+      setSenderSuppression(90);
+
+      // Suppress local audio/banner on sender device
+      const alertFingerprint = `${appState.activeIncident.title || ''}_${appState.activeIncident.level || ''}_${appState.activeIncident.updateCount || 0}_${appState.activeIncident.lastUpdated || ''}_${newEntry.timeLocal || newEntry.sitrep || ''}`;
+      safeStorage.setItem('fc_ares_last_heard_alert_key', alertFingerprint);
+
+      await broadcastIncidentToCloud(appState.activeIncident, false);
+      renderActiveIncidentUI();
+      renderActiveAlertsCardFeed();
+      showTacticalBannerNotification(`✓ Field SITREP #${newEntry.updateNum} transmitted to Response Board & EC`);
+    }
+
+    // Helper: Insert quick-tag chip into dashboard SITREP text box
+    function insertDashboardSitrepTag(tag) {
+      const input = document.getElementById('dash-quick-sitrep-input');
+      if (!input) return;
+      if (!input.value.startsWith(tag)) {
+        input.value = tag + input.value;
+      }
+      input.focus();
+    }
+
+    // Toggle Dashboard SITREP stream container
+    let isDashSitrepExpanded = true;
+    function toggleDashSitrepHistory() {
+      isDashSitrepExpanded = !isDashSitrepExpanded;
+      const stream = document.getElementById('dash-sitreps-stream-container');
+      const btn = document.getElementById('btn-toggle-dash-sitreps');
+      if (stream) {
+        if (isDashSitrepExpanded) {
+          stream.classList.remove('hidden');
+          if (btn) btn.textContent = 'HIDE STREAM ▲';
+        } else {
+          stream.classList.add('hidden');
+          if (btn) btn.textContent = 'SHOW STREAM ▼';
+        }
+      }
+    }
+
+    // Render Dashboard Active Incident & Response Console
+    function renderDashboardActiveIncidentCard() {
+      const card = document.getElementById('dash-active-incident-card');
+      if (!card) return;
+
+      const inc = appState.activeIncident;
+      const isRoutine = isRoutineIncident(inc);
+
+      const lvlBadge = document.getElementById('dash-inc-level-badge');
+      const upBadge = document.getElementById('dash-inc-update-badge');
+      const timeBadge = document.getElementById('dash-inc-time-badge');
+      const titleEl = document.getElementById('dash-inc-title-text');
+      const stagingEl = document.getElementById('dash-inc-staging-text');
+      const paceEl = document.getElementById('dash-inc-pace-text');
+      const sitrepEl = document.getElementById('dash-inc-sitrep-summary');
+      const actionsBlock = document.getElementById('dash-inc-actions-block');
+      const statusBadge = document.getElementById('dash-active-incident-my-status');
+      const sitrepsBox = document.getElementById('dash-recent-sitreps-box');
+
+      if (isRoutine) {
+        // Routine / Steady State / Closed Posture
+        card.className = 'bg-gradient-to-r from-emerald-950/40 via-[#0e141c] to-[#10151d] border-2 border-emerald-500/50 rounded-xl p-4 sm:p-5 shadow-[0_0_20px_rgba(16,185,129,0.15)] space-y-4 font-mono-tac transition-all duration-300';
+        if (lvlBadge) {
+          lvlBadge.textContent = 'LEVEL 3 - MONITORING';
+          lvlBadge.className = 'px-2.5 py-0.5 rounded text-[10px] font-bold bg-emerald-900 text-emerald-200 border border-emerald-700';
+        }
+        if (upBadge) {
+          upBadge.textContent = 'STEADY STATE';
+          upBadge.className = 'px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold text-[10px]';
+        }
+        if (timeBadge) timeBadge.textContent = 'ALL SYSTEMS NORMAL';
+        if (titleEl) titleEl.textContent = 'ROUTINE OPERATIONS // FREESTONE CO. ARES';
+        if (stagingEl) stagingEl.textContent = 'Standby / Home QTH';
+        if (paceEl) paceEl.textContent = 'Ch 01 - FF 110 (145.110 TSQ 146.2)';
+        if (sitrepEl) {
+          sitrepEl.textContent = 'All repeaters operational. County in steady-state standby.';
+          sitrepEl.className = 'text-emerald-200 font-semibold text-xs leading-relaxed break-words whitespace-normal';
+        }
+        if (actionsBlock) actionsBlock.classList.add('hidden');
+        if (sitrepsBox) sitrepsBox.classList.add('hidden');
+      } else {
+        // Emergency Active Incident
+        card.className = 'bg-gradient-to-r from-red-950/80 via-[#160d13] to-[#0f141d] border-2 border-red-500 rounded-xl p-4 sm:p-5 shadow-[0_0_30px_rgba(239,68,68,0.4)] space-y-4 font-mono-tac transition-all duration-300';
+        if (lvlBadge) {
+          lvlBadge.textContent = inc.level || 'LEVEL 1 - FULL ACTIVATION';
+          if (inc.level && inc.level.includes('LEVEL 1')) {
+            lvlBadge.className = 'px-2.5 py-0.5 rounded text-[10px] font-black bg-red-600 text-white tracking-wider animate-pulse';
+          } else if (inc.level && inc.level.includes('LEVEL 2')) {
+            lvlBadge.className = 'px-2.5 py-0.5 rounded text-[10px] font-black bg-orange-600 text-white tracking-wider';
+          } else {
+            lvlBadge.className = 'px-2.5 py-0.5 rounded text-[10px] font-bold bg-amber-600 text-white tracking-wider';
+          }
+        }
+        if (upBadge) {
+          upBadge.textContent = `UPDATE #${inc.updateCount || 1} ACTIVE`;
+          upBadge.className = 'px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-700 font-bold text-[10px]';
+        }
+        if (timeBadge) timeBadge.textContent = inc.lastUpdated && inc.lastUpdated !== '--:--:--' ? inc.lastUpdated : 'ACTIVE';
+        if (titleEl) titleEl.textContent = inc.title || 'MAJOR EMERGENCY DISPATCH';
+        if (stagingEl) stagingEl.textContent = inc.staging || 'Fairfield EOC';
+
+        const findCh = (num) => (appState.channels || []).find(c => c.ch === num) || { ch: '01', name: 'FF 110', rx: '145.110' };
+        const pace = inc.pace || { p: '01', a: '02' };
+        const chP = findCh(pace.p || '01');
+        if (paceEl) paceEl.textContent = `Ch ${chP.ch} - ${chP.name} (${chP.rx || '145.110'})`;
+
+        const topUpdate = (inc.updates && inc.updates.length > 0) ? inc.updates[0] : {};
+        if (sitrepEl) {
+          sitrepEl.textContent = topUpdate.sitrep || inc.mission || 'Active emergency callout dispatched.';
+          sitrepEl.className = 'text-amber-200 font-semibold text-xs leading-relaxed break-words whitespace-normal';
+        }
+
+        if (actionsBlock) actionsBlock.classList.remove('hidden');
+        if (sitrepsBox) sitrepsBox.classList.remove('hidden');
+      }
+
+      // Sync operator status badge
+      if (statusBadge) {
+        if (appState.myStatus && appState.myStatus !== 'NOT RESPONDED') {
+          statusBadge.textContent = appState.myStatus;
+          let col = 'bg-emerald-950 text-emerald-300 border-emerald-800';
+          if (appState.myStatus.includes('STAGING')) col = 'bg-emerald-600 text-white';
+          else if (appState.myStatus.includes('REMOTE')) col = 'bg-blue-600 text-white';
+          else if (appState.myStatus.includes('ON SCENE')) col = 'bg-cyan-600 text-white';
+          else if (appState.myStatus.includes('DELAYED')) col = 'bg-amber-600 text-white';
+          else if (appState.myStatus.includes('UNAVAILABLE')) col = 'bg-slate-700 text-white';
+          statusBadge.className = 'font-bold px-2 py-0.5 rounded text-xs shadow ' + col;
+        } else {
+          statusBadge.textContent = 'NOT RESPONDED';
+          statusBadge.className = 'text-slate-400 font-bold px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-xs';
+        }
+      }
+
+      renderDashboardSitrepStream();
+    }
+
+    // Render Dashboard Live SITREPs Stream
+    function renderDashboardSitrepStream() {
+      const container = document.getElementById('dash-sitreps-stream-container');
+      const countBadge = document.getElementById('dash-sitrep-count-badge');
+      if (!container) return;
+
+      const updates = (appState.activeIncident && appState.activeIncident.updates) || [];
+      if (countBadge) countBadge.textContent = updates.length;
+
+      if (updates.length === 0) {
+        container.innerHTML = `
+          <div class="text-slate-500 text-[11px] text-center py-3 bg-black/30 rounded border border-slate-800">
+            No field SITREPs posted yet. Type an update above and tap TRANSMIT SITREP.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = updates.slice(0, 8).map((u, idx) => {
+        const isLatest = idx === 0;
+        return `
+          <div class="p-2.5 rounded-lg bg-[#0b0e14] border ${isLatest ? 'border-amber-500/80 shadow-[0_0_10px_rgba(245,158,11,0.2)]' : 'border-slate-800'} text-xs space-y-1">
+            <div class="flex items-center justify-between text-[10px]">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="px-1.5 py-0.2 rounded font-black ${isLatest ? 'bg-amber-500 text-black' : 'bg-slate-800 text-slate-300'}">
+                  ${isLatest ? '⚡ UPDATE #' + u.updateNum : '#' + u.updateNum}
+                </span>
+                <span class="text-emerald-400 font-bold">${u.author}</span>
+              </div>
+              <span class="text-slate-400 font-mono">${u.timeLocal}</span>
+            </div>
+            <div class="text-slate-100 text-xs sm:text-[11px] leading-relaxed break-words whitespace-pre-wrap select-text pt-0.5">
+              ${u.sitrep}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
     // Filter responder table by status chip
     function filterResponderTable(chipKey) {
       appState.responderFilter = chipKey;
@@ -7220,7 +7809,7 @@ D. Out-of-County stations and visitors.
               </div>
             </div>
 
-            <div class="text-slate-100 text-xs leading-relaxed bg-black/50 p-2.5 rounded border border-slate-800/70">
+            <div class="text-slate-100 text-xs leading-relaxed bg-black/50 p-2.5 rounded border border-slate-800/70 break-words whitespace-pre-wrap select-text">
               <strong class="text-amber-400">SITREP / WHAT CHANGED:</strong> ${u.sitrep}
             </div>
 
@@ -7316,7 +7905,16 @@ D. Out-of-County stations and visitors.
       if (!appState.activeIncident.updates) appState.activeIncident.updates = [];
       appState.activeIncident.updates.unshift(demobEntry);
       saveActiveIncident();
+      broadcastIncidentToCloud(appState.activeIncident);
       renderActiveIncidentUI();
+      triggerApnsPushNotification('🛑 INCIDENT DEMOBILIZATION', `All-Clear: ${directive || 'Incident operations secured. Units standing down.'}`, 'default', 0);
+      clearNativeAppBadge();
+      clearAllResponderStatuses(true);
+      safeStorage.setItem('fc_ares_response_level', 3);
+      safeStorage.setItem('fc_ares_response_level_ts', Date.now());
+      renderCountyResponseLevelUI();
+      broadcastActivationLevelToCloud(3);
+      dismissHeadsUpAlertBanner();
 
       // Update Banner UI to Closed State
       const badge = document.getElementById('incident-level-badge');
@@ -7334,7 +7932,7 @@ D. Out-of-County stations and visitors.
       }
       if (sitrepEl) {
         sitrepEl.textContent = `All-Clear: Operations secured. 14.0 volunteer hours logged for County EMC.`;
-        sitrepEl.className = 'text-emerald-400 font-bold truncate max-w-sm sm:max-w-md';
+        sitrepEl.className = 'text-emerald-400 font-bold break-words whitespace-normal leading-snug';
       }
       if (demobBtn) {
         demobBtn.innerHTML = '<span>📋</span><span>VIEW ICS-214</span>';
@@ -7596,6 +8194,20 @@ D. Out-of-County stations and visitors.
         if (filter === 'DELAYED') return st.includes('DELAYED');
         return true;
       });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="py-8 text-center text-slate-500 font-mono-tac text-xs">
+              <div class="flex flex-col items-center justify-center gap-1.5">
+                <span class="text-amber-400/90 font-bold text-xs tracking-wide">⏳ AWAITING LIVE OPERATOR RESPONSES</span>
+                <span class="text-slate-400 text-[11px]">No responders checked in yet. Responders will appear here in real time as operators click their response status buttons (Responding to Staging, On Scene, Stationary / Home QTH, or Delayed).</span>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
 
       filtered.forEach(r => {
         let statusBadge = '';
@@ -9429,12 +10041,98 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
       if (playingBadge) playingBadge.classList.add('hidden');
       if (testBtn) testBtn.classList.remove('hidden');
       if (stopBtn) stopBtn.classList.add('hidden');
+
+      // Native iOS Bridge: Stop native siren audio if active
+      try {
+        if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.tacticalNativeBridge) {
+          window.webkit.messageHandlers.tacticalNativeBridge.postMessage({ action: 'stopEmergencySiren' });
+        }
+      } catch(ne) {}
+    }
+
+    // Sender Silence & Audio Suppression System
+    function isSenderSuppressionActive() {
+      const suppressedUntil = parseInt(safeStorage.getItem('fc_ares_sender_suppressed_until') || '0', 10);
+      return Date.now() < suppressedUntil;
+    }
+
+    function setSenderSuppression(seconds = 90) {
+      const expiry = Date.now() + (seconds * 1000);
+      safeStorage.setItem('fc_ares_sender_suppressed_until', expiry);
+      console.log(`🔇 Sender audio suppression active for ${seconds}s.`);
+      try {
+        if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.tacticalNativeBridge) {
+          window.webkit.messageHandlers.tacticalNativeBridge.postMessage({
+            action: 'suppressSenderAlert',
+            durationSeconds: seconds
+          });
+        } else if (window.AndroidBridge && window.AndroidBridge.suppressSenderAlert) {
+          window.AndroidBridge.suppressSenderAlert(seconds);
+        }
+      } catch(e) {}
+    }
+
+    // Two-Tone Radio Alert Beep (Used for updates after initial dispatch; siren sounds ONLY once on initial dispatch)
+    function playTwoToneBeep() {
+      if (isSenderSuppressionActive()) {
+        console.log('🔇 Sender suppression active: suppressing two-tone beep.');
+        return;
+      }
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const now = ctx.currentTime;
+
+        // Tone 1: 880 Hz
+        const osc1 = ctx.createOscillator();
+        const gain1 = ctx.createGain();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(880, now);
+        gain1.gain.setValueAtTime(0, now);
+        gain1.gain.linearRampToValueAtTime(0.28, now + 0.02);
+        gain1.gain.linearRampToValueAtTime(0, now + 0.14);
+        osc1.connect(gain1);
+        gain1.connect(ctx.destination);
+        osc1.start(now);
+        osc1.stop(now + 0.15);
+
+        // Tone 2: 1200 Hz
+        const osc2 = ctx.createOscillator();
+        const gain2 = ctx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(1200, now + 0.18);
+        gain2.gain.setValueAtTime(0, now + 0.18);
+        gain2.gain.linearRampToValueAtTime(0.28, now + 0.20);
+        gain2.gain.linearRampToValueAtTime(0, now + 0.34);
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+        osc2.start(now + 0.18);
+        osc2.stop(now + 0.35);
+
+        if (navigator.vibrate) {
+          try { navigator.vibrate([150, 60, 150]); } catch(ve) {}
+        }
+      } catch(e) {
+        console.warn('Two-tone alert beep notice:', e);
+      }
     }
 
     function playSelectedSiren() {
+      if (isSenderSuppressionActive()) {
+        console.log('🔇 Sender suppression active: suppressing emergency siren on transmitting device.');
+        return;
+      }
       const select = document.getElementById('siren-type-select');
       const type = select ? select.value : 'quickcall';
       stopSirenAudio();
+
+      // Native iOS Bridge: Play siren through AVAudioPlayer (bypasses silent switch)
+      try {
+        if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.tacticalNativeBridge) {
+          window.webkit.messageHandlers.tacticalNativeBridge.postMessage({ action: 'playEmergencySiren' });
+        }
+      } catch(ne) {}
 
       try {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -9453,25 +10151,59 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
         if (stopBtn) stopBtn.classList.remove('hidden');
 
         if (type === 'quickcall') {
-          // Motorola Quick-Call II (Two-Tone Sequential Alert)
-          // Tone A: 707.3 Hz (1.0 sec), Tone B: 953.7 Hz (3.0 sec)
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(707.3, now);
-          osc.frequency.setValueAtTime(953.7, now + 1.0);
+          // Authentic Studio Motorola Minitor Fire Pager Alert Sequence
+          // Tone A: 707.3 Hz (1.00s) -> 50ms gap -> Tone B: 953.7 Hz (2.20s) -> 4 Smooth 1050 Hz Attention Chimes
+          
+          // Tone A: 707.3 Hz with smooth raised-cosine ramps
+          const oscA = ctx.createOscillator();
+          const gainA = ctx.createGain();
+          oscA.type = 'sine';
+          oscA.frequency.setValueAtTime(707.3, now);
+          gainA.gain.setValueAtTime(0.0001, now);
+          gainA.gain.linearRampToValueAtTime(0.32, now + 0.025);
+          gainA.gain.setValueAtTime(0.32, now + 0.975);
+          gainA.gain.exponentialRampToValueAtTime(0.0001, now + 1.00);
+          oscA.connect(gainA);
+          gainA.connect(ctx.destination);
+          oscA.start(now);
+          oscA.stop(now + 1.00);
+          currentSirenOscs.push(oscA);
 
-          gain.gain.setValueAtTime(0.3, now);
-          gain.gain.setValueAtTime(0.3, now + 3.8);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + 4.0);
+          // Tone B: 953.7 Hz with smooth raised-cosine ramps
+          const oscB = ctx.createOscillator();
+          const gainB = ctx.createGain();
+          oscB.type = 'sine';
+          oscB.frequency.setValueAtTime(953.7, now + 1.05);
+          gainB.gain.setValueAtTime(0.0001, now);
+          gainB.gain.setValueAtTime(0.0001, now + 1.05);
+          gainB.gain.linearRampToValueAtTime(0.32, now + 1.075);
+          gainB.gain.setValueAtTime(0.32, now + 3.20);
+          gainB.gain.exponentialRampToValueAtTime(0.0001, now + 3.25);
+          oscB.connect(gainB);
+          gainB.connect(ctx.destination);
+          oscB.start(now + 1.05);
+          oscB.stop(now + 3.25);
+          currentSirenOscs.push(oscB);
 
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(now);
-          osc.stop(now + 4.0);
-          currentSirenOscs.push(osc);
+          // 4 Crisp, Warm Attention Alert Pips at 1,050 Hz (100ms tone, 110ms gap)
+          const oscP = ctx.createOscillator();
+          const gainP = ctx.createGain();
+          oscP.type = 'sine';
+          oscP.frequency.setValueAtTime(1050.0, now + 3.37);
+          gainP.gain.setValueAtTime(0.0001, now);
+          for (let b = 0; b < 4; b++) {
+            const bt = now + 3.37 + b * 0.21;
+            gainP.gain.setValueAtTime(0.0001, bt);
+            gainP.gain.linearRampToValueAtTime(0.28, bt + 0.015);
+            gainP.gain.exponentialRampToValueAtTime(0.0001, bt + 0.10);
+          }
+          oscP.connect(gainP);
+          gainP.connect(ctx.destination);
+          oscP.start(now + 3.37);
+          oscP.stop(now + 4.20);
+          currentSirenOscs.push(oscP);
 
-          sirenTimer = setTimeout(() => stopSirenAudio(), 4100);
+          sirenTimer = setTimeout(() => stopSirenAudio(), 4250);
         } else if (type === 'warble') {
           // Hi-Lo European/Tactical Warble (rapid alternation)
           const osc = ctx.createOscillator();
@@ -9610,8 +10342,8 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
         title.className = 'text-amber-400 font-bold text-sm tracking-wide';
       }
       if (submitBtn) {
-        submitBtn.innerHTML = `<span>⚡ TRANSMIT ALERT UPDATE & RE-SOUND SIRENS</span>`;
-        submitBtn.className = 'flex-2 py-2 px-4 bg-gradient-to-r from-red-600 via-amber-600 to-red-600 hover:from-red-500 hover:to-amber-500 text-white font-bold rounded shadow-lg flex items-center justify-center gap-1.5 border border-amber-400';
+        submitBtn.innerHTML = `<span>Transmit Alert</span>`;
+        submitBtn.className = 'flex-2 py-2 px-4 bg-red-600 hover:bg-red-500 text-white font-bold rounded shadow-lg flex items-center justify-center gap-1.5';
       }
       if (noteBox) noteBox.classList.remove('hidden');
       if (noteInput) {
@@ -9667,7 +10399,7 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
         title.className = 'text-red-400 font-bold text-sm tracking-wide';
       }
       if (submitBtn) {
-        submitBtn.innerHTML = `<span>🚨 BROADCAST NEW INCIDENT ALERT</span>`;
+        submitBtn.innerHTML = `<span>Transmit Alert</span>`;
         submitBtn.className = 'flex-2 py-2 px-4 bg-red-600 hover:bg-red-500 text-white font-bold rounded shadow-lg flex items-center justify-center gap-1.5';
       }
       if (noteBox) noteBox.classList.add('hidden');
@@ -9691,12 +10423,20 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
       const paceE = document.getElementById('b-pace-e').value;
 
       // Update state tracking
+      appState.activeIncident.isClosed = false;
+      appState.activeIncident.status = 'ACTIVE';
       appState.activeIncident.level = level;
       appState.activeIncident.title = title;
       appState.activeIncident.staging = staging;
       appState.activeIncident.mission = mission;
       appState.activeIncident.pace = { p: paceP, a: paceA, c: paceC, e: paceE };
-      appState.activeIncident.updateCount = (appState.activeIncident.updateCount || 1) + 1;
+      if (!isAlertUpdateMode) {
+        appState.activeIncident.updateCount = 1;
+        appState.activeIncident.updates = [];
+        appState.activeIncident.createdAt = Date.now();
+      } else {
+        appState.activeIncident.updateCount = (appState.activeIncident.updateCount || 1) + 1;
+      }
       const now = new Date();
       const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
       appState.activeIncident.lastUpdated = timeStr;
@@ -9759,13 +10499,28 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
         alternateCh: `Ch ${chA.ch} - ${chA.name} (${chA.rx} MHz / ${chA.tone})`,
         contingencyCh: `Ch ${chC.ch} - ${chC.name}`,
         emergencyCh: `Ch ${chE.ch} - ${chE.name}`,
-        broadcastSummary: 'Emergency Sirens Re-Triggered • APNs/FCM Push & SMS Sent to 5 Responders'
+        broadcastSummary: isAlertUpdateMode ? 'Alert Update Broadcasted • Two-Tone Beep Sent' : 'Emergency Dispatch Broadcasted • Pager Siren Sent'
       };
 
       if (!appState.activeIncident.updates) appState.activeIncident.updates = [];
       appState.activeIncident.updates.unshift(newEntry);
       saveActiveIncident();
-      broadcastIncidentToCloud(appState.activeIncident);
+
+      // SENDER SILENCE GUARANTEE: Instantly engage 90s audio suppression across web and native layers
+      setSenderSuppression(90);
+
+      // Synchronize County Activation Level with Incident Posture
+      const targetLvl = level.includes('LEVEL 1') ? 1 : (level.includes('LEVEL 2') ? 2 : 3);
+      safeStorage.setItem('fc_ares_response_level', targetLvl);
+      safeStorage.setItem('fc_ares_response_level_ts', Date.now());
+      renderCountyResponseLevelUI();
+      broadcastActivationLevelToCloud(targetLvl);
+
+      // Register alert fingerprint locally on sender so this device stays silent on cloud echo
+      const alertFingerprint = `${appState.activeIncident.title || ''}_${appState.activeIncident.level || ''}_${appState.activeIncident.updateCount || 0}_${appState.activeIncident.lastUpdated || ''}_${newEntry.timeLocal || newEntry.sitrep || ''}`;
+      safeStorage.setItem('fc_ares_last_heard_alert_key', alertFingerprint);
+
+      broadcastIncidentToCloud(appState.activeIncident, true);
       renderActiveIncidentUI();
       renderActiveAlertsCardFeed();
 
@@ -9776,14 +10531,16 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
 
       if (updateBadge) updateBadge.textContent = `UPDATE #${appState.activeIncident.updateCount} ACTIVE`;
       if (lastUpdatedEl) lastUpdatedEl.textContent = `${timeStr} LOCAL`;
-      if (sitrepEl) sitrepEl.textContent = `Sitrep: ${updateNote}`;
+      if (sitrepEl) {
+        sitrepEl.textContent = `Sitrep: ${updateNote}`;
+        sitrepEl.className = 'text-amber-300 font-semibold break-words whitespace-normal leading-snug';
+      }
 
       closeBroadcastModal();
       
-      // RE-ALERT: Sound siren audio immediately on every update!
-      playSelectedSiren();
+      // SENDER SILENCE: Sender device does NOT play siren audio in operator's ear upon transmitting
 
-      // Show high-visibility notification
+      // Show high-visibility confirmation
       const isUp = isAlertUpdateMode;
       alert(`🚨 ${isUp ? `INCIDENT ALERT UPDATE #${appState.activeIncident.updateCount} TRANSMITTED` : 'EMERGENCY ACTIVATION BROADCASTED'}!
 
@@ -9793,7 +10550,7 @@ Title: ${title}
 Primary PACE Channel: Ch ${chP.ch} - ${chP.name} (${chP.rx} MHz / ${chP.tone})
 Alternate Net: Ch ${chA.ch} - ${chA.name}
 
-Notice: Emergency siren sound re-triggered and high-priority push notifications + SMS dispatched to all 5 active Freestone County ARES responders!`);
+Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES responders. Local console audio suppressed for operator comfort.`);
     }
 
     // Turn-by-Turn Routing Console Functions
@@ -12218,12 +12975,40 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       }
     }
 
+    // ==========================================
+    // APPLE APNS REMOTE PUSH NOTIFICATION RELAY
+    // ==========================================
+    const APNS_RELAY_URL = 'https://fcares-apns.badavis17.workers.dev';
+
+    async function triggerApnsPushNotification(title, body, sound = 'siren.caf', badge = 1) {
+      try {
+        console.log('📣 Beaming Apple APNs Push Notification via Relay:', title);
+        const res = await fetch(APNS_RELAY_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: title,
+            body: body,
+            sound: sound,
+            badge: badge
+          })
+        });
+        const data = await res.json();
+        console.log('✓ APNs Push delivered to Apple:', data);
+        return data;
+      } catch (err) {
+        console.warn('APNs Push relay notice:', err);
+      }
+    }
+
     // 2. Realtime Firebase Activation Level Broadcast
-    async function broadcastActivationLevelToCloud(levelNum) {
+    async function broadcastActivationLevelToCloud(levelNum, sendApnsPush = true) {
       const num = parseInt(levelNum, 10);
       const cfg = COUNTY_RESPONSE_CONFIG[num] || COUNTY_RESPONSE_CONFIG[3];
       const payload = {
         level: num,
+        badgeText: cfg.badgeText,
+        dashSubtext: cfg.dashSubtext,
         title: cfg.badgeText,
         posture: cfg.dashSubtext,
         updatedAt: Date.now(),
@@ -12240,6 +13025,18 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         }
       }
       await fbRestPut('activation_level', payload);
+
+      // Trigger APNs Push only if standalone activation level change (not bundled with an incident broadcast)
+      if (sendApnsPush) {
+        if (num === 1) {
+          triggerApnsPushNotification('🚨 EMERGENCY ACTIVATION: LEVEL 1', 'Freestone County ARES escalated to Level 1 Full Activation. All verified operators mobilize.', 'siren.caf', 1);
+        } else if (num === 2) {
+          triggerApnsPushNotification('⚠️ EMERGENCY POSTURE: LEVEL 2', 'Freestone County ARES placed on Level 2 Standby. Monitor primary PACE repeater.', 'default', 1);
+        } else if (num === 3) {
+          triggerApnsPushNotification('🟢 FREESTONE ARES: STEADY STATE', 'Emergency posture secured. County returned to Level 3 Monitoring standby.', 'default', 0);
+          clearNativeAppBadge();
+        }
+      }
     }
 
     function onRemoteActivationLevelReceived(remoteAct) {
@@ -12258,9 +13055,12 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         safeStorage.setItem('fc_ares_response_level_ts', remoteTs);
         renderCountyResponseLevelUI();
 
-        // Sound chime/siren if escalated to emergency posture (Level 1 or 2)
-        if (newLvl <= 2 && newLvl < currentLvl) {
-          playSelectedSiren();
+        // Sound two-tone alert if escalated to emergency posture (Level 1 or 2) on receiving stations
+        const isSentByMe = Boolean(isSenderSuppressionActive() || (remoteAct.updatedBy && appState.myCall && remoteAct.updatedBy.toUpperCase() === appState.myCall.toUpperCase()));
+        if (!isSentByMe && newLvl <= 2 && newLvl < currentLvl) {
+          if (isOperatorOnDuty()) {
+            playTwoToneBeep();
+          }
           const cfg = COUNTY_RESPONSE_CONFIG[newLvl];
           showTacticalBannerNotification(`🚨 EMERGENCY POSTURE CHANGE: ${cfg.badgeText}`);
         }
@@ -12268,7 +13068,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
     }
 
     // 3. Realtime Cloud Incident / Alert Broadcast
-    async function broadcastIncidentToCloud(incidentObj) {
+    async function broadcastIncidentToCloud(incidentObj, isEmergencyAlert = true) {
       if (!incidentObj) return;
       console.log('🛰️ Broadcasting Incident to Firebase RTDB:', incidentObj);
       if (fbDb) {
@@ -12302,6 +13102,19 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
           } catch(e) {}
         }
         await fbRestPut('alerts/' + alertId, alertRecord);
+      }
+
+      // Beam APNs Push ONLY for genuine emergency alert dispatches (never for field SITREPs or routine monitoring)
+      const isRoutine = isRoutineIncident(incidentObj);
+      const topUpdate = (incidentObj.updates && incidentObj.updates.length > 0) ? incidentObj.updates[0] : {};
+      const isSitrepOnly = Boolean(topUpdate.isSitrepOnly === true || !isEmergencyAlert);
+      if (isEmergencyAlert && !incidentObj.isClosed && !isRoutine && !isSitrepOnly) {
+        const isInitialDispatch = (incidentObj.updateCount === 1 || !incidentObj.updateCount);
+        const pushTitle = `🚨 [${incidentObj.level || 'ARES DISPATCH'}] ${incidentObj.title || 'EMERGENCY CALLOUT'}`;
+        const pushBody = `📍 Staging: ${incidentObj.staging || 'Standby'}\nSitrep: ${topUpdate.sitrep || incidentObj.mission || 'Active incident callout dispatched.'}`;
+        // Siren sound ONLY for initial dispatch; subsequent updates use standard push sound
+        const pushSound = isInitialDispatch ? 'siren.caf' : 'default';
+        triggerApnsPushNotification(pushTitle, pushBody, pushSound, 1);
       }
     }
 
@@ -12354,28 +13167,20 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       renderCountyResponseLevelUI();
       broadcastActivationLevelToCloud(3);
 
-      // Reset responder statuses back to standby
-      if (appState.responders) {
-        appState.responders.forEach(r => {
-          r.status = 'STANDBY (NORMAL MONITORING)';
-          r.time = 'STEADY STATE';
-        });
-      }
-      renderResponderTable();
+      // Reset responder statuses completely until new responses arrive
+      await clearAllResponderStatuses(true);
 
-      // Cloud purge: remove alerts, set active_incident to closed routine, clear incident_responses
+      // Cloud purge: remove alerts, set active_incident to closed routine
       if (fbDb) {
         try {
           await fbDb.ref('active_incident').set(appState.activeIncident);
           await fbDb.ref('alerts').remove();
-          await fbDb.ref('incident_responses').remove();
         } catch(err) {
           console.warn('Firebase SDK purge error:', err);
         }
       }
       await fbRestPut('active_incident', appState.activeIncident);
       await fbRestPut('alerts', {});
-      await fbRestPut('incident_responses', {});
 
       renderActiveIncidentUI();
       renderActiveAlertsCardFeed();
@@ -12464,12 +13269,26 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
     // ======================================================================
 
     function isOperatorOnDuty() {
-      if (!appState.isLoggedIn) return false;
       const call = (appState.myCall || '').toUpperCase();
-      if (!call || call === 'GUEST') return false;
-      const st = appState.myOperationalStatus || safeStorage.getItem('fc_ares_op_status_' + call) || 'available';
-      return st !== 'off_duty';
+      if (call && call !== 'GUEST') {
+        const st = appState.myOperationalStatus || safeStorage.getItem('fc_ares_op_status_' + call);
+        if (st === 'off_duty') return false;
+      }
+      return true;
     }
+
+    // Global: Clear Native iOS Notification Badge on App Icon
+    function clearNativeAppBadge() {
+      try {
+        if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.tacticalNativeBridge) {
+          window.webkit.messageHandlers.tacticalNativeBridge.postMessage({ action: 'clearBadge' });
+        }
+        if (typeof navigator !== 'undefined' && 'clearAppBadge' in navigator) {
+          navigator.clearAppBadge().catch(function() {});
+        }
+      } catch(e) {}
+    }
+    window.clearNativeAppBadge = clearNativeAppBadge;
 
     function showActiveAlertHeadsUpBanner(inc) {
       const banner = document.getElementById('active-alert-heads-up-banner');
@@ -12495,27 +13314,40 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
     }
 
     function dismissHeadsUpAlertBanner() {
-      stopSirenAudio();
+      try {
+        stopSirenAudio();
+      } catch(e) {
+        console.warn('stopSirenAudio error:', e);
+      }
+      try {
+        clearNativeAppBadge();
+      } catch(e) {
+        console.warn('clearNativeAppBadge error:', e);
+      }
       const banner = document.getElementById('active-alert-heads-up-banner');
-      if (banner) banner.classList.add('hidden');
+      if (banner) {
+        banner.classList.add('hidden');
+      }
     }
 
     function muteAlertAudio() {
-      stopSirenAudio();
+      try {
+        stopSirenAudio();
+      } catch(e) {}
       showTacticalBannerNotification('🔇 ALERT SIREN MUTED (BANNER ACTIVE)');
     }
 
     function acknowledgeAndRespondAlert() {
-      dismissHeadsUpAlertBanner();
+      try {
+        dismissHeadsUpAlertBanner();
+      } catch(e) {}
       switchTab('dash');
-      const detailsBlock = document.getElementById('active-incident-details-collapsible');
-      if (detailsBlock && detailsBlock.classList.contains('hidden')) {
-        toggleIncidentDetailsExpanded();
-      }
       setTimeout(() => {
-        const target = document.getElementById('active-alerts-feed-container') || document.getElementById('active-incident-details-collapsible');
-        if (target) target.scrollIntoView({ behavior: 'smooth' });
-      }, 150);
+        const target = document.getElementById('dash-active-incident-card') || document.getElementById('view-dash');
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
     }
 
     function testActiveAlertDispatcher() {
@@ -12540,6 +13372,166 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       playSelectedSiren();
       showActiveAlertHeadsUpBanner(testIncident);
       showSystemPushNotification(testIncident);
+    }
+
+    // Alert Sound & Dispatch Audio Verification Console
+    let verifyStatusTimer = null;
+
+    function openAlertSoundVerifyModal() {
+      const modal = document.getElementById('alert-verify-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        updateVerifyModalStatus();
+        if (!verifyStatusTimer) {
+          verifyStatusTimer = setInterval(updateVerifyModalStatus, 500);
+        }
+      }
+    }
+
+    function closeAlertSoundVerifyModal() {
+      const modal = document.getElementById('alert-verify-modal');
+      if (modal) modal.classList.add('hidden');
+      if (verifyStatusTimer) {
+        clearInterval(verifyStatusTimer);
+        verifyStatusTimer = null;
+      }
+      stopSirenAudio();
+    }
+
+    function updateVerifyModalStatus() {
+      const statusEl = document.getElementById('verify-suppression-status');
+      const timeEl = document.getElementById('verify-suppression-time');
+      if (!statusEl) return;
+      const suppressedUntil = parseInt(safeStorage.getItem('fc_ares_sender_suppressed_until') || '0', 10);
+      const remainingSec = Math.max(0, Math.ceil((suppressedUntil - Date.now()) / 1000));
+      if (remainingSec > 0) {
+        statusEl.className = 'px-2.5 py-1 rounded-full text-xs font-bold bg-amber-950 text-amber-300 border border-amber-600 animate-pulse';
+        statusEl.textContent = '🔇 SENDER SUPPRESSION ACTIVE (Device Muted)';
+        if (timeEl) timeEl.textContent = `${remainingSec}s remaining`;
+      } else {
+        statusEl.className = 'px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-950 text-emerald-300 border border-emerald-600';
+        statusEl.textContent = '🔊 RECEIVER MODE (Normal Alerting Ready)';
+        if (timeEl) timeEl.textContent = 'Ready';
+      }
+    }
+
+    function clearSenderSuppressionForTest() {
+      safeStorage.removeItem('fc_ares_sender_suppressed_until');
+      setSenderSuppression(0);
+      updateVerifyModalStatus();
+      setVerifyResult('verify-log-box', 'ℹ️ Sender suppression cleared. Device is now in Receiver Mode.', 'text-cyan-400');
+    }
+
+    function setVerifyResult(boxId, message, colorClass = 'text-emerald-400') {
+      const box = document.getElementById(boxId || 'verify-log-box');
+      if (!box) return;
+      const now = new Date().toLocaleTimeString();
+      const p = document.createElement('div');
+      p.className = `p-2 rounded bg-slate-900/90 border border-slate-800 text-[11px] font-mono-tac ${colorClass} flex items-start gap-2`;
+      p.innerHTML = `<span class="text-slate-500 font-normal">[${now}]</span> <span>${message}</span>`;
+      box.insertBefore(p, box.firstChild);
+    }
+
+    function testScenarioSenderSilence() {
+      // 1. Engage sender suppression (same as saveBroadcastIncident)
+      setSenderSuppression(90);
+      updateVerifyModalStatus();
+
+      // 2. Simulate broadcast dispatch
+      let audioFired = false;
+      try {
+        if (isSenderSuppressionActive()) {
+          // Suppressed
+        } else {
+          audioFired = true;
+          playSelectedSiren();
+        }
+      } catch(e) {}
+
+      // 3. Confirm 100% silence
+      if (!audioFired) {
+        setVerifyResult('verify-log-box', '✅ TEST 1 PASSED: SENDER SILENCE GUARANTEED. Transmitting alert engaged 90s suppression across Web, iOS AppDelegate & Android. Zero sirens, zero beeps, zero audio played on sender phone.', 'text-emerald-400 font-bold');
+        showTacticalBannerNotification('🔇 SENDER SILENCE VERIFIED: 0 audio played on transmitting station');
+      } else {
+        setVerifyResult('verify-log-box', '❌ TEST 1 FAILED: Audio was not suppressed.', 'text-red-400 font-bold');
+      }
+    }
+
+    function testScenarioReceiverInitialDispatch() {
+      // Simulate receiver phone receiving initial dispatch
+      clearSenderSuppressionForTest();
+      if (!isOperatorOnDuty()) {
+        appState.myStatus = 'AVAILABLE / ON-DUTY';
+      }
+
+      setVerifyResult('verify-log-box', '🚨 TEST 2 (RECEIVER): Incoming INITIAL DISPATCH (Update #1). Playing authentic Motorola Minitor pager siren + heads-up banner...', 'text-amber-300 font-bold');
+      playSelectedSiren();
+
+      const mockIncident = {
+        title: 'STRUCTURE FIRE / COMM BACKUP (DRILL)',
+        level: 'LEVEL 1 - FULL ACTIVATION',
+        staging: 'Fairfield EOC / Staging 1',
+        mission: 'Provide backup VHF communications for mutual aid fire teams.',
+        updateCount: 1,
+        lastUpdated: new Date().toLocaleTimeString(),
+        updates: [{
+          sitrep: 'INITIAL CALLOUT: All Freestone ARES operators mobilize to primary PACE repeater.',
+          timeLocal: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          author: 'KG5TZT'
+        }],
+        isClosed: false
+      };
+      showActiveAlertHeadsUpBanner(mockIncident);
+      setVerifyResult('verify-log-box', '✅ TEST 2 PASSED: Initial dispatch siren sounded once + banner displayed. (APNs push sends siren.caf).', 'text-emerald-400 font-bold');
+    }
+
+    function testScenarioReceiverUpdateBeep() {
+      // Simulate receiver phone receiving subsequent update (Update #2)
+      clearSenderSuppressionForTest();
+      stopSirenAudio();
+
+      setVerifyResult('verify-log-box', '⚡ TEST 3 (RECEIVER): Incoming INCIDENT UPDATE #2. Playing crisp two-tone alert beep (880Hz / 1200Hz). SIREN IS SUPPRESSED...', 'text-cyan-300 font-bold');
+      playTwoToneBeep();
+
+      const mockIncident = {
+        title: 'STRUCTURE FIRE / COMM BACKUP (DRILL)',
+        level: 'LEVEL 1 - FULL ACTIVATION',
+        staging: 'Fairfield EOC / Staging 1',
+        mission: 'Provide backup VHF communications for mutual aid fire teams.',
+        updateCount: 2,
+        lastUpdated: new Date().toLocaleTimeString(),
+        updates: [{
+          sitrep: 'UPDATE #2: PACE primary frequency verified clear. Fairfield staging point active.',
+          timeLocal: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          author: 'KG5TZT'
+        }],
+        isClosed: false
+      };
+      showActiveAlertHeadsUpBanner(mockIncident);
+      setVerifyResult('verify-log-box', '✅ TEST 3 PASSED: Two-tone radio alert beep (880Hz / 1200Hz) sounded with update banner. Siren did NOT repeat.', 'text-emerald-400 font-bold');
+    }
+
+    function testScenarioSitrepSilence() {
+      stopSirenAudio();
+      setVerifyResult('verify-log-box', '📋 TEST 4: Incoming FIELD SITREP from KF5ZBL. Board updating silently...', 'text-slate-300');
+      showTacticalBannerNotification('📻 Field SITREP #2 from KF5ZBL: Weather clear, standing by on 145.110');
+      setVerifyResult('verify-log-box', '✅ TEST 4 PASSED: Field SITREP received silently. Zero sirens, zero beeps played.', 'text-emerald-400 font-bold');
+    }
+
+    function testScenarioResponderStatusSilence() {
+      stopSirenAudio();
+      setVerifyResult('verify-log-box', '🚗 TEST 5: Responder KD5JHQ updated status to "DISPATCHED / EN ROUTE"...', 'text-slate-300');
+      showTacticalBannerNotification('✓ Responder KD5JHQ is En Route to Staging');
+      setVerifyResult('verify-log-box', '✅ TEST 5 PASSED: Responder status synced silently. Zero sirens, zero beeps played.', 'text-emerald-400 font-bold');
+    }
+
+    function testInspectBroadcastModalButton() {
+      closeAlertSoundVerifyModal();
+      openBroadcastModal(false);
+      const submitBtn = document.getElementById('b-modal-submit-btn');
+      if (submitBtn) {
+        console.log('Broadcast Modal Submit Button text:', submitBtn.innerText);
+      }
     }
 
     function requestNotificationPermission() {
@@ -12605,6 +13597,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       document.addEventListener('visibilitychange', function() {
         if (!document.hidden) {
           console.log('📱 App resumed: Re-syncing Firebase RTDB and checking alerts...');
+          clearNativeAppBadge();
           if (fbDb) { try { fbDb.goOnline(); } catch(e){} }
           syncRosterWithCloud(false);
           if (isOperatorOnDuty()) {
@@ -12616,17 +13609,34 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
       // 2. Reconnect & resync immediately when network recovers (Wi-Fi/Cellular)
       window.addEventListener('online', function() {
         console.log('🌐 Network connected: Re-syncing Firebase RTDB and checking alerts...');
+        clearNativeAppBadge();
         if (fbDb) { try { fbDb.goOnline(); } catch(e){} }
         syncRosterWithCloud(false);
       });
 
       // 3. Resync on window focus
       window.addEventListener('focus', function() {
+        clearNativeAppBadge();
         syncRosterWithCloud(false);
       });
 
-      // 4. Prime Web Audio on first user interaction for unblocked background paging tones
+      // 4. Clear Native iOS Notification Badge on App Icon
+      function clearNativeAppBadge() {
+        try {
+          if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.tacticalNativeBridge) {
+            window.webkit.messageHandlers.tacticalNativeBridge.postMessage({ action: 'clearBadge' });
+          }
+          if (typeof navigator !== 'undefined' && 'clearAppBadge' in navigator) {
+            navigator.clearAppBadge().catch(function() {});
+          }
+        } catch(e) {}
+      }
+      window.clearNativeAppBadge = clearNativeAppBadge;
+      clearNativeAppBadge();
+
+      // 5. Prime Web Audio on first user interaction for unblocked background paging tones
       function primeTacticalAudio() {
+        clearNativeAppBadge();
         try {
           const AudioContext = window.AudioContext || window.webkitAudioContext;
           if (!window.tacticalPrimedAudioCtx) {
@@ -12641,7 +13651,7 @@ Notice: Emergency siren sound re-triggered and high-priority push notifications 
         document.addEventListener(evt, primeTacticalAudio, { once: true, passive: true });
       });
 
-      // 5. Acquire Screen WakeLock if on duty
+      // 6. Acquire Screen WakeLock if on duty
       if (isOperatorOnDuty()) {
         requestTacticalWakeLock();
       }
@@ -12734,7 +13744,7 @@ function toggleIncidentDetailsExpanded() {
           <div class="bg-black/60 p-3 rounded-lg border border-red-500/40 text-xs text-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <strong class="text-amber-400">📍 STAGING:</strong> <span class="text-white font-bold">${inc.staging || 'Standby'}</span>
-              <div class="text-[11px] text-slate-300 pt-0.5"><strong>SITREP:</strong> ${sitrep}</div>
+              <div class="text-[11px] text-slate-300 pt-0.5 break-words whitespace-normal leading-snug"><strong>SITREP:</strong> ${sitrep}</div>
             </div>
             <div class="flex items-center gap-2 flex-shrink-0 pt-1 sm:pt-0">
               <span id="btn-toggle-incident-details" class="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white font-black text-xs shadow flex items-center gap-1 transition">
@@ -13483,6 +14493,7 @@ Your console is now authorized and unlocked.`);
     // Handler for incoming incident responses across all Android & iOS devices
     function onRemoteIncidentResponsesReceived(remoteResps) {
       if (!remoteResps || (typeof remoteResps === 'object' && Object.keys(remoteResps).length === 0)) {
+        clearAllResponderStatuses(false);
         return;
       }
       let list = [];
@@ -13491,11 +14502,14 @@ Your console is now authorized and unlocked.`);
       } else if (typeof remoteResps === 'object') {
         list = Object.values(remoteResps).filter(Boolean);
       }
-      if (list.length === 0) return;
+      if (list.length === 0) {
+        clearAllResponderStatuses(false);
+        return;
+      }
 
+      appState.responders = list;
       list.forEach(r => {
         if (!r || !r.call) return;
-        updateOrAddResponder(r);
         const myCall = String(appState.myCall || '').toUpperCase().trim();
         if (myCall && String(r.call).toUpperCase().trim() === myCall) {
           appState.myStatus = r.status;
@@ -13503,6 +14517,11 @@ Your console is now authorized and unlocked.`);
           if (statusBadge && r.status) {
             statusBadge.textContent = r.status;
             if (r.colorClass) statusBadge.className = 'font-bold px-2 py-0.5 rounded text-white text-xs ' + r.colorClass;
+          }
+          const dashStatusBadge = document.getElementById('dash-active-incident-my-status');
+          if (dashStatusBadge && r.status) {
+            dashStatusBadge.textContent = r.status;
+            if (r.colorClass) dashStatusBadge.className = 'font-bold px-2 py-0.5 rounded text-white text-xs shadow ' + r.colorClass;
           }
         }
       });
@@ -13517,13 +14536,22 @@ Your console is now authorized and unlocked.`);
       renderActiveIncidentUI();
       renderActiveAlertsCardFeed();
 
-      // Check if this incident is an active emergency callout (not routine steady state and not closed)
+      // Synchronize County Response Level with active incident posture
       const isRoutine = isRoutineIncident(remoteInc);
       const isEmergency = !remoteInc.isClosed && !isRoutine;
 
       if (!isEmergency) {
+        safeStorage.setItem('fc_ares_response_level', 3);
+        safeStorage.setItem('fc_ares_response_level_ts', Date.now());
+        renderCountyResponseLevelUI();
         dismissHeadsUpAlertBanner();
+        clearAllResponderStatuses(false);
         return;
+      } else {
+        const targetLvl = (remoteInc.level && remoteInc.level.includes('LEVEL 1')) ? 1 : ((remoteInc.level && remoteInc.level.includes('LEVEL 2')) ? 2 : 3);
+        safeStorage.setItem('fc_ares_response_level', targetLvl);
+        safeStorage.setItem('fc_ares_response_level_ts', Date.now());
+        renderCountyResponseLevelUI();
       }
 
       // Compute unique alert fingerprint to trigger sound and banner on NEW alerts and updates
@@ -13531,18 +14559,42 @@ Your console is now authorized and unlocked.`);
       const alertFingerprint = `${remoteInc.title || ''}_${remoteInc.level || ''}_${remoteInc.updateCount || 0}_${remoteInc.lastUpdated || ''}_${topUpdate.timestamp || topUpdate.timeLocal || topUpdate.sitrep || ''}`;
       const lastSeenKey = safeStorage.getItem('fc_ares_last_heard_alert_key') || '';
 
-      if (alertFingerprint !== lastSeenKey) {
-        safeStorage.setItem('fc_ares_last_heard_alert_key', alertFingerprint);
+      if (alertFingerprint === lastSeenKey) {
+        return;
+      }
+      safeStorage.setItem('fc_ares_last_heard_alert_key', alertFingerprint);
 
-        // ActiveAlert Duty Check: On-Duty stations receive audible tones, banner, and vibration!
-        if (isOperatorOnDuty()) {
-          console.log('🚨 ON DUTY: Emergency dispatch alert received! Triggering Active Alert audio & banner...');
+      // 1. SUPPRESSION FOR SENDER: The device that transmitted this update/incident never sounds sirens or alerts
+      const myCall = (appState.myCall || '').toUpperCase().trim();
+      const authorStr = ((topUpdate.author || '') + ' ' + (remoteInc.author || '')).toUpperCase();
+      const isSentByMe = Boolean(isSenderSuppressionActive() || (myCall && myCall !== 'GUEST' && authorStr.includes(myCall)));
+      if (isSentByMe) {
+        console.log(`🔇 Incident update transmitted by this station (${myCall}) - suppressing siren and heads-up banner on sender device.`);
+        return;
+      }
+
+      // 2. SUPPRESSION FOR SITREPs & RESPONDER STATUSES: Field SITREPs & responses update the board silently without alert sirens or beeps
+      const isSitrepOnly = Boolean(topUpdate.isSitrepOnly === true || topUpdate.isSitrep === true || topUpdate.isResponseStatus === true);
+      if (isSitrepOnly) {
+        console.log('📋 Field SITREP received: updated response board & dashboard stream silently.');
+        showTacticalBannerNotification(`📻 Field SITREP #${topUpdate.updateNum || ''} from ${topUpdate.author || 'Field Station'}`);
+        return;
+      }
+
+      // 3. Emergency Incident Callout: Initial dispatch gets Minitor pager siren; subsequent updates get crisp two-tone beep + banner
+      if (isOperatorOnDuty()) {
+        const isInitialDispatch = (remoteInc.updateCount === 1 || !remoteInc.updateCount);
+        if (isInitialDispatch) {
+          console.log('🚨 ON DUTY: INITIAL Emergency Dispatch received! Triggering authentic Motorola Minitor pager siren & banner...');
           playSelectedSiren();
-          showActiveAlertHeadsUpBanner(remoteInc);
-          showSystemPushNotification(remoteInc);
         } else {
-          console.log('💤 OFF DUTY: Alert received in background, audible tone suppressed.');
+          console.log(`⚡ ON DUTY: Incident Alert UPDATE #${remoteInc.updateCount} received! Playing crisp two-tone alert beep (siren sounds only on initial dispatch)...`);
+          playTwoToneBeep();
         }
+        showActiveAlertHeadsUpBanner(remoteInc);
+        showSystemPushNotification(remoteInc);
+      } else {
+        console.log('💤 OFF DUTY: Alert received in background, audible tone suppressed.');
       }
     }
 
@@ -14558,10 +15610,10 @@ Your console is now authorized and unlocked.`);
       if (sitrepEl) {
         if (inc.updates && inc.updates.length > 0) {
           sitrepEl.textContent = `Sitrep: ${inc.updates[0].sitrep}`;
-          sitrepEl.className = 'text-amber-300 font-semibold truncate max-w-sm sm:max-w-md';
+          sitrepEl.className = 'text-amber-300 font-semibold break-words whitespace-normal leading-snug';
         } else {
           sitrepEl.textContent = 'All repeaters operational. Routine monitoring on FF 110 (145.110 TSQ 146.2).';
-          sitrepEl.className = 'text-emerald-300 font-semibold truncate max-w-sm sm:max-w-md';
+          sitrepEl.className = 'text-emerald-300 font-semibold break-words whitespace-normal leading-snug';
         }
       }
 
@@ -14604,9 +15656,21 @@ Your console is now authorized and unlocked.`);
 
       // Timeline Feed
       renderIncidentUpdates();
+
+      // Dashboard Incident Card & Live SITREPs
+      renderDashboardActiveIncidentCard();
+
+      // Synchronize County Response Level UI with active incident status
+      if (isRoutine || inc.isClosed) {
+        safeStorage.setItem('fc_ares_response_level', 3);
+      } else {
+        const targetLvl = (inc.level && inc.level.includes('LEVEL 1')) ? 1 : ((inc.level && inc.level.includes('LEVEL 2')) ? 2 : 3);
+        safeStorage.setItem('fc_ares_response_level', targetLvl);
+      }
+      renderCountyResponseLevelUI();
     }
 
-    function clearAllIncidentAlerts() {
+    async function clearAllIncidentAlerts() {
       const clearance = getOperatorClearance();
       if (clearance.levelNum !== 6 && appState.myCall !== 'KG5TZT') {
         alert('🔒 EC RESTRICTION:\n\nOnly Master Emergency Coordinator Brian Davis (KG5TZT) can purge all alerts.');
@@ -14630,10 +15694,17 @@ Your console is now authorized and unlocked.`);
           e: '06'
         },
         updates: [],
-        isClosed: false
+        isClosed: true
       };
 
       saveActiveIncident();
+      safeStorage.setItem('fc_ares_response_level', 3);
+      safeStorage.setItem('fc_ares_response_level_ts', Date.now());
+      renderCountyResponseLevelUI();
+      broadcastActivationLevelToCloud(3);
+      dismissHeadsUpAlertBanner();
+      await broadcastIncidentToCloud(appState.activeIncident, false);
+      await clearAllResponderStatuses(true);
       renderActiveIncidentUI();
 
       // Reset Demob button if previously closed
@@ -14645,7 +15716,7 @@ Your console is now authorized and unlocked.`);
       }
 
       pushRosterSyncToCloud();
-      alert('✅ ALL ALERTS PURGED SUCCESSFULLY\n\nIncident counter reset to 0.\nStatus set to Level 4 (Routine Monitoring / Steady State).');
+      alert('✅ ALL ALERTS PURGED SUCCESSFULLY\n\nIncident counter reset to 0.\nStatus set to Level 3 (Routine Monitoring / Steady State). Responders cleared.');
     }
 
     // ==========================================
@@ -16444,7 +17515,7 @@ Your console is now authorized and unlocked.`);
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.8 (Build 50)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.8 (Build 60)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>

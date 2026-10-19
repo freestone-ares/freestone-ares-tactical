@@ -48,8 +48,10 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, WKSc
         webView.scrollView.alwaysBounceHorizontal = false
         webView.scrollView.showsHorizontalScrollIndicator = false
         webView.scrollView.contentInsetAdjustmentBehavior = .automatic
+        webView.scrollView.maximumZoomScale = 1.0
+        webView.scrollView.minimumZoomScale = 1.0
 
-        // Keep standard 1.0 responsive viewport scaling on Mac, iPad & iPhone (prevents horizontal overflow)
+        // Keep standard 1.0 responsive viewport scaling on Mac, iPad & iPhone (prevents horizontal overflow & zoom drift)
 
         view.addSubview(webView)
 
@@ -84,6 +86,9 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, WKSc
                 (UIApplication.shared.delegate as? AppDelegate)?.playEmergencySiren()
             } else if action == "stopEmergencySiren" {
                 (UIApplication.shared.delegate as? AppDelegate)?.stopEmergencySiren()
+            } else if action == "suppressSenderAlert" {
+                let duration = (dict["durationSeconds"] as? Double) ?? 90.0
+                (UIApplication.shared.delegate as? AppDelegate)?.suppressSenderAlert(duration: duration)
             } else if action == "clearBadge" {
                 if #available(iOS 17.0, *) {
                     UNUserNotificationCenter.current().setBadgeCount(0, withCompletionHandler: nil)
@@ -152,10 +157,17 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, WKSc
         present(alert, animated: true)
     }
 
-    // MARK: - UIScrollViewDelegate (Hard Lock Horizontal Scrolling on iOS/iPadOS)
+    // MARK: - UIScrollViewDelegate (Hard Lock Horizontal Scrolling & Prevent Viewport Auto-Zoom on iOS/iPadOS)
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.contentOffset.x != 0 {
             scrollView.contentOffset.x = 0
         }
+        if scrollView.zoomScale != 1.0 {
+            scrollView.setZoomScale(1.0, animated: false)
+        }
+    }
+
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return nil
     }
 }

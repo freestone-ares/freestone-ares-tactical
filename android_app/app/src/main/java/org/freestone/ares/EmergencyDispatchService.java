@@ -41,6 +41,7 @@ public class EmergencyDispatchService extends Service {
 
     private int lastKnownLevel = -1;
     private String lastIncidentFingerprint = null;
+    public static volatile long senderSuppressedUntil = 0;
 
     @Override
     public void onCreate() {
@@ -195,6 +196,11 @@ public class EmergencyDispatchService extends Service {
             String badgeText = obj.optString("badgeText", "LEVEL " + level);
             String subtext = obj.optString("dashSubtext", "Emergency Posture Change");
 
+            if (System.currentTimeMillis() < senderSuppressedUntil) {
+                lastKnownLevel = level;
+                return;
+            }
+
             if (lastKnownLevel == -1) {
                 lastKnownLevel = level;
                 return;
@@ -247,6 +253,12 @@ public class EmergencyDispatchService extends Service {
             }
 
             String fingerprint = title + "_" + level + "_" + updateCount + "_" + lastUpdated;
+
+            if (System.currentTimeMillis() < senderSuppressedUntil) {
+                lastIncidentFingerprint = fingerprint;
+                return;
+            }
+
             if (lastIncidentFingerprint == null) {
                 lastIncidentFingerprint = fingerprint;
                 return;
@@ -254,10 +266,26 @@ public class EmergencyDispatchService extends Service {
 
             if (!fingerprint.equals(lastIncidentFingerprint)) {
                 lastIncidentFingerprint = fingerprint;
-                postEmergencyAlertNotification(
-                        "🚨 ACTIVE CALLOUT: " + title,
-                        "📍 Staging: " + staging + "\nDirective: " + mission
-                );
+
+                // Suppress siren alerts for field SITREPs
+                JSONArray updates = obj.optJSONArray("updates");
+                if (updates != null && updates.length() > 0) {
+                    JSONObject topUpdate = updates.optJSONObject(0);
+                    if (topUpdate != null && topUpdate.optBoolean("isSitrepOnly", false)) {
+                        Log.i(TAG, "Field SITREP update received; audible alert suppressed.");
+                        return;
+                    }
+                }
+
+                // Sound siren only on initial dispatch (updateCount <= 1)
+                if (updateCount <= 1) {
+                    postEmergencyAlertNotification(
+                            "🚨 ACTIVE CALLOUT: " + title,
+                            "📍 Staging: " + staging + "\nDirective: " + mission
+                    );
+                } else {
+                    Log.i(TAG, "Subsequent update #" + updateCount + "; full siren suppressed.");
+                }
             }
         } catch (Exception e) {
             Log.w(TAG, "Error parsing active_incident: " + e.getMessage());
