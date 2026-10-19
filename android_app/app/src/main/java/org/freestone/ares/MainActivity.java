@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.webkit.GeolocationPermissions;
+import android.webkit.JavascriptInterface;
 import android.webkit.PermissionRequest;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -321,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public class AndroidBridge {
-        @android.webkit.JavascriptInterface
+        @JavascriptInterface
         public void suppressSenderAlert(int seconds) {
             EmergencyDispatchService.senderSuppressedUntil = System.currentTimeMillis() + (seconds * 1000L);
         }
