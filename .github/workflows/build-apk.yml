@@ -46,17 +46,17 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug --stacktrace
           ./gradlew bundleRelease --stacktrace
-          cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.9.8.apk
+          cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.9.9.apk
           cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical.apk
-          cp app/build/outputs/bundle/release/*.aab ../Freestone-ARES-Tactical-v7.9.8.aab || cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical-v7.9.8.aab
+          cp app/build/outputs/bundle/release/*.aab ../Freestone-ARES-Tactical-v7.9.9.aab || cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical-v7.9.9.aab
           cp app/build/outputs/bundle/release/*.aab ../Freestone-ARES-Tactical.aab || cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical.aab
 
       - name: Upload APK & Bundle as Workflow Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Freestone-ARES-Tactical-v7.9.8-Distribution
+          name: Freestone-ARES-Tactical-v7.9.9-Distribution
           path: |
-            Freestone-ARES-Tactical-v7.9.8.apk
+            Freestone-ARES-Tactical-v7.9.9.apk
             Freestone-ARES-Tactical.aab
           retention-days: 30
 
@@ -64,28 +64,28 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v7.9.8
+          tag_name: v7.9.9
           target_commitish: ${{ github.sha }}
-          name: "Freestone ARES Tactical v7.9.8 Build 60 (SITREP Auto-Zoom Fix, Full Sentence Wrap, Silent Transmitter & Alert Rules)"
+          name: "Freestone ARES Tactical v7.9.9 Build 61 (Dedicated Operator ID Card, In-App Field Manual PDF Viewer & Dynamic Uploader)"
           make_latest: true
           body: |
-            ## Freestone County ARES - Tactical Operations Field Build (v7.9.8 / Build 60)
+            ## Freestone County ARES - Tactical Operations Field Build (v7.9.9 / Build 61)
             
             Universal release for Android Phones & Tablets and Apple iOS, iPadOS, and macOS (Designed for iPad).
             
             ### Package Files Included:
-            - **`Freestone-ARES-Tactical.apk` / `Freestone-ARES-Tactical-v7.9.8.apk`**: Standalone Android field installer.
-            - **`Freestone-ARES-Tactical.aab` / `Freestone-ARES-Tactical-v7.9.8.aab`**: Signed Android App Bundle for Google Play.
+            - **`Freestone-ARES-Tactical.apk` / `Freestone-ARES-Tactical-v7.9.9.apk`**: Standalone Android field installer.
+            - **`Freestone-ARES-Tactical.aab` / `Freestone-ARES-Tactical-v7.9.9.aab`**: Signed Android App Bundle for Google Play.
             
-            ### What's New in Build 50:
-            - **Option B Tactical Roster Card (2x2 Grid):** Top-left features an extra-large 120px square operator photo with emerald neon border, alongside 3 stacked boxes (Name, Callsign, GMRS Call). Directly underneath are ARES ID and RACES ID matching the respective column widths. Right column features equal-width tactical badges (Available, dynamic Unclaimed, Storm Spotter, Net Control, Clearance Level).
-            - **Active Alert Emergency Dispatch Paging Engine:** Motorola Quick-Call II paging tones (707.3 Hz / 953.7 Hz) with hardware vibration, continuous background receiving with WebSocket/REST failover, Screen Wake Lock API, and heads-up pop-up alert banner. Fully gated by operator duty status (active when ON DUTY; muted when OFF DUTY).
-            - **Net Scheduling NCS Assignment Dropdown:** One-tap modal to assign designated Net Control Station operators directly from an active roster dropdown, with Net Manager position removed.
-            - **Dynamic Unclaimed Badge Dismissal:** The Unclaimed badge disappears in real-time across all devices as soon as an operator sets up their profile.
+            ### What's New in Build 61:
+            - **Dedicated Operator ID Card (`view-idcard`):** Created full credentials card with Front & Back 3D flip, photo badge, FEMA NIMS training checklist, equipment capabilities, and instant print/save features.
+            - **Tactical Dashboard Refinement (`view-dash`):** Operator card removed to give full width to the Sunday Net command center, NCS staffing controls, net scripts, and readiness posture.
+            - **Tactical Field Binder (Rev 7.5) & Dynamic In-App Uploader (`view-manual`):** Bundled official 84-page manual for 100% offline access with Mozilla PDF.js reader, chapter jump, and in-app `IndexedDB` uploader for instant future revisions without app updates.
+            - **Navigation Drawer Menu:** Direct 1-tap navigation to Official Operator ID Card and Tactical Field Binder.
           files: |
-            Freestone-ARES-Tactical-v7.9.8.apk
+            Freestone-ARES-Tactical-v7.9.9.apk
             Freestone-ARES-Tactical.apk
-            Freestone-ARES-Tactical-v7.9.8.aab
+            Freestone-ARES-Tactical-v7.9.9.aab
             Freestone-ARES-Tactical.aab
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

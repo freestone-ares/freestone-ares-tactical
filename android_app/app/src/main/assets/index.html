@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Freestone County ARES Tactical Mobile v7.9.8</title>
+  <title>Freestone County ARES Tactical Mobile v7.9.9</title>
   <meta name="description" content="Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES">
   <meta name="theme-color" content="#0b0e14">
   <meta name="mobile-web-app-capable" content="yes">
@@ -22,6 +22,9 @@
   <!-- Firebase 9.23.0 Compat SDK for Realtime Multi-Device Sync -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <!-- PDF.js Mozilla Offline PDF Rendering Engine -->
+  <script src="js/pdf.min.js"></script>
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
     
@@ -67,6 +70,12 @@
       max-width: 100% !important;
       overflow-x: hidden !important;
       touch-action: pan-y !important;
+    }
+
+    #main-container {
+      padding-bottom: max(calc(env(safe-area-inset-bottom, 0px) + 24px), 32px) !important;
+      padding-left: max(env(safe-area-inset-left, 0px), 12px) !important;
+      padding-right: max(env(safe-area-inset-right, 0px), 12px) !important;
     }
 
     *, *::before, *::after {
@@ -388,6 +397,30 @@
               <div>
                 <div class="font-bold text-xs text-white">Tactical Dashboard</div>
                 <div class="text-[10px] text-slate-400">Master status, clocks, and operational feed</div>
+              </div>
+            </div>
+            <span class="text-emerald-400 font-bold text-xs">➔</span>
+          </button>
+
+          <!-- 1b. Official Operator ID Card -->
+          <button onclick="navFromMenu('idcard')" id="menu-item-idcard" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-slate-800/80 text-slate-200 transition border border-transparent cursor-pointer">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">🪪</span>
+              <div>
+                <div class="font-bold text-xs text-white">Official Operator ID Card</div>
+                <div class="text-[10px] text-slate-400">Credentials, clearance level &amp; station badge</div>
+              </div>
+            </div>
+            <span class="text-slate-500 text-xs">➔</span>
+          </button>
+
+          <!-- 1c. Tactical Field Binder (Rev 7.5) -->
+          <button onclick="navFromMenu('manual')" id="menu-item-manual" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-emerald-950/40 text-emerald-300 transition border border-emerald-900/40 bg-emerald-950/20 cursor-pointer">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">📖</span>
+              <div>
+                <div class="font-bold text-xs text-white">Tactical Field Binder (Rev 7.5)</div>
+                <div class="text-[10px] text-slate-400">Offline field manual, PACE plan &amp; in-app PDF uploader</div>
               </div>
             </div>
             <span class="text-emerald-400 font-bold text-xs">➔</span>
@@ -1089,103 +1122,8 @@
 
       </div>
 
-      <!-- MAIN DASHBOARD SPLIT: OPERATOR COMMAND & SUNDAY NET WIDGET -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-
-        <!-- Left Column: Operator Readiness & Station Profile (5 Cols) -->
-        <div class="lg:col-span-5 bg-[#10151d] border border-slate-800 rounded-xl p-5 space-y-4 font-mono-tac">
-          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-            <span class="text-xs font-bold text-slate-200">LOGGED OPERATOR PROFILE</span>
-            <span id="dash-auth-badge" class="text-[10px] text-amber-400 bg-amber-950 px-2 py-0.5 rounded border border-amber-800 font-bold">GUEST (LOCKED)</span>
-          </div>
-
-          <!-- Operator Details -->
-          <div class="flex items-start gap-3 p-3 bg-[#0b0e14] rounded-lg border border-slate-800">
-            <div id="dash-user-avatar" class="w-12 h-12 rounded-xl bg-amber-950/60 border border-amber-500/60 flex items-center justify-center text-amber-400 font-bold text-base shadow-[0_0_12px_rgba(245,158,11,0.3)]">
-              🔒
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center gap-2">
-                <h3 id="dash-user-name" class="text-sm font-bold text-white truncate">Guest Operator</h3>
-                <span id="dash-user-call" class="text-sm font-black text-amber-400">GUEST</span>
-              </div>
-              <p id="dash-user-role-text" class="text-[11px] text-slate-400">Unauthenticated Guest &bull; Masked View</p>
-              <div id="dash-user-meta-badges" class="flex flex-wrap items-center gap-1.5 mt-1.5 text-[10px]">
-                <span class="bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded border border-amber-800 font-bold">RACES: TX-FREE-01</span>
-                <span class="bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded">GMRS: WRPN302</span>
-                <span class="bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded">Fairfield, TX</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Station Capability Tags (Dynamically Populated from Member Profile) -->
-          <div class="space-y-1.5">
-            <div class="flex items-center justify-between">
-              <span class="text-[10px] text-slate-400 block font-bold uppercase tracking-wider">DEPLOYED STATION CAPABILITIES:</span>
-              <button type="button" onclick="openOperatorSelfEditModal()" class="text-[10px] text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-1 cursor-pointer">
-                <span>✏️</span><span>EDIT GEAR</span>
-              </button>
-            </div>
-            <div id="dash-user-capabilities" class="flex flex-wrap gap-1.5 text-[10px] text-slate-300">
-              <span class="p-1 px-2 bg-emerald-950/70 text-emerald-300 rounded border border-emerald-800/80 font-bold flex items-center gap-1 text-[10px]">
-                <span class="text-emerald-400">✓</span><span>50W VHF/UHF Mobile</span>
-              </span>
-              <span class="p-1 px-2 bg-emerald-950/70 text-emerald-300 rounded border border-emerald-800/80 font-bold flex items-center gap-1 text-[10px]">
-                <span class="text-emerald-400">✓</span><span>HF Portable Base</span>
-              </span>
-              <span class="p-1 px-2 bg-emerald-950/70 text-emerald-300 rounded border border-emerald-800/80 font-bold flex items-center gap-1 text-[10px]">
-                <span class="text-emerald-400">✓</span><span>Winlink RMS Packet / Radio Email</span>
-              </span>
-              <span class="p-1 px-2 bg-emerald-950/70 text-emerald-300 rounded border border-emerald-800/80 font-bold flex items-center gap-1 text-[10px]">
-                <span class="text-emerald-400">✓</span><span>100Ah+ Battery / LiFePO4 Power</span>
-              </span>
-            </div>
-            <button type="button" onclick="openOperatorSelfEditModal()" class="w-full mt-2 py-1.5 px-3 bg-slate-900 hover:bg-slate-800 border border-emerald-500/50 text-emerald-300 font-bold text-[11px] rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer shadow">
-              <span>✏️</span><span>EDIT MY PROFILE &amp; STATION CAPABILITIES</span>
-            </button>
-          </div>
-
-          <!-- Interactive One-Touch Availability Status -->
-          <div class="pt-2 border-t border-slate-800 space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="text-[10px] text-slate-400 font-bold">SET MY CURRENT READINESS:</span>
-              <span id="dash-my-status-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-800">
-                🟢 AVAILABLE & MONITORING
-              </span>
-            </div>
-            
-            <div class="grid grid-cols-2 gap-2 text-xs">
-              <button onclick="setDashboardStatus('AVAILABLE / MONITORING', 'bg-emerald-950 text-emerald-300 border-emerald-800')" class="p-2 rounded bg-slate-900 hover:bg-slate-800 text-emerald-400 font-bold border border-slate-700 text-left transition flex items-center gap-1.5 truncate">
-                🟢 Available / On-Air
-              </button>
-              <button onclick="setDashboardStatus('STANDBY AT STATION', 'bg-amber-950 text-amber-300 border-amber-800')" class="p-2 rounded bg-slate-900 hover:bg-slate-800 text-amber-400 font-bold border border-slate-700 text-left transition flex items-center gap-1.5 truncate">
-                🟡 Standby at Base
-              </button>
-              <button onclick="setDashboardStatus('DISPATCHED / EN ROUTE', 'bg-blue-950 text-blue-300 border-blue-800')" class="p-2 rounded bg-slate-900 hover:bg-slate-800 text-blue-400 font-bold border border-slate-700 text-left transition flex items-center gap-1.5 truncate">
-                🔵 En Route Staging
-              </button>
-              <button onclick="setDashboardStatus('OFF-DUTY', 'bg-slate-900 text-slate-400 border-slate-700')" class="p-2 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 font-bold border border-slate-700 text-left transition flex items-center gap-1.5 truncate">
-                ⚪ Off-Duty
-              </button>
-            </div>
-          </div>
-
-          <!-- Geolocation & Staging Grid -->
-          <div class="p-2.5 bg-[#0b0e14] rounded border border-slate-800 text-[10px] text-slate-400 space-y-1">
-            <div class="flex justify-between">
-              <span>Fairfield EOC Staging:</span>
-              <strong class="text-slate-200">31.7249° N, 96.1652° W</strong>
-            </div>
-            <div class="flex justify-between">
-              <span>Maidenhead Grid Square:</span>
-              <strong class="text-amber-400">EM11xq (Freestone Co.)</strong>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Right Column: Weekly Sunday Net Countdown & Mission Shortcuts (7 Cols) -->
-        <div class="lg:col-span-7 space-y-5 font-mono-tac">
+      <!-- TACTICAL COMMAND OPERATIONS & SUNDAY NET WIDGET (FULL WIDTH) -->
+      <div class="space-y-6 font-mono-tac">
           
           <!-- SUNDAY WEEKLY TRAINING NET CARD -->
           <div class="bg-gradient-to-br from-[#101915] via-[#10151d] to-[#141219] border-2 border-emerald-500/50 rounded-xl p-5 shadow-lg space-y-4">
@@ -1524,25 +1462,37 @@
             </div>
           </div>
 
-          <!-- TACTICAL MISSION SHORTCUTS (3 CARDS - PACE CHANNELS IN HAMBURGER MENU) -->
+          <!-- TACTICAL MISSION SHORTCUTS (5 CARDS WITH ID CARD & FIELD MANUAL) -->
           <div class="space-y-2">
-            <span class="text-[10px] text-slate-400 font-bold block">MISSION SHORTCUTS:</span>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+            <span class="text-[10px] text-slate-400 font-bold block">TACTICAL MISSION SHORTCUTS:</span>
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 text-xs font-mono-tac">
               
-              <button id="dash-btn-paging-2" onclick="handleDashboardAlertClick()" class="p-3 bg-[#10151d] hover:bg-slate-800 border border-slate-800 rounded-xl text-left transition space-y-1 cursor-pointer">
-                <div class="text-base text-red-400">🚨</div>
+              <button onclick="switchTab('idcard')" class="p-3 bg-gradient-to-br from-[#0e171b] to-[#10151d] hover:bg-slate-800 border-2 border-emerald-500/50 rounded-xl text-left transition space-y-1 cursor-pointer shadow group">
+                <div class="text-lg group-hover:scale-110 transition-transform">🪪</div>
+                <div class="font-bold text-white text-[11px]">OPERATOR ID CARD</div>
+                <div class="text-[10px] text-emerald-400">Credentials &amp; Badge</div>
+              </button>
+
+              <button onclick="switchTab('manual')" class="p-3 bg-gradient-to-br from-[#19150d] to-[#10151d] hover:bg-slate-800 border-2 border-amber-500/50 rounded-xl text-left transition space-y-1 cursor-pointer shadow group">
+                <div class="text-lg group-hover:scale-110 transition-transform">📖</div>
+                <div class="font-bold text-white text-[11px]">FIELD MANUAL</div>
+                <div class="text-[10px] text-amber-300">Tactical Binder 7.5</div>
+              </button>
+
+              <button id="dash-btn-paging-2" onclick="handleDashboardAlertClick()" class="p-3 bg-[#10151d] hover:bg-slate-800 border border-slate-800 rounded-xl text-left transition space-y-1 cursor-pointer group">
+                <div class="text-lg text-red-400 group-hover:scale-110 transition-transform">🚨</div>
                 <div class="font-bold text-white text-[11px]">INCIDENT ALERTS</div>
                 <div class="text-[10px] text-slate-400">Tone Siren &amp; Page</div>
               </button>
 
-              <button onclick="switchTab('skywarn')" class="p-3 bg-[#10151d] hover:bg-slate-800 border border-slate-800 rounded-xl text-left transition space-y-1 cursor-pointer">
-                <div class="text-base text-blue-400">⛈️</div>
+              <button onclick="switchTab('skywarn')" class="p-3 bg-[#10151d] hover:bg-slate-800 border border-slate-800 rounded-xl text-left transition space-y-1 cursor-pointer group">
+                <div class="text-lg text-blue-400 group-hover:scale-110 transition-transform">⛈️</div>
                 <div class="font-bold text-white text-[11px]">SKYWARN WEATHER</div>
                 <div class="text-[10px] text-slate-400">Live Spotter Reports</div>
               </button>
 
-              <button onclick="switchTab('roster')" class="p-3 bg-[#10151d] hover:bg-slate-800 border border-slate-800 rounded-xl text-left transition space-y-1 cursor-pointer">
-                <div class="text-base text-amber-400">👥</div>
+              <button onclick="switchTab('roster')" class="p-3 bg-[#10151d] hover:bg-slate-800 border border-slate-800 rounded-xl text-left transition space-y-1 cursor-pointer col-span-2 sm:col-span-1 group">
+                <div class="text-lg text-amber-400 group-hover:scale-110 transition-transform">👥</div>
                 <div class="font-bold text-white text-[11px]">ARES ROSTER</div>
                 <div class="text-[10px] text-slate-400">16 County Members</div>
               </button>
@@ -1550,8 +1500,450 @@
             </div>
           </div>
 
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- DEDICATED OFFICIAL OPERATOR ID CARD SECTION -->
+    <!-- ========================================== -->
+    <section id="view-idcard" class="tab-content hidden space-y-6 font-mono-tac max-w-5xl mx-auto">
+      
+      <!-- Top Header & Action Controls Bar -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#10151d] border-2 border-emerald-500/50 rounded-2xl p-4 sm:p-5 shadow-xl">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-emerald-950 border-2 border-emerald-500/80 flex items-center justify-center text-2xl text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+            🪪
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-base sm:text-lg font-black text-white uppercase tracking-wider">OFFICIAL OPERATOR ID CARD</h2>
+              <span id="idcard-auth-status-badge" class="px-2 py-0.5 rounded text-[10px] font-black bg-emerald-950 text-emerald-300 border border-emerald-700">VERIFIED CREDENTIAL</span>
+            </div>
+            <p class="text-xs text-slate-400">Freestone County Amateur Radio Emergency Service &bull; ARRL North Texas Section</p>
+          </div>
         </div>
 
+        <!-- Action Buttons -->
+        <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+          <button type="button" onclick="toggleIdCardFlip()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow cursor-pointer">
+            <span>🔄</span><span id="idcard-flip-btn-text">FLIP TO BACK</span>
+          </button>
+          <button type="button" onclick="openOperatorSelfEditModal()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow cursor-pointer">
+            <span>✏️</span><span>EDIT PROFILE &amp; PHOTO</span>
+          </button>
+          <button type="button" onclick="printOperatorIdCard()" class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 text-slate-950 font-black rounded-lg text-xs transition flex items-center gap-1.5 shadow-[0_0_15px_rgba(16,185,129,0.3)] cursor-pointer">
+            <span>🖨️</span><span>PRINT / SAVE ID CARD</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- THE OFFICIAL TACTICAL ID CARD CONTAINER (DUAL / FLIP) -->
+      <div id="idcard-printable-area" class="space-y-6">
+        
+        <!-- CARD FRONT -->
+        <div id="idcard-front" class="bg-gradient-to-br from-[#0c1219] via-[#090d14] to-[#07090f] border-2 border-emerald-500/70 rounded-2xl p-5 sm:p-7 shadow-[0_0_35px_rgba(0,0,0,0.8)] relative overflow-hidden transition-all duration-300">
+          
+          <!-- Background Security Watermark -->
+          <div class="absolute -right-10 -bottom-10 opacity-5 pointer-events-none select-none text-9xl font-black text-white">
+            ARES
+          </div>
+
+          <!-- Official Top Banner Header -->
+          <div class="border-b-2 border-emerald-500/40 pb-4 mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-xl bg-black border border-emerald-500/60 p-1 flex items-center justify-center flex-shrink-0">
+                <span class="text-2xl">⭐</span>
+              </div>
+              <div>
+                <div class="text-[10px] text-amber-400 font-black tracking-widest uppercase">STATE OF TEXAS &bull; FREESTONE COUNTY</div>
+                <h1 class="text-base sm:text-xl font-black text-white tracking-wider uppercase">EMERGENCY COMMUNICATIONS CREDENTIAL</h1>
+                <div class="text-[10px] text-emerald-400 font-bold tracking-wider">AMATEUR RADIO EMERGENCY SERVICE &bull; RACES &bull; NWS SKYWARN</div>
+              </div>
+            </div>
+            <div class="flex flex-col sm:items-end text-left sm:text-right">
+              <span id="idcard-clearance-pill" class="px-2.5 py-1 rounded text-xs font-black bg-emerald-950 text-emerald-300 border border-emerald-600 shadow">
+                LEVEL 6 &bull; EC COMMAND
+              </span>
+              <span class="text-[10px] text-slate-400 mt-1">SECURITY CLEARANCE: VERIFIED</span>
+            </div>
+          </div>
+
+          <!-- Card Body: Photo & Credentials Split -->
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+            
+            <!-- Left: Operator Photo Box & Fast Badges (4 Cols) -->
+            <div class="md:col-span-4 flex flex-col items-center text-center space-y-3">
+              <!-- Photo Frame -->
+              <div class="relative group">
+                <div id="idcard-photo-wrapper" class="w-40 h-48 sm:w-44 sm:h-52 rounded-xl bg-black border-2 border-emerald-500/80 shadow-[0_0_20px_rgba(16,185,129,0.25)] flex items-center justify-center overflow-hidden">
+                  <img id="idcard-photo-img" src="" alt="Operator Portrait" class="w-full h-full object-cover hidden">
+                  <div id="idcard-photo-placeholder" class="text-5xl font-black text-emerald-400 flex flex-col items-center justify-center gap-2">
+                    <span>👤</span>
+                    <span class="text-xs text-slate-500 font-normal">OPERATOR PHOTO</span>
+                  </div>
+                </div>
+                <!-- Verified Holographic Badge Overlay -->
+                <div class="absolute bottom-2 left-2 right-2 bg-black/85 backdrop-blur border border-emerald-500/80 rounded py-1 px-1.5 text-[9px] text-emerald-300 font-black uppercase tracking-wider shadow">
+                  🛡️ VERIFIED VOLUNTEER
+                </div>
+              </div>
+
+              <!-- Callsign Box Under Photo -->
+              <div class="w-full bg-[#080b10] border border-slate-800 rounded-xl p-2.5 space-y-0.5">
+                <div class="text-[9px] text-slate-500 uppercase tracking-widest">FCC CALL SIGN:</div>
+                <div id="idcard-call" class="text-2xl sm:text-3xl font-black text-emerald-400 tracking-wider">KG5TZT</div>
+                <div id="idcard-class" class="text-[10px] text-amber-400 font-bold">Amateur Extra Class</div>
+              </div>
+            </div>
+
+            <!-- Right: Operator Identification & Clearance Details (8 Cols) -->
+            <div class="md:col-span-8 space-y-4">
+              <!-- Name & Official Title -->
+              <div>
+                <div class="text-[10px] text-slate-500 uppercase tracking-widest">NAME OF REGISTERED OPERATOR:</div>
+                <div id="idcard-name" class="text-xl sm:text-2xl font-black text-white tracking-wide">Brian Davis</div>
+                <div id="idcard-role" class="text-xs text-emerald-400 font-bold mt-0.5">County Emergency Coordinator (EC) &bull; Level 6 Command</div>
+              </div>
+
+              <!-- Detailed Tactical Credentials Grid -->
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
+                <div class="p-2.5 bg-[#080b10] rounded-lg border border-slate-800 space-y-0.5">
+                  <span class="text-[9px] text-slate-500 block uppercase">RACES OPERATOR ID:</span>
+                  <strong id="idcard-races" class="text-white text-xs">TX-FREE-01</strong>
+                </div>
+                <div class="p-2.5 bg-[#080b10] rounded-lg border border-slate-800 space-y-0.5">
+                  <span class="text-[9px] text-slate-500 block uppercase">GMRS CALLSIGN:</span>
+                  <strong id="idcard-gmrs" class="text-white text-xs">WRPN302</strong>
+                </div>
+                <div class="p-2.5 bg-[#080b10] rounded-lg border border-slate-800 space-y-0.5">
+                  <span class="text-[9px] text-slate-500 block uppercase">ARES ID / AFFILIATION:</span>
+                  <strong id="idcard-ares" class="text-emerald-400 text-xs">ARES-TX-FREE</strong>
+                </div>
+                <div class="p-2.5 bg-[#080b10] rounded-lg border border-slate-800 space-y-0.5">
+                  <span class="text-[9px] text-slate-500 block uppercase">COUNTY JURISDICTION:</span>
+                  <strong class="text-white text-xs">Freestone County, TX</strong>
+                </div>
+                <div class="p-2.5 bg-[#080b10] rounded-lg border border-slate-800 space-y-0.5">
+                  <span class="text-[9px] text-slate-500 block uppercase">MAIDENHEAD GRID:</span>
+                  <strong class="text-amber-400 text-xs">EM11xq (Fairfield)</strong>
+                </div>
+                <div class="p-2.5 bg-[#080b10] rounded-lg border border-slate-800 space-y-0.5">
+                  <span class="text-[9px] text-slate-500 block uppercase">ASSIGNED STAGING:</span>
+                  <strong class="text-white text-xs">Fairfield EOC Base</strong>
+                </div>
+              </div>
+
+              <!-- Contact & Deployment Phone -->
+              <div class="p-3 bg-[#080b10] rounded-lg border border-slate-800 space-y-1">
+                <div class="flex items-center justify-between text-[10px]">
+                  <span class="text-slate-400 font-bold uppercase">PRIMARY OPERATIONAL CONTACT:</span>
+                  <span class="text-emerald-400">DISPATCH SECURE</span>
+                </div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs">
+                  <div>
+                    <span class="text-slate-400">TEL: </span>
+                    <strong id="idcard-phone" class="text-white font-mono-tac">903-388-XXXX</strong>
+                  </div>
+                  <div>
+                    <span class="text-slate-400">EMAIL: </span>
+                    <strong id="idcard-email" class="text-slate-200 font-mono-tac">kg5tzt@freestone-ares.org</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Barcode / Electronic Scanner Strip & Security Sign-off -->
+              <div class="pt-2 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[10px]">
+                <div class="text-slate-400">
+                  <span class="text-slate-500">DIGITAL CARD SERIAL: </span>
+                  <strong id="idcard-serial" class="text-emerald-400 font-mono-tac">FC-ARES-KG5TZT-2026</strong>
+                </div>
+                <div class="text-slate-400">
+                  <span>EXPIRATION: </span>
+                  <strong class="text-amber-400">OCTOBER 2028 (ACTIVE)</strong>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Bottom Card Legal Strip -->
+          <div class="mt-5 pt-3 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[9px] text-slate-500">
+            <div>OFFICIAL VOLUNTEER EMERGENCY COMMUNICATIONS OPERATOR &bull; FREESTONE COUNTY SHERIFF &amp; EOC LIAISON</div>
+            <div class="text-slate-400 font-bold">WHEN ALL ELSE FAILS &bull; AMATEUR RADIO EMERGENCY SERVICE</div>
+          </div>
+
+        </div>
+
+        <!-- CARD BACK (QUALIFICATIONS, NIMS CERTIFICATIONS & EMERGENCY INFO) -->
+        <div id="idcard-back" class="bg-gradient-to-br from-[#0c1219] via-[#090d14] to-[#07090f] border-2 border-amber-500/60 rounded-2xl p-5 sm:p-7 shadow-[0_0_35px_rgba(0,0,0,0.8)] relative overflow-hidden transition-all duration-300">
+          
+          <div class="border-b-2 border-amber-500/40 pb-3 mb-4 flex items-center justify-between">
+            <div>
+              <span class="text-[10px] text-amber-400 font-black tracking-widest uppercase">EMERGENCY DEPLOYMENT QUALIFICATIONS</span>
+              <h3 class="text-base sm:text-lg font-black text-white">FEMA NIMS CERTIFICATIONS &amp; DISASTER READINESS</h3>
+            </div>
+            <span class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-700">
+              CARD REVERSE
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            
+            <!-- FEMA / Incident Command System (ICS) Standard Certifications -->
+            <div class="space-y-2 p-3 bg-[#080b10] rounded-xl border border-slate-800">
+              <span class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider block">FEMA / ICS VERIFIED TRAINING:</span>
+              <div class="space-y-1.5 text-[11px] text-slate-300 font-mono-tac">
+                <div class="flex items-center gap-2">
+                  <span class="text-emerald-400">✓</span>
+                  <span><strong>IS-100.c:</strong> Introduction to Incident Command System</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-emerald-400">✓</span>
+                  <span><strong>IS-200.c:</strong> Basic Incident Command System for Initial Response</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-emerald-400">✓</span>
+                  <span><strong>IS-700.b:</strong> National Incident Management System (NIMS)</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-emerald-400">✓</span>
+                  <span><strong>IS-800.d:</strong> National Response Framework (NRF)</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-emerald-400">✓</span>
+                  <span><strong>NWS SKYWARN:</strong> Official Trained Severe Weather Spotter</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Deployed Station Capabilities & Gear -->
+            <div class="space-y-2 p-3 bg-[#080b10] rounded-xl border border-slate-800">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] text-amber-400 font-bold uppercase tracking-wider block">DEPLOYED STATION CAPABILITIES:</span>
+                <button type="button" onclick="openOperatorSelfEditModal()" class="text-[10px] text-emerald-400 hover:underline">Edit Gear</button>
+              </div>
+              <div id="idcard-capabilities-list" class="flex flex-wrap gap-1.5 text-[10px] text-slate-300 font-mono-tac">
+                <span class="p-1 px-2 bg-emerald-950/70 text-emerald-300 rounded border border-emerald-800/80 font-bold flex items-center gap-1">
+                  <span class="text-emerald-400">✓</span><span>50W VHF/UHF Mobile</span>
+                </span>
+                <span class="p-1 px-2 bg-emerald-950/70 text-emerald-300 rounded border border-emerald-800/80 font-bold flex items-center gap-1">
+                  <span class="text-emerald-400">✓</span><span>HF Portable Base</span>
+                </span>
+                <span class="p-1 px-2 bg-emerald-950/70 text-emerald-300 rounded border border-emerald-800/80 font-bold flex items-center gap-1">
+                  <span class="text-emerald-400">✓</span><span>Winlink RMS Packet / Radio Email</span>
+                </span>
+                <span class="p-1 px-2 bg-emerald-950/70 text-emerald-300 rounded border border-emerald-800/80 font-bold flex items-center gap-1">
+                  <span class="text-emerald-400">✓</span><span>100Ah+ Battery / LiFePO4 Power</span>
+                </span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Emergency Medical & In Case of Emergency (ICE) Contact -->
+          <div class="mt-4 p-3 bg-[#080b10] rounded-xl border border-slate-800 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div>
+              <span class="text-[9px] text-slate-500 uppercase block">IN CASE OF EMERGENCY (ICE) CONTACT:</span>
+              <strong id="idcard-ice-contact" class="text-white text-xs">Freestone County EOC Coordinator &bull; (903) 389-3336</strong>
+            </div>
+            <div>
+              <span class="text-[9px] text-slate-500 uppercase block">PRIMARY TACTICAL DISPATCH FREQUENCY:</span>
+              <strong class="text-emerald-400 text-xs">145.110 MHz (-0.600 T146.2) Fairfield</strong>
+            </div>
+          </div>
+
+          <!-- Notice to Law Enforcement / Emergency Officials -->
+          <div class="mt-4 p-3 bg-black/40 rounded-lg border border-slate-800 text-[10px] text-slate-400 leading-relaxed">
+            <strong class="text-amber-300">NOTICE TO EMERGENCY SERVICES &amp; LAW ENFORCEMENT:</strong>
+            The bearer of this card is an authorized volunteer communications operator assisting Freestone County Emergency Management. During declared emergencies, drills, and activations, please extend all appropriate access to incident command posts, designated staging areas, and communications shelters.
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ONE-TOUCH OPERATOR READINESS TOGGLE (MOVED FROM DASHBOARD) -->
+      <div class="bg-[#10151d] border border-slate-800 rounded-xl p-5 space-y-3 font-mono-tac">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+          <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">SET MY ACTIVE READINESS &amp; DEPLOYMENT STATUS:</span>
+          <span id="idcard-status-badge" class="px-2.5 py-0.5 rounded text-xs font-bold bg-emerald-950 text-emerald-300 border border-emerald-800">
+            🟢 AVAILABLE &amp; MONITORING
+          </span>
+        </div>
+        
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+          <button type="button" onclick="setDashboardStatus('AVAILABLE / MONITORING', 'bg-emerald-950 text-emerald-300 border-emerald-800')" class="p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-emerald-400 font-bold border border-slate-700 text-left transition flex items-center gap-2 cursor-pointer shadow">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>🟢 Available / On-Air</span>
+          </button>
+          <button type="button" onclick="setDashboardStatus('STANDBY AT STATION', 'bg-amber-950 text-amber-300 border-amber-800')" class="p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-400 font-bold border border-slate-700 text-left transition flex items-center gap-2 cursor-pointer shadow">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+            <span>🟡 Standby at Base</span>
+          </button>
+          <button type="button" onclick="setDashboardStatus('DISPATCHED / EN ROUTE', 'bg-blue-950 text-blue-300 border-blue-800')" class="p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-blue-400 font-bold border border-slate-700 text-left transition flex items-center gap-2 cursor-pointer shadow">
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-400 animate-pulse"></span>
+            <span>🔵 En Route Staging</span>
+          </button>
+          <button type="button" onclick="setDashboardStatus('OFF-DUTY', 'bg-slate-900 text-slate-400 border-slate-700')" class="p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 font-bold border border-slate-700 text-left transition flex items-center gap-2 cursor-pointer shadow">
+            <span class="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
+            <span>⚪ Off-Duty</span>
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- DEDICATED TACTICAL FIELD MANUAL & VIEWER -->
+    <!-- ========================================== -->
+    <section id="view-manual" class="tab-content hidden space-y-4 font-mono-tac">
+      
+      <!-- Top Title & Version Status Card -->
+      <div class="bg-gradient-to-r from-[#121815] via-[#10151d] to-[#16120d] border-2 border-emerald-500/50 rounded-2xl p-4 sm:p-5 shadow-xl space-y-3">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-xl bg-amber-950/80 border-2 border-amber-500/80 flex items-center justify-center text-2xl text-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.25)] flex-shrink-0">
+              📖
+            </div>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <h2 class="text-base sm:text-lg font-black text-white uppercase tracking-wider">FREESTONE COUNTY ARES TACTICAL FIELD BINDER</h2>
+                <span id="manual-version-badge" class="px-2.5 py-0.5 rounded text-xs font-black bg-emerald-950 text-emerald-300 border border-emerald-600 shadow">
+                  REVISION 7.5 (OCTOBER 2026)
+                </span>
+                <span id="manual-storage-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-900 text-slate-300 border border-slate-700">
+                  OFFICIAL BUNDLE
+                </span>
+              </div>
+              <p class="text-xs text-slate-400 mt-0.5">Comprehensive Emergency Communications, PACE Plan, ICS-205, Winlink, APRS, &amp; Off-Grid Maps</p>
+            </div>
+          </div>
+
+          <!-- Dynamic Action Buttons (Upload / Update, Reset, Export) -->
+          <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+            <!-- Hidden File Input for Dynamic PDF Upload -->
+            <input type="file" id="manual-file-input" accept=".pdf,application/pdf" style="display:none;" onchange="handleManualFileSelected(event)">
+            
+            <button type="button" onclick="triggerManualUpload()" class="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black rounded-lg text-xs shadow flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap">
+              <span>📁</span><span>UPDATE / UPLOAD MANUAL</span>
+            </button>
+            
+            <button type="button" onclick="resetManualToDefault()" id="btn-reset-manual" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-bold border border-slate-700 flex items-center gap-1.5 transition cursor-pointer hidden whitespace-nowrap" title="Revert to official bundled Revision 7.5">
+              <span>🔄</span><span>RESET DEFAULT</span>
+            </button>
+            
+            <button type="button" onclick="exportCurrentManualPdf()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-emerald-300 rounded-lg text-xs font-bold border border-slate-700 flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap" title="Download or save a copy of the active manual PDF to device">
+              <span>⬇️</span><span>SAVE PDF</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- In-App Upload Revisions Notice Banner -->
+        <div class="bg-black/40 border border-slate-800 rounded-lg p-2.5 text-[11px] text-slate-300 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <span class="text-amber-400 text-base">ℹ️</span>
+            <span><strong>Instant In-App Manual Updates:</strong> You can upload revised Field Manual PDFs anytime directly from your device. Revisions save to offline device storage automatically without requiring an app update or recompile.</span>
+          </div>
+          <span id="manual-file-info-text" class="text-[10px] text-slate-500 font-mono-tac whitespace-nowrap">Tactical_Field_Binder_7.5.pdf</span>
+        </div>
+      </div>
+
+      <!-- PDF VIEWER TOOLBAR (PAGE NAV, TOC JUMP, ZOOM, FULLSCREEN) -->
+      <div class="bg-[#10151d] border border-slate-800 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3 text-xs shadow-md">
+        
+        <!-- Chapter / Section Fast Jump Selector -->
+        <div class="flex items-center gap-2 min-w-0">
+          <span class="text-[10px] text-slate-400 font-bold uppercase whitespace-nowrap hidden sm:inline">CHAPTER JUMP:</span>
+          <select id="manual-toc-select" onchange="jumpToTocPage(this.value)" class="bg-[#080b10] border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white font-bold focus:outline-none focus:border-amber-500 max-w-[220px] sm:max-w-xs cursor-pointer truncate">
+            <option value="1">📑 0-A Cover Page (Rev 7.5)</option>
+            <option value="2">📑 0-TOC Table of Contents (p. 1-6)</option>
+            <option value="8">★ 1.1 Approval &amp; Signature (p. 1-1)</option>
+            <option value="9">★ 1.2 Document Control &amp; Rev History</option>
+            <option value="11">📡 1.3 Communications PACE Plan</option>
+            <option value="12">📋 1.4 ICS-205 Communications Annex</option>
+            <option value="13">📻 1.5 Radio Programming Standard</option>
+            <option value="14">🎒 1.6 Deployment Checklist</option>
+            <option value="15">🎙️ 1.7 Net Control (NCS) Quick Guide</option>
+            <option value="16">👥 1.8 Operator Accountability Roster</option>
+            <option value="17">⚡ 2.0 Field Operations &amp; Tactics</option>
+            <option value="25">⛈️ 3.0 Severe Weather &amp; SKYWARN</option>
+            <option value="35">💻 4.0 Digital Modes &amp; Winlink</option>
+            <option value="44">🔋 5.0 Equipment, Radios &amp; LiFePO4</option>
+            <option value="55">📍 6.1 APRS Quick Command Chart</option>
+            <option value="59">🗺️ 7.1 County Topo &amp; PACE Maps</option>
+          </select>
+        </div>
+
+        <!-- Page Stepper: First, Prev, Input, Next, Last -->
+        <div class="flex items-center gap-1.5 font-mono-tac">
+          <button type="button" onclick="goToManualFirstPage()" class="p-1.5 px-2.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold border border-slate-700 transition cursor-pointer" title="First Page">
+            ⏮
+          </button>
+          <button type="button" onclick="goToManualPrevPage()" class="p-1.5 px-3 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold border border-slate-700 transition cursor-pointer" title="Previous Page">
+            ◀ PREV
+          </button>
+          
+          <div class="flex items-center gap-1 px-2 py-1 bg-black rounded border border-slate-700 text-xs">
+            <span class="text-slate-400">PAGE</span>
+            <input type="number" id="manual-page-num" min="1" max="84" value="1" onchange="goToManualPage(this.value)" class="w-12 bg-transparent text-center font-bold text-amber-400 focus:outline-none">
+            <span class="text-slate-500">/</span>
+            <span id="manual-page-count" class="text-slate-300 font-bold">84</span>
+          </div>
+
+          <button type="button" onclick="goToManualNextPage()" class="p-1.5 px-3 rounded bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black transition cursor-pointer shadow" title="Next Page">
+            NEXT ▶
+          </button>
+          <button type="button" onclick="goToManualLastPage()" class="p-1.5 px-2.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold border border-slate-700 transition cursor-pointer" title="Last Page">
+            ⏭
+          </button>
+        </div>
+
+        <!-- Zoom Controls & Fullscreen -->
+        <div class="flex items-center gap-1.5">
+          <button type="button" onclick="zoomManualOut()" class="p-1.5 px-2.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold border border-slate-700 transition cursor-pointer" title="Zoom Out">
+            🔍 -
+          </button>
+          <select id="manual-zoom-select" onchange="setManualZoom(this.value)" class="bg-[#080b10] border border-slate-700 rounded px-2 py-1 text-xs text-white font-bold focus:outline-none cursor-pointer">
+            <option value="auto" selected>Fit Width</option>
+            <option value="page">Fit Page</option>
+            <option value="0.75">75%</option>
+            <option value="1.0">100%</option>
+            <option value="1.25">125%</option>
+            <option value="1.5">150%</option>
+            <option value="2.0">200%</option>
+          </select>
+          <button type="button" onclick="zoomManualIn()" class="p-1.5 px-2.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold border border-slate-700 transition cursor-pointer" title="Zoom In">
+            🔍 +
+          </button>
+          <button type="button" onclick="toggleManualFullscreen()" class="p-1.5 px-2.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold border border-slate-700 transition cursor-pointer" title="Toggle Fullscreen">
+            ⛶
+          </button>
+        </div>
+
+      </div>
+
+      <!-- MAIN PDF VIEWER DISPLAY CONTAINER -->
+      <div id="manual-viewer-viewport" class="w-full bg-[#07090e] border-2 border-emerald-500/40 rounded-2xl overflow-auto min-h-[70vh] max-h-[82vh] p-2 sm:p-4 flex flex-col items-center justify-start relative shadow-2xl">
+        
+        <!-- Loading Overlay -->
+        <div id="manual-loading" class="absolute inset-0 bg-black/90 flex flex-col items-center justify-center gap-3 z-30 font-mono-tac">
+          <div class="w-10 h-10 border-4 border-amber-500/30 border-t-amber-400 rounded-full animate-spin"></div>
+          <div class="text-amber-400 font-bold text-xs" id="manual-loading-text">Loading Tactical Field Binder (Rev 7.5)...</div>
+          <p class="text-[10px] text-slate-500">Preparing high-resolution offline pages</p>
+        </div>
+
+        <!-- Active Page Canvas -->
+        <div id="manual-canvas-wrapper" class="relative max-w-full">
+          <canvas id="manual-pdf-canvas" class="shadow-2xl rounded-lg max-w-full bg-white transition-all duration-200"></canvas>
+        </div>
+
+      </div>
+
+      <!-- Bottom Keyboard & Touch Navigation Hints -->
+      <div class="flex items-center justify-between text-[11px] text-slate-400 px-2 font-mono-tac">
+        <div>💡 <strong>Tips:</strong> Use Left / Right arrow keys or swipe left/right to turn pages.</div>
+        <div id="manual-footer-status">Document: Revision 7.5 &bull; 84 Pages</div>
       </div>
 
     </section>
@@ -3901,7 +4293,7 @@
 
       <!-- Modal Footer -->
       <div class="flex items-center justify-between border-t border-purple-900/60 p-3 bg-[#07090e] flex-shrink-0">
-        <span class="text-[10px] text-purple-300">Freestone County ARES Dispatch Validator • Build 60</span>
+        <span class="text-[10px] text-purple-300">Freestone County ARES Dispatch Validator • Build 61</span>
         <button type="button" onclick="closeAlertSoundVerifyModal()" class="px-4 py-2 bg-purple-800 hover:bg-purple-700 text-white font-bold rounded-xl text-xs transition cursor-pointer">
           CLOSE CONSOLE
         </button>
@@ -6460,6 +6852,8 @@ function getOperatorClearance() {
       if (headerStatus) {
         const titles = {
           'dash': '● DASHBOARD',
+          'idcard': '● ID CARD',
+          'manual': '● FIELD MANUAL',
           'pace': '● PACE / FREQS',
           'roster': '● ROSTER',
           'alert': '● PAGING / ALERTS',
@@ -6481,6 +6875,12 @@ function getOperatorClearance() {
       }
       if (tabId === 'dash') {
         renderCountyResponseLevelUI();
+      }
+      if (tabId === 'idcard') {
+        updateOperatorIdCardView();
+      }
+      if (tabId === 'manual') {
+        initTacticalManualViewer();
       }
       if (tabId === 'pace') {
         renderPaceChannels();
@@ -9139,6 +9539,7 @@ D. Out-of-County stations and visitors.
           }
         }
       }
+      try { updateOperatorIdCardView(); } catch(e) { console.warn('ID Card view update error:', e); }
     }
     function switchOperator(callsign, showAlert = true) {
       if (!callsign || callsign === 'GUEST') {
@@ -11368,6 +11769,20 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
           leafletMap.flyTo([county.lat, county.lng], 11, { duration: 1.2 });
         }
         inspectMapItem('spot', 'staging');
+
+    // Auto-switch tab or login if specified in URL query or hash
+    try {
+      const href = window.location.href;
+      const loginMatch = href.match(/[?&]login=([^&#]+)/);
+      if (loginMatch) {
+        switchOperator(loginMatch[1], false);
+      }
+      const match = href.match(/[?&]tab=([^&#]+)/) || href.match(/#([a-zA-Z0-9_-]+)/);
+      const targetTab = match ? match[1] : '';
+      if (targetTab && targetTab !== 'dash' && document.getElementById('view-' + targetTab)) {
+        switchTab(targetTab);
+      }
+    } catch(e) {}
       }, 150);
     }
 
@@ -16871,6 +17286,23 @@ Your console is now authorized and unlocked.`);
     initTacticalMap();
     inspectMapItem('spot', 'staging');
 
+    // Auto-switch tab or login if specified in URL query or hash
+    try {
+      const href = window.location.href;
+      const loginMatch = href.match(/[?&]login=([^&#]+)/);
+      if (loginMatch) {
+        switchOperator(loginMatch[1], false);
+      }
+      const match = href.match(/[?&]tab=([^&#]+)/) || href.match(/#([a-zA-Z0-9_-]+)/);
+      const targetTab = match ? match[1] : '';
+      if (targetTab && targetTab !== 'dash' && document.getElementById('view-' + targetTab)) {
+        switchTab(targetTab);
+      }
+      if (href.includes('#menu') || href.includes('menu=open') || href.includes('drawer=open') || targetTab === 'menu') {
+        toggleHamburgerMenu(true);
+      }
+    } catch(e) {}
+
     // Register Service Worker for 100% offline capability
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -16880,6 +17312,689 @@ Your console is now authorized and unlocked.`);
       });
     }
   
+
+    // ==========================================
+    // OPERATOR ID CARD & CREDENTIAL ENGINE
+    // ==========================================
+    var idCardCurrentSide = 'front'; // 'front' or 'back'
+
+    function updateOperatorIdCardView() {
+      const isGuest = !appState.isLoggedIn || appState.myCall === 'GUEST';
+      const accounts = typeof getRegisteredAccounts === 'function' ? getRegisteredAccounts() : {};
+      const acc = accounts[appState.myCall] || {};
+      const mem = appState.members ? (appState.members.find(m => m.call.toUpperCase() === (appState.myCall || '').toUpperCase()) || {}) : {};
+      const clearance = typeof getOperatorClearance === 'function' ? getOperatorClearance() : { levelNum: 1, levelTitle: 'Level 1 - General Volunteer' };
+
+      const callsign = isGuest ? 'GUEST' : appState.myCall;
+      const name = isGuest ? 'Guest Operator' : (acc.name || mem.name || appState.myName || 'Verified Volunteer');
+      const role = isGuest ? 'Unauthenticated Guest &bull; Masked View' : (appState.myRole || mem.role || 'Field Communications Operator');
+      const level = isGuest ? 'GUEST (LOCKED)' : (appState.myLevel || mem.level || 'Level 1 - General Volunteer');
+      const gmrs = (callsign === 'AI5OX' ? 'WSEA569' : (acc.gmrs || mem.gmrs || (isGuest ? 'LOCKED' : 'WRPN302')));
+      const races = acc.races || mem.races || (isGuest ? 'LOCKED' : 'TX-FREE-01');
+      const ares = acc.ares || mem.ares || acc.aresId || mem.aresId || 'ARES-TX-FREE';
+      const licenseClass = acc.class || mem.class || (callsign === 'KG5TZT' ? 'Amateur Extra Class' : 'Technician Class');
+      const phone = isGuest ? '***-***-**** (Locked)' : (acc.phone || mem.phone || (callsign === 'KG5TZT' ? '903-388-7561' : '903-389-XXXX'));
+      const email = isGuest ? 'guest@masked.view' : (acc.email || mem.email || (callsign.toLowerCase() + '@freestone-ares.org'));
+      const photo = acc.photo || mem.photo || '';
+      const caps = acc.capabilities || mem.capabilities || [
+        '50W VHF/UHF Mobile',
+        'HF Portable Base',
+        'Winlink RMS Packet / Radio Email',
+        '100Ah+ Battery / LiFePO4 Power'
+      ];
+
+      // Update text fields
+      const elCall = document.getElementById('idcard-call');
+      if (elCall) elCall.textContent = callsign;
+
+      const elName = document.getElementById('idcard-name');
+      if (elName) elName.textContent = name;
+
+      const elRole = document.getElementById('idcard-role');
+      if (elRole) elRole.innerHTML = role;
+
+      const elClass = document.getElementById('idcard-class');
+      if (elClass) elClass.textContent = licenseClass;
+
+      const elRaces = document.getElementById('idcard-races');
+      if (elRaces) elRaces.textContent = races;
+
+      const elGmrs = document.getElementById('idcard-gmrs');
+      if (elGmrs) elGmrs.textContent = gmrs;
+
+      const elAres = document.getElementById('idcard-ares');
+      if (elAres) elAres.textContent = ares;
+
+      const elPhone = document.getElementById('idcard-phone');
+      if (elPhone) elPhone.textContent = phone;
+
+      const elEmail = document.getElementById('idcard-email');
+      if (elEmail) elEmail.textContent = email;
+
+      const elSerial = document.getElementById('idcard-serial');
+      if (elSerial) elSerial.textContent = `FC-ARES-${callsign}-${new Date().getFullYear()}`;
+
+      // Status & Clearance Pills
+      const elClearancePill = document.getElementById('idcard-clearance-pill');
+      if (elClearancePill) {
+        if (isGuest) {
+          elClearancePill.textContent = 'GUEST ACCESS (LOCKED)';
+          elClearancePill.className = 'px-2.5 py-1 rounded text-xs font-black bg-amber-950 text-amber-300 border border-amber-700 shadow';
+        } else {
+          elClearancePill.textContent = `LEVEL ${clearance.levelNum} • ${clearance.levelTitle.toUpperCase()}`;
+          elClearancePill.className = 'px-2.5 py-1 rounded text-xs font-black bg-emerald-950 text-emerald-300 border border-emerald-600 shadow';
+        }
+      }
+
+      const elAuthStatus = document.getElementById('idcard-auth-status-badge');
+      if (elAuthStatus) {
+        if (isGuest) {
+          elAuthStatus.textContent = 'GUEST PRIVACY MODE';
+          elAuthStatus.className = 'px-2 py-0.5 rounded text-[10px] font-black bg-amber-950 text-amber-400 border border-amber-800';
+        } else {
+          elAuthStatus.textContent = 'VERIFIED OPERATIONAL CREDENTIAL';
+          elAuthStatus.className = 'px-2 py-0.5 rounded text-[10px] font-black bg-emerald-950 text-emerald-300 border border-emerald-700';
+        }
+      }
+
+      // Photos
+      const elPhotoImg = document.getElementById('idcard-photo-img');
+      const elPhotoPlace = document.getElementById('idcard-photo-placeholder');
+      if (elPhotoImg && elPhotoPlace) {
+        if (photo && !isGuest) {
+          elPhotoImg.src = photo;
+          elPhotoImg.classList.remove('hidden');
+          elPhotoPlace.classList.add('hidden');
+        } else {
+          elPhotoImg.classList.add('hidden');
+          elPhotoPlace.classList.remove('hidden');
+          if (isGuest) {
+            elPhotoPlace.innerHTML = '<span class="text-4xl">🔒</span><span class="text-[10px] text-amber-400 mt-1">GUEST</span>';
+          } else {
+            const initials = callsign === 'KG5TZT' ? 'EC' : callsign.substring(0, 2);
+            elPhotoPlace.innerHTML = `<span class="text-4xl font-black text-emerald-400">${initials}</span><span class="text-[9px] text-slate-400 mt-1">${callsign}</span>`;
+          }
+        }
+      }
+
+      // Station Capabilities List
+      const elCaps = document.getElementById('idcard-capabilities-list');
+      if (elCaps) {
+        if (isGuest) {
+          elCaps.innerHTML = '<span class="text-slate-500 text-xs italic">Sign in to load verified station gear</span>';
+        } else if (caps && caps.length > 0) {
+          elCaps.innerHTML = caps.map(c => `
+            <span class="p-1 px-2 bg-emerald-950/70 text-emerald-300 rounded border border-emerald-800/80 font-bold flex items-center gap-1 text-[10px]">
+              <span class="text-emerald-400">✓</span><span>${c}</span>
+            </span>
+          `).join('');
+        }
+      }
+
+      // Sync ID card status badge with current dashboard status
+      const dashStatus = document.getElementById('dash-my-status-badge');
+      const idcardStatus = document.getElementById('idcard-status-badge');
+      if (dashStatus && idcardStatus) {
+        idcardStatus.textContent = dashStatus.textContent;
+        idcardStatus.className = dashStatus.className;
+      }
+    }
+
+    function toggleIdCardFlip() {
+      const front = document.getElementById('idcard-front');
+      const back = document.getElementById('idcard-back');
+      const btnText = document.getElementById('idcard-flip-btn-text');
+
+      if (!front || !back) return;
+
+      if (idCardCurrentSide === 'front') {
+        front.classList.add('hidden');
+        back.classList.remove('hidden');
+        idCardCurrentSide = 'back';
+        if (btnText) btnText.textContent = 'FLIP TO FRONT';
+      } else {
+        front.classList.remove('hidden');
+        back.classList.add('hidden');
+        idCardCurrentSide = 'front';
+        if (btnText) btnText.textContent = 'FLIP TO BACK';
+      }
+    }
+
+    function printOperatorIdCard() {
+      // Ensure both front and back are visible for printing
+      const front = document.getElementById('idcard-front');
+      const back = document.getElementById('idcard-back');
+      if (front) front.classList.remove('hidden');
+      if (back) back.classList.remove('hidden');
+
+      window.print();
+
+      // Restore view according to flip state
+      if (idCardCurrentSide === 'front' && back) {
+        back.classList.add('hidden');
+      } else if (idCardCurrentSide === 'back' && front) {
+        front.classList.add('hidden');
+      }
+    }
+
+    // ==========================================
+    // TACTICAL FIELD BINDER & DYNAMIC PDF ENGINE
+    // ==========================================
+    var tacticalPdfDoc = null;
+    var tacticalPdfPageNum = 1;
+    var tacticalPdfScale = 'auto'; // 'auto', 'page', or numeric
+    var tacticalPdfRendering = false;
+    var tacticalPdfPagePending = null;
+    var tacticalPdfSource = 'bundled'; // 'bundled' or 'custom'
+    var tacticalPdfFileName = 'Tactical_Field_Binder_7.5.pdf';
+
+    var MANUAL_DB_NAME = 'FreestoneTacticalManualDB';
+    var MANUAL_STORE_NAME = 'manuals';
+    var MANUAL_KEY = 'active_binder';
+    var DEFAULT_BUNDLED_PATH = 'assets/docs/Tactical_Field_Binder_7.5.pdf';
+
+    function openManualIndexedDB() {
+      return new Promise((resolve, reject) => {
+        if (!window.indexedDB) {
+          resolve(null);
+          return;
+        }
+        const request = indexedDB.open(MANUAL_DB_NAME, 1);
+        request.onupgradeneeded = function(e) {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(MANUAL_STORE_NAME)) {
+            db.createObjectStore(MANUAL_STORE_NAME, { keyPath: 'key' });
+          }
+        };
+        request.onsuccess = function(e) {
+          resolve(e.target.result);
+        };
+        request.onerror = function(e) {
+          console.warn('IndexedDB open error:', e);
+          resolve(null);
+        };
+      });
+    }
+
+    async function loadManualFromIndexedDB() {
+      try {
+        const db = await openManualIndexedDB();
+        if (!db) return null;
+        return new Promise((resolve) => {
+          const tx = db.transaction(MANUAL_STORE_NAME, 'readonly');
+          const store = tx.objectStore(MANUAL_STORE_NAME);
+          const req = store.get(MANUAL_KEY);
+          req.onsuccess = () => resolve(req.result || null);
+          req.onerror = () => resolve(null);
+        });
+      } catch (e) {
+        console.warn('Failed to load manual from IndexedDB:', e);
+        return null;
+      }
+    }
+
+    async function saveManualToIndexedDB(arrayBuffer, fileName, fileSize) {
+      try {
+        const db = await openManualIndexedDB();
+        if (!db) return false;
+        return new Promise((resolve) => {
+          const tx = db.transaction(MANUAL_STORE_NAME, 'readwrite');
+          const store = tx.objectStore(MANUAL_STORE_NAME);
+          const record = {
+            key: MANUAL_KEY,
+            data: arrayBuffer,
+            name: fileName,
+            size: fileSize,
+            timestamp: Date.now(),
+            dateString: new Date().toLocaleDateString()
+          };
+          const req = store.put(record);
+          req.onsuccess = () => resolve(true);
+          req.onerror = () => resolve(false);
+        });
+      } catch (e) {
+        console.error('Failed to save manual to IndexedDB:', e);
+        return false;
+      }
+    }
+
+    async function clearManualFromIndexedDB() {
+      try {
+        const db = await openManualIndexedDB();
+        if (!db) return;
+        return new Promise((resolve) => {
+          const tx = db.transaction(MANUAL_STORE_NAME, 'readwrite');
+          const store = tx.objectStore(MANUAL_STORE_NAME);
+          const req = store.delete(MANUAL_KEY);
+          req.onsuccess = () => resolve(true);
+          req.onerror = () => resolve(false);
+        });
+      } catch(e) {
+        console.warn('Failed to delete manual:', e);
+      }
+    }
+
+    async function initTacticalManualViewer(forceReload = false) {
+      if (tacticalPdfDoc && !forceReload) return;
+
+      const loadingEl = document.getElementById('manual-loading');
+      const loadingText = document.getElementById('manual-loading-text');
+      if (loadingEl) loadingEl.classList.remove('hidden');
+      if (loadingText) loadingText.textContent = 'Checking local offline storage...';
+
+      // Check if PDF.js is loaded
+      if (typeof pdfjsLib === 'undefined') {
+        if (loadingText) loadingText.textContent = 'Loading PDF.js reader engine...';
+        console.warn('PDF.js not loaded yet, waiting...');
+        setTimeout(() => initTacticalManualViewer(forceReload), 300);
+        return;
+      }
+
+      // Configure worker
+      try {
+        if (pdfjsLib.GlobalWorkerOptions && !pdfjsLib.GlobalWorkerOptions.workerSrc) {
+          pdfjsLib.GlobalWorkerOptions.workerSrc = 'js/pdf.worker.min.js';
+        }
+      } catch(e) {}
+
+      // 1. First, check IndexedDB for any user-uploaded revision
+      const customRecord = await loadManualFromIndexedDB();
+      if (customRecord && customRecord.data) {
+        if (loadingText) loadingText.textContent = `Loading Custom Manual: ${customRecord.name}...`;
+        tacticalPdfSource = 'custom';
+        tacticalPdfFileName = customRecord.name || 'Custom_Manual.pdf';
+        updateManualHeaderUI(tacticalPdfFileName, customRecord.size, true);
+
+        try {
+          const loadingTask = pdfjsLib.getDocument({ data: customRecord.data });
+          tacticalPdfDoc = await loadingTask.promise;
+          onTacticalPdfLoaded(tacticalPdfDoc);
+          return;
+        } catch(err) {
+          console.error('Failed to parse custom manual from IndexedDB:', err);
+          alert('Could not render saved custom manual. Reverting to bundled Revision 7.5.');
+          await clearManualFromIndexedDB();
+        }
+      }
+
+      // 2. Load bundled official Revision 7.5
+      if (loadingText) loadingText.textContent = 'Loading Bundled Revision 7.5 (68.6 MB)...';
+      tacticalPdfSource = 'bundled';
+      tacticalPdfFileName = 'Tactical_Field_Binder_7.5.pdf';
+      updateManualHeaderUI('Tactical_Field_Binder_7.5.pdf', 71935279, false);
+
+      try {
+        const loadingTask = pdfjsLib.getDocument(DEFAULT_BUNDLED_PATH);
+        loadingTask.onProgress = function(progressData) {
+          if (progressData.total > 0 && loadingText) {
+            const pct = Math.round((progressData.loaded / progressData.total) * 100);
+            loadingText.textContent = `Loading Bundled Revision 7.5 (${pct}%)...`;
+          }
+        };
+        tacticalPdfDoc = await loadingTask.promise;
+        onTacticalPdfLoaded(tacticalPdfDoc);
+      } catch (err) {
+        console.error('Failed to load bundled PDF:', err);
+        // Try fallback to web/ path
+        try {
+          const fallbackTask = pdfjsLib.getDocument('web/assets/docs/Tactical_Field_Binder_7.5.pdf');
+          tacticalPdfDoc = await fallbackTask.promise;
+          onTacticalPdfLoaded(tacticalPdfDoc);
+        } catch (err2) {
+          if (loadingText) {
+            loadingText.innerHTML = `⚠️ Error opening manual PDF.<br><button onclick="triggerManualUpload()" class="mt-2 px-3 py-1 bg-amber-500 text-black font-bold rounded text-xs">Tap to Upload PDF from Device</button>`;
+          }
+        }
+      }
+    }
+
+    function onTacticalPdfLoaded(pdf) {
+      const pageCountEl = document.getElementById('manual-page-count');
+      const pageNumInput = document.getElementById('manual-page-num');
+      const footerStatus = document.getElementById('manual-footer-status');
+
+      if (pageCountEl) pageCountEl.textContent = pdf.numPages;
+      if (pageNumInput) {
+        pageNumInput.max = pdf.numPages;
+        pageNumInput.value = 1;
+      }
+      if (footerStatus) {
+        footerStatus.innerHTML = `Document: <strong>${tacticalPdfFileName}</strong> &bull; ${pdf.numPages} Pages`;
+      }
+
+      tacticalPdfPageNum = 1;
+      renderTacticalManualPage(1);
+
+      // Attach keyboard listener
+      window.removeEventListener('keydown', handleManualKeyDown);
+      window.addEventListener('keydown', handleManualKeyDown);
+
+      // Attach touch swipe listener
+      setupManualTouchGestures();
+    }
+
+    function updateManualHeaderUI(fileName, fileSize, isCustom) {
+      const versionBadge = document.getElementById('manual-version-badge');
+      const storageBadge = document.getElementById('manual-storage-badge');
+      const fileInfoText = document.getElementById('manual-file-info-text');
+      const resetBtn = document.getElementById('btn-reset-manual');
+
+      if (isCustom) {
+        if (versionBadge) {
+          versionBadge.textContent = 'ACTIVE: CUSTOM REVISION';
+          versionBadge.className = 'px-2.5 py-0.5 rounded text-xs font-black bg-amber-950 text-amber-300 border border-amber-600 shadow';
+        }
+        if (storageBadge) {
+          storageBadge.textContent = 'SAVED TO DEVICE (OFFLINE)';
+          storageBadge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-700';
+        }
+        if (resetBtn) resetBtn.classList.remove('hidden');
+      } else {
+        if (versionBadge) {
+          versionBadge.textContent = 'REVISION 7.5 (OCTOBER 2026)';
+          versionBadge.className = 'px-2.5 py-0.5 rounded text-xs font-black bg-emerald-950 text-emerald-300 border border-emerald-600 shadow';
+        }
+        if (storageBadge) {
+          storageBadge.textContent = 'BUNDLED OFFICIAL (OFFLINE)';
+          storageBadge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-slate-900 text-slate-300 border border-slate-700';
+        }
+        if (resetBtn) resetBtn.classList.add('hidden');
+      }
+
+      if (fileInfoText) {
+        const sizeMb = fileSize ? (fileSize / (1024 * 1024)).toFixed(1) + ' MB' : '';
+        fileInfoText.textContent = `${fileName} ${sizeMb ? '(' + sizeMb + ')' : ''}`;
+      }
+    }
+
+    async function renderTacticalManualPage(num) {
+      if (!tacticalPdfDoc) return;
+      if (tacticalPdfRendering) {
+        tacticalPdfPagePending = num;
+        return;
+      }
+      tacticalPdfRendering = true;
+
+      const loadingEl = document.getElementById('manual-loading');
+      if (loadingEl) loadingEl.classList.remove('hidden');
+
+      try {
+        const page = await tacticalPdfDoc.getPage(num);
+        const canvas = document.getElementById('manual-pdf-canvas');
+        if (!canvas) {
+          tacticalPdfRendering = false;
+          return;
+        }
+        const ctx = canvas.getContext('2d');
+
+        const container = document.getElementById('manual-viewer-viewport');
+        const containerWidth = (container ? container.clientWidth : window.innerWidth) - 32;
+
+        let scale = 1.0;
+        const unscaledViewport = page.getViewport({ scale: 1.0 });
+
+        if (tacticalPdfScale === 'auto') {
+          scale = Math.max(0.4, (containerWidth / unscaledViewport.width));
+        } else if (tacticalPdfScale === 'page') {
+          const containerHeight = (container ? container.clientHeight : 700) - 40;
+          scale = Math.min((containerWidth / unscaledViewport.width), (containerHeight / unscaledViewport.height));
+        } else {
+          scale = parseFloat(tacticalPdfScale) || 1.0;
+        }
+
+        const dpr = window.devicePixelRatio || 1;
+        const viewport = page.getViewport({ scale: scale });
+
+        canvas.width = Math.floor(viewport.width * dpr);
+        canvas.height = Math.floor(viewport.height * dpr);
+        canvas.style.width = Math.floor(viewport.width) + 'px';
+        canvas.style.height = Math.floor(viewport.height) + 'px';
+
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        const renderContext = {
+          canvasContext: ctx,
+          viewport: viewport
+        };
+
+        await page.render(renderContext).promise;
+
+        tacticalPdfRendering = false;
+        tacticalPdfPageNum = num;
+
+        // Update page number readout
+        const pageInput = document.getElementById('manual-page-num');
+        if (pageInput) pageInput.value = num;
+
+        if (loadingEl) loadingEl.classList.add('hidden');
+
+        if (tacticalPdfPagePending !== null) {
+          const pending = tacticalPdfPagePending;
+          tacticalPdfPagePending = null;
+          renderTacticalManualPage(pending);
+        }
+      } catch(err) {
+        console.error('Page render error:', err);
+        tacticalPdfRendering = false;
+        if (loadingEl) loadingEl.classList.add('hidden');
+      }
+    }
+
+    function goToManualPage(val) {
+      if (!tacticalPdfDoc) return;
+      let pageNum = parseInt(val, 10);
+      if (isNaN(pageNum)) pageNum = 1;
+      pageNum = Math.max(1, Math.min(pageNum, tacticalPdfDoc.numPages));
+      renderTacticalManualPage(pageNum);
+    }
+
+    function goToManualPrevPage() {
+      if (tacticalPdfPageNum <= 1) return;
+      goToManualPage(tacticalPdfPageNum - 1);
+    }
+
+    function goToManualNextPage() {
+      if (!tacticalPdfDoc || tacticalPdfPageNum >= tacticalPdfDoc.numPages) return;
+      goToManualPage(tacticalPdfPageNum + 1);
+    }
+
+    function goToManualFirstPage() {
+      goToManualPage(1);
+    }
+
+    function goToManualLastPage() {
+      if (!tacticalPdfDoc) return;
+      goToManualPage(tacticalPdfDoc.numPages);
+    }
+
+    function jumpToTocPage(val) {
+      const pageNum = parseInt(val, 10);
+      if (!isNaN(pageNum)) {
+        goToManualPage(pageNum);
+      }
+    }
+
+    function setManualZoom(val) {
+      tacticalPdfScale = val;
+      renderTacticalManualPage(tacticalPdfPageNum);
+    }
+
+    function zoomManualIn() {
+      let cur = tacticalPdfScale === 'auto' || tacticalPdfScale === 'page' ? 1.0 : parseFloat(tacticalPdfScale);
+      cur = Math.min(3.0, cur + 0.25);
+      tacticalPdfScale = cur;
+      const select = document.getElementById('manual-zoom-select');
+      if (select) select.value = cur.toString();
+      renderTacticalManualPage(tacticalPdfPageNum);
+    }
+
+    function zoomManualOut() {
+      let cur = tacticalPdfScale === 'auto' || tacticalPdfScale === 'page' ? 1.0 : parseFloat(tacticalPdfScale);
+      cur = Math.max(0.5, cur - 0.25);
+      tacticalPdfScale = cur;
+      const select = document.getElementById('manual-zoom-select');
+      if (select) select.value = cur.toString();
+      renderTacticalManualPage(tacticalPdfPageNum);
+    }
+
+    function toggleManualFullscreen() {
+      const container = document.getElementById('manual-viewer-viewport');
+      if (!container) return;
+      if (!document.fullscreenElement) {
+        if (container.requestFullscreen) {
+          container.requestFullscreen();
+        } else if (container.webkitRequestFullscreen) {
+          container.webkitRequestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    function handleManualKeyDown(e) {
+      // Only trigger if view-manual is currently active
+      const manualView = document.getElementById('view-manual');
+      if (!manualView || manualView.classList.contains('hidden')) return;
+
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+        goToManualNextPage();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        goToManualPrevPage();
+      } else if (e.key === 'Home') {
+        goToManualFirstPage();
+      } else if (e.key === 'End') {
+        goToManualLastPage();
+      }
+    }
+
+    function setupManualTouchGestures() {
+      const viewport = document.getElementById('manual-viewer-viewport');
+      if (!viewport) return;
+
+      let startX = 0;
+      let startY = 0;
+
+      viewport.addEventListener('touchstart', function(e) {
+        if (e.touches && e.touches.length === 1) {
+          startX = e.touches[0].clientX;
+          startY = e.touches[0].clientY;
+        }
+      }, { passive: true });
+
+      viewport.addEventListener('touchend', function(e) {
+        if (e.changedTouches && e.changedTouches.length === 1) {
+          const diffX = e.changedTouches[0].clientX - startX;
+          const diffY = e.changedTouches[0].clientY - startY;
+          if (Math.abs(diffX) > 60 && Math.abs(diffY) < 40) {
+            if (diffX < 0) {
+              goToManualNextPage();
+            } else {
+              goToManualPrevPage();
+            }
+          }
+        }
+      }, { passive: true });
+    }
+
+    // Auto-resize manual viewer on device rotation or screen dimension changes
+    var manualResizeTimer = null;
+    window.addEventListener('resize', function() {
+      clearTimeout(manualResizeTimer);
+      manualResizeTimer = setTimeout(function() {
+        const manualView = document.getElementById('view-manual');
+        if (manualView && !manualView.classList.contains('hidden') && tacticalPdfDoc && (tacticalPdfScale === 'auto' || tacticalPdfScale === 'page')) {
+          renderTacticalManualPage(tacticalPdfPageNum);
+        }
+      }, 150);
+    });
+
+    // Dynamic Upload Handler
+    function triggerManualUpload() {
+      const fileInput = document.getElementById('manual-file-input');
+      if (fileInput) {
+        fileInput.value = '';
+        fileInput.click();
+      }
+    }
+
+    async function handleManualFileSelected(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      if (!file.name.toLowerCase().endsWith('.pdf') && file.type !== 'application/pdf') {
+        alert('Please select a valid PDF document (.pdf).');
+        return;
+      }
+
+      const loadingEl = document.getElementById('manual-loading');
+      const loadingText = document.getElementById('manual-loading-text');
+      if (loadingEl) loadingEl.classList.remove('hidden');
+      if (loadingText) loadingText.textContent = `Reading and validating ${file.name}...`;
+
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        const arrayBuffer = e.target.result;
+        try {
+          if (loadingText) loadingText.textContent = 'Verifying PDF structure...';
+          const testTask = pdfjsLib.getDocument({ data: arrayBuffer });
+          const testPdf = await testTask.promise;
+
+          if (loadingText) loadingText.textContent = 'Saving revision to local offline storage...';
+          await saveManualToIndexedDB(arrayBuffer, file.name, file.size);
+
+          tacticalPdfDoc = testPdf;
+          tacticalPdfSource = 'custom';
+          tacticalPdfFileName = file.name;
+          updateManualHeaderUI(file.name, file.size, true);
+          onTacticalPdfLoaded(testPdf);
+
+          alert(`✅ REVISION LOADED SUCCESSFULLY!\n\n"${file.name}" (${(file.size / (1024 * 1024)).toFixed(1)} MB, ${testPdf.numPages} pages) has been loaded and saved into your device's persistent offline storage.\n\nThis revised manual will automatically load every time you open the app without needing any app store update.`);
+        } catch(err) {
+          console.error('Invalid PDF file:', err);
+          if (loadingEl) loadingEl.classList.add('hidden');
+          alert(`❌ Failed to read PDF file:\n${err.message || err}`);
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    async function resetManualToDefault() {
+      if (!confirm('Revert back to the official bundled Revision 7.5 Tactical Field Binder?')) {
+        return;
+      }
+      const loadingEl = document.getElementById('manual-loading');
+      if (loadingEl) loadingEl.classList.remove('hidden');
+
+      await clearManualFromIndexedDB();
+      tacticalPdfDoc = null;
+      await initTacticalManualViewer(true);
+      alert('✅ Reverted back to the official bundled Revision 7.5 Tactical Field Binder.');
+    }
+
+    async function exportCurrentManualPdf() {
+      const customRecord = await loadManualFromIndexedDB();
+      if (customRecord && customRecord.data) {
+        const blob = new Blob([customRecord.data], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = customRecord.name || 'Tactical_Field_Binder_Revision.pdf';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      } else {
+        const a = document.createElement('a');
+        a.href = DEFAULT_BUNDLED_PATH;
+        a.download = 'Tactical_Field_Binder_7.5.pdf';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+    }
+
 </script>
 
 
@@ -17515,7 +18630,7 @@ Your console is now authorized and unlocked.`);
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.8 (Build 60)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.9 (Build 61)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>
