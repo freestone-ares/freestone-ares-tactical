@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         center.delegate = self
         center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if granted {
-                NSLog("[Freestone ARES] Notification authorization granted by operator.")
+                NSLog("[Freestone ARES] Notification authorization granted by operator (including Critical Alerts).")
                 DispatchQueue.main.async {
                     UIApplication.shared.registerForRemoteNotifications()
                 }
@@ -159,23 +159,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                     if fingerprint != self.lastIncidentFingerprint {
                         self.lastIncidentFingerprint = fingerprint
 
-                        // 2. Suppress siren for field SITREPs
+                        // 2. Play subtle P25 chirp for field SITREPs
                         if let updates = json["updates"] as? [[String: Any]], let topUpdate = updates.first {
                             let isSitrepOnly = topUpdate["isSitrepOnly"] as? Bool ?? false
                             if isSitrepOnly {
-                                NSLog("[Freestone ARES] checkActiveIncident: SITREP update received, suppressing audible alert.")
+                                NSLog("[Freestone ARES] checkActiveIncident: Field SITREP received, playing P25 talk-permit chirp.")
+                                self.playSitrepBeep()
                                 return
                             }
                         }
 
                         // 3. Siren sounds ONLY on initial emergency dispatch (updateCount <= 1)
                         if updateCount <= 1 {
+                            self.playEmergencySiren()
                             self.sendLocalEmergencyAlert(
                                 title: "🚨 ACTIVE CALLOUT: \(title)",
                                 body: "📍 Staging: \(staging)\nMission: \(mission)"
                             )
                         } else {
-                            NSLog("[Freestone ARES] checkActiveIncident: Subsequent update #\(updateCount), full siren suppressed.")
+                            NSLog("[Freestone ARES] checkActiveIncident: Subsequent update #\(updateCount), playing P25 talk-permit chirp.")
+                            self.playSitrepBeep()
                         }
                     }
                 }
@@ -183,8 +186,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }.resume()
     }
 
-    // MARK: - Native Siren Audio Player (Bypasses Hardware Mute Switch)
+    // MARK: - Native Audio Players (Bypasses Hardware Mute Switch)
+    private var sitrepPlayer: AVAudioPlayer?
+
+    func playSitrepBeep() {
+        if isSenderSuppressed() { return }
+        guard let url = Bundle.main.url(forResource: "sitrep", withExtension: "caf") ?? Bundle.main.url(forResource: "sitrep", withExtension: "wav") else {
+            NSLog("[Freestone ARES] Sitrep audio file (sitrep.caf / sitrep.wav) not found in bundle.")
+            return
+        }
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.mixWithOthers])
+            try AVAudioSession.sharedInstance().setActive(true)
+            sitrepPlayer?.stop()
+            sitrepPlayer = try AVAudioPlayer(contentsOf: url)
+            sitrepPlayer?.numberOfLoops = 0
+            sitrepPlayer?.volume = 1.0
+            sitrepPlayer?.play()
+            NSLog("[Freestone ARES] Playing native Motorola ASTRO P25 sitrep talk-permit chirp.")
+        } catch {
+            NSLog("[Freestone ARES] Failed to play sitrep audio: \(error.localizedDescription)")
+        }
+    }
+
     func playEmergencySiren() {
+        if isSenderSuppressed() { return }
         guard let url = Bundle.main.url(forResource: "siren", withExtension: "caf") ?? Bundle.main.url(forResource: "siren", withExtension: "wav") else {
             NSLog("[Freestone ARES] Siren audio file (siren.caf / siren.wav) not found in bundle.")
             return
@@ -194,10 +220,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             try AVAudioSession.sharedInstance().setActive(true)
             sirenPlayer?.stop()
             sirenPlayer = try AVAudioPlayer(contentsOf: url)
-            sirenPlayer?.numberOfLoops = 0 // Play the 4.5s two-tone alert
+            sirenPlayer?.numberOfLoops = 0 // Play the 3.5s Quick-Call II dispatch tone
             sirenPlayer?.volume = 1.0
             sirenPlayer?.play()
-            NSLog("[Freestone ARES] Playing native emergency siren via AVAudioPlayer (bypasses silent switch).")
+            NSLog("[Freestone ARES] Playing native Quick-Call II emergency tone via AVAudioPlayer (bypasses silent switch).")
         } catch {
             NSLog("[Freestone ARES] Failed to play siren audio: \(error.localizedDescription)")
         }
@@ -206,14 +232,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func stopEmergencySiren() {
         sirenPlayer?.stop()
         sirenPlayer = nil
+        sitrepPlayer?.stop()
+        sitrepPlayer = nil
     }
 
-    private func sendLocalEmergencyAlert(title: String, body: String) {
+    func sendLocalEmergencyAlert(title: String, body: String) {
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
         content.sound = UNNotificationSound(named: UNNotificationSoundName("siren.caf"))
         content.badge = 1
+        if #available(iOS 15.0, *) {
+            content.interruptionLevel = .timeSensitive
+        }
 
         let request = UNNotificationRequest(
             identifier: "ares_alert_\(Date().timeIntervalSince1970)",

@@ -86,9 +86,15 @@ class ViewController: UIViewController, WKUIDelegate, WKNavigationDelegate, WKSc
                 (UIApplication.shared.delegate as? AppDelegate)?.playEmergencySiren()
             } else if action == "stopEmergencySiren" {
                 (UIApplication.shared.delegate as? AppDelegate)?.stopEmergencySiren()
+            } else if action == "playSitrepBeep" {
+                (UIApplication.shared.delegate as? AppDelegate)?.playSitrepBeep()
             } else if action == "suppressSenderAlert" {
                 let duration = (dict["durationSeconds"] as? Double) ?? 90.0
                 (UIApplication.shared.delegate as? AppDelegate)?.suppressSenderAlert(duration: duration)
+            } else if action == "sendEmergencyAlert" {
+                let title = (dict["title"] as? String) ?? "🚨 FREESTONE ARES EMERGENCY"
+                let body = (dict["body"] as? String) ?? "Active emergency broadcast in Freestone County."
+                (UIApplication.shared.delegate as? AppDelegate)?.sendLocalEmergencyAlert(title: title, body: body)
             } else if action == "clearBadge" {
                 if #available(iOS 17.0, *) {
                     UNUserNotificationCenter.current().setBadgeCount(0, withCompletionHandler: nil)

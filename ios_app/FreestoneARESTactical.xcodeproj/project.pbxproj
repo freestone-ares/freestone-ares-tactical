@@ -13,6 +13,7 @@
 		AA00002229B7F12300000022 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA00001229B7F12300000012 /* Assets.xcassets */; };
 		AA00002429B7F12300000024 /* web in Resources */ = {isa = PBXBuildFile; fileRef = AA00001429B7F12300000014 /* web */; };
 		AA00002629B7F12300000026 /* siren.caf in Resources */ = {isa = PBXBuildFile; fileRef = AA00001629B7F12300000016 /* siren.caf */; };
+		AA00002729B7F12300000027 /* sitrep.caf in Resources */ = {isa = PBXBuildFile; fileRef = AA00001729B7F12300000017 /* sitrep.caf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +24,7 @@
 		AA00001329B7F12300000013 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA00001429B7F12300000014 /* web */ = {isa = PBXFileReference; lastKnownFileType = folder; path = web; sourceTree = "<group>"; };
 		AA00001629B7F12300000016 /* siren.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; path = siren.caf; sourceTree = "<group>"; };
+		AA00001729B7F12300000017 /* sitrep.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; path = sitrep.caf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +55,7 @@
 				AA00001329B7F12300000013 /* Info.plist */,
 				AA00001429B7F12300000014 /* web */,
 				AA00001629B7F12300000016 /* siren.caf */,
+				AA00001729B7F12300000017 /* sitrep.caf */,
 			);
 			path = FreestoneARESTactical;
 			sourceTree = "<group>";
@@ -117,6 +120,7 @@
 				AA00002229B7F12300000022 /* Assets.xcassets in Resources */,
 				AA00002429B7F12300000024 /* web in Resources */,
 				AA00002629B7F12300000026 /* siren.caf in Resources */,
+				AA00002729B7F12300000027 /* sitrep.caf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -191,12 +195,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FreestoneARESTactical/FreestoneARESTactical.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 62;
+				CURRENT_PROJECT_VERSION = 63;
 				DEVELOPMENT_TEAM = LSMMV8JFAJ;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = FreestoneARESTactical/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 7.9.10;
+				MARKETING_VERSION = 7.9.11;
 				PRODUCT_BUNDLE_IDENTIFIER = org.freestone.ares.tactical;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MAC_DESIGNED_FOR_IPAD = YES;
@@ -212,12 +216,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FreestoneARESTactical/FreestoneARESTactical.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 62;
+				CURRENT_PROJECT_VERSION = 63;
 				DEVELOPMENT_TEAM = LSMMV8JFAJ;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = FreestoneARESTactical/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 7.9.10;
+				MARKETING_VERSION = 7.9.11;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = org.freestone.ares.tactical;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -75,8 +75,8 @@ jobs:
             PROVISIONING_PROFILE="e751b47c-c688-4a5a-8489-2af3f1181483" \
             CODE_SIGN_IDENTITY="Apple Distribution" \
             CODE_SIGN_ENTITLEMENTS="FreestoneARESTactical/FreestoneARESTactical.entitlements" \
-            CURRENT_PROJECT_VERSION=62 \
-            MARKETING_VERSION=7.9.10
+            CURRENT_PROJECT_VERSION=63 \
+            MARKETING_VERSION=7.9.11
 
       - name: Export IPA
         run: |
@@ -86,22 +86,22 @@ jobs:
             -exportPath build/artifacts
 
           cp build/artifacts/*.ipa Freestone-ARES-Tactical.ipa || true
-          cp build/artifacts/*.ipa Freestone-ARES-Tactical-v7.9.10.ipa || true
-          cp build/artifacts/*.ipa Freestone-ARES-Tactical-v7.9.10-b62.ipa || true
+          cp build/artifacts/*.ipa Freestone-ARES-Tactical-v7.9.11.ipa || true
+          cp build/artifacts/*.ipa Freestone-ARES-Tactical-v7.9.11-b63.ipa || true
 
           # Ensure no root Symbols directory or storyboardc bundle confuses Apple lipo validator
           zip -d Freestone-ARES-Tactical.ipa "Symbols/*" 2>/dev/null || true
           zip -d Freestone-ARES-Tactical.ipa "*storyboardc*" 2>/dev/null || true
-          zip -d Freestone-ARES-Tactical-v7.9.10.ipa "Symbols/*" 2>/dev/null || true
-          zip -d Freestone-ARES-Tactical-v7.9.10.ipa "*storyboardc*" 2>/dev/null || true
-          zip -d Freestone-ARES-Tactical-v7.9.10-b62.ipa "Symbols/*" 2>/dev/null || true
-          zip -d Freestone-ARES-Tactical-v7.9.10-b62.ipa "*storyboardc*" 2>/dev/null || true
+          zip -d Freestone-ARES-Tactical-v7.9.11.ipa "Symbols/*" 2>/dev/null || true
+          zip -d Freestone-ARES-Tactical-v7.9.11.ipa "*storyboardc*" 2>/dev/null || true
+          zip -d Freestone-ARES-Tactical-v7.9.11-b63.ipa "Symbols/*" 2>/dev/null || true
+          zip -d Freestone-ARES-Tactical-v7.9.11-b63.ipa "*storyboardc*" 2>/dev/null || true
           unzip -l Freestone-ARES-Tactical.ipa
 
       - name: Upload IPA as Workflow Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Freestone-ARES-Tactical-iOS-v7.9.10-b62
+          name: Freestone-ARES-Tactical-iOS-v7.9.11-b63
           path: Freestone-ARES-Tactical.ipa
           retention-days: 30
 
@@ -110,11 +110,11 @@ jobs:
         continue-on-error: true
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v7.9.10
+          tag_name: v7.9.11
           overwrite: true
           files: |
             Freestone-ARES-Tactical.ipa
-            Freestone-ARES-Tactical-v7.9.10.ipa
-            Freestone-ARES-Tactical-v7.9.10-b62.ipa
+            Freestone-ARES-Tactical-v7.9.11.ipa
+            Freestone-ARES-Tactical-v7.9.11-b63.ipa
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
