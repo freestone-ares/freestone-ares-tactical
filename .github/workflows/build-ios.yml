@@ -57,6 +57,8 @@ jobs:
         run: |
           mkdir -p ios_app/FreestoneARESTactical/web
           cp -r web/* ios_app/FreestoneARESTactical/web/
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion 64" ios_app/FreestoneARESTactical/Info.plist || true
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString 7.9.11" ios_app/FreestoneARESTactical/Info.plist || true
 
       - name: Build and Archive iOS Project
         run: |
@@ -75,7 +77,7 @@ jobs:
             PROVISIONING_PROFILE="e751b47c-c688-4a5a-8489-2af3f1181483" \
             CODE_SIGN_IDENTITY="Apple Distribution" \
             CODE_SIGN_ENTITLEMENTS="FreestoneARESTactical/FreestoneARESTactical.entitlements" \
-            CURRENT_PROJECT_VERSION=63 \
+            CURRENT_PROJECT_VERSION=64 \
             MARKETING_VERSION=7.9.11
 
       - name: Export IPA
@@ -87,21 +89,21 @@ jobs:
 
           cp build/artifacts/*.ipa Freestone-ARES-Tactical.ipa || true
           cp build/artifacts/*.ipa Freestone-ARES-Tactical-v7.9.11.ipa || true
-          cp build/artifacts/*.ipa Freestone-ARES-Tactical-v7.9.11-b63.ipa || true
+          cp build/artifacts/*.ipa Freestone-ARES-Tactical-v7.9.11-b64.ipa || true
 
           # Ensure no root Symbols directory or storyboardc bundle confuses Apple lipo validator
           zip -d Freestone-ARES-Tactical.ipa "Symbols/*" 2>/dev/null || true
           zip -d Freestone-ARES-Tactical.ipa "*storyboardc*" 2>/dev/null || true
           zip -d Freestone-ARES-Tactical-v7.9.11.ipa "Symbols/*" 2>/dev/null || true
           zip -d Freestone-ARES-Tactical-v7.9.11.ipa "*storyboardc*" 2>/dev/null || true
-          zip -d Freestone-ARES-Tactical-v7.9.11-b63.ipa "Symbols/*" 2>/dev/null || true
-          zip -d Freestone-ARES-Tactical-v7.9.11-b63.ipa "*storyboardc*" 2>/dev/null || true
+          zip -d Freestone-ARES-Tactical-v7.9.11-b64.ipa "Symbols/*" 2>/dev/null || true
+          zip -d Freestone-ARES-Tactical-v7.9.11-b64.ipa "*storyboardc*" 2>/dev/null || true
           unzip -l Freestone-ARES-Tactical.ipa
 
       - name: Upload IPA as Workflow Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Freestone-ARES-Tactical-iOS-v7.9.11-b63
+          name: Freestone-ARES-Tactical-iOS-v7.9.11-b64
           path: Freestone-ARES-Tactical.ipa
           retention-days: 30
 
@@ -115,6 +117,6 @@ jobs:
           files: |
             Freestone-ARES-Tactical.ipa
             Freestone-ARES-Tactical-v7.9.11.ipa
-            Freestone-ARES-Tactical-v7.9.11-b63.ipa
+            Freestone-ARES-Tactical-v7.9.11-b64.ipa
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

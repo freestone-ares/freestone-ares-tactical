@@ -66,10 +66,10 @@ jobs:
         with:
           tag_name: v7.9.11
           target_commitish: ${{ github.sha }}
-          name: "Freestone ARES Tactical v7.9.11 Build 63 (Apple Critical Alerts Entitlement & Emergency Alerting)"
+          name: "Freestone ARES Tactical v7.9.11 Build 64 (Authentic Motorola QC-II Pair 2 & P25 Sitrep Audio)"
           make_latest: true
           body: |
-            ## Freestone County ARES - Tactical Operations Field Build (v7.9.11 / Build 63)
+            ## Freestone County ARES - Tactical Operations Field Build (v7.9.11 / Build 64)
             
             Universal release for Android Phones & Tablets and Apple iOS, iPadOS, and macOS (Designed for iPad).
             
