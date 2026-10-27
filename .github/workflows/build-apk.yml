@@ -46,17 +46,17 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug --stacktrace
           ./gradlew bundleRelease --stacktrace
-          cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.9.11.apk
+          cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.9.12.apk
           cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical.apk
-          cp app/build/outputs/bundle/release/*.aab ../Freestone-ARES-Tactical-v7.9.11.aab || cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical-v7.9.11.aab
+          cp app/build/outputs/bundle/release/*.aab ../Freestone-ARES-Tactical-v7.9.12.aab || cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical-v7.9.12.aab
           cp app/build/outputs/bundle/release/*.aab ../Freestone-ARES-Tactical.aab || cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical.aab
 
       - name: Upload APK & Bundle as Workflow Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Freestone-ARES-Tactical-v7.9.11-Distribution
+          name: Freestone-ARES-Tactical-v7.9.12-Distribution
           path: |
-            Freestone-ARES-Tactical-v7.9.11.apk
+            Freestone-ARES-Tactical-v7.9.12.apk
             Freestone-ARES-Tactical.aab
           retention-days: 30
 
@@ -64,30 +64,29 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v7.9.11
+          tag_name: v7.9.12
           target_commitish: ${{ github.sha }}
-          name: "Freestone ARES Tactical v7.9.11 Build 64 (Authentic Motorola QC-II Pair 2 & P25 Sitrep Audio)"
+          name: "Freestone ARES Tactical v7.9.12 Build 64 (Authentic Motorola QC-II Pair 2 & P25 Sitrep Audio)"
           make_latest: true
           body: |
-            ## Freestone County ARES - Tactical Operations Field Build (v7.9.11 / Build 64)
+            ## Freestone County ARES - Tactical Operations Field Build (v7.9.12 / Build 64)
             
             Universal release for Android Phones & Tablets and Apple iOS, iPadOS, and macOS (Designed for iPad).
             
             ### Package Files Included:
-            - **`Freestone-ARES-Tactical.apk` / `Freestone-ARES-Tactical-v7.9.11.apk`**: Standalone Android field installer.
-            - **`Freestone-ARES-Tactical.aab` / `Freestone-ARES-Tactical-v7.9.11.aab`**: Signed Android App Bundle for Google Play.
+            - **`Freestone-ARES-Tactical.apk` / `Freestone-ARES-Tactical-v7.9.12.apk`**: Standalone Android field installer.
+            - **`Freestone-ARES-Tactical.aab` / `Freestone-ARES-Tactical-v7.9.12.aab`**: Signed Android App Bundle for Google Play.
             
-            ### What's New in Build 63:
-            - **Apple Critical Alerts Entitlement:** Configured `com.apple.developer.usernotifications.critical-alerts` capability and authorization request in `AppDelegate.swift`. Emergency activations punch through iOS hardware mute switch, Bedtime, and "Do Not Disturb" focus modes at full siren audio volume with `.critical` interruption level.
-            - **Native Bridge Dispatch Integration:** Direct `sendEmergencyAlert` bridge action allowing in-app CAD callouts and emergency dispatches to sound native sirens and display critical lockscreen banners.
+            ### What's New in Build 64:
+            - **Authentic Motorola Quick-Call II Dispatch Alert (Pair 2):** Pure sinusoidal 600.9 Hz (1.0s) / 810.2 Hz (2.5s) standard Texas Fire/EMS paging tones with seamless 0ms gap.
+            - **Authentic Motorola ASTRO P25 Talk-Permit Chirp (SITREP 1A):** Exact 910 Hz digital trunked 3-burst grant tone for field SITREPs and response logs.
+            - **Streamlined Alert Console:** Clean single-click dispatch test, sitrep test, and emergency active alert verification without dropdown clutter.
             - **Official CR80 CAC-Style Operator ID Card:** High-contrast federal White Common Access Card formatting with exact CR80 physical badge proportions (2.125" × 3.375" / 54mm × 85.6mm) and 1/8" die-cut rounded corners for direct PVC card printing.
-            - **Official Freestone County ARES Emblem:** Embedded high-resolution county silhouette with centered red ARRL ARES diamond emblem across all native platforms.
             - **Full NIMS / ICS Training Checklist:** 100% verified certification matrix including ICS-300 and ICS-400, IS-100, IS-200, IS-700, IS-800, IS-701.a, IS-702.a, EC-001, and SKYWARN.
-            - **Credential & Identity Alignment:** Standardized EC credentials (DAVIS, BRIAN / KG5TZT / Amateur Extra / Emergency Coordinator), multi-agency IDs (RACES: TX-FREE-01, GMRS: WRPN302, ARES: TX-ARES-01), Maidenhead Grid EM11uv (Streetman, TX), ICE details, and Texas Gov Code Ch. 418 statutory authority.
           files: |
-            Freestone-ARES-Tactical-v7.9.11.apk
+            Freestone-ARES-Tactical-v7.9.12.apk
             Freestone-ARES-Tactical.apk
-            Freestone-ARES-Tactical-v7.9.11.aab
+            Freestone-ARES-Tactical-v7.9.12.aab
             Freestone-ARES-Tactical.aab
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
