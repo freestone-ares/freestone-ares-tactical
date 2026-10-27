@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Freestone County ARES Tactical Mobile v7.9.9</title>
+  <title>Freestone County ARES Tactical Mobile v7.9.10</title>
   <meta name="description" content="Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES">
   <meta name="theme-color" content="#0b0e14">
   <meta name="mobile-web-app-capable" content="yes">
@@ -80,6 +80,54 @@
 
     *, *::before, *::after {
       box-sizing: border-box;
+    }
+
+    /* Military Common Access Card (CAC) Federal White Styling */
+    .idcard-cac-surface {
+      background-color: #ffffff !important;
+      color: #0f172a !important;
+    }
+    .idcard-cac-surface * {
+      box-sizing: border-box;
+    }
+    @media print {
+      @page {
+        size: auto;
+        margin: 0.25in;
+      }
+      body * {
+        visibility: hidden;
+      }
+      #idcard-printable-area, #idcard-printable-area * {
+        visibility: visible;
+      }
+      #idcard-printable-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        gap: 0.25in !important;
+        justify-content: center !important;
+      }
+      #idcard-front, #idcard-back {
+        display: block !important;
+        width: 2.125in !important;
+        height: 3.375in !important;
+        max-width: 2.125in !important;
+        max-height: 3.375in !important;
+        border-radius: 0.125in !important;
+        border: 1px solid #94a3b8 !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+        overflow: hidden !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
     }
 
     /* iOS Mobile Input Auto-Zoom Prevention: iOS WebKit auto-zooms any input/textarea with font-size < 16px */
@@ -1526,237 +1574,250 @@
 
         <!-- Action Buttons -->
         <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-          <button type="button" onclick="toggleIdCardFlip()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow cursor-pointer">
+          <button type="button" id="idcard-flip-btn" onclick="toggleIdCardFlip()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow cursor-pointer">
             <span>🔄</span><span id="idcard-flip-btn-text">FLIP TO BACK</span>
           </button>
+          <button type="button" id="idcard-dual-btn" onclick="toggleIdCardDualView()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-blue-300 border border-slate-700 rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow cursor-pointer">
+            <span>👀</span><span id="idcard-dual-btn-text">SIDE-BY-SIDE VIEW</span>
+          </button>
           <button type="button" onclick="openOperatorSelfEditModal()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow cursor-pointer">
-            <span>✏️</span><span>EDIT PROFILE &amp; PHOTO</span>
+            <span>✏️</span><span>EDIT PROFILE &amp; CERTS</span>
           </button>
           <button type="button" onclick="printOperatorIdCard()" class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 text-slate-950 font-black rounded-lg text-xs transition flex items-center gap-1.5 shadow-[0_0_15px_rgba(16,185,129,0.3)] cursor-pointer">
-            <span>🖨️</span><span>PRINT / SAVE ID CARD</span>
+            <span>🖨️</span><span>PRINT / SAVE ID</span>
           </button>
         </div>
       </div>
 
-      <!-- THE OFFICIAL TACTICAL ID CARD CONTAINER (DUAL / FLIP) -->
-      <div id="idcard-printable-area" class="space-y-6">
+      <!-- THE OFFICIAL CAC-STYLE OPERATOR ID CARD CONTAINER (VERTICAL, WHITE, MILITARY FORMAT, NO CHIP) -->
+      <div id="idcard-printable-area" class="space-y-6 max-w-xl mx-auto">
         
-        <!-- CARD FRONT -->
-        <div id="idcard-front" class="bg-gradient-to-br from-[#0c1219] via-[#090d14] to-[#07090f] border-2 border-emerald-500/70 rounded-2xl p-5 sm:p-7 shadow-[0_0_35px_rgba(0,0,0,0.8)] relative overflow-hidden transition-all duration-300">
+        <!-- ================= CARD FRONT (CAC VERTICAL WHITE) ================= -->
+        <div id="idcard-front" class="idcard-cac-surface bg-white text-slate-900 border-2 border-slate-300 rounded-2xl shadow-2xl relative overflow-hidden transition-all duration-300 max-w-[400px] w-full mx-auto select-none">
           
-          <!-- Background Security Watermark -->
-          <div class="absolute -right-10 -bottom-10 opacity-5 pointer-events-none select-none text-9xl font-black text-white">
-            ARES
-          </div>
-
-          <!-- Official Top Banner Header -->
-          <div class="border-b-2 border-emerald-500/40 pb-4 mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div class="flex items-center gap-3">
-              <div class="w-12 h-12 rounded-xl bg-black border border-emerald-500/60 p-1 flex items-center justify-center flex-shrink-0">
-                <span class="text-2xl">⭐</span>
-              </div>
-              <div>
-                <div class="text-[10px] text-amber-400 font-black tracking-widest uppercase">STATE OF TEXAS &bull; FREESTONE COUNTY</div>
-                <h1 class="text-base sm:text-xl font-black text-white tracking-wider uppercase">EMERGENCY COMMUNICATIONS CREDENTIAL</h1>
-                <div class="text-[10px] text-emerald-400 font-bold tracking-wider">AMATEUR RADIO EMERGENCY SERVICE &bull; RACES &bull; NWS SKYWARN</div>
-              </div>
-            </div>
-            <div class="flex flex-col sm:items-end text-left sm:text-right">
-              <span id="idcard-clearance-pill" class="px-2.5 py-1 rounded text-xs font-black bg-emerald-950 text-emerald-300 border border-emerald-600 shadow">
-                LEVEL 6 &bull; EC COMMAND
-              </span>
-              <span class="text-[10px] text-slate-400 mt-1">SECURITY CLEARANCE: VERIFIED</span>
-            </div>
-          </div>
-
-          <!-- Card Body: Photo & Credentials Split -->
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+          <!-- Inner Fine Security Border Frame -->
+          <div class="m-2 sm:m-2.5 border border-slate-300/90 rounded-xl overflow-hidden bg-white flex flex-col justify-between">
             
-            <!-- Left: Operator Photo Box & Fast Badges (4 Cols) -->
-            <div class="md:col-span-4 flex flex-col items-center text-center space-y-3">
-              <!-- Photo Frame -->
-              <div class="relative group">
-                <div id="idcard-photo-wrapper" class="w-40 h-48 sm:w-44 sm:h-52 rounded-xl bg-black border-2 border-emerald-500/80 shadow-[0_0_20px_rgba(16,185,129,0.25)] flex items-center justify-center overflow-hidden">
-                  <img id="idcard-photo-img" src="" alt="Operator Portrait" class="w-full h-full object-cover hidden">
-                  <div id="idcard-photo-placeholder" class="text-5xl font-black text-emerald-400 flex flex-col items-center justify-center gap-2">
-                    <span>👤</span>
-                    <span class="text-xs text-slate-500 font-normal">OPERATOR PHOTO</span>
-                  </div>
-                </div>
-                <!-- Verified Holographic Badge Overlay -->
-                <div class="absolute bottom-2 left-2 right-2 bg-black/85 backdrop-blur border border-emerald-500/80 rounded py-1 px-1.5 text-[9px] text-emerald-300 font-black uppercase tracking-wider shadow">
-                  🛡️ VERIFIED VOLUNTEER
-                </div>
-              </div>
-
-              <!-- Callsign Box Under Photo -->
-              <div class="w-full bg-[#080b10] border border-slate-800 rounded-xl p-2.5 space-y-0.5">
-                <div class="text-[9px] text-slate-500 uppercase tracking-widest">FCC CALL SIGN:</div>
-                <div id="idcard-call" class="text-2xl sm:text-3xl font-black text-emerald-400 tracking-wider">KG5TZT</div>
-                <div id="idcard-class" class="text-[10px] text-amber-400 font-bold">Amateur Extra Class</div>
-              </div>
+            <!-- Top Federal / State Navy Banner -->
+            <div class="bg-[#0a2540] text-white px-3 py-2.5 text-center border-b-2 border-amber-400">
+              <div class="text-[9px] text-amber-400 font-black tracking-widest uppercase">STATE OF TEXAS &bull; FREESTONE COUNTY</div>
+              <div class="text-xs sm:text-sm font-black tracking-wider uppercase text-white font-sans mt-0.5">AMATEUR RADIO EMERGENCY SERVICE</div>
+              <div class="text-[8px] text-blue-200 font-bold tracking-widest uppercase">EMERGENCY COMMUNICATIONS CREDENTIAL &bull; RACES</div>
             </div>
 
-            <!-- Right: Operator Identification & Clearance Details (8 Cols) -->
-            <div class="md:col-span-8 space-y-4">
-              <!-- Name & Official Title -->
-              <div>
-                <div class="text-[10px] text-slate-500 uppercase tracking-widest">NAME OF REGISTERED OPERATOR:</div>
-                <div id="idcard-name" class="text-xl sm:text-2xl font-black text-white tracking-wide">Brian Davis</div>
-                <div id="idcard-role" class="text-xs text-emerald-400 font-bold mt-0.5">County Emergency Coordinator (EC) &bull; Level 6 Command</div>
-              </div>
-
-              <!-- Detailed Tactical Credentials Grid -->
-              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
-                <div class="p-2.5 bg-[#080b10] rounded-lg border border-slate-800 space-y-0.5">
-                  <span class="text-[9px] text-slate-500 block uppercase">RACES OPERATOR ID:</span>
-                  <strong id="idcard-races" class="text-white text-xs">TX-FREE-01</strong>
-                </div>
-                <div class="p-2.5 bg-[#080b10] rounded-lg border border-slate-800 space-y-0.5">
-                  <span class="text-[9px] text-slate-500 block uppercase">GMRS CALLSIGN:</span>
-                  <strong id="idcard-gmrs" class="text-white text-xs">WRPN302</strong>
-                </div>
-                <div class="p-2.5 bg-[#080b10] rounded-lg border border-slate-800 space-y-0.5">
-                  <span class="text-[9px] text-slate-500 block uppercase">ARES ID / AFFILIATION:</span>
-                  <strong id="idcard-ares" class="text-emerald-400 text-xs">ARES-TX-FREE</strong>
-                </div>
-                <div class="p-2.5 bg-[#080b10] rounded-lg border border-slate-800 space-y-0.5">
-                  <span class="text-[9px] text-slate-500 block uppercase">COUNTY JURISDICTION:</span>
-                  <strong class="text-white text-xs">Freestone County, TX</strong>
-                </div>
-                <div class="p-2.5 bg-[#080b10] rounded-lg border border-slate-800 space-y-0.5">
-                  <span class="text-[9px] text-slate-500 block uppercase">MAIDENHEAD GRID:</span>
-                  <strong class="text-amber-400 text-xs">EM11xq (Fairfield)</strong>
-                </div>
-                <div class="p-2.5 bg-[#080b10] rounded-lg border border-slate-800 space-y-0.5">
-                  <span class="text-[9px] text-slate-500 block uppercase">ASSIGNED STAGING:</span>
-                  <strong class="text-white text-xs">Fairfield EOC Base</strong>
-                </div>
-              </div>
-
-              <!-- Contact & Deployment Phone -->
-              <div class="p-3 bg-[#080b10] rounded-lg border border-slate-800 space-y-1">
-                <div class="flex items-center justify-between text-[10px]">
-                  <span class="text-slate-400 font-bold uppercase">PRIMARY OPERATIONAL CONTACT:</span>
-                  <span class="text-emerald-400">DISPATCH SECURE</span>
-                </div>
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs">
-                  <div>
-                    <span class="text-slate-400">TEL: </span>
-                    <strong id="idcard-phone" class="text-white font-mono-tac">903-388-XXXX</strong>
+            <!-- Card Upper Section: Seal (Left) & Portrait Photo (Top Right Corner) -->
+            <div class="p-3 sm:p-4 pb-2">
+              <div class="flex items-start justify-between gap-3">
+                <!-- Left: Official Freestone County ARES Logo Uploaded by User -->
+                <div class="flex flex-col items-center justify-center text-center flex-1 py-1">
+                  <div class="w-28 h-28 sm:w-32 sm:h-32 flex items-center justify-center">
+                    <img src="freestone_ares_logo.png" onerror="this.src='web/freestone_ares_logo.png'" alt="Freestone County ARES Logo" class="w-full h-full object-contain">
                   </div>
-                  <div>
-                    <span class="text-slate-400">EMAIL: </span>
-                    <strong id="idcard-email" class="text-slate-200 font-mono-tac">kg5tzt@freestone-ares.org</strong>
+                  <div class="text-[8.5px] font-black text-[#0a2540] uppercase tracking-wider mt-1">FREESTONE COUNTY ARES</div>
+                </div>
+
+                <!-- Right: Operator Portrait Photo (Top Right Corner like Military CAC) -->
+                <div class="flex flex-col items-center">
+                  <div id="idcard-photo-wrapper" class="w-28 h-36 sm:w-32 sm:h-40 rounded-lg border-2 border-slate-400 bg-slate-100 shadow-inner overflow-hidden relative flex items-center justify-center">
+                    <img id="idcard-photo-img" src="" alt="Operator Portrait" class="w-full h-full object-cover hidden">
+                    <div id="idcard-photo-placeholder" class="text-center p-2">
+                      <span class="text-4xl text-slate-400 block">👤</span>
+                      <span class="text-[9px] font-bold text-slate-500 uppercase block mt-1">OPERATOR PHOTO</span>
+                      <span id="idcard-photo-initials" class="text-xs font-black text-[#0a2540] block mt-0.5">KG5TZT</span>
+                    </div>
+                    <!-- Corner Agency Stamp Overlay -->
+                    <div class="absolute bottom-1 right-1 text-[8px] font-black text-slate-500/90 bg-white/80 px-1 rounded uppercase border border-slate-200">
+                      FC-OEM
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <!-- Barcode / Electronic Scanner Strip & Security Sign-off -->
-              <div class="pt-2 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[10px]">
-                <div class="text-slate-400">
-                  <span class="text-slate-500">DIGITAL CARD SERIAL: </span>
-                  <strong id="idcard-serial" class="text-emerald-400 font-mono-tac">FC-ARES-KG5TZT-2026</strong>
+              <!-- Operator Name Hierarchy (Military CAC Format: Large SURNAME first) -->
+              <div class="mt-3 pt-2.5 border-t border-slate-200">
+                <div class="text-[8px] text-slate-500 font-bold uppercase tracking-widest">LAST NAME / SURNAME:</div>
+                <div id="idcard-surname" class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight uppercase leading-none font-sans">DAVIS</div>
+                
+                <div class="text-[8px] text-slate-500 font-bold uppercase tracking-widest mt-1.5">FIRST NAME:</div>
+                <div id="idcard-firstname" class="text-sm sm:text-base font-extrabold text-slate-800 tracking-wide uppercase font-sans">BRIAN</div>
+                <div id="idcard-name" class="hidden">Brian Davis</div>
+              </div>
+
+              <!-- Callsign & FCC Class Box -->
+              <div class="mt-2.5 p-2 bg-slate-50 border border-slate-300 rounded-lg flex items-center justify-between">
+                <div>
+                  <span class="text-[8px] text-slate-500 font-bold block uppercase tracking-wider">FCC CALLSIGN:</span>
+                  <span id="idcard-call" class="text-xl sm:text-2xl font-black text-[#0a2540] tracking-wider font-mono">KG5TZT</span>
                 </div>
-                <div class="text-slate-400">
-                  <span>EXPIRATION: </span>
-                  <strong class="text-amber-400">OCTOBER 2028 (ACTIVE)</strong>
+                <div class="text-right">
+                  <span class="text-[8px] text-slate-500 font-bold block uppercase tracking-wider">LICENSE CLASS:</span>
+                  <span id="idcard-class" class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-[#0a2540] text-white shadow-sm inline-block">AMATEUR EXTRA</span>
                 </div>
               </div>
+
+              <!-- Duty Position & Grade -->
+              <div class="mt-2">
+                <div class="text-[8px] text-slate-500 font-bold uppercase tracking-wider">DUTY POSITION &amp; OPERATIONAL TITLE:</div>
+                <div id="idcard-role" class="text-xs sm:text-sm font-black text-[#0a2540] uppercase font-sans">EMERGENCY COORDINATOR (EC)</div>
+                <div id="idcard-clearance-pill" class="text-[10px] font-bold text-emerald-700 mt-0.5">LEVEL 6 COMMAND &bull; ACTIVE AUTHORIZED CREDENTIAL</div>
+              </div>
+
+              <!-- Tactical & Civil Defense Identifiers Grid -->
+              <div class="mt-2.5 grid grid-cols-3 gap-1.5 p-2 bg-slate-50 border border-slate-200 rounded-lg text-center text-[10px]">
+                <div class="border-r border-slate-200 pr-1">
+                  <span class="text-[8px] text-slate-500 block uppercase font-bold">RACES ID</span>
+                  <strong id="idcard-races" class="text-slate-900 font-mono text-xs font-black">TX-FREE-01</strong>
+                </div>
+                <div class="border-r border-slate-200 px-1">
+                  <span class="text-[8px] text-slate-500 block uppercase font-bold">GMRS CALL</span>
+                  <strong id="idcard-gmrs" class="text-slate-900 font-mono text-xs font-black">WRPN302</strong>
+                </div>
+                <div class="pl-1">
+                  <span class="text-[8px] text-slate-500 block uppercase font-bold">ARES ID</span>
+                  <strong id="idcard-ares" class="text-[#0a2540] font-mono text-xs font-black">TX-ARES-01</strong>
+                </div>
+              </div>
+
+              <!-- Jurisdiction, Post & Maidenhead Grid (EM11uv Streetman, TX) -->
+              <div class="mt-1.5 grid grid-cols-2 gap-1.5 p-2 bg-slate-50 border border-slate-200 rounded-lg text-[10px]">
+                <div>
+                  <span class="text-[8px] text-slate-500 block uppercase font-bold">COUNTY JURISDICTION</span>
+                  <strong class="text-slate-900 font-bold text-xs">Freestone County, TX</strong>
+                </div>
+                <div>
+                  <span class="text-[8px] text-slate-500 block uppercase font-bold">MAIDENHEAD GRID</span>
+                  <strong id="idcard-grid" class="text-[#0a2540] font-mono text-xs font-bold">EM11uv (Streetman, TX)</strong>
+                </div>
+                <div class="col-span-2 pt-1 border-t border-slate-200 flex items-center justify-between">
+                  <span class="text-[8px] text-slate-500 uppercase font-bold">ASSIGNED POST / STAGING</span>
+                  <strong id="idcard-staging" class="text-slate-900 font-bold text-xs">Streetman / Fairfield EOC</strong>
+                </div>
+                <span id="idcard-phone" class="hidden"></span>
+              </div>
+
+              <!-- Issue Dates & Serial -->
+              <div class="mt-2.5 pt-2 border-t border-slate-200 flex items-center justify-between text-[10px]">
+                <div>
+                  <span class="text-[8px] text-slate-500 block font-bold uppercase">ISSUED</span>
+                  <span class="font-bold text-slate-800">10/2024</span>
+                </div>
+                <div>
+                  <span class="text-[8px] text-slate-500 block font-bold uppercase">EXPIRES</span>
+                  <span class="font-bold text-blue-900">10/2028 (ACTIVE)</span>
+                </div>
+                <div class="text-right">
+                  <span class="text-[8px] text-slate-500 block font-bold uppercase">SERIAL / EDIPI</span>
+                  <strong id="idcard-serial" class="font-mono text-slate-900 font-black">903-FREE-KG5TZT</strong>
+                </div>
+              </div>
+
+              <!-- Military Barcode Strip across bottom -->
+              <div class="mt-2 pt-1 border-t border-slate-200 flex flex-col items-center">
+                <div class="w-full h-7 bg-slate-900 rounded p-1 flex items-center justify-center overflow-hidden">
+                  <svg class="w-full h-full text-white" viewBox="0 0 280 20" preserveAspectRatio="none">
+                    <g fill="white">
+                      <rect x="0" y="0" width="3" height="20"/><rect x="5" y="0" width="1" height="20"/><rect x="8" y="0" width="4" height="20"/><rect x="14" y="0" width="2" height="20"/><rect x="18" y="0" width="1" height="20"/><rect x="21" y="0" width="3" height="20"/><rect x="26" y="0" width="2" height="20"/><rect x="30" y="0" width="4" height="20"/><rect x="36" y="0" width="1" height="20"/><rect x="39" y="0" width="3" height="20"/><rect x="44" y="0" width="2" height="20"/><rect x="48" y="0" width="1" height="20"/><rect x="51" y="0" width="4" height="20"/><rect x="57" y="0" width="2" height="20"/><rect x="61" y="0" width="1" height="20"/><rect x="64" y="0" width="3" height="20"/><rect x="69" y="0" width="2" height="20"/><rect x="73" y="0" width="4" height="20"/><rect x="79" y="0" width="1" height="20"/><rect x="82" y="0" width="3" height="20"/><rect x="87" y="0" width="2" height="20"/><rect x="91" y="0" width="4" height="20"/><rect x="97" y="0" width="1" height="20"/><rect x="100" y="0" width="3" height="20"/><rect x="105" y="0" width="2" height="20"/><rect x="109" y="0" width="1" height="20"/><rect x="112" y="0" width="4" height="20"/><rect x="118" y="0" width="2" height="20"/><rect x="122" y="0" width="3" height="20"/><rect x="127" y="0" width="1" height="20"/><rect x="130" y="0" width="4" height="20"/><rect x="136" y="0" width="2" height="20"/><rect x="140" y="0" width="1" height="20"/><rect x="143" y="0" width="3" height="20"/><rect x="148" y="0" width="2" height="20"/><rect x="152" y="0" width="4" height="20"/><rect x="158" y="0" width="1" height="20"/><rect x="161" y="0" width="3" height="20"/><rect x="166" y="0" width="2" height="20"/><rect x="170" y="0" width="4" height="20"/><rect x="176" y="0" width="1" height="20"/><rect x="179" y="0" width="3" height="20"/><rect x="184" y="0" width="2" height="20"/><rect x="188" y="0" width="1" height="20"/><rect x="191" y="0" width="4" height="20"/><rect x="197" y="0" width="2" height="20"/><rect x="201" y="0" width="3" height="20"/><rect x="206" y="0" width="1" height="20"/><rect x="209" y="0" width="4" height="20"/><rect x="215" y="0" width="2" height="20"/><rect x="219" y="0" width="1" height="20"/><rect x="222" y="0" width="3" height="20"/><rect x="227" y="0" width="2" height="20"/><rect x="231" y="0" width="4" height="20"/><rect x="237" y="0" width="1" height="20"/><rect x="240" y="0" width="3" height="20"/><rect x="245" y="0" width="2" height="20"/><rect x="249" y="0" width="4" height="20"/><rect x="255" y="0" width="1" height="20"/><rect x="258" y="0" width="3" height="20"/><rect x="263" y="0" width="2" height="20"/><rect x="267" y="0" width="4" height="20"/><rect x="273" y="0" width="2" height="20"/><rect x="277" y="0" width="3" height="20"/>
+                    </g>
+                  </svg>
+                </div>
+                <div class="text-[7.5px] text-slate-500 font-mono tracking-widest mt-1 text-center font-bold">
+                  FREESTONE COUNTY AMATEUR RADIO EMERGENCY SERVICE &bull; OEM
+                </div>
+              </div>
+
             </div>
 
-          </div>
-
-          <!-- Bottom Card Legal Strip -->
-          <div class="mt-5 pt-3 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[9px] text-slate-500">
-            <div>OFFICIAL VOLUNTEER EMERGENCY COMMUNICATIONS OPERATOR &bull; FREESTONE COUNTY SHERIFF &amp; EOC LIAISON</div>
-            <div class="text-slate-400 font-bold">WHEN ALL ELSE FAILS &bull; AMATEUR RADIO EMERGENCY SERVICE</div>
           </div>
 
         </div>
 
-        <!-- CARD BACK (QUALIFICATIONS, NIMS CERTIFICATIONS & EMERGENCY INFO) -->
-        <div id="idcard-back" class="bg-gradient-to-br from-[#0c1219] via-[#090d14] to-[#07090f] border-2 border-amber-500/60 rounded-2xl p-5 sm:p-7 shadow-[0_0_35px_rgba(0,0,0,0.8)] relative overflow-hidden transition-all duration-300">
+        <!-- ================= CARD BACK (QUALIFICATIONS, CERTIFICATIONS & CAPABILITIES) ================= -->
+        <div id="idcard-back" class="idcard-cac-surface bg-white text-slate-900 border-2 border-slate-300 rounded-2xl shadow-2xl relative overflow-hidden transition-all duration-300 max-w-[400px] w-full mx-auto select-none hidden">
           
-          <div class="border-b-2 border-amber-500/40 pb-3 mb-4 flex items-center justify-between">
-            <div>
-              <span class="text-[10px] text-amber-400 font-black tracking-widest uppercase">EMERGENCY DEPLOYMENT QUALIFICATIONS</span>
-              <h3 class="text-base sm:text-lg font-black text-white">FEMA NIMS CERTIFICATIONS &amp; DISASTER READINESS</h3>
-            </div>
-            <span class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-700">
-              CARD REVERSE
-            </span>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <!-- Inner Fine Security Border Frame -->
+          <div class="m-2 sm:m-2.5 border border-slate-300/90 rounded-xl overflow-hidden bg-white flex flex-col justify-between">
             
-            <!-- FEMA / Incident Command System (ICS) Standard Certifications -->
-            <div class="space-y-2 p-3 bg-[#080b10] rounded-xl border border-slate-800">
-              <span class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider block">FEMA / ICS VERIFIED TRAINING:</span>
-              <div class="space-y-1.5 text-[11px] text-slate-300 font-mono-tac">
-                <div class="flex items-center gap-2">
-                  <span class="text-emerald-400">✓</span>
-                  <span><strong>IS-100.c:</strong> Introduction to Incident Command System</span>
-                </div>
-                <div class="flex items-center gap-2">
-                  <span class="text-emerald-400">✓</span>
-                  <span><strong>IS-200.c:</strong> Basic Incident Command System for Initial Response</span>
-                </div>
-                <div class="flex items-center gap-2">
-                  <span class="text-emerald-400">✓</span>
-                  <span><strong>IS-700.b:</strong> National Incident Management System (NIMS)</span>
-                </div>
-                <div class="flex items-center gap-2">
-                  <span class="text-emerald-400">✓</span>
-                  <span><strong>IS-800.d:</strong> National Response Framework (NRF)</span>
-                </div>
-                <div class="flex items-center gap-2">
-                  <span class="text-emerald-400">✓</span>
-                  <span><strong>NWS SKYWARN:</strong> Official Trained Severe Weather Spotter</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Deployed Station Capabilities & Gear -->
-            <div class="space-y-2 p-3 bg-[#080b10] rounded-xl border border-slate-800">
+            <!-- Card Back Header -->
+            <div class="p-3 sm:p-4 pb-2 border-b border-slate-200 bg-slate-50">
               <div class="flex items-center justify-between">
-                <span class="text-[10px] text-amber-400 font-bold uppercase tracking-wider block">DEPLOYED STATION CAPABILITIES:</span>
-                <button type="button" onclick="openOperatorSelfEditModal()" class="text-[10px] text-emerald-400 hover:underline">Edit Gear</button>
-              </div>
-              <div id="idcard-capabilities-list" class="flex flex-wrap gap-1.5 text-[10px] text-slate-300 font-mono-tac">
-                <span class="p-1 px-2 bg-emerald-950/70 text-emerald-300 rounded border border-emerald-800/80 font-bold flex items-center gap-1">
-                  <span class="text-emerald-400">✓</span><span>50W VHF/UHF Mobile</span>
-                </span>
-                <span class="p-1 px-2 bg-emerald-950/70 text-emerald-300 rounded border border-emerald-800/80 font-bold flex items-center gap-1">
-                  <span class="text-emerald-400">✓</span><span>HF Portable Base</span>
-                </span>
-                <span class="p-1 px-2 bg-emerald-950/70 text-emerald-300 rounded border border-emerald-800/80 font-bold flex items-center gap-1">
-                  <span class="text-emerald-400">✓</span><span>Winlink RMS Packet / Radio Email</span>
-                </span>
-                <span class="p-1 px-2 bg-emerald-950/70 text-emerald-300 rounded border border-emerald-800/80 font-bold flex items-center gap-1">
-                  <span class="text-emerald-400">✓</span><span>100Ah+ Battery / LiFePO4 Power</span>
+                <div>
+                  <div class="text-[8px] text-amber-700 font-black tracking-widest uppercase">FREESTONE COUNTY EMERGENCY MANAGEMENT</div>
+                  <h3 class="text-xs sm:text-sm font-black text-slate-900 uppercase tracking-tight">OPERATIONAL QUALIFICATIONS &amp; READINESS</h3>
+                </div>
+                <span class="px-2 py-0.5 rounded text-[8px] font-black bg-slate-200 text-slate-800 border border-slate-300 uppercase">
+                  CARD REVERSE
                 </span>
               </div>
             </div>
 
-          </div>
+            <div class="p-3 sm:p-4 space-y-2.5">
+              
+              <!-- 1. FEMA NIMS / ICS CERTIFICATIONS -->
+              <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50">
+                <div class="border-b border-slate-200 pb-1 mb-1.5">
+                  <span class="text-[9.5px] text-[#0a2540] font-black uppercase tracking-wider flex items-center gap-1.5">
+                    <span>📜</span><span>FEMA NIMS &amp; ICS CERTIFICATIONS</span>
+                  </span>
+                </div>
+                <!-- Dynamic Certs Checklist Container -->
+                <div id="idcard-certs-container" class="space-y-1 text-[10px]">
+                  <!-- Populated by JavaScript -->
+                </div>
+              </div>
 
-          <!-- Emergency Medical & In Case of Emergency (ICE) Contact -->
-          <div class="mt-4 p-3 bg-[#080b10] rounded-xl border border-slate-800 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-            <div>
-              <span class="text-[9px] text-slate-500 uppercase block">IN CASE OF EMERGENCY (ICE) CONTACT:</span>
-              <strong id="idcard-ice-contact" class="text-white text-xs">Freestone County EOC Coordinator &bull; (903) 389-3336</strong>
-            </div>
-            <div>
-              <span class="text-[9px] text-slate-500 uppercase block">PRIMARY TACTICAL DISPATCH FREQUENCY:</span>
-              <strong class="text-emerald-400 text-xs">145.110 MHz (-0.600 T146.2) Fairfield</strong>
-            </div>
-          </div>
+              <!-- 2. EMERGENCY MEDICAL & NEXT OF KIN (ICE) -->
+              <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50 grid grid-cols-2 gap-2 text-[10px]">
+                <div>
+                  <span class="text-[8px] text-slate-500 block uppercase font-bold">IN CASE OF EMERGENCY (ICE)</span>
+                  <strong id="idcard-ice-contact" class="text-slate-900 font-bold block text-xs">Jane Davis (Spouse)</strong>
+                  <span id="idcard-ice-phone-disp" class="text-slate-700 font-mono text-[10px]">903-644-5856</span>
+                </div>
+                <div>
+                  <span class="text-[8px] text-slate-500 block uppercase font-bold">TACTICAL DISPATCH FREQ</span>
+                  <strong class="text-[#0a2540] font-bold block text-xs">145.110 MHz (-0.600)</strong>
+                  <span class="text-slate-600 text-[10px]">PL 146.2 &bull; W5NFL Fairfield</span>
+                </div>
+                <div class="col-span-2 pt-1.5 border-t border-slate-200 flex items-center justify-between text-[9px]">
+                  <div>
+                    <span class="text-slate-500 font-bold">BLOOD TYPE: </span>
+                    <strong id="idcard-blood-type" class="text-red-700 font-bold">O+</strong>
+                  </div>
+                  <div>
+                    <span class="text-slate-500 font-bold">ALLERGIES: </span>
+                    <strong id="idcard-allergies" class="text-slate-800 font-bold">Penicillin (PCN)</strong>
+                  </div>
+                  <div>
+                    <span class="text-slate-500 font-bold">STATUS: </span>
+                    <strong class="text-emerald-700 font-bold">FIELD READY</strong>
+                  </div>
+                </div>
+              </div>
 
-          <!-- Notice to Law Enforcement / Emergency Officials -->
-          <div class="mt-4 p-3 bg-black/40 rounded-lg border border-slate-800 text-[10px] text-slate-400 leading-relaxed">
-            <strong class="text-amber-300">NOTICE TO EMERGENCY SERVICES &amp; LAW ENFORCEMENT:</strong>
-            The bearer of this card is an authorized volunteer communications operator assisting Freestone County Emergency Management. During declared emergencies, drills, and activations, please extend all appropriate access to incident command posts, designated staging areas, and communications shelters.
+              <!-- 3. OFFICIAL AUTHORITY & LAW ENFORCEMENT NOTICE -->
+              <div class="p-2 bg-slate-100 rounded-lg border border-slate-200 text-[8px] text-slate-600 leading-relaxed">
+                <strong class="text-slate-900 font-black">PROPERTY OF FREESTONE COUNTY EMERGENCY MANAGEMENT &bull; OFFICIAL NOTICE:</strong>
+                The individual named on this credential is an authorized volunteer emergency communications specialist recognized under Texas Government Code Ch. 418 and FCC Part 97. During declared emergencies, drills, and activations, civil defense, incident commanders, law enforcement, and military checkpoints are requested to grant priority passage and site access to command posts, communication shelters, and emergency staging facilities.
+                <div class="mt-1 font-bold text-slate-800">
+                  IF FOUND, RETURN TO FREESTONE COUNTY SHERIFF'S OFFICE OR DROP IN ANY U.S. MAILBOX. POSTAGE GUARANTEED.
+                </div>
+              </div>
+
+              <!-- 5. VERIFICATION QR & DIGITAL SEAL -->
+              <div class="pt-2 border-t border-slate-200 flex items-center justify-between gap-2">
+                <div class="space-y-0.5">
+                  <div class="text-[8px] text-slate-500 uppercase font-bold">AUTHENTICATING OFFICIAL:</div>
+                  <div class="font-serif italic font-bold text-slate-800 text-xs">Brian Davis</div>
+                  <div class="text-[8px] text-[#0a2540] font-black uppercase">Emergency Coordinator (EC) &bull; Freestone County</div>
+                  <div class="text-[7px] text-slate-400 font-mono">DIGITAL SIGNATURE: FC-ARES-KG5TZT-EC-VERIFIED</div>
+                </div>
+                <div class="flex flex-col items-center flex-shrink-0">
+                  <img src="qr_web_app.svg" onerror="this.src='web/qr_web_app.svg'" alt="Verification QR" class="w-12 h-12 border border-slate-300 rounded p-0.5 bg-white shadow-sm">
+                  <span class="text-[7px] text-slate-400 font-mono mt-0.5">VERIFY ID</span>
+                </div>
+              </div>
+
+            </div>
+
           </div>
 
         </div>
@@ -4293,7 +4354,7 @@
 
       <!-- Modal Footer -->
       <div class="flex items-center justify-between border-t border-purple-900/60 p-3 bg-[#07090e] flex-shrink-0">
-        <span class="text-[10px] text-purple-300">Freestone County ARES Dispatch Validator • Build 61</span>
+        <span class="text-[10px] text-purple-300">Freestone County ARES Dispatch Validator • Build 62</span>
         <button type="button" onclick="closeAlertSoundVerifyModal()" class="px-4 py-2 bg-purple-800 hover:bg-purple-700 text-white font-bold rounded-xl text-xs transition cursor-pointer">
           CLOSE CONSOLE
         </button>
@@ -5866,8 +5927,14 @@
       }
       container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
         const val = cb.value.toUpperCase();
-        const shortVal = val.replace('IS-', '');
-        cb.checked = arr.some(x => x.toUpperCase() === val || x.toUpperCase() === shortVal || x.toUpperCase().includes(shortVal));
+        const shortVal = val.replace('IS-', '').replace('ICS-', '');
+        cb.checked = arr.some(x => {
+          const ux = String(x).toUpperCase();
+          if (ux === val) return true;
+          if (shortVal && shortVal.length >= 2 && (ux === shortVal || ux.includes(shortVal))) return true;
+          if (val && val.length >= 3 && (ux.includes(val) || val.includes(ux))) return true;
+          return false;
+        });
       });
     }
 
@@ -6119,7 +6186,7 @@ assignedSpots: [
         updates: []
       },
       members: [
-        { id: 1, call: 'KG5TZT', gmrs: 'WRPN302', ares: 'TX-ARES-01', races: 'TX-FREE-01', name: 'Brian Davis', class: 'Amateur Extra', role: 'Emergency Coordinator (EC)', level: 'Level 6 - Emergency Coordinator (EC)', verified: true, claimed: true, canSendAlerts: true, phone: '903-644-5856', email: 'fcares@pm.me', fema: ['IS-100', 'IS-200', 'IS-300', 'IS-400', 'IS-700', 'IS-800'], power: 'Commercial & Battery Backup & Emergency Generator', isSpotter: true, bloodType: 'O+', allergies: 'Penicillin (PCN)', medicalConditions: 'None / Field Ready', medications: 'None', iceName: 'Jane Davis (Spouse)', icePhone: '903-644-5856' },
+        { id: 1, call: 'KG5TZT', gmrs: 'WRPN302', ares: 'TX-ARES-01', races: 'TX-FREE-01', name: 'Brian Davis', class: 'Amateur Extra', role: 'Emergency Coordinator (EC)', level: 'Level 6 - Emergency Coordinator (EC)', verified: true, claimed: true, canSendAlerts: true, phone: '903-644-5856', email: 'fcares@pm.me', fema: ['IS-100', 'IS-200', 'ICS-300', 'ICS-400', 'IS-700', 'IS-800', 'IS-701.a', 'IS-702.a', 'EC-001', 'SKYWARN'], power: 'Commercial & Battery Backup & Emergency Generator', isSpotter: true, bloodType: 'O+', allergies: 'Penicillin (PCN)', medicalConditions: 'None / Field Ready', medications: 'None', iceName: 'Jane Davis (Spouse)', icePhone: '903-644-5856' },
         { id: 2, call: 'AI5OX', gmrs: 'WSEA569', ares: 'TX-ARES-02', races: 'TX-FREE-02', name: 'Robert Cockerell', class: 'Amateur Extra', role: 'Assistant EC (AEC)', level: 'Level 4 - Assistant EC', verified: true, claimed: false, canSendAlerts: true, phone: '903-394-1772', email: 'AI5OX@yahoo.com', fema: ['IS-100', 'IS-200', 'IS-300', 'IS-700', 'IS-800'], power: 'Commercial & Battery Backup', isSpotter: true, bloodType: 'A+', allergies: 'NKDA (None Known)', medicalConditions: 'None', medications: 'None', iceName: 'Sarah Cockerell (Spouse)', icePhone: '903-394-1772' },
         { id: 3, call: 'FC-EMC', gmrs: 'NONE', races: 'TX-FREE-EMC', name: 'Freestone County EMC', class: 'Liaison', role: 'County Emergency Management Coordinator (EMC)', level: 'Level 5 - County EMC', verified: true, claimed: false, canSendAlerts: false, phone: '903-389-3335', email: 'freestone.emc@co.freestone.tx.us', fema: ['IS-100', 'IS-200', 'IS-300', 'IS-400', 'IS-700', 'IS-800'], power: 'Commercial & Emergency Generator', isSpotter: false },
         { id: 4, call: 'N5BED', gmrs: 'WSDI801', ares: 'TX-ARES-04', races: 'TX-FREE-04', name: 'Billy Bryant', class: 'General', role: 'Net Control Station (NCS)', level: 'Level 3 - NCS', verified: true, claimed: false, canSendAlerts: false, phone: '903-388-3470', email: 'bryant1969@yahoo.com', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800'], power: 'Commercial & Battery Backup', isSpotter: true, bloodType: 'B+', allergies: 'NKDA (None Known)', medicalConditions: 'None', medications: 'None', iceName: 'Mary Bryant (Spouse)', icePhone: '903-388-3470' },
@@ -9427,11 +9494,13 @@ D. Out-of-County stations and visitors.
           dispatchBadge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-slate-900 text-slate-400 border border-slate-800';
         }
       }
-      document.getElementById('session-modal').classList.remove('hidden');
+      const modal = document.getElementById('session-modal') || document.getElementById('operator-profile-modal');
+      if (modal) modal.classList.remove('hidden');
     }
 
     function closeSessionModal() {
-      document.getElementById('session-modal').classList.add('hidden');
+      const modal = document.getElementById('session-modal') || document.getElementById('operator-profile-modal');
+      if (modal) modal.classList.add('hidden');
     }
 
     function handleSessionButtonClick() {
@@ -12341,19 +12410,40 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
           isMaster: true,
           isSpotter: true,
           power: 'Commercial & Battery Backup & Emergency Generator',
-          fema: ['IS-100', 'IS-200', 'IS-300', 'IS-400', 'IS-700', 'IS-800'],
+          fema: ['IS-100', 'IS-200', 'ICS-300', 'ICS-400', 'IS-700', 'IS-800', 'IS-701.a', 'IS-702.a', 'EC-001', 'SKYWARN'],
+          bloodType: 'O+',
+          allergies: 'Penicillin (PCN)',
+          medicalConditions: 'None / Field Ready',
+          medications: 'None',
+          iceName: 'Jane Davis (Spouse)',
+          icePhone: '903-644-5856',
+          capabilities: [
+            '50W VHF/UHF Mobile Station',
+            'HF Portable Base Deployment',
+            'Winlink RMS Packet / Radio Email',
+            '100Ah+ LiFePO4 Power Station',
+            'Crossband Repeater / Field Link',
+            'APRS Tactical Tracking'
+          ],
           passwordHash: btoa('Chief@svfd1'),
           authorizedBy: 'ROOT_EC',
           authorizedTimestamp: Date.now()
         };
       } else {
-        // Enforce Master EC strict password and clearance
+        // Enforce Master EC strict password, clearance, and full verified certifications
         accounts['KG5TZT'].passwordHash = btoa('Chief@svfd1');
         accounts['KG5TZT'].level = 'Level 6 - Emergency Coordinator (EC)';
         accounts['KG5TZT'].role = 'Emergency Coordinator (EC)';
         accounts['KG5TZT'].canSendAlerts = true;
         accounts['KG5TZT'].isMaster = true;
         accounts['KG5TZT'].isSpotter = true;
+        accounts['KG5TZT'].bloodType = accounts['KG5TZT'].bloodType || 'O+';
+        accounts['KG5TZT'].allergies = accounts['KG5TZT'].allergies || 'Penicillin (PCN)';
+        accounts['KG5TZT'].iceName = accounts['KG5TZT'].iceName || 'Jane Davis (Spouse)';
+        accounts['KG5TZT'].icePhone = accounts['KG5TZT'].icePhone || '903-644-5856';
+        if (!accounts['KG5TZT'].fema || !accounts['KG5TZT'].fema.includes('ICS-300') || !accounts['KG5TZT'].fema.includes('ICS-400')) {
+          accounts['KG5TZT'].fema = ['IS-100', 'IS-200', 'ICS-300', 'ICS-400', 'IS-700', 'IS-800', 'IS-701.a', 'IS-702.a', 'EC-001', 'SKYWARN'];
+        }
       }
 
       // Pre-seed known roster calls if not present (Default generic password: ARES2026)
@@ -15578,6 +15668,7 @@ Your console is now authorized and unlocked.`);
       renderRosterGrid();
       renderResponderTable();
       pushRosterSyncToCloud();
+      try { updateOperatorIdCardView(); } catch(e) {}
 
       alert(`✅ OPERATOR PROFILE UPDATED\n\nCallsign ${call} (${name}) updated and synchronized with cloud roster.`);
     }
@@ -15799,6 +15890,7 @@ Your console is now authorized and unlocked.`);
       renderRosterGrid();
       renderResponderTable();
       pushRosterSyncToCloud();
+      try { updateOperatorIdCardView(); } catch(e) {}
 
       alert(`✅ PROFILE & EQUIPMENT SAVED!\n\nCallsign: ${myCall}\nOperator: ${name}\nStation Capabilities: ${capabilitiesList.join(', ')}\n\nAll profile changes have been saved to your local station and synchronized across the Freestone County network in real time.`);
     }
@@ -17289,19 +17381,39 @@ Your console is now authorized and unlocked.`);
     // Auto-switch tab or login if specified in URL query or hash
     try {
       const href = window.location.href;
+      console.log('AUTO-SWITCH INIT href:', href);
       const loginMatch = href.match(/[?&]login=([^&#]+)/);
       if (loginMatch) {
+        console.log('AUTO-SWITCH LOGIN:', loginMatch[1]);
         switchOperator(loginMatch[1], false);
       }
       const match = href.match(/[?&]tab=([^&#]+)/) || href.match(/#([a-zA-Z0-9_-]+)/);
       const targetTab = match ? match[1] : '';
+      console.log('AUTO-SWITCH TARGET TAB:', targetTab);
       if (targetTab && targetTab !== 'dash' && document.getElementById('view-' + targetTab)) {
+        console.log('SWITCHING TO TAB:', targetTab);
         switchTab(targetTab);
       }
       if (href.includes('#menu') || href.includes('menu=open') || href.includes('drawer=open') || targetTab === 'menu') {
         toggleHamburgerMenu(true);
       }
-    } catch(e) {}
+      if (href.includes('side=back')) {
+        const front = document.getElementById('idcard-front');
+        const back = document.getElementById('idcard-back');
+        const btnText = document.getElementById('idcard-flip-btn-text');
+        if (front && back) {
+          front.classList.add('hidden');
+          back.classList.remove('hidden');
+          idCardCurrentSide = 'back';
+          if (btnText) btnText.textContent = 'FLIP TO FRONT';
+        }
+      }
+      if (href.includes('mode=dual')) {
+        toggleIdCardDualView();
+      }
+    } catch(e) {
+      console.error('AUTO-SWITCH ERROR:', e, e.stack);
+    }
 
     // Register Service Worker for 100% offline capability
     if ('serviceWorker' in navigator) {
@@ -17314,9 +17426,25 @@ Your console is now authorized and unlocked.`);
   
 
     // ==========================================
-    // OPERATOR ID CARD & CREDENTIAL ENGINE
+    // OPERATOR ID CARD & CAC CREDENTIAL ENGINE
     // ==========================================
-    var idCardCurrentSide = 'front'; // 'front' or 'back'
+    var idCardCurrentSide = (typeof idCardCurrentSide !== 'undefined' && idCardCurrentSide) ? idCardCurrentSide : 'front'; // 'front' or 'back'
+    var idCardViewMode = (typeof idCardViewMode !== 'undefined' && idCardViewMode) ? idCardViewMode : 'flip'; // 'flip' or 'dual'
+
+    function isCertApproved(certCode, femaList) {
+      if (!femaList || !Array.isArray(femaList)) return false;
+      const codeClean = String(certCode).toUpperCase().replace(/[^A-Z0-9]/g, '');
+      const codeNum = certCode.replace(/[^0-9]/g, '');
+      const codeLetters = certCode.replace(/[^A-Za-z]/g, '').toUpperCase();
+      return femaList.some(item => {
+        const itemStr = String(item).toUpperCase();
+        const itemClean = itemStr.replace(/[^A-Z0-9]/g, '');
+        if (itemClean === codeClean || itemClean.includes(codeClean) || codeClean.includes(itemClean)) return true;
+        if (codeNum && codeNum.length >= 3 && itemStr.includes(codeNum)) return true;
+        if (codeLetters && codeLetters.length >= 4 && itemStr.includes(codeLetters)) return true;
+        return false;
+      });
+    }
 
     function updateOperatorIdCardView() {
       const isGuest = !appState.isLoggedIn || appState.myCall === 'GUEST';
@@ -17325,36 +17453,73 @@ Your console is now authorized and unlocked.`);
       const mem = appState.members ? (appState.members.find(m => m.call.toUpperCase() === (appState.myCall || '').toUpperCase()) || {}) : {};
       const clearance = typeof getOperatorClearance === 'function' ? getOperatorClearance() : { levelNum: 1, levelTitle: 'Level 1 - General Volunteer' };
 
-      const callsign = isGuest ? 'GUEST' : appState.myCall;
-      const name = isGuest ? 'Guest Operator' : (acc.name || mem.name || appState.myName || 'Verified Volunteer');
-      const role = isGuest ? 'Unauthenticated Guest &bull; Masked View' : (appState.myRole || mem.role || 'Field Communications Operator');
-      const level = isGuest ? 'GUEST (LOCKED)' : (appState.myLevel || mem.level || 'Level 1 - General Volunteer');
+      const callsign = isGuest ? 'GUEST' : (appState.myCall || 'KG5TZT');
+      const name = isGuest ? 'Guest Operator' : (acc.name || mem.name || appState.myName || 'Brian Davis');
+      const role = isGuest ? 'Unauthenticated Guest &bull; Masked View' : (appState.myRole || mem.role || (callsign === 'KG5TZT' ? 'Emergency Coordinator (EC)' : 'Field Communications Operator'));
+      const level = isGuest ? 'GUEST (LOCKED)' : (appState.myLevel || mem.level || (callsign === 'KG5TZT' ? 'Level 6 - Emergency Coordinator (EC)' : 'Level 1 - General Volunteer'));
       const gmrs = (callsign === 'AI5OX' ? 'WSEA569' : (acc.gmrs || mem.gmrs || (isGuest ? 'LOCKED' : 'WRPN302')));
-      const races = acc.races || mem.races || (isGuest ? 'LOCKED' : 'TX-FREE-01');
-      const ares = acc.ares || mem.ares || acc.aresId || mem.aresId || 'ARES-TX-FREE';
-      const licenseClass = acc.class || mem.class || (callsign === 'KG5TZT' ? 'Amateur Extra Class' : 'Technician Class');
-      const phone = isGuest ? '***-***-**** (Locked)' : (acc.phone || mem.phone || (callsign === 'KG5TZT' ? '903-388-7561' : '903-389-XXXX'));
-      const email = isGuest ? 'guest@masked.view' : (acc.email || mem.email || (callsign.toLowerCase() + '@freestone-ares.org'));
+      const races = acc.races || mem.races || (isGuest ? 'LOCKED' : (callsign === 'KG5TZT' ? 'TX-FREE-01' : 'TX-FREE'));
+      const ares = acc.ares || mem.ares || acc.aresId || mem.aresId || (callsign === 'KG5TZT' ? 'TX-ARES-01' : 'ARES-TX-FREE');
+      const licenseClass = acc.class || mem.class || (callsign === 'KG5TZT' ? 'Amateur Extra Class' : 'General Class');
+      const phone = isGuest ? '***-***-**** (Locked)' : (acc.phone || mem.phone || (callsign === 'KG5TZT' ? '903-644-5856' : '903-389-XXXX'));
+      const email = isGuest ? 'guest@masked.view' : (acc.email || mem.email || (callsign === 'KG5TZT' ? 'fcares@pm.me' : callsign.toLowerCase() + '@freestone-ares.org'));
       const photo = acc.photo || mem.photo || '';
+      const bloodType = acc.bloodType || mem.bloodType || (callsign === 'KG5TZT' ? 'O+' : 'Unknown');
+      const allergies = acc.allergies || mem.allergies || (callsign === 'KG5TZT' ? 'Penicillin (PCN)' : 'None Known');
+      const iceName = acc.iceName || mem.iceName || (callsign === 'KG5TZT' ? 'Jane Davis (Spouse)' : 'Freestone County EOC');
+      const icePhone = acc.icePhone || mem.icePhone || (callsign === 'KG5TZT' ? '903-644-5856' : '903-389-3336');
+
+      // Operator Name Military Parsing (Surname vs Given Names)
+      let surname = 'DAVIS';
+      let firstname = 'BRIAN';
+      if (name && name !== 'Guest Operator') {
+        const parts = name.trim().split(/\s+/);
+        if (parts.length === 1) {
+          surname = parts[0].toUpperCase();
+          firstname = '';
+        } else {
+          surname = parts[parts.length - 1].toUpperCase();
+          firstname = parts.slice(0, parts.length - 1).join(' ').toUpperCase();
+        }
+      }
+      if (callsign === 'KG5TZT') {
+        surname = 'DAVIS';
+        firstname = 'BRIAN';
+      }
+
       const caps = acc.capabilities || mem.capabilities || [
-        '50W VHF/UHF Mobile',
-        'HF Portable Base',
+        '50W VHF/UHF Mobile Station',
+        'HF Portable Base Deployment',
         'Winlink RMS Packet / Radio Email',
-        '100Ah+ Battery / LiFePO4 Power'
+        '100Ah+ LiFePO4 Power Station',
+        'Crossband Repeater / Field Link',
+        'APRS Tactical Tracking'
       ];
 
+      // Raw / verified fema array
+      let femaList = acc.fema || mem.fema || [];
+      if (callsign === 'KG5TZT') {
+        femaList = ['IS-100', 'IS-200', 'ICS-300', 'ICS-400', 'IS-700', 'IS-800', 'IS-701.a', 'IS-702.a', 'EC-001', 'SKYWARN'];
+      }
+
       // Update text fields
-      const elCall = document.getElementById('idcard-call');
-      if (elCall) elCall.textContent = callsign;
+      const elSurname = document.getElementById('idcard-surname');
+      if (elSurname) elSurname.textContent = surname;
+
+      const elFirstname = document.getElementById('idcard-firstname');
+      if (elFirstname) elFirstname.textContent = firstname;
 
       const elName = document.getElementById('idcard-name');
       if (elName) elName.textContent = name;
+
+      const elCall = document.getElementById('idcard-call');
+      if (elCall) elCall.textContent = callsign;
 
       const elRole = document.getElementById('idcard-role');
       if (elRole) elRole.innerHTML = role;
 
       const elClass = document.getElementById('idcard-class');
-      if (elClass) elClass.textContent = licenseClass;
+      if (elClass) elClass.textContent = licenseClass.toUpperCase().replace('CLASS', '').trim();
 
       const elRaces = document.getElementById('idcard-races');
       if (elRaces) elRaces.textContent = races;
@@ -17368,21 +17533,27 @@ Your console is now authorized and unlocked.`);
       const elPhone = document.getElementById('idcard-phone');
       if (elPhone) elPhone.textContent = phone;
 
-      const elEmail = document.getElementById('idcard-email');
-      if (elEmail) elEmail.textContent = email;
+      const elGrid = document.getElementById('idcard-grid');
+      if (elGrid) elGrid.textContent = (callsign === 'KG5TZT' ? 'EM11uv (Streetman, TX)' : (acc.grid || mem.grid || 'EM11xq (Fairfield)'));
+
+      const elStaging = document.getElementById('idcard-staging');
+      if (elStaging) elStaging.textContent = (callsign === 'KG5TZT' ? 'Streetman / Fairfield EOC' : (acc.staging || mem.staging || 'Fairfield EOC Base'));
 
       const elSerial = document.getElementById('idcard-serial');
-      if (elSerial) elSerial.textContent = `FC-ARES-${callsign}-${new Date().getFullYear()}`;
+      if (elSerial) elSerial.textContent = `903-FREE-${callsign}`;
 
       // Status & Clearance Pills
       const elClearancePill = document.getElementById('idcard-clearance-pill');
       if (elClearancePill) {
         if (isGuest) {
           elClearancePill.textContent = 'GUEST ACCESS (LOCKED)';
-          elClearancePill.className = 'px-2.5 py-1 rounded text-xs font-black bg-amber-950 text-amber-300 border border-amber-700 shadow';
+          elClearancePill.className = 'text-[10px] font-bold text-amber-700';
+        } else if (callsign === 'KG5TZT' || clearance.levelNum >= 6) {
+          elClearancePill.textContent = 'LEVEL 6 COMMAND • ACTIVE AUTHORIZED CREDENTIAL';
+          elClearancePill.className = 'text-[10px] font-bold text-emerald-700';
         } else {
           elClearancePill.textContent = `LEVEL ${clearance.levelNum} • ${clearance.levelTitle.toUpperCase()}`;
-          elClearancePill.className = 'px-2.5 py-1 rounded text-xs font-black bg-emerald-950 text-emerald-300 border border-emerald-600 shadow';
+          elClearancePill.className = 'text-[10px] font-bold text-emerald-700';
         }
       }
 
@@ -17397,7 +17568,7 @@ Your console is now authorized and unlocked.`);
         }
       }
 
-      // Photos
+      // Photos (Top Right Corner like Military CAC)
       const elPhotoImg = document.getElementById('idcard-photo-img');
       const elPhotoPlace = document.getElementById('idcard-photo-placeholder');
       if (elPhotoImg && elPhotoPlace) {
@@ -17409,12 +17580,49 @@ Your console is now authorized and unlocked.`);
           elPhotoImg.classList.add('hidden');
           elPhotoPlace.classList.remove('hidden');
           if (isGuest) {
-            elPhotoPlace.innerHTML = '<span class="text-4xl">🔒</span><span class="text-[10px] text-amber-400 mt-1">GUEST</span>';
+            elPhotoPlace.innerHTML = '<span class="text-4xl text-slate-400 block">🔒</span><span class="text-[9px] text-slate-500 font-bold block mt-1">GUEST</span>';
           } else {
-            const initials = callsign === 'KG5TZT' ? 'EC' : callsign.substring(0, 2);
-            elPhotoPlace.innerHTML = `<span class="text-4xl font-black text-emerald-400">${initials}</span><span class="text-[9px] text-slate-400 mt-1">${callsign}</span>`;
+            const initials = callsign === 'KG5TZT' ? 'BD' : callsign.substring(0, 2);
+            elPhotoPlace.innerHTML = `<span class="text-4xl font-black text-[#0a2540] block">${initials}</span><span class="text-[8px] font-bold text-slate-500 uppercase block mt-1">OPERATOR PHOTO</span><span class="text-[9px] font-black text-blue-900 font-mono block">${callsign}</span>`;
           }
         }
+      }
+
+      // Dynamic Render of Approved FEMA & NIMS Certifications (Back of Card)
+      const elCertsContainer = document.getElementById('idcard-certs-container');
+      if (elCertsContainer) {
+        const allKnownCerts = [
+          { code: 'IS-100', title: 'IS-100.c: Intro to Incident Command System (ICS)' },
+          { code: 'IS-200', title: 'IS-200.c: Basic ICS for Initial Response' },
+          { code: 'ICS-300', title: 'ICS-300: Intermediate ICS for Expanding Incidents' },
+          { code: 'ICS-400', title: 'ICS-400: Advanced ICS Command & General Staff' },
+          { code: 'IS-700', title: 'IS-700.b: National Incident Management System (NIMS)' },
+          { code: 'IS-800', title: 'IS-800.d: National Response Framework (NRF)' },
+          { code: 'IS-701', title: 'IS-701.a: NIMS Multiagency Coordination (MACS)' },
+          { code: 'IS-702', title: 'IS-702.a: NIMS Public Information Systems' },
+          { code: 'EC-001', title: 'ARRL EC-001: Emergency Communications' },
+          { code: 'SKYWARN', title: 'NWS SKYWARN: Trained Severe Storm Spotter' },
+          { code: 'AUXCOMM', title: 'AUXCOMM: Auxiliary Emergency Communicator' }
+        ];
+
+        elCertsContainer.innerHTML = allKnownCerts.map(c => {
+          const approved = !isGuest && isCertApproved(c.code, femaList);
+          if (approved) {
+            return `
+              <div class="flex items-center gap-2 p-1.5 bg-white rounded border border-slate-200/90 shadow-2xs">
+                <span class="text-emerald-600 font-black text-sm flex-shrink-0 leading-none">✓</span>
+                <span class="font-bold text-slate-900 truncate text-[10.5px] tracking-tight">${c.title}</span>
+              </div>
+            `;
+          } else {
+            return `
+              <div class="flex items-center gap-2 p-1 bg-slate-100/50 rounded border border-slate-200/50 opacity-40">
+                <span class="text-slate-400 font-bold text-xs flex-shrink-0 leading-none">○</span>
+                <span class="text-slate-500 truncate text-[10px]">${c.title}</span>
+              </div>
+            `;
+          }
+        }).join('');
       }
 
       // Station Capabilities List
@@ -17424,12 +17632,25 @@ Your console is now authorized and unlocked.`);
           elCaps.innerHTML = '<span class="text-slate-500 text-xs italic">Sign in to load verified station gear</span>';
         } else if (caps && caps.length > 0) {
           elCaps.innerHTML = caps.map(c => `
-            <span class="p-1 px-2 bg-emerald-950/70 text-emerald-300 rounded border border-emerald-800/80 font-bold flex items-center gap-1 text-[10px]">
-              <span class="text-emerald-400">✓</span><span>${c}</span>
+            <span class="p-1 px-1.5 bg-blue-50 text-blue-900 rounded border border-blue-200 font-bold flex items-center gap-1 text-[9px]">
+              <span class="text-blue-700 font-black">✓</span><span>${c}</span>
             </span>
           `).join('');
         }
       }
+
+      // Emergency Medical & Next-of-kin Fields
+      const elIceContact = document.getElementById('idcard-ice-contact');
+      if (elIceContact) elIceContact.textContent = iceName;
+
+      const elIcePhoneDisp = document.getElementById('idcard-ice-phone-disp');
+      if (elIcePhoneDisp) elIcePhoneDisp.textContent = icePhone;
+
+      const elBloodType = document.getElementById('idcard-blood-type');
+      if (elBloodType) elBloodType.textContent = bloodType;
+
+      const elAllergies = document.getElementById('idcard-allergies');
+      if (elAllergies) elAllergies.textContent = allergies;
 
       // Sync ID card status badge with current dashboard status
       const dashStatus = document.getElementById('dash-my-status-badge');
@@ -17447,6 +17668,11 @@ Your console is now authorized and unlocked.`);
 
       if (!front || !back) return;
 
+      if (idCardViewMode === 'dual') {
+        idCardViewMode = 'flip';
+        updateIdCardViewModeUI();
+      }
+
       if (idCardCurrentSide === 'front') {
         front.classList.add('hidden');
         back.classList.remove('hidden');
@@ -17460,20 +17686,63 @@ Your console is now authorized and unlocked.`);
       }
     }
 
-    function printOperatorIdCard() {
-      // Ensure both front and back are visible for printing
+    function toggleIdCardDualView() {
       const front = document.getElementById('idcard-front');
       const back = document.getElementById('idcard-back');
+      const container = document.getElementById('idcard-printable-area');
+      const dualBtnText = document.getElementById('idcard-dual-btn-text');
+      const flipBtn = document.getElementById('idcard-flip-btn');
+
+      if (!front || !back || !container) return;
+
+      if (idCardViewMode === 'flip') {
+        idCardViewMode = 'dual';
+        front.classList.remove('hidden');
+        back.classList.remove('hidden');
+        container.className = 'grid grid-cols-1 lg:grid-cols-2 gap-6 justify-center items-start max-w-5xl mx-auto';
+        if (dualBtnText) dualBtnText.textContent = 'SINGLE CARD VIEW';
+        if (flipBtn) flipBtn.classList.add('opacity-50');
+      } else {
+        idCardViewMode = 'flip';
+        container.className = 'space-y-6 max-w-xl mx-auto';
+        if (idCardCurrentSide === 'front') {
+          front.classList.remove('hidden');
+          back.classList.add('hidden');
+        } else {
+          front.classList.add('hidden');
+          back.classList.remove('hidden');
+        }
+        if (dualBtnText) dualBtnText.textContent = 'SIDE-BY-SIDE VIEW';
+        if (flipBtn) flipBtn.classList.remove('opacity-50');
+      }
+    }
+
+    function updateIdCardViewModeUI() {
+      const container = document.getElementById('idcard-printable-area');
+      const dualBtnText = document.getElementById('idcard-dual-btn-text');
+      const flipBtn = document.getElementById('idcard-flip-btn');
+      if (container) container.className = 'space-y-6 max-w-xl mx-auto';
+      if (dualBtnText) dualBtnText.textContent = 'SIDE-BY-SIDE VIEW';
+      if (flipBtn) flipBtn.classList.remove('opacity-50');
+    }
+
+    function printOperatorIdCard() {
+      const front = document.getElementById('idcard-front');
+      const back = document.getElementById('idcard-back');
+      const container = document.getElementById('idcard-printable-area');
+      const wasDual = idCardViewMode === 'dual';
+      const prevSide = idCardCurrentSide;
+
       if (front) front.classList.remove('hidden');
       if (back) back.classList.remove('hidden');
+      if (container) container.className = 'grid grid-cols-1 md:grid-cols-2 gap-6 justify-center items-start';
 
       window.print();
 
-      // Restore view according to flip state
-      if (idCardCurrentSide === 'front' && back) {
-        back.classList.add('hidden');
-      } else if (idCardCurrentSide === 'back' && front) {
-        front.classList.add('hidden');
+      if (!wasDual) {
+        if (container) container.className = 'space-y-6 max-w-xl mx-auto';
+        if (prevSide === 'front' && back) back.classList.add('hidden');
+        if (prevSide === 'back' && front) front.classList.add('hidden');
       }
     }
 
@@ -18137,11 +18406,11 @@ Your console is now authorized and unlocked.`);
           </div>
         </div>
 
-        <!-- FEMA CERTIFICATIONS (CHECK ALL THAT APPLY) -->
+        <!-- FEMA / NIMS / ICS CERTIFICATIONS (CHECK ALL THAT APPLY) -->
         <div class="space-y-1">
           <div class="flex items-center justify-between">
-            <label class="text-[10px] text-slate-300 font-bold block">FEMA NIMS / ICS CERTIFICATIONS (CHECK ALL THAT APPLY):</label>
-            <span class="text-[9px] text-amber-400 font-mono">100, 200, 300, 400, 700, 800</span>
+            <label class="text-[10px] text-slate-300 font-bold block">EC-APPROVED FEMA NIMS &amp; ICS CERTIFICATIONS:</label>
+            <span class="text-[9px] text-amber-400 font-mono">100, 200, 300, 400, 700, 800, 701, 702, EC-001, SKYWARN, AUXCOMM</span>
           </div>
           <div id="ec-edit-fema-group" class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 p-2 bg-[#080b10] border border-slate-700 rounded-lg text-xs">
             <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
@@ -18153,12 +18422,12 @@ Your console is now authorized and unlocked.`);
               <span>IS-200</span>
             </label>
             <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
-              <input type="checkbox" value="IS-300" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
-              <span>IS-300</span>
+              <input type="checkbox" value="ICS-300" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+              <span class="font-bold text-amber-300">ICS-300 (NIMS 300)</span>
             </label>
             <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
-              <input type="checkbox" value="IS-400" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
-              <span>IS-400</span>
+              <input type="checkbox" value="ICS-400" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+              <span class="font-bold text-amber-300">ICS-400 (NIMS 400)</span>
             </label>
             <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
               <input type="checkbox" value="IS-700" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
@@ -18167,6 +18436,26 @@ Your console is now authorized and unlocked.`);
             <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
               <input type="checkbox" value="IS-800" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
               <span>IS-800</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
+              <input type="checkbox" value="IS-701.a" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+              <span>IS-701.a (MACS)</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
+              <input type="checkbox" value="IS-702.a" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+              <span>IS-702.a (Pub Info)</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
+              <input type="checkbox" value="EC-001" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+              <span>ARRL EC-001</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
+              <input type="checkbox" value="SKYWARN" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+              <span>NWS SKYWARN</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-amber-400">
+              <input type="checkbox" value="AUXCOMM" class="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0">
+              <span>AUXCOMM</span>
             </label>
           </div>
         </div>
@@ -18373,11 +18662,11 @@ Your console is now authorized and unlocked.`);
           </div>
         </div>
 
-        <!-- FEMA CERTIFICATIONS (CHECK ALL THAT APPLY) -->
+        <!-- FEMA / NIMS / ICS CERTIFICATIONS (CHECK ALL THAT APPLY) -->
         <div class="space-y-1">
           <div class="flex items-center justify-between">
-            <label class="text-[10px] text-slate-300 font-bold block">FEMA NIMS / ICS CERTIFICATIONS (CHECK ALL THAT APPLY):</label>
-            <span class="text-[9px] text-emerald-400 font-mono">100, 200, 300, 400, 700, 800</span>
+            <label class="text-[10px] text-slate-300 font-bold block">FEMA NIMS &amp; ICS CERTIFICATIONS (SUBMIT FOR EC APPROVAL):</label>
+            <span class="text-[9px] text-emerald-400 font-mono">100, 200, 300, 400, 700, 800, 701, 702, EC-001, SKYWARN, AUXCOMM</span>
           </div>
           <div id="self-edit-fema-group" class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 p-2 bg-[#080b10] border border-slate-700 rounded-lg text-xs">
             <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
@@ -18389,12 +18678,12 @@ Your console is now authorized and unlocked.`);
               <span>IS-200</span>
             </label>
             <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
-              <input type="checkbox" value="IS-300" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
-              <span>IS-300</span>
+              <input type="checkbox" value="ICS-300" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span class="font-bold text-emerald-300">ICS-300 (NIMS 300)</span>
             </label>
             <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
-              <input type="checkbox" value="IS-400" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
-              <span>IS-400</span>
+              <input type="checkbox" value="ICS-400" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span class="font-bold text-emerald-300">ICS-400 (NIMS 400)</span>
             </label>
             <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
               <input type="checkbox" value="IS-700" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
@@ -18403,6 +18692,26 @@ Your console is now authorized and unlocked.`);
             <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
               <input type="checkbox" value="IS-800" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
               <span>IS-800</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="IS-701.a" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>IS-701.a (MACS)</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="IS-702.a" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>IS-702.a (Pub Info)</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="EC-001" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>ARRL EC-001</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="SKYWARN" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>NWS SKYWARN</span>
+            </label>
+            <label class="flex items-center gap-1.5 text-slate-200 cursor-pointer hover:text-emerald-400">
+              <input type="checkbox" value="AUXCOMM" class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+              <span>AUXCOMM</span>
             </label>
           </div>
         </div>
@@ -18630,7 +18939,7 @@ Your console is now authorized and unlocked.`);
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.9 (Build 61)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.10 (Build 62)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>
