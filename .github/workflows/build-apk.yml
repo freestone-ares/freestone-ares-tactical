@@ -46,17 +46,17 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug --stacktrace
           ./gradlew bundleRelease --stacktrace
-          cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.9.15.apk
+          cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.9.16.apk
           cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical.apk
-          cp app/build/outputs/bundle/release/*.aab ../Freestone-ARES-Tactical-v7.9.15.aab || cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical-v7.9.15.aab
+          cp app/build/outputs/bundle/release/*.aab ../Freestone-ARES-Tactical-v7.9.16.aab || cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical-v7.9.16.aab
           cp app/build/outputs/bundle/release/*.aab ../Freestone-ARES-Tactical.aab || cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical.aab
 
       - name: Upload APK & Bundle as Workflow Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Freestone-ARES-Tactical-v7.9.15-Distribution
+          name: Freestone-ARES-Tactical-v7.9.16-Distribution
           path: |
-            Freestone-ARES-Tactical-v7.9.15.apk
+            Freestone-ARES-Tactical-v7.9.16.apk
             Freestone-ARES-Tactical.aab
           retention-days: 30
 
@@ -64,27 +64,32 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v7.9.15
+          tag_name: v7.9.16
           target_commitish: ${{ github.sha }}
-          name: "Freestone ARES Tactical v7.9.15 Build 67 (Activation Posture Delegation Link & Exclusive EC Lockdown)"
+          name: "Freestone ARES Tactical v7.9.16 Build 68 (Marine-Proof Operator Training Guide & Interactive Slide Deck)"
           make_latest: true
           body: |
-            ## Freestone County ARES - Tactical Operations Field Build (v7.9.15 / Build 67)
+            ## Freestone County ARES - Tactical Operations Field Build (v7.9.16 / Build 68)
             
             Universal release for Android Phones & Tablets and Apple iOS, iPadOS, and macOS (Designed for iPad).
             
             ### Package Files Included:
-            - **`Freestone-ARES-Tactical.apk` / `Freestone-ARES-Tactical-v7.9.15.apk`**: Standalone Android field installer.
-            - **`Freestone-ARES-Tactical.aab` / `Freestone-ARES-Tactical-v7.9.15.aab`**: Signed Android App Bundle for Google Play.
+            - **`Freestone-ARES-Tactical.apk` / `Freestone-ARES-Tactical-v7.9.16.apk`**: Standalone Android field installer.
+            - **`Freestone-ARES-Tactical.aab` / `Freestone-ARES-Tactical-v7.9.16.aab`**: Signed Android App Bundle for Google Play.
+            - **`Freestone_ARES_Tactical_User_Guide.pptx`**: Full 16:9 widescreen PowerPoint presentation guide.
+            - **`Freestone_ARES_Tactical_User_Guide.pdf`**: High-resolution printable field booklet.
             
-            ### What's New in Build 67:
-            - **County Activation Level Delegation Link:** Linked County Emergency Response Posture control (Levels 1 - 3) directly to the EC delegation subsystem. When EC Brian Davis delegates an operator as Acting EC, they receive full temporary authority to elevate or change the county activation level. When revoked, authority immediately returns to exclusive Level 6 EC control.
-            - **Adaptive Dashboard Posture Controls:** The direct 1-tap posture switcher on the command dashboard dynamically appears for authorized operators and hides for non-delegated personnel.
-            - **Universal Live Field SITREPs:** All verified responders across clearance levels 1 through 6 retain full capability to transmit real-time situation reports and rapid updates during active incidents.
+            ### What's New in Build 68:
+            - **Interactive In-App Operator Training Guide:** Integrated directly into the Field Manual tab. Features an 18-slide illustrated visual training deck with high-contrast numbered badges matching every screen in the app.
+            - **Direct Slide Deck & PDF Export:** One-tap download links inside the app for PowerPoint (`.pptx`) and printable (`.pdf`) editions.
+            - **Marine-Proof Step-by-Step Instructions:** Foolproof, zero-jargon actions, "How You Know It Worked" visual confirmations, and field caution boxes for every operational module.
+            - **Dedicated Leadership Appendix:** Clearly demarcated appendix covering Emergency Coordinator Brian Davis (`KG5TZT`) authority, County Activation Posture shifts, Siren Paging, and Out-of-Town Delegation.
           files: |
-            Freestone-ARES-Tactical-v7.9.15.apk
+            Freestone-ARES-Tactical-v7.9.16.apk
             Freestone-ARES-Tactical.apk
-            Freestone-ARES-Tactical-v7.9.15.aab
+            Freestone-ARES-Tactical-v7.9.16.aab
             Freestone-ARES-Tactical.aab
+            web/Freestone_ARES_Tactical_User_Guide.pptx
+            web/Freestone_ARES_Tactical_User_Guide.pdf
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

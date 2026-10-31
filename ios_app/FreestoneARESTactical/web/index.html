@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Freestone County ARES Tactical Mobile v7.9.15</title>
+  <title>Freestone County ARES Tactical Mobile v7.9.16</title>
   <meta name="description" content="Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES">
   <meta name="theme-color" content="#0b0e14">
   <meta name="mobile-web-app-capable" content="yes">
@@ -1921,6 +1921,19 @@
     <!-- ========================================== -->
     <section id="view-manual" class="tab-content hidden space-y-4 font-mono-tac">
       
+      <!-- SUB-TAB SELECTOR: TACTICAL FIELD BINDER vs. OPERATOR TRAINING GUIDE -->
+      <div class="flex items-center gap-2 p-1.5 bg-[#080b10] border border-slate-800 rounded-xl shadow-lg">
+        <button type="button" id="subtab-btn-manual-binder" onclick="switchManualSubTab('binder')" class="flex-1 py-2.5 px-3 rounded-lg font-black text-xs transition flex items-center justify-center gap-2 bg-emerald-600 text-slate-950 shadow cursor-pointer">
+          <span class="text-sm">📖</span><span>TACTICAL FIELD BINDER (PDF)</span>
+        </button>
+        <button type="button" id="subtab-btn-manual-guide" onclick="switchManualSubTab('guide')" class="flex-1 py-2.5 px-3 rounded-lg font-black text-xs transition flex items-center justify-center gap-2 bg-slate-900 text-slate-300 hover:text-white border border-slate-700 cursor-pointer">
+          <span class="text-sm">🎓</span><span>OPERATOR TRAINING GUIDE (SLIDES)</span>
+        </button>
+      </div>
+
+      <!-- CONTAINER 1: OFFICIAL FIELD BINDER (PDF) -->
+      <div id="manual-binder-container" class="space-y-4">
+      
       <!-- Top Title & Version Status Card -->
       <div class="bg-gradient-to-r from-[#121815] via-[#10151d] to-[#16120d] border-2 border-emerald-500/50 rounded-2xl p-4 sm:p-5 shadow-xl space-y-3">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
@@ -2067,6 +2080,108 @@
         <div>💡 <strong>Tips:</strong> Use Left / Right arrow keys or swipe left/right to turn pages.</div>
         <div id="manual-footer-status">Document: Revision 7.5 &bull; 84 Pages</div>
       </div>
+      </div> <!-- End of manual-binder-container -->
+
+      <!-- ============================================================== -->
+      <!-- CONTAINER 2: MARINE-PROOF OPERATOR TRAINING GUIDE (SLIDE DECK) -->
+      <!-- ============================================================== -->
+      <div id="manual-guide-container" class="space-y-4 hidden font-mono-tac">
+        
+        <!-- Guide Header & Quick Download Bar -->
+        <div class="bg-gradient-to-r from-[#121815] via-[#10151d] to-[#16120d] border-2 border-amber-500/60 rounded-2xl p-4 sm:p-5 shadow-xl space-y-3">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-xl bg-amber-950/80 border-2 border-amber-500 flex items-center justify-center text-2xl text-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.3)] flex-shrink-0">
+                🎓
+              </div>
+              <div>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h2 class="text-base sm:text-lg font-black text-white uppercase tracking-wider">ARES OPERATOR TRAINING MANUAL</h2>
+                  <span class="px-2.5 py-0.5 rounded text-xs font-black bg-amber-950 text-amber-300 border border-amber-600 shadow">
+                    MARINE-PROOF EDITION
+                  </span>
+                </div>
+                <p class="text-xs text-slate-400 mt-0.5">Step-by-step visual screen instructions with high-contrast numbered badges for Android &amp; iOS</p>
+              </div>
+            </div>
+
+            <!-- Download PPTX / PDF Buttons -->
+            <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+              <a href="Freestone_ARES_Tactical_User_Guide.pptx" download="Freestone_ARES_Tactical_User_Guide.pptx" class="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-black rounded-lg text-xs shadow flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap">
+                <span>📊</span><span>DOWNLOAD PPTX</span>
+              </a>
+              <a href="Freestone_ARES_Tactical_User_Guide.pdf" download="Freestone_ARES_Tactical_User_Guide.pdf" target="_blank" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-slate-700 font-black rounded-lg text-xs shadow flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap">
+                <span>📄</span><span>PRINTABLE PDF</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE NAVIGATION TOOLBAR -->
+        <div class="bg-[#10151d] border border-slate-800 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3 text-xs shadow-md">
+          
+          <!-- Module Jump Selector -->
+          <div class="flex items-center gap-2 min-w-0">
+            <span class="text-[10px] text-slate-400 font-bold uppercase whitespace-nowrap hidden sm:inline">JUMP TO SLIDE:</span>
+            <select id="guide-slide-select" onchange="jumpToGuideSlide(parseInt(this.value))" class="bg-[#080b10] border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white font-bold focus:outline-none focus:border-amber-500 max-w-[240px] sm:max-w-xs cursor-pointer truncate">
+              <option value="0">01: Title &amp; Field Authority</option>
+              <option value="1">02: Four Golden Rules</option>
+              <option value="2">03: Mod 1 - Sign In &amp; Claim Callsign</option>
+              <option value="3">04: Mod 2 - Command Dashboard</option>
+              <option value="4">05: Mod 3 - Live Field SITREP</option>
+              <option value="5">06: Mod 4 - Navigation Drawer</option>
+              <option value="6">07: Mod 5 - Roster &amp; Check-In</option>
+              <option value="7">08: Mod 6 - Operator CAC ID Card</option>
+              <option value="8">09: Mod 7 - PACE Comms Plan</option>
+              <option value="9">10: Mod 8 - ICS Incident Forms</option>
+              <option value="10">11: Mod 9 - SKYWARN Spotter</option>
+              <option value="11">12: Mod 10 - Off-Grid Maps &amp; GPS</option>
+              <option value="12">13: Mod 11 - Field Manual (PDF)</option>
+              <option value="13">14: Mod 12 - Operations Calendar</option>
+              <option value="14">15: Appendix - Leadership Only</option>
+              <option value="15">16: App A - Siren Paging Broadcast</option>
+              <option value="16">17: App B - EC Security &amp; Delegation</option>
+              <option value="17">18: Comms Cheat Sheet</option>
+            </select>
+          </div>
+
+          <!-- Slide Stepper Controls -->
+          <div class="flex items-center gap-1.5 font-mono-tac">
+            <button type="button" onclick="firstGuideSlide()" class="p-1.5 px-2.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold border border-slate-700 transition cursor-pointer" title="First Slide">
+              ⏮
+            </button>
+            <button type="button" onclick="prevGuideSlide()" class="p-1.5 px-3 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold border border-slate-700 transition cursor-pointer" title="Previous Slide">
+              ◀ PREV
+            </button>
+            
+            <div class="flex items-center gap-1 px-2.5 py-1 bg-black rounded border border-slate-700 text-xs font-bold">
+              <span class="text-slate-400">SLIDE</span>
+              <span id="guide-current-slide-num" class="text-amber-400 font-black">1</span>
+              <span class="text-slate-500">/</span>
+              <span id="guide-total-slides" class="text-slate-300 font-black">18</span>
+            </div>
+
+            <button type="button" onclick="nextGuideSlide()" class="p-1.5 px-3 rounded bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black transition cursor-pointer shadow" title="Next Slide">
+              NEXT ▶
+            </button>
+            <button type="button" onclick="lastGuideSlide()" class="p-1.5 px-2.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold border border-slate-700 transition cursor-pointer" title="Last Slide">
+              ⏭
+            </button>
+          </div>
+        </div>
+
+        <!-- MAIN SLIDE DISPLAY VIEWPORT -->
+        <div id="manual-guide-slide-viewport" class="w-full bg-[#07090e] border-2 border-emerald-500/40 rounded-2xl p-4 sm:p-6 shadow-2xl min-h-[500px]">
+          <!-- Dynamic Content rendered by renderGuideSlide() -->
+        </div>
+
+        <!-- Slide Footer Keyboard & Swipe Hints -->
+        <div class="flex items-center justify-between text-[11px] text-slate-400 px-2 font-mono-tac">
+          <div>💡 <strong>Tips:</strong> Swipe left / right on touchscreen or use PREV / NEXT to flip through training slides.</div>
+          <div>Marine-Proof Training System &bull; Build 68</div>
+        </div>
+
+      </div> <!-- End of manual-guide-container -->
 
     </section>
 
@@ -4413,7 +4528,7 @@
 
       <!-- Modal Footer -->
       <div class="flex items-center justify-between border-t border-purple-900/60 p-3 bg-[#07090e] flex-shrink-0">
-        <span class="text-[10px] text-purple-300">Freestone County ARES Dispatch Validator • Build 67</span>
+        <span class="text-[10px] text-purple-300">Freestone County ARES Dispatch Validator • Build 68</span>
         <button type="button" onclick="closeAlertSoundVerifyModal()" class="px-4 py-2 bg-purple-800 hover:bg-purple-700 text-white font-bold rounded-xl text-xs transition cursor-pointer">
           CLOSE CONSOLE
         </button>
@@ -19147,7 +19262,7 @@ Your console is now authorized and unlocked.`);
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.15 (Build 67)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.15 (Build 68)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>
