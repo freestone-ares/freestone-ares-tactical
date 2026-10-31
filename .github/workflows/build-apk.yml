@@ -46,17 +46,17 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug --stacktrace
           ./gradlew bundleRelease --stacktrace
-          cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.9.13.apk
+          cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.9.14.apk
           cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical.apk
-          cp app/build/outputs/bundle/release/*.aab ../Freestone-ARES-Tactical-v7.9.13.aab || cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical-v7.9.13.aab
+          cp app/build/outputs/bundle/release/*.aab ../Freestone-ARES-Tactical-v7.9.14.aab || cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical-v7.9.14.aab
           cp app/build/outputs/bundle/release/*.aab ../Freestone-ARES-Tactical.aab || cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical.aab
 
       - name: Upload APK & Bundle as Workflow Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Freestone-ARES-Tactical-v7.9.13-Distribution
+          name: Freestone-ARES-Tactical-v7.9.14-Distribution
           path: |
-            Freestone-ARES-Tactical-v7.9.13.apk
+            Freestone-ARES-Tactical-v7.9.14.apk
             Freestone-ARES-Tactical.aab
           retention-days: 30
 
@@ -64,29 +64,28 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v7.9.13
+          tag_name: v7.9.14
           target_commitish: ${{ github.sha }}
-          name: "Freestone ARES Tactical v7.9.13 Build 65 (Universal Android Camera Cutout & Display Insets Adaptation)"
+          name: "Freestone ARES Tactical v7.9.14 Build 66 (Emergency Paging Level 6 EC Restriction & Out-of-Town Delegation)"
           make_latest: true
           body: |
-            ## Freestone County ARES - Tactical Operations Field Build (v7.9.13 / Build 65)
+            ## Freestone County ARES - Tactical Operations Field Build (v7.9.14 / Build 66)
             
             Universal release for Android Phones & Tablets and Apple iOS, iPadOS, and macOS (Designed for iPad).
             
             ### Package Files Included:
-            - **`Freestone-ARES-Tactical.apk` / `Freestone-ARES-Tactical-v7.9.13.apk`**: Standalone Android field installer.
-            - **`Freestone-ARES-Tactical.aab` / `Freestone-ARES-Tactical-v7.9.13.aab`**: Signed Android App Bundle for Google Play.
+            - **`Freestone-ARES-Tactical.apk` / `Freestone-ARES-Tactical-v7.9.14.apk`**: Standalone Android field installer.
+            - **`Freestone-ARES-Tactical.aab` / `Freestone-ARES-Tactical-v7.9.14.aab`**: Signed Android App Bundle for Google Play.
             
-            ### What's New in Build 65:
-            - **Universal Android Camera Cutout & Window Insets Architecture:** Fully compliant with Android 15 edge-to-edge enforcement. App headers, buttons, and drawer menus dynamically clear front-facing camera punch holes, teardrop notches, and status bars across all Android phone models.
-            - **Adaptive Tablet vs. Phone Scaling:** Intelligently consumes system bars and display cutout insets without extra padding on Android tablets, providing native full-screen density on large screens while protecting phone UI elements from camera clipping.
-            - **PWA & Standalone Fallback:** Standalone web app mode on Android phones automatically incorporates 38px safe-area top clearance.
-            - **Authentic Motorola QC-II Pair 2 & P25 Sitrep Audio:** Pure sinusoidal Texas Fire/EMS dual-tone alert paging and Motorola ASTRO P25 3-chirp talk-permit audio.
-            - **Official CR80 CAC-Style Operator ID Card:** High-contrast federal White Common Access Card formatting with verified NIMS/ICS certifications.
+            ### What's New in Build 66:
+            - **Emergency Paging Level 6 Restriction:** Mass dispatch emergency tone sirens (Texas Fire/EMS dual-tone alert paging, Motorola ASTRO P25 Sitrep chirp), incident priority broadcasts, and countywide emergency notifications are restricted exclusively to Level 6 EC Brian Davis (KG5TZT).
+            - **Dynamic Out-of-Town EC Delegation Subsystem:** Added dedicated Emergency Paging & Dispatch Delegation controller in the EC Security Desk. Allows the Emergency Coordinator to grant temporary paging authority to any field operator when leaving town, and instantly revoke/turn off authority upon return.
+            - **Real-Time Cloud Roster Sync:** Paging delegation status (`canSendAlerts`) synchronizes instantly across all connected mobile devices and tablets via Firebase Realtime Database.
+            - **Visual Clearance Badging & Safeguards:** Non-delegated operators receive clear "Receive Only" status and guidance modals; delegated operators feature an animated amber badge and "Acting EC - Delegated Paging" clearance.
           files: |
-            Freestone-ARES-Tactical-v7.9.13.apk
+            Freestone-ARES-Tactical-v7.9.14.apk
             Freestone-ARES-Tactical.apk
-            Freestone-ARES-Tactical-v7.9.13.aab
+            Freestone-ARES-Tactical-v7.9.14.aab
             Freestone-ARES-Tactical.aab
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

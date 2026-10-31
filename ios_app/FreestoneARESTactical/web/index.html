@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Freestone County ARES Tactical Mobile v7.9.13</title>
+  <title>Freestone County ARES Tactical Mobile v7.9.14</title>
   <meta name="description" content="Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES">
   <meta name="theme-color" content="#0b0e14">
   <meta name="mobile-web-app-capable" content="yes">
@@ -903,6 +903,42 @@
                   <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
                 </div>
                 <p class="text-[10px] text-slate-300">Full County Activation. Emergency operational posture, repeaters mobilized.</p>
+              </button>
+            </div>
+          </div>
+
+          <!-- EMERGENCY PAGING DELEGATION CONTROLLER (EC OUT-OF-TOWN DISPATCH TRANSFER) -->
+          <div class="bg-[#10151d] border-2 border-red-500/80 rounded-xl p-5 space-y-4 font-mono-tac shadow-xl">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-3 gap-2">
+              <div class="flex items-center gap-2">
+                <span class="text-xl animate-pulse">🚨</span>
+                <div>
+                  <h4 class="text-sm font-black text-red-400 tracking-wider">EMERGENCY PAGING &amp; DISPATCH DELEGATION</h4>
+                  <p class="text-[10px] text-slate-400">Exclusive Level 6 Authority Transfer &bull; Temporary Out-Of-Town Dispatch Delegation</p>
+                </div>
+              </div>
+              <span id="ec-paging-status-badge" class="px-2.5 py-1 rounded text-xs font-black bg-slate-900 text-slate-400 border border-slate-700">
+                EXCLUSIVE EC LOCK (0 DELEGATED)
+              </span>
+            </div>
+
+            <p class="text-xs text-slate-300">
+              Emergency Paging (tone sirens, active alert broadcasting, mass dispatch) is restricted strictly to <strong>Emergency Coordinator Brian Davis (KG5TZT - Level 6)</strong>. If you are going out of town, delegate emergency dispatch authority to a trusted operator below. When you return, turn off access with a single click to restore exclusive Level 6 lock.
+            </p>
+
+            <!-- Active Delegations Container -->
+            <div id="ec-active-delegations-box" class="p-3 bg-[#080b10] border border-slate-800 rounded-xl space-y-2">
+              <!-- Rendered dynamically by renderEcPagingDelegationCard() -->
+            </div>
+
+            <!-- Quick Delegation Selector -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-1 border-t border-slate-900">
+              <select id="ec-paging-delegate-select" class="flex-1 bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white font-bold">
+                <option value="">Select Operator to Delegate Paging Access...</option>
+              </select>
+              <button type="button" onclick="delegatePagingFromDropdown()" class="px-3.5 py-2 bg-gradient-to-r from-red-700 to-red-600 hover:from-red-600 text-white font-bold rounded-lg text-xs transition flex items-center justify-center gap-1.5 shadow cursor-pointer whitespace-nowrap">
+                <span>⚡</span>
+                <span>GRANT PAGING ACCESS</span>
               </button>
             </div>
           </div>
@@ -4377,7 +4413,7 @@
 
       <!-- Modal Footer -->
       <div class="flex items-center justify-between border-t border-purple-900/60 p-3 bg-[#07090e] flex-shrink-0">
-        <span class="text-[10px] text-purple-300">Freestone County ARES Dispatch Validator • Build 65</span>
+        <span class="text-[10px] text-purple-300">Freestone County ARES Dispatch Validator • Build 66</span>
         <button type="button" onclick="closeAlertSoundVerifyModal()" class="px-4 py-2 bg-purple-800 hover:bg-purple-700 text-white font-bold rounded-xl text-xs transition cursor-pointer">
           CLOSE CONSOLE
         </button>
@@ -6210,7 +6246,7 @@ assignedSpots: [
       },
       members: [
         { id: 1, call: 'KG5TZT', gmrs: 'WRPN302', ares: 'TX-ARES-01', races: 'TX-FREE-01', name: 'Brian Davis', class: 'Amateur Extra', role: 'Emergency Coordinator (EC)', level: 'Level 6 - Emergency Coordinator (EC)', verified: true, claimed: true, canSendAlerts: true, phone: '903-644-5856', email: 'fcares@pm.me', fema: ['IS-100', 'IS-200', 'ICS-300', 'ICS-400', 'IS-700', 'IS-800', 'IS-701.a', 'IS-702.a', 'EC-001', 'SKYWARN'], power: 'Commercial & Battery Backup & Emergency Generator', isSpotter: true, bloodType: 'O+', allergies: 'Penicillin (PCN)', medicalConditions: 'None / Field Ready', medications: 'None', iceName: 'Jane Davis (Spouse)', icePhone: '903-644-5856' },
-        { id: 2, call: 'AI5OX', gmrs: 'WSEA569', ares: 'TX-ARES-02', races: 'TX-FREE-02', name: 'Robert Cockerell', class: 'Amateur Extra', role: 'Assistant EC (AEC)', level: 'Level 4 - Assistant EC', verified: true, claimed: false, canSendAlerts: true, phone: '903-394-1772', email: 'AI5OX@yahoo.com', fema: ['IS-100', 'IS-200', 'IS-300', 'IS-700', 'IS-800'], power: 'Commercial & Battery Backup', isSpotter: true, bloodType: 'A+', allergies: 'NKDA (None Known)', medicalConditions: 'None', medications: 'None', iceName: 'Sarah Cockerell (Spouse)', icePhone: '903-394-1772' },
+        { id: 2, call: 'AI5OX', gmrs: 'WSEA569', ares: 'TX-ARES-02', races: 'TX-FREE-02', name: 'Robert Cockerell', class: 'Amateur Extra', role: 'Assistant EC (AEC)', level: 'Level 4 - Assistant EC', verified: true, claimed: false, canSendAlerts: false, phone: '903-394-1772', email: 'AI5OX@yahoo.com', fema: ['IS-100', 'IS-200', 'IS-300', 'IS-700', 'IS-800'], power: 'Commercial & Battery Backup', isSpotter: true, bloodType: 'A+', allergies: 'NKDA (None Known)', medicalConditions: 'None', medications: 'None', iceName: 'Sarah Cockerell (Spouse)', icePhone: '903-394-1772' },
         { id: 3, call: 'FC-EMC', gmrs: 'NONE', races: 'TX-FREE-EMC', name: 'Freestone County EMC', class: 'Liaison', role: 'County Emergency Management Coordinator (EMC)', level: 'Level 5 - County EMC', verified: true, claimed: false, canSendAlerts: false, phone: '903-389-3335', email: 'freestone.emc@co.freestone.tx.us', fema: ['IS-100', 'IS-200', 'IS-300', 'IS-400', 'IS-700', 'IS-800'], power: 'Commercial & Emergency Generator', isSpotter: false },
         { id: 4, call: 'N5BED', gmrs: 'WSDI801', ares: 'TX-ARES-04', races: 'TX-FREE-04', name: 'Billy Bryant', class: 'General', role: 'Net Control Station (NCS)', level: 'Level 3 - NCS', verified: true, claimed: false, canSendAlerts: false, phone: '903-388-3470', email: 'bryant1969@yahoo.com', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800'], power: 'Commercial & Battery Backup', isSpotter: true, bloodType: 'B+', allergies: 'NKDA (None Known)', medicalConditions: 'None', medications: 'None', iceName: 'Mary Bryant (Spouse)', icePhone: '903-388-3470' },
         { id: 5, call: 'KJ5HSS', gmrs: 'WSHS425', races: 'TX-FREE-05', name: 'Paul Parrish', class: 'General', role: 'Field Operator / Storm Spotter', level: 'Level 2 - Field Operator / Spotter', verified: true, claimed: false, canSendAlerts: false, phone: '903-875-6420', email: 'paulparrish@gmail.com', fema: ['IS-100', 'IS-200', 'IS-700', 'IS-800'], power: 'Commercial & Battery Backup', isSpotter: true },
@@ -6598,14 +6634,23 @@ function getOperatorClearance() {
       const call = (appState.myCall || '').toUpperCase().trim();
       const levelStr = (appState.myLevel || '').toString();
 
-      // Level 6: Emergency Coordinator (EC) — Brian Davis (KG5TZT)
+      // Check whether this operator has explicit Emergency Paging authority delegated by EC Brian Davis
+      let isEcDelegatedPaging = false;
+      try {
+        const accounts = getRegisteredAccounts();
+        const userAcc = accounts[call] || {};
+        const userMem = (appState.members || []).find(m => m.call.toUpperCase() === call) || {};
+        isEcDelegatedPaging = !!(userAcc.canSendAlerts || userMem.canSendAlerts);
+      } catch(e) {}
+
+      // Level 6: Emergency Coordinator (EC) — Brian Davis (KG5TZT) [Exclusive Root Authority]
       if (call === 'KG5TZT' || levelStr.includes('Level 6') || levelStr === 'EC') {
         return {
           levelNum: 6,
           levelTitle: 'Level 6 - Emergency Coordinator (EC)',
           role: 'Emergency Coordinator (EC)',
           canManageUsers: true,  // Sole authority over EC Desk & user passwords
-          canSendAlerts: true,   // Paging, Tone Sirens, Mass Dispatch
+          canSendAlerts: true,   // Paging, Tone Sirens, Mass Dispatch (Root Authority)
           canRunNCS: true,       // Net Script & NetLogger prompter
           canCommandDeploy: true,
           hasFullAccess: true
@@ -6619,21 +6664,23 @@ function getOperatorClearance() {
           levelTitle: 'Level 5 - County EMC',
           role: 'County Emergency Management Coordinator (EMC)',
           canManageUsers: false,
-          canSendAlerts: false,  // ALL APP PERMISSIONS EXCEPT ALERT FEATURES
+          canSendAlerts: isEcDelegatedPaging,  // Locked by default; true only if explicitly delegated by EC
           canRunNCS: true,
           canCommandDeploy: false,
           hasFullAccess: false
         };
       }
 
-      // Level 4: Assistant EC (AEC) — Operations plus Alert & Siren Dispatch
+      // Level 4: Assistant EC (AEC) — Operations
+      // NOTE: Emergency Paging is restricted to Level 6 EC Brian Davis by default.
+      // Assistant EC only receives emergency paging if explicitly delegated by Brian Davis (e.g., when out of town).
       if (levelStr.includes('Level 4') || levelStr.includes('Assistant EC') || levelStr.includes('AEC') || call === 'AI5OX') {
         return {
           levelNum: 4,
           levelTitle: 'Level 4 - Assistant EC (AEC)',
-          role: 'Assistant Emergency Coordinator (AEC)',
+          role: isEcDelegatedPaging ? 'Assistant EC (Acting EC - Delegated Paging)' : 'Assistant Emergency Coordinator (AEC)',
           canManageUsers: false,
-          canSendAlerts: true,   // ALL OPERATOR PERMISSIONS PLUS ALERT FEATURES
+          canSendAlerts: isEcDelegatedPaging,   // Restricted to EC by default; enabled only via explicit EC delegation
           canRunNCS: true,
           canCommandDeploy: true,
           hasFullAccess: false
@@ -6645,9 +6692,9 @@ function getOperatorClearance() {
         return {
           levelNum: 3,
           levelTitle: 'Level 3 - Net Control Station (NCS)',
-          role: 'Net Control Station (NCS)',
+          role: isEcDelegatedPaging ? 'Net Control Station (Acting EC - Delegated Paging)' : 'Net Control Station (NCS)',
           canManageUsers: false,
-          canSendAlerts: false,  // No emergency broadcast alerts
+          canSendAlerts: isEcDelegatedPaging,  // Enabled only via explicit EC delegation
           canRunNCS: true,       // Access to all NCS features like net script and NetLogger
           canCommandDeploy: false,
           hasFullAccess: false
@@ -6659,9 +6706,9 @@ function getOperatorClearance() {
         return {
           levelNum: 2,
           levelTitle: 'Level 2 - Field Operator / Spotter',
-          role: 'Field Operator / Storm Spotter',
+          role: isEcDelegatedPaging ? 'Field Operator / Spotter (Delegated Paging)' : 'Field Operator / Storm Spotter',
           canManageUsers: false,
-          canSendAlerts: false,
+          canSendAlerts: isEcDelegatedPaging,
           canRunNCS: false,      // Basic privileges
           canCommandDeploy: false,
           hasFullAccess: false
@@ -6673,9 +6720,9 @@ function getOperatorClearance() {
         return {
           levelNum: 1,
           levelTitle: 'Level 1 - Operator',
-          role: 'Level 1 Operator',
+          role: isEcDelegatedPaging ? 'Level 1 Operator (Delegated Paging)' : 'Level 1 Operator',
           canManageUsers: false,
-          canSendAlerts: false,
+          canSendAlerts: isEcDelegatedPaging,
           canRunNCS: false,      // Basic privileges
           canCommandDeploy: false,
           hasFullAccess: false
@@ -6774,7 +6821,7 @@ function getOperatorClearance() {
           <div class="flex items-center justify-between p-1.5 rounded bg-black/40">
             <span class="text-slate-300">Emergency Tone Sirens &amp; Mass Paging:</span>
             <span class="${clearance.canSendAlerts ? 'text-red-400' : 'text-slate-500'} font-bold">
-              ${clearance.canSendAlerts ? '✓ AUTHORIZED (L4/L6)' : '🔒 RESTRICTED (L1/2/3/5)'}
+              ${clearance.canSendAlerts ? ((clearance.levelNum === 6 || appState.myCall === 'KG5TZT') ? '✓ ROOT EC (L6)' : '✓ DELEGATED BY EC') : '🔒 RESTRICTED (EC ONLY)'}
             </span>
           </div>
           <div class="flex items-center justify-between p-1.5 rounded bg-black/40">
@@ -6799,9 +6846,11 @@ function getOperatorClearance() {
       const container = document.getElementById('menu-item-alert-wrapper');
       const clearance = getOperatorClearance();
       const canPage = clearance.canSendAlerts;
+      const isRootEC = (clearance.levelNum === 6 || appState.myCall === 'KG5TZT');
 
       if (container) {
         if (canPage) {
+          const authBadge = isRootEC ? 'ROOT EC (L6)' : 'EC DELEGATED';
           container.innerHTML = `
             <button onclick="navFromMenu('alert')" id="menu-item-alert" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 hover:bg-red-950/60 text-red-300 transition border border-red-900/50 bg-red-950/20">
               <div class="flex items-center gap-2.5">
@@ -6809,7 +6858,7 @@ function getOperatorClearance() {
                 <div>
                   <div class="font-bold text-xs flex items-center gap-1.5 text-red-400">
                     <span>Emergency Paging &amp; Alerts</span>
-                    <span class="px-1.5 py-0.2 rounded text-[9px] bg-red-950 text-red-300 border border-red-800 font-bold">AUTHORIZED (L${clearance.levelNum})</span>
+                    <span class="px-1.5 py-0.2 rounded text-[9px] bg-red-950 text-red-300 border border-red-800 font-bold">${authBadge}</span>
                   </div>
                   <div class="text-[10px] text-slate-400">Dispatch sirens, SMS alerts &amp; NetLogger alert</div>
                 </div>
@@ -6819,7 +6868,7 @@ function getOperatorClearance() {
           `;
         } else {
           container.innerHTML = `
-            <div onclick="showPagingRestrictedNotice()" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 bg-slate-900/40 text-slate-500 border border-slate-800/80 cursor-not-allowed opacity-50 select-none" title="Paging Restricted: Level 4 Assistant EC or Level 6 EC required">
+            <div onclick="showPagingRestrictedNotice()" class="w-full text-left p-2.5 rounded-lg flex items-center justify-between gap-2 bg-slate-900/40 text-slate-500 border border-slate-800/80 cursor-not-allowed opacity-50 select-none" title="Paging Restricted: Emergency Coordinator Brian Davis (Level 6) required">
               <div class="flex items-center gap-2.5">
                 <span class="text-base text-slate-600">🔒</span>
                 <div>
@@ -6827,7 +6876,7 @@ function getOperatorClearance() {
                     <span>Emergency Paging &amp; Alerts</span>
                     <span class="px-1.5 py-0.2 rounded text-[9px] bg-slate-800 text-slate-400 border border-slate-700 font-bold">LOCKED</span>
                   </div>
-                  <div class="text-[10px] text-slate-500">${clearance.levelNum === 5 ? 'Restricted for EMC (No Ham Paging)' : 'Restricted to Level 4 (AEC) & Level 6 (EC)'}</div>
+                  <div class="text-[10px] text-slate-500">Restricted to Level 6 EC (Brian Davis)</div>
                 </div>
               </div>
               <span class="text-slate-600 text-xs">🔒</span>
@@ -6845,7 +6894,7 @@ function getOperatorClearance() {
           dashBtn1.innerHTML = '<span>🚨</span><span>VIEW ACTIVATION CONSOLE</span>';
         } else {
           dashBtn1.className = 'px-3 py-1.5 bg-slate-900 text-slate-500 border border-slate-800 rounded text-xs font-bold opacity-50 cursor-not-allowed flex items-center gap-1.5 whitespace-nowrap';
-          dashBtn1.innerHTML = '<span>🔒</span><span>PAGING LOCKED (L4/L6)</span>';
+          dashBtn1.innerHTML = '<span>🔒</span><span>PAGING LOCKED (EC ONLY)</span>';
         }
       }
       if (dashBtn2) {
@@ -6861,7 +6910,7 @@ function getOperatorClearance() {
           dashBtn2.innerHTML = `
             <div class="text-base text-slate-600">🔒</div>
             <div class="font-bold text-slate-500 text-[11px]">INCIDENT ALERTS</div>
-            <div class="text-[10px] text-slate-600">Restricted (L4/L6)</div>
+            <div class="text-[10px] text-slate-600">Restricted (EC Only)</div>
           `;
         }
       }
@@ -6869,11 +6918,7 @@ function getOperatorClearance() {
 
     function showPagingRestrictedNotice() {
       const clearance = getOperatorClearance();
-      if (clearance.levelNum === 5) {
-        alert(`🔒 EMERGENCY PAGING RESTRICTED FOR COUNTY EMC (LEVEL 5)\n\nCounty Emergency Management Coordinator has executive access across all operational logs, ICS forms, and tactical maps, but amateur radio emergency page-out broadcast and audio siren dispatch are restricted to operational amateur radio coordinators (Level 4 Assistant EC and Level 6 EC).\n\nTo request an emergency page-out, contact Emergency Coordinator Brian Davis (KG5TZT) or an Assistant EC.`);
-      } else {
-        alert(`🔒 EMERGENCY PAGING & ALERTS RESTRICTED\n\nCountywide emergency tone sirens, mass paging, and incident dispatch are restricted to Level 4 (Assistant EC) and Level 6 (Emergency Coordinator Brian Davis - KG5TZT).\n\nYour assigned clearance level: ${clearance.levelTitle}.\nContact EC Brian Davis (KG5TZT) to request paging authorization.`);
-      }
+      alert(`🔒 EMERGENCY PAGING RESTRICTED TO EC (LEVEL 6)\n\nCountywide emergency tone sirens, mass paging, and incident dispatch are restricted exclusively to Emergency Coordinator Brian Davis (KG5TZT - Level 6).\n\nIf the EC is out of town, he may temporarily delegate emergency paging authority to your callsign from the EC Security Desk.\n\nYour assigned clearance level: ${clearance.levelTitle}.\nContact EC Brian Davis (KG5TZT) to request paging delegation.`);
     }
 
     function handleDashboardAlertClick() {
@@ -6960,6 +7005,7 @@ function getOperatorClearance() {
 
       if (tabId === 'security-desk') {
         renderEcAuthorizationQueue();
+        renderEcPagingDelegationCard();
         renderEcOperatorDirectory();
         renderCountyResponseLevelUI();
       }
@@ -9157,8 +9203,10 @@ D. Out-of-County stations and visitors.
           : `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="w-full h-full"><rect width="120" height="120" fill="#131c26"/><circle cx="60" cy="44" r="22" fill="#334155"/><path d="M22,112 C22,80 40,74 60,74 C80,74 98,80 98,112 Z" fill="#334155"/><text x="60" y="114" fill="#10b981" font-size="11" font-family="monospace" font-weight="bold" text-anchor="middle">${m.call}</text></svg>`;
 
         let dispatchBadge = '';
-        if (m.canSendAlerts || levelNum >= 4) {
-          dispatchBadge = '<span class="px-2 py-0.5 rounded text-[9px] font-bold bg-red-950 text-red-300 border border-red-700 flex items-center gap-1 shadow-[0_0_10px_rgba(239,68,68,0.3)]"><span>⚡</span><span>DISPATCH AUTH</span></span>';
+        if (m.call === 'KG5TZT') {
+          dispatchBadge = '<span class="px-2 py-0.5 rounded text-[9px] font-bold bg-red-950 text-red-300 border border-red-700 flex items-center gap-1 shadow-[0_0_10px_rgba(239,68,68,0.3)]"><span>👑</span><span>ROOT EC PAGING</span></span>';
+        } else if (m.canSendAlerts) {
+          dispatchBadge = '<span class="px-2 py-0.5 rounded text-[9px] font-bold bg-amber-950 text-amber-300 border border-amber-600 flex items-center gap-1 shadow-[0_0_10px_rgba(245,158,11,0.3)] animate-pulse"><span>⚡</span><span>EC DELEGATED PAGING</span></span>';
         } else {
           dispatchBadge = '<span class="px-2 py-0.5 rounded text-[9px] font-semibold bg-slate-900 text-slate-400 border border-slate-800">RECEIVE ONLY</span>';
         }
@@ -14770,6 +14818,7 @@ function toggleIncidentDetailsExpanded() {
           localMem.power = remoteMem.power || localMem.power;
           localMem.capabilities = remoteMem.capabilities || localMem.capabilities;
           localMem.isSpotter = (remoteMem.isSpotter !== undefined) ? !!remoteMem.isSpotter : localMem.isSpotter;
+          localMem.canSendAlerts = (call === 'KG5TZT') ? true : !!remoteMem.canSendAlerts;
           if (remoteMem.photo) localMem.photo = remoteMem.photo;
           if (remoteMem.claimed !== undefined) localMem.claimed = !!remoteMem.claimed;
           if (remoteMem.lastProfileVerified) localMem.lastProfileVerified = remoteMem.lastProfileVerified;
@@ -14794,7 +14843,7 @@ function toggleIncidentDetailsExpanded() {
             isSpotter: !!remoteMem.isSpotter,
             photo: remoteMem.photo || '',
             claimed: !!remoteMem.claimed,
-            canSendAlerts: !!remoteMem.canSendAlerts
+            canSendAlerts: (call === 'KG5TZT') ? true : !!remoteMem.canSendAlerts
           });
         }
 
@@ -14815,6 +14864,7 @@ function toggleIncidentDetailsExpanded() {
         accounts[call].fema = remoteMem.fema || accounts[call].fema;
         accounts[call].power = remoteMem.power || accounts[call].power;
         accounts[call].isSpotter = (remoteMem.isSpotter !== undefined) ? remoteMem.isSpotter : accounts[call].isSpotter;
+        accounts[call].canSendAlerts = (call === 'KG5TZT') ? true : !!remoteMem.canSendAlerts;
         if (remoteMem.photo) accounts[call].photo = remoteMem.photo;
         if (remoteMem.claimed) {
           accounts[call].status = 'AUTHORIZED';
@@ -14822,6 +14872,21 @@ function toggleIncidentDetailsExpanded() {
         }
         if (remoteMem.lastProfileVerified) accounts[call].lastProfileVerified = remoteMem.lastProfileVerified;
       });
+
+      if (appState.myCall) {
+        const myCallUpper = appState.myCall.toUpperCase();
+        if (myCallUpper === 'KG5TZT') {
+          appState.canSendAlerts = true;
+        } else if (accounts[myCallUpper]) {
+          const prevCanSend = !!appState.canSendAlerts;
+          const newCanSend = !!accounts[myCallUpper].canSendAlerts;
+          if (prevCanSend !== newCanSend) {
+            appState.canSendAlerts = newCanSend;
+            updateMenuPagingState();
+            updateDispatchControlsVisibility();
+          }
+        }
+      }
 
       safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(accounts));
       safeStorage.setItem('fc_ares_roster_cache', JSON.stringify(appState.members));
@@ -14831,6 +14896,7 @@ function toggleIncidentDetailsExpanded() {
       renderResponderTable();
       if (appState.myCall === 'KG5TZT') {
         renderEcOperatorDirectory();
+        try { renderEcPagingDelegationCard(); } catch(e) {}
       }
       updateDashboardUserProfile();
     }
@@ -15253,6 +15319,206 @@ Your console is now authorized and unlocked.`);
     }
 
     // ==========================================
+    // EC EMERGENCY PAGING DELEGATION SUBSYSTEM (OUT-OF-TOWN DISPATCH TRANSFER)
+    // ==========================================
+    function renderEcPagingDelegationCard() {
+      const container = document.getElementById('ec-active-delegations-box');
+      const badge = document.getElementById('ec-paging-status-badge');
+      const select = document.getElementById('ec-paging-delegate-select');
+      if (!container) return;
+
+      const accounts = getRegisteredAccounts();
+      const allCalls = Array.from(new Set([
+        ...appState.members.map(m => m.call.toUpperCase()),
+        ...Object.keys(accounts)
+      ])).filter(c => c !== 'KG5TZT');
+
+      const delegatedCalls = allCalls.filter(c => {
+        const acc = accounts[c] || {};
+        const mem = appState.members.find(m => m.call.toUpperCase() === c) || {};
+        return !!(acc.canSendAlerts || mem.canSendAlerts);
+      });
+
+      if (badge) {
+        if (delegatedCalls.length > 0) {
+          badge.className = 'px-2.5 py-1 rounded text-xs font-black bg-amber-950 text-amber-300 border border-amber-600 animate-pulse';
+          badge.textContent = `DELEGATED: ${delegatedCalls.length} OPERATOR(S)`;
+        } else {
+          badge.className = 'px-2.5 py-1 rounded text-xs font-black bg-slate-900 text-slate-400 border border-slate-700';
+          badge.textContent = 'EXCLUSIVE EC LOCK (0 DELEGATED)';
+        }
+      }
+
+      if (delegatedCalls.length === 0) {
+        container.innerHTML = `
+          <div class="flex items-center justify-between gap-2 p-2 rounded-lg bg-[#0b0e14] border border-slate-800">
+            <div class="flex items-center gap-2">
+              <span class="text-emerald-400 font-bold text-base">✓</span>
+              <div>
+                <div class="text-xs font-bold text-white">Emergency Paging is strictly locked to EC Brian Davis (KG5TZT)</div>
+                <div class="text-[10px] text-slate-400">No external operators currently have siren or paging broadcast authority.</div>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800 whitespace-nowrap">SECURE LOCK</span>
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <div class="space-y-2">
+            <div class="flex items-center justify-between pb-1 border-b border-amber-950/80 flex-wrap gap-2">
+              <span class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+                <span class="animate-pulse">🚨</span>
+                <span>OPERATORS CURRENTLY DELEGATED EMERGENCY PAGING AUTHORITY:</span>
+              </span>
+              <button onclick="revokeAllPagingDelegations()" class="px-2.5 py-1 bg-red-950 hover:bg-red-900 text-red-300 border border-red-700 rounded text-[10px] font-bold transition flex items-center gap-1 cursor-pointer">
+                <span>🔒</span><span>REVOKE ALL DELEGATIONS</span>
+              </button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              ${delegatedCalls.map(c => {
+                const acc = accounts[c] || {};
+                const mem = appState.members.find(m => m.call.toUpperCase() === c) || {};
+                const name = acc.name || mem.name || 'Volunteer Operator';
+                const level = acc.level || mem.level || 'Level 1';
+                return `
+                  <div class="p-2.5 rounded-lg bg-red-950/30 border border-red-800/80 flex items-center justify-between gap-2 shadow-[0_0_10px_rgba(239,68,68,0.2)]">
+                    <div class="min-w-0">
+                      <div class="flex items-center gap-1.5">
+                        <span class="text-amber-400 font-black text-xs">${c}</span>
+                        <span class="text-[9px] bg-red-950 text-red-300 px-1 py-0.2 rounded border border-red-700 font-bold">ACTING EC DISPATCH</span>
+                      </div>
+                      <div class="text-white text-xs font-bold truncate">${name}</div>
+                      <div class="text-[10px] text-slate-400">${level}</div>
+                    </div>
+                    <button onclick="toggleEcPagingDelegation('${c}')" class="px-2.5 py-1.5 bg-red-950 hover:bg-red-900 text-red-300 border border-red-600 rounded text-[10px] font-bold transition cursor-pointer flex-shrink-0" title="Turn off emergency paging for ${c}">
+                      <span>🔒 TURN OFF</span>
+                    </button>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      if (select) {
+        select.innerHTML = '<option value="">Select Operator to Delegate Paging Access...</option>';
+        allCalls.forEach(c => {
+          if (!delegatedCalls.includes(c)) {
+            const acc = accounts[c] || {};
+            const mem = appState.members.find(m => m.call.toUpperCase() === c) || {};
+            const name = acc.name || mem.name || 'Volunteer';
+            const level = acc.level || mem.level || 'Level 1';
+            const opt = document.createElement('option');
+            opt.value = c;
+            opt.textContent = `${c} - ${name} (${level})`;
+            select.appendChild(opt);
+          }
+        });
+      }
+    }
+
+    function toggleEcPagingDelegation(targetCall) {
+      const clearance = getOperatorClearance();
+      if (clearance.levelNum < 6 && appState.myCall !== 'KG5TZT') {
+        alert('🔒 RESTRICTED ACTION\n\nOnly Emergency Coordinator Brian Davis (KG5TZT - Level 6) has authority to grant or revoke Emergency Paging delegation.');
+        return;
+      }
+      const call = (targetCall || '').toUpperCase().trim();
+      if (!call) return;
+      if (call === 'KG5TZT') {
+        alert('Emergency Coordinator Brian Davis holds permanent root paging authority.');
+        return;
+      }
+
+      const accounts = getRegisteredAccounts();
+      if (!accounts[call]) {
+        accounts[call] = { call: call, status: 'AUTHORIZED' };
+      }
+      const currentStatus = !!accounts[call].canSendAlerts;
+      const newStatus = !currentStatus;
+
+      accounts[call].canSendAlerts = newStatus;
+      safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(accounts));
+
+      let mem = appState.members.find(m => m.call.toUpperCase() === call);
+      if (mem) {
+        mem.canSendAlerts = newStatus;
+        safeStorage.setItem('fc_ares_roster_cache', JSON.stringify(appState.members));
+        saveRosterMembers();
+      }
+
+      // Synchronize across Firebase Realtime Database in real time
+      pushRosterSyncToCloud();
+      saveAccountToCloud(call, accounts[call]);
+
+      // If active session on this device happens to be this operator, sync immediately
+      if (appState.myCall === call) {
+        appState.canSendAlerts = newStatus;
+        updateMenuPagingState();
+        updateDispatchControlsVisibility();
+      }
+
+      // Refresh UI components
+      renderEcOperatorDirectory();
+      renderEcPagingDelegationCard();
+      renderRosterGrid();
+      renderResponderTable();
+
+      const name = accounts[call].name || (mem ? mem.name : call);
+      if (newStatus) {
+        alert(`🚨 EMERGENCY PAGING DELEGATED!\n\nCallsign: ${call} (${name})\n\nThis operator is now authorized to activate tone sirens, issue mass pages, and broadcast incident alerts while EC Brian Davis is out of town.\n\nChanges have been synchronized across the county network in real time.`);
+      } else {
+        alert(`🔒 EMERGENCY PAGING REVOKED\n\nCallsign: ${call} (${name})\n\nEmergency paging authority has been turned off and returned to exclusive Level 6 EC control.`);
+      }
+    }
+
+    function revokeAllPagingDelegations() {
+      const clearance = getOperatorClearance();
+      if (clearance.levelNum < 6 && appState.myCall !== 'KG5TZT') {
+        alert('🔒 RESTRICTED ACTION\n\nOnly Emergency Coordinator Brian Davis (KG5TZT - Level 6) can manage emergency paging delegations.');
+        return;
+      }
+      if (!confirm('🔒 RESTORE EXCLUSIVE LEVEL 6 EC PAGING LOCK?\n\nThis will immediately turn off Emergency Paging authority for all delegated operators, restricting all sirens, paging, and alert broadcasts strictly to EC Brian Davis.\n\nProceed?')) {
+        return;
+      }
+      const accounts = getRegisteredAccounts();
+      let count = 0;
+      Object.keys(accounts).forEach(call => {
+        if (call !== 'KG5TZT' && accounts[call].canSendAlerts) {
+          accounts[call].canSendAlerts = false;
+          saveAccountToCloud(call, accounts[call]);
+          count++;
+        }
+      });
+      appState.members.forEach(m => {
+        if (m.call !== 'KG5TZT' && m.canSendAlerts) {
+          m.canSendAlerts = false;
+        }
+      });
+      safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(accounts));
+      safeStorage.setItem('fc_ares_roster_cache', JSON.stringify(appState.members));
+      saveRosterMembers();
+      pushRosterSyncToCloud();
+
+      renderEcOperatorDirectory();
+      renderEcPagingDelegationCard();
+      renderRosterGrid();
+      renderResponderTable();
+
+      alert(`✓ EXCLUSIVE EC PAGING LOCK RESTORED!\n\nRevoked paging delegation from ${count} operator(s).\nEmergency Paging is now restricted 100% to EC Brian Davis (KG5TZT).`);
+    }
+
+    function delegatePagingFromDropdown() {
+      const select = document.getElementById('ec-paging-delegate-select');
+      if (!select || !select.value) {
+        alert('Please select an operator to delegate emergency paging access.');
+        return;
+      }
+      toggleEcPagingDelegation(select.value);
+    }
+
+    // ==========================================
     // ACTIVE REGISTERED OPERATORS DIRECTORY LIST (SECURITY DESK)
     // ==========================================
     function renderEcOperatorDirectory() {
@@ -15290,6 +15556,7 @@ Your console is now authorized and unlocked.`);
         const isSpotter = acc.isSpotter || mem.isSpotter || level.includes('Spotter');
         const photo = acc.photo || mem.photo || '';
         const isMaster = (call === 'KG5TZT');
+        const isDelegated = !isMaster && !!(acc.canSendAlerts || mem.canSendAlerts);
 
         const card = document.createElement('div');
         card.className = 'p-3 bg-[#0b0e14] rounded-xl border border-slate-800 hover:border-slate-700 space-y-2 transition shadow';
@@ -15301,6 +15568,12 @@ Your console is now authorized and unlocked.`);
         const spotterBadge = isSpotter
           ? `<span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-950 text-amber-300 border border-amber-600 flex items-center gap-1"><span>⛈️</span><span>STORM SPOTTER</span></span>`
           : '';
+
+        const pagingBtnHtml = !isMaster ? (
+          isDelegated
+            ? `<button onclick="toggleEcPagingDelegation('${call}')" class="px-2.5 py-1.5 bg-red-950 hover:bg-red-900 text-red-300 border border-red-500 rounded text-xs font-bold transition flex items-center gap-1 cursor-pointer shadow-[0_0_10px_rgba(239,68,68,0.4)] animate-pulse" title="Revoke Emergency Paging Access from ${call}"><span>🚨</span><span>PAGING: ON</span></button>`
+            : `<button onclick="toggleEcPagingDelegation('${call}')" class="px-2.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-700 rounded text-xs font-bold transition flex items-center gap-1 cursor-pointer" title="Authorize Emergency Paging for ${call} while EC is out of town"><span>🔒</span><span>PAGING: OFF</span></button>`
+        ) : `<span class="px-2 py-1 bg-red-950/80 text-red-400 text-[10px] font-black rounded border border-red-700">👑 ROOT EC PAGING</span>`;
 
         card.innerHTML = `
           <div class="flex items-start justify-between gap-2">
@@ -15317,7 +15590,8 @@ Your console is now authorized and unlocked.`);
                 <div class="text-[10px] text-slate-400">${level}</div>
               </div>
             </div>
-            <div class="flex items-center gap-1.5 flex-shrink-0">
+            <div class="flex items-center gap-1.5 flex-shrink-0 flex-wrap sm:flex-nowrap">
+              ${pagingBtnHtml}
               <button onclick="openEcEditOperatorModal('${call}')" class="px-2.5 py-1.5 bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-300 border border-emerald-600/50 rounded text-xs font-bold transition flex items-center gap-1 cursor-pointer" title="Edit credentials, level, and photo for ${call}">
                 <span>✏️</span><span>EDIT</span>
               </button>
@@ -15399,6 +15673,17 @@ Your console is now authorized and unlocked.`);
         spotterCheck.checked = !!(acc.isSpotter || mem.isSpotter || (acc.level && acc.level.includes('Spotter')));
       }
 
+      const canPageCheck = document.getElementById('ec-edit-can-page');
+      if (canPageCheck) {
+        if (targetCall === 'KG5TZT') {
+          canPageCheck.checked = true;
+          canPageCheck.disabled = true;
+        } else {
+          canPageCheck.checked = !!(acc.canSendAlerts || mem.canSendAlerts);
+          canPageCheck.disabled = false;
+        }
+      }
+
       const photoData = acc.photo || mem.photo || '';
       const photoInput = document.getElementById('ec-edit-photo-data');
       const photoPreview = document.getElementById('ec-edit-photo-preview');
@@ -15438,6 +15723,7 @@ Your console is now authorized and unlocked.`);
       const powerList = getSelectedPowerCheckboxes('ec-edit-power-group');
       const power = powerList.join(' & ');
       const isSpotter = document.getElementById('ec-edit-is-spotter') ? document.getElementById('ec-edit-is-spotter').checked : false;
+      const canPageChecked = document.getElementById('ec-edit-can-page') ? document.getElementById('ec-edit-can-page').checked : false;
       const photo = document.getElementById('ec-edit-photo-data') ? document.getElementById('ec-edit-photo-data').value : '';
       const ecBVal = document.getElementById('ec-edit-blood-type') ? document.getElementById('ec-edit-blood-type').value : 'Unknown';
       const ecMedCondVal = document.getElementById('ec-edit-medical-conditions') ? document.getElementById('ec-edit-medical-conditions').value.trim() : '';
@@ -15453,24 +15739,24 @@ Your console is now authorized and unlocked.`);
 
       let role = 'Field Operator';
       let canSendAlerts = false;
-      if (level.includes('Level 6') || level.includes('Emergency Coordinator (EC)')) {
+      if (call === 'KG5TZT' || level.includes('Level 6') || level.includes('Emergency Coordinator (EC)')) {
         role = 'Emergency Coordinator (EC)';
         canSendAlerts = true;
       } else if (level.includes('Level 5') || level.includes('County EMC')) {
         role = 'County Emergency Management Coordinator (EMC)';
-        canSendAlerts = false;
+        canSendAlerts = canPageChecked;
       } else if (level.includes('Level 4') || level.includes('Assistant EC')) {
-        role = 'Assistant Emergency Coordinator (AEC)';
-        canSendAlerts = true;
+        role = canPageChecked ? 'Assistant EC (Acting EC - Delegated Paging)' : 'Assistant Emergency Coordinator (AEC)';
+        canSendAlerts = canPageChecked;
       } else if (level.includes('Level 3') || level.includes('NCS')) {
-        role = 'Net Control Station (NCS)';
-        canSendAlerts = false;
+        role = canPageChecked ? 'Net Control Station (Acting EC - Delegated Paging)' : 'Net Control Station (NCS)';
+        canSendAlerts = canPageChecked;
       } else if (level.includes('Level 2') || level.includes('Spotter')) {
-        role = 'Field Operator / Storm Spotter';
-        canSendAlerts = false;
+        role = canPageChecked ? 'Field Operator / Spotter (Delegated Paging)' : 'Field Operator / Storm Spotter';
+        canSendAlerts = canPageChecked;
       } else {
-        role = 'Level 1 Operator';
-        canSendAlerts = false;
+        role = canPageChecked ? 'Level 1 Operator (Delegated Paging)' : 'Level 1 Operator';
+        canSendAlerts = canPageChecked;
       }
 
 // femaList already loaded from checkboxes above
@@ -16630,7 +16916,7 @@ Your console is now authorized and unlocked.`);
         canSendAlerts = false; // Level 5 has all app permissions EXCEPT alert features
       } else if (selectedLevel.includes('Level 4') || selectedLevel.includes('Assistant EC') || selectedLevel.includes('AEC')) {
         role = 'Assistant Emergency Coordinator (AEC)';
-        canSendAlerts = true;  // Level 4 has all operator permissions PLUS alert features
+        canSendAlerts = false; // Level 4 requires explicit EC delegation for emergency paging
       } else if (selectedLevel.includes('Level 3') || selectedLevel.includes('NCS') || selectedLevel.includes('Net Control')) {
         role = 'Net Control Station (NCS)';
         canSendAlerts = false; // Level 3 has access to NCS features (net script, NetLogger)
@@ -17252,6 +17538,7 @@ Your console is now authorized and unlocked.`);
     renderCountyResponseLevelUI();
     renderNcsStaffingUI();
     renderEcOperatorDirectory();
+    try { renderEcPagingDelegationCard(); } catch(e) {}
     updateDashboardUserProfile();
     updateDispatchControlsVisibility();
     updateSessionHeaderUI();
@@ -18435,6 +18722,26 @@ Your console is now authorized and unlocked.`);
           </label>
         </div>
 
+        <!-- EMERGENCY PAGING DISPATCH DELEGATION (EC OUT-OF-TOWN AUTHORITY) -->
+        <div class="p-3 bg-red-950/30 rounded-xl border border-red-500/70 space-y-1">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-red-400 flex items-center gap-1.5">
+                <span>🚨</span>
+                <span>EMERGENCY PAGING &amp; DISPATCH AUTHORITY</span>
+              </span>
+              <p class="text-[10px] text-slate-300 mt-0.5">Authorize this operator to broadcast countywide emergency tone sirens and incident alerts while EC Brian Davis is out of town.</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer ml-2 flex-shrink-0">
+              <input type="checkbox" id="ec-edit-can-page" class="sr-only peer">
+              <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]"></div>
+            </label>
+          </div>
+          <div class="text-[9px] text-amber-400/90 font-mono">
+            ★ ROOT AUTHORITY: Restricted to EC Brian Davis (Level 6). Toggle ON only to delegate acting dispatch authority; toggle OFF upon return.
+          </div>
+        </div>
+
         <!-- Professional Photo -->
         <div class="p-3 bg-[#080b10] rounded-xl border border-slate-800 space-y-2">
           <label class="text-[10px] text-slate-300 font-bold block">OPERATOR CREDENTIAL PHOTO:</label>
@@ -18827,7 +19134,7 @@ Your console is now authorized and unlocked.`);
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.13 (Build 65)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.14 (Build 66)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>
