@@ -5,11 +5,14 @@ import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
 import android.webkit.PermissionRequest;
@@ -18,11 +21,17 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,10 +58,48 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // ActiveAlert Keep-Screen-On: Prevents device screen from dimming/sleeping while monitoring CAD dispatch
-        getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        // Configure system bar colors to match tactical app theme (#070a0f)
+        getWindow().setStatusBarColor(Color.parseColor("#070a0f"));
+        getWindow().setNavigationBarColor(Color.parseColor("#070a0f"));
+
+        // Enable layout in display cutout for edge-to-edge screens with camera notches/punch holes (Android 9+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            getWindow().getAttributes().layoutInDisplayCutoutMode =
+                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+        }
+
+        // Ensure status bar & navigation bar icons are crisp light/white on the dark tactical background
+        WindowInsetsControllerCompat windowInsetsController =
+                WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+        if (windowInsetsController != null) {
+            windowInsetsController.setAppearanceLightStatusBars(false);
+            windowInsetsController.setAppearanceLightNavigationBars(false);
+        }
+
+        // Root container to manage hardware insets (camera punch hole, notch, status bar, navigation bar)
+        FrameLayout rootLayout = new FrameLayout(this);
+        rootLayout.setBackgroundColor(Color.parseColor("#070a0f"));
 
         webView = new WebView(this);
-        setContentView(webView);
+        webView.setBackgroundColor(Color.parseColor("#070a0f"));
+        rootLayout.addView(webView, new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        ));
+        setContentView(rootLayout);
+
+        // Universal Android screen sizing: Auto-adapt for all Android phones and tablets.
+        // Respects hardware status bar, front camera punch hole / notch (display cutout), and navigation bar.
+        ViewCompat.setOnApplyWindowInsetsListener(rootLayout, (v, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(
+                    WindowInsetsCompat.Type.systemBars() |
+                    WindowInsetsCompat.Type.displayCutout()
+            );
+            v.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+            return WindowInsetsCompat.CONSUMED;
+        });
 
         requestAppPermissions();
 

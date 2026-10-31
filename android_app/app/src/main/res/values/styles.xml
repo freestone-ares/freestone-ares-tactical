@@ -4,5 +4,7 @@
         <item name="android:statusBarColor">@color/tactical_dark</item>
         <item name="android:navigationBarColor">@color/tactical_dark</item>
         <item name="android:windowBackground">@color/tactical_dark</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
     </style>
 </resources>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Freestone County ARES Tactical Mobile v7.9.12</title>
+  <title>Freestone County ARES Tactical Mobile v7.9.13</title>
   <meta name="description" content="Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES">
   <meta name="theme-color" content="#0b0e14">
   <meta name="mobile-web-app-capable" content="yes">
@@ -25,6 +25,20 @@
   <!-- PDF.js Mozilla Offline PDF Rendering Engine -->
   <script src="js/pdf.min.js"></script>
 
+  <!-- Android Phone Standalone / PWA Cutout Detector -->
+  <script>
+    (function() {
+      try {
+        var isAndroid = /Android/i.test(navigator.userAgent);
+        var isMobile = /Mobile/i.test(navigator.userAgent);
+        var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+        if (isAndroid && isMobile && isStandalone && !window.AndroidBridge) {
+          document.documentElement.classList.add('android-pwa-phone');
+        }
+      } catch(e){}
+    })();
+  </script>
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
     
@@ -40,7 +54,7 @@
       filter: none !important;
     }
 
-    /* iOS Safe-Area Notch and Dynamic Island Adaptations */
+    /* Hardware Safe-Area Notch, Camera Cutout and Dynamic Island Adaptations */
     :root {
       --sat: env(safe-area-inset-top, 0px);
       --sab: env(safe-area-inset-bottom, 0px);
@@ -52,6 +66,17 @@
     }
     #nav-drawer {
       padding-top: max(env(safe-area-inset-top, 0px), 16px) !important;
+    }
+
+    /* Android Phone Standalone / PWA Front Camera Cutout Adaptation */
+    html.android-pwa-phone header.sticky {
+      padding-top: max(env(safe-area-inset-top, 0px), 38px) !important;
+    }
+    html.android-pwa-phone #nav-drawer {
+      padding-top: max(env(safe-area-inset-top, 0px), 40px) !important;
+    }
+    html.android-pwa-phone #active-alert-heads-up-banner > div {
+      padding-top: max(env(safe-area-inset-top, 0px), 38px) !important;
     }
 
     /* Lock all horizontal sliding / scrolling on iPhone & iPad */
@@ -4352,7 +4377,7 @@
 
       <!-- Modal Footer -->
       <div class="flex items-center justify-between border-t border-purple-900/60 p-3 bg-[#07090e] flex-shrink-0">
-        <span class="text-[10px] text-purple-300">Freestone County ARES Dispatch Validator • Build 64</span>
+        <span class="text-[10px] text-purple-300">Freestone County ARES Dispatch Validator • Build 65</span>
         <button type="button" onclick="closeAlertSoundVerifyModal()" class="px-4 py-2 bg-purple-800 hover:bg-purple-700 text-white font-bold rounded-xl text-xs transition cursor-pointer">
           CLOSE CONSOLE
         </button>
@@ -18802,7 +18827,7 @@ Your console is now authorized and unlocked.`);
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.12 (Build 64)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.13 (Build 65)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Freestone County ARES Tactical Mobile v7.9.10</title>
+  <title>Freestone County ARES Tactical Mobile v7.9.13</title>
   <meta name="description" content="Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES">
   <meta name="theme-color" content="#0b0e14">
   <meta name="mobile-web-app-capable" content="yes">
@@ -25,6 +25,20 @@
   <!-- PDF.js Mozilla Offline PDF Rendering Engine -->
   <script src="js/pdf.min.js"></script>
 
+  <!-- Android Phone Standalone / PWA Cutout Detector -->
+  <script>
+    (function() {
+      try {
+        var isAndroid = /Android/i.test(navigator.userAgent);
+        var isMobile = /Mobile/i.test(navigator.userAgent);
+        var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+        if (isAndroid && isMobile && isStandalone && !window.AndroidBridge) {
+          document.documentElement.classList.add('android-pwa-phone');
+        }
+      } catch(e){}
+    })();
+  </script>
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
     
@@ -40,7 +54,7 @@
       filter: none !important;
     }
 
-    /* iOS Safe-Area Notch and Dynamic Island Adaptations */
+    /* Hardware Safe-Area Notch, Camera Cutout and Dynamic Island Adaptations */
     :root {
       --sat: env(safe-area-inset-top, 0px);
       --sab: env(safe-area-inset-bottom, 0px);
@@ -52,6 +66,17 @@
     }
     #nav-drawer {
       padding-top: max(env(safe-area-inset-top, 0px), 16px) !important;
+    }
+
+    /* Android Phone Standalone / PWA Front Camera Cutout Adaptation */
+    html.android-pwa-phone header.sticky {
+      padding-top: max(env(safe-area-inset-top, 0px), 38px) !important;
+    }
+    html.android-pwa-phone #nav-drawer {
+      padding-top: max(env(safe-area-inset-top, 0px), 40px) !important;
+    }
+    html.android-pwa-phone #active-alert-heads-up-banner > div {
+      padding-top: max(env(safe-area-inset-top, 0px), 38px) !important;
     }
 
     /* Lock all horizontal sliding / scrolling on iPhone & iPad */
@@ -2315,27 +2340,25 @@
           </div>
         </div>
 
-        <div class="flex flex-col sm:flex-row items-stretch sm:items-end gap-2.5 w-full pt-2 border-t border-slate-800/80 font-mono-tac text-xs">
-          <div class="flex-1 min-w-0">
-            <label class="text-[10px] text-slate-400 font-bold block mb-1">SELECT ALERT PAGING TONE:</label>
-            <select id="siren-type-select" class="w-full bg-[#080b10] border border-slate-700 text-amber-300 font-bold rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-red-500 shadow">
-              <option value="quickcall">🔊 Motorola Minitor Fire Pager Alert</option>
-              <option value="warble">🚨 Tactical Warble Siren</option>
-              <option value="eas">📢 EAS Signal (853 / 960 Hz)</option>
-              <option value="beep">📻 1000 Hz Alert Beep</option>
-            </select>
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 w-full pt-2 border-t border-slate-800/80 font-mono-tac text-xs">
+          <div class="flex items-center gap-2">
+            <span class="text-base">🚨</span>
+            <div>
+              <div class="text-[11px] font-bold text-white tracking-wide">COUNTY DISPATCH ALERT: <span class="text-amber-400">QC-II PAIR 2 (600.9 / 810.2 Hz)</span></div>
+              <div class="text-[10px] text-slate-400">Field Telemetry: <span class="text-emerald-400">Motorola P25 Talk-Permit Chirp</span></div>
+            </div>
           </div>
-          <div class="flex items-center gap-2 flex-shrink-0">
-            <button id="btn-test-siren" type="button" onclick="playSelectedSiren()" class="flex-1 sm:flex-initial px-3.5 py-2 bg-red-600 hover:bg-red-500 text-white font-bold rounded-lg flex items-center justify-center gap-1.5 transition shadow cursor-pointer text-xs">
-              <span>🔊 TEST TONE</span>
+          <div class="flex items-center gap-2 flex-shrink-0 flex-wrap">
+            <button id="btn-test-siren" type="button" onclick="playSelectedSiren()" class="px-3 py-1.5 bg-red-700 hover:bg-red-600 text-white font-bold rounded-lg flex items-center justify-center gap-1.5 transition shadow cursor-pointer text-xs">
+              <span>🔊 TEST DISPATCH TONE</span>
             </button>
-            <button id="btn-test-active-alert" type="button" onclick="testActiveAlertDispatcher()" class="flex-1 sm:flex-initial px-3.5 py-2 bg-gradient-to-r from-red-700 to-amber-700 hover:from-red-600 text-white font-bold rounded-lg flex items-center justify-center gap-1.5 transition shadow cursor-pointer text-xs" title="Test Active Alert banner, tones, and vibration">
+            <button id="btn-test-sitrep" type="button" onclick="playTwoToneBeep()" class="px-3 py-1.5 bg-emerald-800 hover:bg-emerald-700 text-white font-bold rounded-lg flex items-center justify-center gap-1.5 transition shadow cursor-pointer text-xs">
+              <span>📡 TEST SITREP CHIRP</span>
+            </button>
+            <button id="btn-test-active-alert" type="button" onclick="testActiveAlertDispatcher()" class="px-3 py-1.5 bg-gradient-to-r from-red-700 to-amber-700 hover:from-red-600 text-white font-bold rounded-lg flex items-center justify-center gap-1.5 transition shadow cursor-pointer text-xs" title="Test Active Alert banner, tones, and vibration">
               <span>🚨 TEST ACTIVE ALERT</span>
             </button>
-            <button id="btn-audio-verify-modal" type="button" onclick="openAlertSoundVerifyModal()" class="flex-1 sm:flex-initial px-3.5 py-2 bg-gradient-to-r from-purple-800 to-indigo-800 hover:from-purple-700 hover:to-indigo-700 text-white font-bold rounded-lg flex items-center justify-center gap-1.5 transition shadow cursor-pointer text-xs border border-purple-400/50" title="Verify Sender Silence & Audio Dispatch Rules">
-              <span>🧪 VERIFY ALERT RULES</span>
-            </button>
-            <button id="btn-stop-siren" type="button" onclick="stopSirenAudio()" class="hidden flex-1 sm:flex-initial px-3.5 py-2 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg flex items-center justify-center gap-1.5 transition shadow cursor-pointer text-xs">
+            <button id="btn-stop-siren" type="button" onclick="stopSirenAudio()" class="hidden px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg flex items-center justify-center gap-1.5 transition shadow cursor-pointer text-xs">
               <span>⏹️ STOP</span>
             </button>
           </div>
@@ -4354,7 +4377,7 @@
 
       <!-- Modal Footer -->
       <div class="flex items-center justify-between border-t border-purple-900/60 p-3 bg-[#07090e] flex-shrink-0">
-        <span class="text-[10px] text-purple-300">Freestone County ARES Dispatch Validator • Build 62</span>
+        <span class="text-[10px] text-purple-300">Freestone County ARES Dispatch Validator • Build 65</span>
         <button type="button" onclick="closeAlertSoundVerifyModal()" class="px-4 py-2 bg-purple-800 hover:bg-purple-700 text-white font-bold rounded-xl text-xs transition cursor-pointer">
           CLOSE CONSOLE
         </button>
@@ -10501,6 +10524,12 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
         try { currentSirenCtx.close(); } catch(e) {}
         currentSirenCtx = null;
       }
+      if (currentSirenAudio) {
+        try { currentSirenAudio.pause(); currentSirenAudio.currentTime = 0; } catch(e) {}
+      }
+      if (currentSitrepAudio) {
+        try { currentSitrepAudio.pause(); currentSitrepAudio.currentTime = 0; } catch(e) {}
+      }
 
       const pulseIcon = document.getElementById('siren-pulse-icon');
       const playingBadge = document.getElementById('siren-playing-badge');
@@ -10542,220 +10571,79 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
       } catch(e) {}
     }
 
-    // Two-Tone Radio Alert Beep (Used for updates after initial dispatch; siren sounds ONLY once on initial dispatch)
+    let currentSirenAudio = null;
+    let currentSitrepAudio = null;
+
+    // Authentic Motorola ASTRO P25 Talk-Permit Tone (SITREP / Field Intelligence Update)
     function playTwoToneBeep() {
       if (isSenderSuppressionActive()) {
-        console.log('🔇 Sender suppression active: suppressing two-tone beep.');
+        console.log('🔇 Sender suppression active: suppressing sitrep chirp on transmitting station.');
         return;
       }
       try {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if (!AudioCtx) return;
-        const ctx = new AudioCtx();
-        const now = ctx.currentTime;
-
-        // Tone 1: 880 Hz
-        const osc1 = ctx.createOscillator();
-        const gain1 = ctx.createGain();
-        osc1.type = 'sine';
-        osc1.frequency.setValueAtTime(880, now);
-        gain1.gain.setValueAtTime(0, now);
-        gain1.gain.linearRampToValueAtTime(0.28, now + 0.02);
-        gain1.gain.linearRampToValueAtTime(0, now + 0.14);
-        osc1.connect(gain1);
-        gain1.connect(ctx.destination);
-        osc1.start(now);
-        osc1.stop(now + 0.15);
-
-        // Tone 2: 1200 Hz
-        const osc2 = ctx.createOscillator();
-        const gain2 = ctx.createGain();
-        osc2.type = 'sine';
-        osc2.frequency.setValueAtTime(1200, now + 0.18);
-        gain2.gain.setValueAtTime(0, now + 0.18);
-        gain2.gain.linearRampToValueAtTime(0.28, now + 0.20);
-        gain2.gain.linearRampToValueAtTime(0, now + 0.34);
-        osc2.connect(gain2);
-        gain2.connect(ctx.destination);
-        osc2.start(now + 0.18);
-        osc2.stop(now + 0.35);
+        // 1. Native iOS / Android Bridge
+        if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.tacticalNativeBridge) {
+          window.webkit.messageHandlers.tacticalNativeBridge.postMessage({ action: 'playSitrepBeep' });
+        } else if (window.AndroidBridge && window.AndroidBridge.playSitrepBeep) {
+          window.AndroidBridge.playSitrepBeep();
+        } else {
+          // Web / Preview fallback
+          if (!currentSitrepAudio) {
+            currentSitrepAudio = new Audio('sitrep.wav');
+          }
+          currentSitrepAudio.currentTime = 0;
+          currentSitrepAudio.play().catch(function() {});
+        }
 
         if (navigator.vibrate) {
-          try { navigator.vibrate([150, 60, 150]); } catch(ve) {}
+          try { navigator.vibrate([40, 20, 60]); } catch(ve) {}
         }
       } catch(e) {
-        console.warn('Two-tone alert beep notice:', e);
+        console.warn('SITREP chirp error:', e);
       }
     }
 
+    // Authentic Motorola Quick-Call II Dispatch Tone (Tone A 600.9 Hz / Tone B 810.2 Hz)
     function playSelectedSiren() {
       if (isSenderSuppressionActive()) {
-        console.log('🔇 Sender suppression active: suppressing emergency siren on transmitting device.');
+        console.log('🔇 Sender suppression active: suppressing emergency dispatch tone on transmitting station.');
         return;
       }
-      const select = document.getElementById('siren-type-select');
-      const type = select ? select.value : 'quickcall';
       stopSirenAudio();
 
-      // Native iOS Bridge: Play siren through AVAudioPlayer (bypasses silent switch)
+      const pulseIcon = document.getElementById('siren-pulse-icon');
+      const playingBadge = document.getElementById('siren-playing-badge');
+      const testBtn = document.getElementById('btn-test-siren');
+      const stopBtn = document.getElementById('btn-stop-siren');
+
+      if (pulseIcon) pulseIcon.classList.add('animate-bounce');
+      if (playingBadge) playingBadge.classList.remove('hidden');
+      if (testBtn) testBtn.classList.add('hidden');
+      if (stopBtn) stopBtn.classList.remove('hidden');
+
       try {
+        // 1. Native iOS / Android Bridge (AVAudioPlayer bypasses hardware mute switch)
         if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.tacticalNativeBridge) {
           window.webkit.messageHandlers.tacticalNativeBridge.postMessage({ action: 'playEmergencySiren' });
-        }
-      } catch(ne) {}
-
-      try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        currentSirenCtx = new AudioContext();
-        const ctx = currentSirenCtx;
-        const now = ctx.currentTime;
-
-        const pulseIcon = document.getElementById('siren-pulse-icon');
-        const playingBadge = document.getElementById('siren-playing-badge');
-        const testBtn = document.getElementById('btn-test-siren');
-        const stopBtn = document.getElementById('btn-stop-siren');
-
-        if (pulseIcon) pulseIcon.classList.add('animate-bounce');
-        if (playingBadge) playingBadge.classList.remove('hidden');
-        if (testBtn) testBtn.classList.add('hidden');
-        if (stopBtn) stopBtn.classList.remove('hidden');
-
-        if (type === 'quickcall') {
-          // Authentic Studio Motorola Minitor Fire Pager Alert Sequence
-          // Tone A: 707.3 Hz (1.00s) -> 50ms gap -> Tone B: 953.7 Hz (2.20s) -> 4 Smooth 1050 Hz Attention Chimes
-          
-          // Tone A: 707.3 Hz with smooth raised-cosine ramps
-          const oscA = ctx.createOscillator();
-          const gainA = ctx.createGain();
-          oscA.type = 'sine';
-          oscA.frequency.setValueAtTime(707.3, now);
-          gainA.gain.setValueAtTime(0.0001, now);
-          gainA.gain.linearRampToValueAtTime(0.32, now + 0.025);
-          gainA.gain.setValueAtTime(0.32, now + 0.975);
-          gainA.gain.exponentialRampToValueAtTime(0.0001, now + 1.00);
-          oscA.connect(gainA);
-          gainA.connect(ctx.destination);
-          oscA.start(now);
-          oscA.stop(now + 1.00);
-          currentSirenOscs.push(oscA);
-
-          // Tone B: 953.7 Hz with smooth raised-cosine ramps
-          const oscB = ctx.createOscillator();
-          const gainB = ctx.createGain();
-          oscB.type = 'sine';
-          oscB.frequency.setValueAtTime(953.7, now + 1.05);
-          gainB.gain.setValueAtTime(0.0001, now);
-          gainB.gain.setValueAtTime(0.0001, now + 1.05);
-          gainB.gain.linearRampToValueAtTime(0.32, now + 1.075);
-          gainB.gain.setValueAtTime(0.32, now + 3.20);
-          gainB.gain.exponentialRampToValueAtTime(0.0001, now + 3.25);
-          oscB.connect(gainB);
-          gainB.connect(ctx.destination);
-          oscB.start(now + 1.05);
-          oscB.stop(now + 3.25);
-          currentSirenOscs.push(oscB);
-
-          // 4 Crisp, Warm Attention Alert Pips at 1,050 Hz (100ms tone, 110ms gap)
-          const oscP = ctx.createOscillator();
-          const gainP = ctx.createGain();
-          oscP.type = 'sine';
-          oscP.frequency.setValueAtTime(1050.0, now + 3.37);
-          gainP.gain.setValueAtTime(0.0001, now);
-          for (let b = 0; b < 4; b++) {
-            const bt = now + 3.37 + b * 0.21;
-            gainP.gain.setValueAtTime(0.0001, bt);
-            gainP.gain.linearRampToValueAtTime(0.28, bt + 0.015);
-            gainP.gain.exponentialRampToValueAtTime(0.0001, bt + 0.10);
+        } else if (window.AndroidBridge && window.AndroidBridge.playEmergencySiren) {
+          window.AndroidBridge.playEmergencySiren();
+        } else {
+          // Web / Preview fallback
+          if (!currentSirenAudio) {
+            currentSirenAudio = new Audio('siren.wav');
           }
-          oscP.connect(gainP);
-          gainP.connect(ctx.destination);
-          oscP.start(now + 3.37);
-          oscP.stop(now + 4.20);
-          currentSirenOscs.push(oscP);
-
-          sirenTimer = setTimeout(() => stopSirenAudio(), 4250);
-        } else if (type === 'warble') {
-          // Hi-Lo European/Tactical Warble (rapid alternation)
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sawtooth';
-          gain.gain.setValueAtTime(0.18, now);
-
-          for (let i = 0; i < 16; i++) {
-            const t = now + i * 0.2;
-            const freq = (i % 2 === 0) ? 800 : 1050;
-            osc.frequency.setValueAtTime(freq, t);
-          }
-          gain.gain.setValueAtTime(0.18, now + 3.0);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + 3.2);
-
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(now);
-          osc.stop(now + 3.2);
-          currentSirenOscs.push(osc);
-
-          sirenTimer = setTimeout(() => stopSirenAudio(), 3300);
-        } else if (type === 'eas') {
-          // EAS Attention Signal (853 Hz + 960 Hz dual tone)
-          const osc1 = ctx.createOscillator();
-          const osc2 = ctx.createOscillator();
-          const gain1 = ctx.createGain();
-          const gain2 = ctx.createGain();
-
-          osc1.type = 'sine';
-          osc2.type = 'sine';
-          osc1.frequency.setValueAtTime(853, now);
-          osc2.frequency.setValueAtTime(960, now);
-
-          gain1.gain.setValueAtTime(0.16, now);
-          gain2.gain.setValueAtTime(0.16, now);
-          gain1.gain.setValueAtTime(0.16, now + 2.8);
-          gain2.gain.setValueAtTime(0.16, now + 2.8);
-          gain1.gain.exponentialRampToValueAtTime(0.0001, now + 3.0);
-          gain2.gain.exponentialRampToValueAtTime(0.0001, now + 3.0);
-
-          osc1.connect(gain1);
-          osc2.connect(gain2);
-          gain1.connect(ctx.destination);
-          gain2.connect(ctx.destination);
-
-          osc1.start(now);
-          osc2.start(now);
-          osc1.stop(now + 3.0);
-          osc2.stop(now + 3.0);
-          currentSirenOscs.push(osc1, osc2);
-
-          sirenTimer = setTimeout(() => stopSirenAudio(), 3100);
-        } else if (type === 'beep') {
-          // 1000 Hz Alert Beep Pulses (4 x 0.35s pulses)
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(1000, now);
-          gain.gain.setValueAtTime(0, now);
-
-          for (let b = 0; b < 4; b++) {
-            const bt = now + b * 0.6;
-            gain.gain.setValueAtTime(0.3, bt);
-            gain.gain.setValueAtTime(0.3, bt + 0.35);
-            gain.gain.exponentialRampToValueAtTime(0.0001, bt + 0.4);
-          }
-
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(now);
-          osc.stop(now + 2.6);
-          currentSirenOscs.push(osc);
-          sirenTimer = setTimeout(() => stopSirenAudio(), 2700);
+          currentSirenAudio.currentTime = 0;
+          currentSirenAudio.play().catch(function() {});
         }
 
-        // Hardware tactical vibration for emergency dispatch
+        // Auto-stop button after tone completion (3.55s)
+        sirenTimer = setTimeout(function() { stopSirenAudio(); }, 3550);
+
         if (navigator.vibrate) {
           try { navigator.vibrate([600, 200, 600, 200, 800, 200, 1000]); } catch(ve) {}
         }
       } catch(e) {
-        console.warn("Web Audio error:", e);
+        console.warn("Emergency dispatch tone error:", e);
       }
     }
 
@@ -18939,7 +18827,7 @@ Your console is now authorized and unlocked.`);
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.10 (Build 62)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.13 (Build 65)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>
