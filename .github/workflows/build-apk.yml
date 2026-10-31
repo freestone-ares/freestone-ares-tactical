@@ -46,17 +46,17 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug --stacktrace
           ./gradlew bundleRelease --stacktrace
-          cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.9.14.apk
+          cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.9.15.apk
           cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical.apk
-          cp app/build/outputs/bundle/release/*.aab ../Freestone-ARES-Tactical-v7.9.14.aab || cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical-v7.9.14.aab
+          cp app/build/outputs/bundle/release/*.aab ../Freestone-ARES-Tactical-v7.9.15.aab || cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical-v7.9.15.aab
           cp app/build/outputs/bundle/release/*.aab ../Freestone-ARES-Tactical.aab || cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical.aab
 
       - name: Upload APK & Bundle as Workflow Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Freestone-ARES-Tactical-v7.9.14-Distribution
+          name: Freestone-ARES-Tactical-v7.9.15-Distribution
           path: |
-            Freestone-ARES-Tactical-v7.9.14.apk
+            Freestone-ARES-Tactical-v7.9.15.apk
             Freestone-ARES-Tactical.aab
           retention-days: 30
 
@@ -64,28 +64,27 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v7.9.14
+          tag_name: v7.9.15
           target_commitish: ${{ github.sha }}
-          name: "Freestone ARES Tactical v7.9.14 Build 66 (Emergency Paging Level 6 EC Restriction & Out-of-Town Delegation)"
+          name: "Freestone ARES Tactical v7.9.15 Build 67 (Activation Posture Delegation Link & Exclusive EC Lockdown)"
           make_latest: true
           body: |
-            ## Freestone County ARES - Tactical Operations Field Build (v7.9.14 / Build 66)
+            ## Freestone County ARES - Tactical Operations Field Build (v7.9.15 / Build 67)
             
             Universal release for Android Phones & Tablets and Apple iOS, iPadOS, and macOS (Designed for iPad).
             
             ### Package Files Included:
-            - **`Freestone-ARES-Tactical.apk` / `Freestone-ARES-Tactical-v7.9.14.apk`**: Standalone Android field installer.
-            - **`Freestone-ARES-Tactical.aab` / `Freestone-ARES-Tactical-v7.9.14.aab`**: Signed Android App Bundle for Google Play.
+            - **`Freestone-ARES-Tactical.apk` / `Freestone-ARES-Tactical-v7.9.15.apk`**: Standalone Android field installer.
+            - **`Freestone-ARES-Tactical.aab` / `Freestone-ARES-Tactical-v7.9.15.aab`**: Signed Android App Bundle for Google Play.
             
-            ### What's New in Build 66:
-            - **Emergency Paging Level 6 Restriction:** Mass dispatch emergency tone sirens (Texas Fire/EMS dual-tone alert paging, Motorola ASTRO P25 Sitrep chirp), incident priority broadcasts, and countywide emergency notifications are restricted exclusively to Level 6 EC Brian Davis (KG5TZT).
-            - **Dynamic Out-of-Town EC Delegation Subsystem:** Added dedicated Emergency Paging & Dispatch Delegation controller in the EC Security Desk. Allows the Emergency Coordinator to grant temporary paging authority to any field operator when leaving town, and instantly revoke/turn off authority upon return.
-            - **Real-Time Cloud Roster Sync:** Paging delegation status (`canSendAlerts`) synchronizes instantly across all connected mobile devices and tablets via Firebase Realtime Database.
-            - **Visual Clearance Badging & Safeguards:** Non-delegated operators receive clear "Receive Only" status and guidance modals; delegated operators feature an animated amber badge and "Acting EC - Delegated Paging" clearance.
+            ### What's New in Build 67:
+            - **County Activation Level Delegation Link:** Linked County Emergency Response Posture control (Levels 1 - 3) directly to the EC delegation subsystem. When EC Brian Davis delegates an operator as Acting EC, they receive full temporary authority to elevate or change the county activation level. When revoked, authority immediately returns to exclusive Level 6 EC control.
+            - **Adaptive Dashboard Posture Controls:** The direct 1-tap posture switcher on the command dashboard dynamically appears for authorized operators and hides for non-delegated personnel.
+            - **Universal Live Field SITREPs:** All verified responders across clearance levels 1 through 6 retain full capability to transmit real-time situation reports and rapid updates during active incidents.
           files: |
-            Freestone-ARES-Tactical-v7.9.14.apk
+            Freestone-ARES-Tactical-v7.9.15.apk
             Freestone-ARES-Tactical.apk
-            Freestone-ARES-Tactical-v7.9.14.aab
+            Freestone-ARES-Tactical-v7.9.15.aab
             Freestone-ARES-Tactical.aab
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
