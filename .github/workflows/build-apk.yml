@@ -80,12 +80,12 @@ jobs:
             - **`Freestone_ARES_Tactical_User_Guide.pdf`**: High-resolution printable field booklet.
             
             ### What's New in Build 69:
-- **Full Production Weather & SKYWARN Overhaul:** Redesigned 4-tab operational deck: `[⚡ REPORT]`, `[📸 CAMERA]`, `[🛰️ RADAR]`, `[📋 LOG]`.
-- **Real Device GPS Integration:** Live satellite locking via browser/device geolocation with dynamic 6-character Maidenhead grid calculation (EM11xq), altitude in feet, and horizontal accuracy.
-- **Native Mobile Camera & Watermarking Lab:** Direct 1-tap rear camera capture (`<input capture="environment">`) or photo library picker. Automatic cryptographic canvas watermarking burning Freestone ARES & NWS Fort Worth header, callsign, spotter ID, real GPS, Maidenhead grid, azimuth bearing, and 24H Local/Zulu timestamps.
-- **Save to Phone / Camera Roll:** Integrated Web Share API (`navigator.share`) triggering the native iOS/Android Share Sheet to save watermarked photos directly to Apple Photos or device storage, with browser download fallback.
-- **Interactive NEXRAD Weather Radar:** Integrated responsive weather radar loop centered on Fairfield, Texas, with quick station toggles for KFWS Dallas/Fort Worth, KGRK Central Texas, KHGX Houston, and KSHV Shreveport, plus direct links to NWS Fort Worth Radar and SPC Day 1 Outlook.
-- **Fixed Voice Scripting & Reporting:** Streamlined transmission to Net Control on repeater FF 110 (145.110 MHz), live on-air 10-second repeater voice scripts, and active county severe weather log.
+            - **Full Production Weather & SKYWARN Overhaul:** Redesigned 4-tab operational deck: [⚡ REPORT], [📸 CAMERA], [🛰️ RADAR], [📋 LOG].
+            - **Real Device GPS Integration:** Live satellite locking via browser/device geolocation with dynamic 6-character Maidenhead grid calculation (EM11xq), altitude in feet, and horizontal accuracy.
+            - **Native Mobile Camera & Watermarking Lab:** Direct 1-tap rear camera capture (capture="environment") or photo library picker. Automatic cryptographic canvas watermarking burning Freestone ARES & NWS Fort Worth header, callsign, spotter ID, real GPS, Maidenhead grid, azimuth bearing, and 24H Local/Zulu timestamps.
+            - **Save to Phone / Camera Roll:** Integrated Web Share API (navigator.share) triggering the native iOS/Android Share Sheet to save watermarked photos directly to Apple Photos or device storage, with browser download fallback.
+            - **Interactive NEXRAD Weather Radar:** Integrated responsive weather radar loop centered on Fairfield, Texas, with quick station toggles for KFWS Dallas/Fort Worth, KGRK Central Texas, KHGX Houston, and KSHV Shreveport, plus direct links to NWS Fort Worth Radar and SPC Day 1 Outlook.
+            - **Fixed Voice Scripting & Reporting:** Streamlined transmission to Net Control on repeater FF 110 (145.110 MHz), live on-air 10-second repeater voice scripts, and active county severe weather log.
           files: |
             Freestone-ARES-Tactical-v7.9.17.apk
             Freestone-ARES-Tactical.apk
