@@ -14,6 +14,8 @@ const ASSETS_TO_CACHE = [
   './icon-512.png',
   './apple-touch-icon.png',
   './tactical_patch_optimized.jpg',
+  './siren.wav',
+  './sitrep.wav',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
 ];

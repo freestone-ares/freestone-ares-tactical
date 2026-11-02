@@ -491,7 +491,7 @@
       "zuluTime": "01:00Z",
       "channel": "Ch 01 - FF 110 (145.110 -0.600 TSQ 146.2)",
       "altChannel": "Ch 02 - WRTM 760 (146.760 -0.600 T136.5)",
-      "location": "W5NFL Fairfield VHF Repeater & EchoLink (AI5OX-R)",
+      "location": "W5NFL Fairfield VHF Repeater",
       "ncs": "AI5OX - Robert Cockerell (AEC / Net Control)",
       "description": "Weekly countywide training net. Roll call of active operators, emergency traffic handling drill, ARES announcements, and Winlink check-ins on Ch 28 (144.975 MHz).",
       "rsvps": {

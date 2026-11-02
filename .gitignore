@@ -12,3 +12,4 @@ android_app/local.properties
 audio_samples/
 audio_refined/
 audio_studio_preview.html
+*_raw.png

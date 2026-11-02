@@ -17,9 +17,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>7.9.17</string>
+	<string>7.9.18</string>
 	<key>CFBundleVersion</key>
-	<string>69</string>
+	<string>70</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -52,6 +52,12 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Freestone County ARES requires camera access to capture operator badge photos and field damage imagery.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Freestone County ARES allows selecting and saving tactical weather damage photos.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Freestone County ARES saves geo-stamped SKYWARN storm photos directly to your photo library.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Freestone County ARES uses device compass sensors to measure real-time azimuth heading for SKYWARN severe weather spotting.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Freestone County ARES uses Face ID for fast hands-free biometric authentication in the field.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

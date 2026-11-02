@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Freestone County ARES Tactical Mobile v7.9.17</title>
+  <title>Freestone County ARES Tactical Mobile v7.9.18</title>
   <meta name="description" content="Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES">
   <meta name="theme-color" content="#0b0e14">
   <meta name="mobile-web-app-capable" content="yes">
@@ -2181,7 +2181,7 @@
         <!-- Slide Footer Keyboard & Swipe Hints -->
         <div class="flex items-center justify-between text-[11px] text-slate-400 px-2 font-mono-tac">
           <div>💡 <strong>Tips:</strong> Swipe left / right on touchscreen or use PREV / NEXT to flip through training slides.</div>
-          <div>Marine-Proof Training System &bull; Build 69 (v7.9.17)</div>
+          <div>Marine-Proof Training System &bull; Build 70 (v7.9.18)</div>
         </div>
 
       </div> <!-- End of manual-guide-container -->
@@ -3470,20 +3470,20 @@
           <!-- Dark Storm Backdrop -->
           <div id="skywarn-camera-canvas" class="absolute inset-0 bg-gradient-to-b from-slate-950 via-[#0a101d] to-emerald-950/40 opacity-95 transition"></div>
 
-          <!-- Tactical Crosshairs & Radar Reticle -->
+          <!-- Tactical Crosshairs & Rotating Compass Reticle -->
           <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div class="w-48 h-48 border border-emerald-500/40 rounded-full flex items-center justify-center">
+            <div id="hud-compass-dial" class="w-48 h-48 border border-emerald-500/40 rounded-full flex items-center justify-center transition-transform duration-100 ease-out relative">
               <div class="w-28 h-28 border border-emerald-500/25 rounded-full flex items-center justify-center">
                 <div class="w-3 h-3 bg-emerald-400 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.9)] animate-pulse"></div>
               </div>
+              <!-- Angle ticks fixed to the rotating dial -->
+              <span class="absolute top-2 text-[9px] text-emerald-300 font-bold">N 0°</span>
+              <span class="absolute right-2 text-[9px] text-emerald-400/80 font-bold">E 90°</span>
+              <span class="absolute bottom-2 text-[9px] text-emerald-400/80 font-bold">S 180°</span>
+              <span class="absolute left-2 text-[9px] text-emerald-400/80 font-bold">W 270°</span>
             </div>
             <div class="absolute w-64 h-0.5 bg-emerald-500/20"></div>
             <div class="absolute h-64 w-0.5 bg-emerald-500/20"></div>
-            <!-- Angle ticks -->
-            <span class="absolute top-6 text-[9px] text-emerald-400/80 font-bold">N 0°</span>
-            <span class="absolute right-6 text-[9px] text-emerald-400/80 font-bold">E 90°</span>
-            <span class="absolute bottom-6 text-[9px] text-emerald-400/80 font-bold">S 180°</span>
-            <span class="absolute left-6 text-[9px] text-emerald-400/80 font-bold">W 270°</span>
           </div>
 
           <!-- Top HUD Data Overlay (Exact Real-Time Telemetry) -->
@@ -3505,10 +3505,18 @@
           <!-- Compass Azimuth Selector Tape -->
           <div class="relative z-10 bg-black/75 backdrop-blur-md p-2.5 rounded-xl border border-slate-800 text-[10px] space-y-1.5 my-auto">
             <div class="flex justify-between items-center text-slate-400">
-              <span class="font-bold flex items-center gap-1.5">
-                <span>🧭</span><span>DIGITAL AZIMUTH COMPASS:</span>
-              </span>
-              <span id="compass-bearing-label" class="text-amber-400 font-bold text-xs">285° WNW</span>
+              <div class="flex items-center gap-2">
+                <span class="font-bold flex items-center gap-1.5">
+                  <span>🧭</span><span>DIGITAL AZIMUTH:</span>
+                </span>
+                <span id="compass-status-badge" class="px-2 py-0.5 rounded text-[9px] font-bold bg-slate-800 text-slate-400 border border-slate-700">INITIALIZING SENSOR...</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <button type="button" id="compass-activate-btn" onclick="requestCompassPermission()" class="hidden px-2.5 py-1 bg-amber-500/30 hover:bg-amber-500/50 text-amber-300 border border-amber-500/80 rounded-lg text-[10px] font-bold animate-pulse cursor-pointer">
+                  🧭 TAP TO ENABLE IPHONE COMPASS
+                </button>
+                <span id="compass-bearing-label" class="text-amber-400 font-bold text-xs">285° WNW</span>
+              </div>
             </div>
             <div class="flex items-center gap-1 overflow-x-auto scrollbar-thin py-0.5">
               <button type="button" onclick="setSkywarnHeading(0, '0° N')" class="heading-btn px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg border border-slate-700 whitespace-nowrap cursor-pointer font-bold">N (0°)</button>
@@ -3518,7 +3526,7 @@
               <button type="button" onclick="setSkywarnHeading(180, '180° S')" class="heading-btn px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg border border-slate-700 whitespace-nowrap cursor-pointer font-bold">S (180°)</button>
               <button type="button" onclick="setSkywarnHeading(225, '225° SW')" class="heading-btn px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg border border-slate-700 whitespace-nowrap cursor-pointer font-bold">SW (225°)</button>
               <button type="button" onclick="setSkywarnHeading(270, '270° W')" class="heading-btn px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg border border-slate-700 whitespace-nowrap cursor-pointer font-bold">W (270°)</button>
-              <button type="button" onclick="setSkywarnHeading(285, '285° WNW')" class="heading-btn px-2.5 py-1 bg-emerald-950 text-emerald-300 rounded-lg border border-emerald-500 font-bold whitespace-nowrap cursor-pointer">WNW (285°)</button>
+              <button type="button" onclick="setSkywarnHeading(285, '285° WNW')" class="heading-btn px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg border border-slate-700 whitespace-nowrap cursor-pointer font-bold">WNW (285°)</button>
               <button type="button" onclick="setSkywarnHeading(315, '315° NW')" class="heading-btn px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg border border-slate-700 whitespace-nowrap cursor-pointer font-bold">NW (315°)</button>
             </div>
           </div>
@@ -4552,7 +4560,7 @@
 
       <!-- Modal Footer -->
       <div class="flex items-center justify-between border-t border-purple-900/60 p-3 bg-[#07090e] flex-shrink-0">
-        <span class="text-[10px] text-purple-300">Freestone County ARES Dispatch Validator • Build 69</span>
+        <span class="text-[10px] text-purple-300">Freestone County ARES Dispatch Validator • Build 70</span>
         <button type="button" onclick="closeAlertSoundVerifyModal()" class="px-4 py-2 bg-purple-800 hover:bg-purple-700 text-white font-bold rounded-xl text-xs transition cursor-pointer">
           CLOSE CONSOLE
         </button>
@@ -10140,6 +10148,7 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
     let skywarnOrientationBound = false;
 
     // Subtab Switcher
+    function showSkywarnSubtab(t) { switchSkywarnSubtab(t === 'log' ? 'feed' : t); }
     function switchSkywarnSubtab(tabName) {
       const tabs = ['report', 'camera', 'radar', 'feed'];
       tabs.forEach(t => {
@@ -10159,6 +10168,12 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
       });
 
       if (tabName === 'camera') {
+        if (isIosOrientationRequiresPermission() && !appState.compassPermissionGranted) {
+          requestCompassPermission();
+        } else {
+          setupSkywarnCompassAutoInit();
+        }
+        updateCompassStatusUI(compassActive, appState.skywarnHeading, appState.skywarnHeadingLabel);
         renderSkywarnPhotos();
       } else if (tabName === 'feed') {
         renderSkywarnReportsFeed();
@@ -10208,6 +10223,7 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
       updateAttachedPhotoCard();
       renderSkywarnPhotos();
       renderSkywarnReportsFeed();
+      setupSkywarnCompassAutoInit();
 
       // 6. Attempt non-blocking GPS warmup if no fix yet
       if (!appState.spotterLat && navigator.geolocation) {
@@ -10345,71 +10361,224 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
       }
     }
 
-    // Compass Heading
-    function setSkywarnHeading(deg, label) {
-      appState.skywarnHeading = deg;
-      appState.skywarnHeadingLabel = label;
+    // Compass Heading & Real-Time Orientation Engine
+    let compassActive = false;
+
+    // Check if on iOS 13+ requiring explicit user permission prompt
+    function isIosOrientationRequiresPermission() {
+      return (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function');
+    }
+
+    function updateCompassStatusUI(active, deg, label) {
+      const badge = document.getElementById('compass-status-badge');
+      const actBtn = document.getElementById('compass-activate-btn');
       const azDisplay = document.getElementById('photo-hud-azimuth');
       const compLabel = document.getElementById('compass-bearing-label');
-      if (azDisplay) azDisplay.textContent = label;
-      if (compLabel) compLabel.textContent = label;
+      const dial = document.getElementById('hud-compass-dial');
 
-      // Update pill styling
+      if (active) {
+        if (badge) {
+          badge.className = 'px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-500/60 flex items-center gap-1';
+          badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span><span>LIVE SENSOR ACTIVE</span>';
+        }
+        if (actBtn) actBtn.classList.add('hidden');
+      } else {
+        if (isIosOrientationRequiresPermission() && !appState.compassPermissionGranted) {
+          if (actBtn) actBtn.classList.remove('hidden');
+          if (badge) {
+            badge.className = 'px-2 py-0.5 rounded text-[9px] font-bold bg-amber-950 text-amber-300 border border-amber-600';
+            badge.textContent = 'PERMISSION REQUIRED';
+          }
+        }
+      }
+
+      if (deg !== undefined && label !== undefined) {
+        if (azDisplay) azDisplay.textContent = label;
+        if (compLabel) compLabel.textContent = label;
+        if (dial) dial.style.transform = `rotate(${-deg}deg)`;
+      }
+    }
+
+    function requestCompassPermission() {
+      if (isIosOrientationRequiresPermission()) {
+        try {
+          DeviceOrientationEvent.requestPermission()
+            .then(state => {
+              if (state === 'granted') {
+                appState.compassPermissionGranted = true;
+                bindCompassListener();
+                updateCompassStatusUI(true);
+              } else {
+                alert('⚠️ Compass permission was denied. You can manually tap any direction pill (N, NE, E, SE, S, SW, W, NW) to set your observation azimuth.');
+              }
+            })
+            .catch(err => {
+              console.warn('[Compass Permission Error]', err);
+              bindCompassListener();
+            });
+        } catch(e) {
+          bindCompassListener();
+        }
+      } else {
+        bindCompassListener();
+        updateCompassStatusUI(true);
+      }
+    }
+
+    function initDeviceCompass() {
+      requestCompassPermission();
+    }
+
+    function bindCompassListener() {
+      if (skywarnOrientationBound) return;
+      
+      // 1. Standard DeviceOrientation event
+      window.addEventListener('deviceorientation', handleDeviceOrientation, true);
+      
+      // 2. Android Chrome Absolute Orientation event (true magnetic north)
+      if ('ondeviceorientationabsolute' in window) {
+        window.addEventListener('deviceorientationabsolute', handleDeviceOrientation, true);
+      }
+      
+      skywarnOrientationBound = true;
+      compassActive = true;
+      updateCompassStatusUI(true);
+    }
+
+    function handleDeviceOrientation(e) {
+      let heading = null;
+
+      // Priority 1: iOS Safari native webkitCompassHeading (0 = North, 90 = East, 180 = South, 270 = West)
+      if (e.webkitCompassHeading !== undefined && e.webkitCompassHeading !== null) {
+        heading = e.webkitCompassHeading;
+      } 
+      // Priority 2: Absolute orientation on Android
+      else if (e.absolute === true && e.alpha !== null && e.alpha !== undefined) {
+        heading = 360 - e.alpha;
+      }
+      // Priority 3: Fallback orientation
+      else if (e.alpha !== null && e.alpha !== undefined) {
+        heading = 360 - e.alpha;
+      }
+
+      // Tilt compensation for Android when phone is held upright in portrait mode
+      if (heading !== null && (e.webkitCompassHeading === undefined || e.webkitCompassHeading === null)) {
+        if (e.beta !== null && e.gamma !== null) {
+          const degToRad = Math.PI / 180;
+          const _x = e.beta ? e.beta * degToRad : 0;
+          const _y = e.gamma ? e.gamma * degToRad : 0;
+          const _z = e.alpha ? e.alpha * degToRad : 0;
+
+          const cX = Math.cos(_x);
+          const cY = Math.cos(_y);
+          const cZ = Math.cos(_z);
+          const sX = Math.sin(_x);
+          const sY = Math.sin(_y);
+          const sZ = Math.sin(_z);
+
+          const Vx = -cZ * sY - sZ * sX * cY;
+          const Vy = -sZ * sY + cZ * sX * cY;
+
+          if (Math.abs(Vx) > 0.0001 || Math.abs(Vy) > 0.0001) {
+            let compassHeading = Math.atan2(Vx, Vy);
+            if (compassHeading < 0) {
+              compassHeading += 2 * Math.PI;
+            }
+            const degComp = compassHeading * (180 / Math.PI);
+            if (!isNaN(degComp)) {
+              heading = degComp;
+            }
+          }
+        }
+      }
+
+      if (heading !== null && !isNaN(heading)) {
+        let deg = Math.round((heading % 360 + 360) % 360);
+
+        // Adjust for device screen rotation if user rotated to landscape
+        const screenAngle = (window.screen && window.screen.orientation && window.screen.orientation.angle !== undefined)
+          ? window.screen.orientation.angle
+          : (typeof window.orientation === 'number' ? window.orientation : 0);
+          
+        if (screenAngle) {
+          deg = Math.round((deg + screenAngle) % 360);
+        }
+
+        const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+        const idx = Math.round(deg / 22.5) % 16;
+        const label = `${deg}° ${directions[idx]}`;
+
+        appState.skywarnHeading = deg;
+        appState.skywarnHeadingLabel = label;
+
+        updateCompassStatusUI(true, deg, label);
+        updateHeadingPills(deg);
+      }
+    }
+
+    function updateHeadingPills(deg) {
+      let closestBtn = null;
+      let minDiff = 360;
       document.querySelectorAll('.heading-btn').forEach(btn => {
         btn.classList.remove('bg-emerald-950', 'text-emerald-300', 'border-emerald-500');
         btn.classList.add('bg-slate-900', 'text-slate-300', 'border-slate-700');
-        if (btn.textContent.includes(deg + '°') || (deg === 285 && btn.textContent.includes('285'))) {
+
+        const match = btn.getAttribute('onclick') && btn.getAttribute('onclick').match(/setSkywarnHeading\((\d+)/);
+        if (match) {
+          const btnDeg = parseInt(match[1], 10);
+          let diff = Math.abs(btnDeg - deg);
+          if (diff > 180) diff = 360 - diff;
+          if (diff < minDiff && diff <= 25) {
+            minDiff = diff;
+            closestBtn = btn;
+          }
+        }
+      });
+      if (closestBtn) {
+        closestBtn.classList.remove('bg-slate-900', 'text-slate-300', 'border-slate-700');
+        closestBtn.classList.add('bg-emerald-950', 'text-emerald-300', 'border-emerald-500');
+      }
+    }
+
+    // Manual Heading Override (e.g. on Desktop or when sensor uncalibrated)
+    function setSkywarnHeading(deg, label) {
+      appState.skywarnHeading = deg;
+      appState.skywarnHeadingLabel = label;
+      updateCompassStatusUI(compassActive, deg, label);
+
+      document.querySelectorAll('.heading-btn').forEach(btn => {
+        btn.classList.remove('bg-emerald-950', 'text-emerald-300', 'border-emerald-500');
+        btn.classList.add('bg-slate-900', 'text-slate-300', 'border-slate-700');
+        if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(deg + ',')) {
           btn.classList.remove('bg-slate-900', 'text-slate-300', 'border-slate-700');
           btn.classList.add('bg-emerald-950', 'text-emerald-300', 'border-emerald-500');
         }
       });
     }
 
-    function initDeviceCompass() {
-      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-        DeviceOrientationEvent.requestPermission()
-          .then(state => {
-            if (state === 'granted') {
-              bindCompassListener();
-              alert('✓ iOS Compass sensor calibrated & active.');
-            } else {
-              alert('⚠️ Compass permission was denied. You can still tap the heading buttons manually.');
-            }
-          })
-          .catch(e => {
-            console.warn(e);
-            bindCompassListener();
-          });
+    // Auto-setup compass on tab view or first gesture
+    function setupSkywarnCompassAutoInit() {
+      if (isIosOrientationRequiresPermission()) {
+        if (appState.compassPermissionGranted) {
+          bindCompassListener();
+          updateCompassStatusUI(true);
+        } else {
+          updateCompassStatusUI(false);
+          const viewSkywarn = document.getElementById('view-skywarn');
+          if (viewSkywarn) {
+            const tapHandler = function() {
+              requestCompassPermission();
+              viewSkywarn.removeEventListener('click', tapHandler);
+              viewSkywarn.removeEventListener('touchend', tapHandler);
+            };
+            viewSkywarn.addEventListener('click', tapHandler, { once: true, passive: true });
+            viewSkywarn.addEventListener('touchend', tapHandler, { once: true, passive: true });
+          }
+        }
       } else {
+        // Android or non-iOS browser: start immediately!
         bindCompassListener();
-        alert('✓ Compass orientation sensor initialized.');
-      }
-    }
-
-    function bindCompassListener() {
-      if (skywarnOrientationBound) return;
-      window.addEventListener('deviceorientation', handleDeviceOrientation, true);
-      skywarnOrientationBound = true;
-    }
-
-    function handleDeviceOrientation(e) {
-      let heading = null;
-      if (e.webkitCompassHeading !== undefined && e.webkitCompassHeading !== null) {
-        heading = e.webkitCompassHeading;
-      } else if (e.alpha !== null && e.alpha !== undefined) {
-        heading = (360 - e.alpha) % 360;
-      }
-      if (heading !== null && !isNaN(heading)) {
-        const deg = Math.round(heading);
-        const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
-        const idx = Math.round(deg / 22.5) % 16;
-        const label = `${deg}° ${directions[idx]}`;
-        appState.skywarnHeading = deg;
-        appState.skywarnHeadingLabel = label;
-        const azDisplay = document.getElementById('photo-hud-azimuth');
-        const compLabel = document.getElementById('compass-bearing-label');
-        if (azDisplay) azDisplay.textContent = label;
-        if (compLabel) compLabel.textContent = label;
+        updateCompassStatusUI(true);
       }
     }
 
@@ -10481,11 +10650,17 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
 
     // Step 4: Camera & Photo Processing
     function triggerSkywarnCamera() {
+      if (isIosOrientationRequiresPermission() && !appState.compassPermissionGranted) {
+        requestCompassPermission();
+      }
       const input = document.getElementById('skywarn-camera-input');
       if (input) input.click();
     }
 
     function triggerSkywarnGallery() {
+      if (isIosOrientationRequiresPermission() && !appState.compassPermissionGranted) {
+        requestCompassPermission();
+      }
       const input = document.getElementById('skywarn-gallery-input');
       if (input) input.click();
     }
@@ -19308,7 +19483,7 @@ Your console is now authorized and unlocked.`);
         category: 'OFFICIAL OPERATOR FIELD MANUAL',
         title: 'FREESTONE COUNTY ARES TACTICAL MOBILE',
         subtitle: 'COMPLETE OPERATOR FIELD GUIDE • MARINE-PROOF EDITION',
-        meta: 'Step-By-Step Illustrated Visual Instructions for Android & iOS\nCross-Platform Unified Architecture • Build 69 (v7.9.17) • November 2026\nCounty Emergency Coordinator: Brian Davis (KG5TZT)',
+        meta: 'Step-By-Step Illustrated Visual Instructions for Android & iOS\nCross-Platform Unified Architecture • Build 70 (v7.9.18) • November 2026\nCounty Emergency Coordinator: Brian Davis (KG5TZT)',
         image: 'guide_screens/screen_02_dashboard_annotated.png'
       },
       {
@@ -19459,17 +19634,17 @@ Your console is now authorized and unlocked.`);
       {
         type: 'module',
         category: 'MODULE 09B • TACTICAL STORM CAMERA',
-        title: 'HUD CAMERA, GEOTAGGING & SAVING TO PHONE',
+        title: 'LIVE HUD COMPASS, ROTATING RETICLE & GEOTAGGING',
         image: 'guide_screens/screen_09b_skywarn_camera_annotated.png',
-        purpose: 'Captures photographic storm evidence with a cryptographic tactical watermark stamped onto the image, saving directly to your phone's Camera Roll and attaching to reports.',
+        purpose: 'Captures photographic storm evidence with a dynamic real-time azimuth compass sensor, rotating reticle HUD, and cryptographic tactical watermark stamped onto the image.',
         steps: [
-          '1. Aim device at the storm feature using the HUD reticle crosshairs, digital compass tape, and CST/Zulu clocks (Badge 1).',
-          '2. Tap "📸 OPEN CAMERA (SNAP & STAMP)" (Badge 2) to trigger your native camera viewfinder. Snap the photo.',
-          '3. Tap "💾 SAVE TO PHONE" (Badge 3): On iPhone/iPad (iOS), the Apple Share Sheet appears—tap "Save Image" to put it in Apple Photos! On Android, it saves to Downloads/Gallery.',
-          '4. Tap "⚡ ATTACH TO REPORT" (Badge 4) to bind this watermarked image to your active storm report before transmitting.'
+          '1. Real-time compass dynamically tracks your azimuth bearing as you turn your device; the HUD reticle dial rotates in real time to match your physical heading.',
+          '2. On iPhone/iPad: Tap the pulsing "🧭 TAP TO ENABLE IPHONE COMPASS" button (Badge 1) once to grant iOS motion permissions, or tap any azimuth pill for manual bearing.',
+          '3. Tap "📸 OPEN CAMERA (SNAP & STAMP)" (Badge 2) to snap the photo, automatically watermarking your callsign, GPS, bearing, and Zulu time.',
+          '4. Tap "💾 SAVE TO PHONE" (Badge 3) (or Share Sheet on iOS) and "⚡ ATTACH TO REPORT" (Badge 4) to bind photo evidence to your active spotter transmission.'
         ],
-        howItWorks: 'The app stamps an unalterable tactical banner onto the photo: Callsign, Spotter ID, Latitude, Longitude, Maidenhead Grid, Elevation, Azimuth Bearing, and 24H/Zulu timestamps.',
-        tip: 'IPHONE USER NOTE: In iOS, tapping "💾 SAVE TO PHONE" opens the standard iOS Share Sheet. Always tap "Save Image" to store the photo in your native Camera Roll.'
+        howItWorks: 'Hardware gyro and magnetometer sensors calculate real-time tilt-compensated azimuth. Stamped photo embeds unalterable GPS, Maidenhead grid, elevation, heading, and timestamps.',
+        tip: 'MARINE-PROOF RULE: On iOS (iPhone/iPad), WebKit requires a one-time gesture to activate motion sensors. If prompted, tap Allow or tap the amber compass button to engage live tracking.'
       },
       {
         type: 'module',
@@ -20492,7 +20667,7 @@ Your console is now authorized and unlocked.`);
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.17 (Build 69)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.18 (Build 70)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>
