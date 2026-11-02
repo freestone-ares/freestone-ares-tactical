@@ -57,8 +57,8 @@ jobs:
         run: |
           mkdir -p ios_app/FreestoneARESTactical/web
           cp -r web/* ios_app/FreestoneARESTactical/web/
-          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion 67" ios_app/FreestoneARESTactical/Info.plist || true
-          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString 7.9.15" ios_app/FreestoneARESTactical/Info.plist || true
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion 68" ios_app/FreestoneARESTactical/Info.plist || true
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString 7.9.16" ios_app/FreestoneARESTactical/Info.plist || true
 
       - name: Build and Archive iOS Project
         run: |
@@ -77,8 +77,8 @@ jobs:
             PROVISIONING_PROFILE="e751b47c-c688-4a5a-8489-2af3f1181483" \
             CODE_SIGN_IDENTITY="Apple Distribution" \
             CODE_SIGN_ENTITLEMENTS="FreestoneARESTactical/FreestoneARESTactical.entitlements" \
-            CURRENT_PROJECT_VERSION=67 \
-            MARKETING_VERSION=7.9.15
+            CURRENT_PROJECT_VERSION=68 \
+            MARKETING_VERSION=7.9.16
 
       - name: Export IPA
         run: |
