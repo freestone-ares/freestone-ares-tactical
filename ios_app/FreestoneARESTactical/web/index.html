@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Freestone County ARES Tactical Mobile v7.9.16</title>
+  <title>Freestone County ARES Tactical Mobile v7.9.17</title>
   <meta name="description" content="Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES">
   <meta name="theme-color" content="#0b0e14">
   <meta name="mobile-web-app-capable" content="yes">
@@ -3156,6 +3156,7 @@
     </section>
 
     <!-- 4. SKYWARN / STORM SPOTTING HUD (WITH 24H & UTC STAMP) -->
+        <!-- 4. SKYWARN / STORM SPOTTING HUD & WEATHER RADAR -->
     <section id="view-skywarn" class="tab-content hidden space-y-4">
       <!-- Skywarn Header & Command Controls -->
       <div class="bg-[#10151d] p-4 rounded-xl border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-3 hud-glow">
@@ -3164,8 +3165,8 @@
             <span class="px-2 py-0.5 rounded text-[10px] font-mono-tac bg-sky-950 text-sky-300 border border-sky-800 font-bold">NWS FORT WORTH SKYWARN</span>
             <span class="text-xs font-mono-tac text-slate-400">FREESTONE CO. ARES</span>
           </div>
-          <h3 class="font-mono-tac text-base font-bold text-white mt-0.5">SKYWARN // SEVERE WEATHER OBSERVATION & REPORTING</h3>
-          <p class="text-xs text-slate-400">Direct tactical severe weather spotting deck for Freestone County ARES & NWS Fort Worth (FWD).</p>
+          <h3 class="font-mono-tac text-base font-bold text-white mt-0.5">SKYWARN // SEVERE WEATHER OBSERVATION &amp; RADAR</h3>
+          <p class="text-xs text-slate-400">Direct tactical storm spotting deck for Freestone County ARES &amp; NWS Fort Worth (FWD).</p>
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
@@ -3183,448 +3184,468 @@
           </div>
 
           <!-- NWS Criteria Guide Modal Button -->
-          <button onclick="openSkywarnGuideModal()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-sky-300 font-mono-tac text-xs font-bold rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+          <button type="button" onclick="openSkywarnGuideModal()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-sky-300 font-mono-tac text-xs font-bold rounded-lg border border-slate-700 transition flex items-center gap-1.5 cursor-pointer">
             <span>📖</span>
             <span>NWS CRITERIA</span>
           </button>
 
           <!-- 10-Sec Voice Script Button -->
-          <button onclick="openSkywarnVoiceScriptModal()" class="px-3 py-1.5 bg-purple-950/70 hover:bg-purple-900 border border-purple-700/80 text-purple-200 font-mono-tac text-xs font-bold rounded-lg transition flex items-center gap-1.5">
+          <button type="button" onclick="openSkywarnVoiceScriptModal()" class="px-3 py-1.5 bg-purple-950/70 hover:bg-purple-900 border border-purple-700/80 text-purple-200 font-mono-tac text-xs font-bold rounded-lg transition flex items-center gap-1.5 cursor-pointer">
             <span>🎙️</span>
             <span>VOICE SCRIPT</span>
           </button>
 
-<!-- NWS Desk Call button removed per EC Directive: Reports channeled via FF 110 or Net Control -->
+          <!-- Call EC Brian Directly -->
+          <a href="tel:9036445856" class="px-3 py-1.5 bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-600 text-emerald-300 font-bold rounded-lg text-xs flex items-center gap-1.5 transition shadow" title="Direct Phone to EC Brian Davis">
+            <span>📞</span><span>CALL EC BRIAN</span>
+          </a>
         </div>
       </div>
 
-      <!-- Severe Weather Criteria Warning & Thresholds Banner -->
-      <div class="bg-gradient-to-r from-sky-950/70 via-[#10151d] to-[#10151d] border border-sky-500/40 rounded-xl p-3 sm:p-4 font-mono-tac flex flex-col md:flex-row md:items-center justify-between gap-3">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-sky-500/20 border border-sky-500/50 flex items-center justify-center text-sky-400 text-xl flex-shrink-0 animate-pulse">
-            ⛈️
-          </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="text-[10px] text-sky-400 font-bold tracking-wider uppercase">NWS FORT WORTH REPORTING CRITERIA</span>
-              <span class="px-1.5 py-0.2 rounded bg-sky-950 text-sky-300 text-[9px] border border-sky-800 font-bold">STRICT THRESHOLD</span>
-            </div>
-            <h4 class="text-sm font-bold text-white">Report Only Severe Phenomena Meeting NWS Guidelines</h4>
-            <p class="text-xs text-slate-300">
-              <span class="text-amber-400 font-bold">🌪️ Tornado / Rotating Wall Cloud</span> • 
-              <span class="text-sky-300 font-bold">🧊 Hail ≥ 1.00" (Quarter+)</span> • 
-              <span class="text-rose-400 font-bold">💨 Wind ≥ 58 MPH</span> • 
-              <span class="text-blue-300 font-bold">🌊 Flash Flooding</span>
-            </p>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-2 self-start md:self-auto bg-[#080b10] px-3 py-2 rounded-lg border border-slate-800">
-          <div class="text-right">
-            <span class="text-[9px] text-slate-400 block leading-tight">ACTIVE SKYWARN NET:</span>
-            <span class="text-xs font-bold text-emerald-400">Ch 01 - FF 110 (145.110 TSQ 146.2)</span>
-          </div>
-        </div>
+      <!-- SKYWARN SUBTAB SWITCHER -->
+      <div class="flex border-b border-slate-800 text-xs font-mono-tac overflow-x-auto scrollbar-thin bg-[#080b10] rounded-xl p-1 gap-1">
+        <button type="button" id="skywarn-tab-btn-report" onclick="switchSkywarnSubtab('report')" class="flex-1 py-2 px-2 rounded-lg font-bold bg-amber-500/20 text-amber-300 border border-amber-500/60 flex items-center justify-center gap-1 transition whitespace-nowrap shadow cursor-pointer text-[11px] sm:text-xs">
+          <span>⚡</span><span>REPORT</span>
+        </button>
+        <button type="button" id="skywarn-tab-btn-camera" onclick="switchSkywarnSubtab('camera')" class="flex-1 py-2 px-2 rounded-lg font-bold text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent flex items-center justify-center gap-1 transition whitespace-nowrap cursor-pointer text-[11px] sm:text-xs">
+          <span>📸</span><span>CAMERA</span>
+        </button>
+        <button type="button" id="skywarn-tab-btn-radar" onclick="switchSkywarnSubtab('radar')" class="flex-1 py-2 px-2 rounded-lg font-bold text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent flex items-center justify-center gap-1 transition whitespace-nowrap cursor-pointer text-[11px] sm:text-xs">
+          <span>🛰️</span><span>RADAR</span>
+        </button>
+        <button type="button" id="skywarn-tab-btn-feed" onclick="switchSkywarnSubtab('feed')" class="flex-1 py-2 px-2 rounded-lg font-bold text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent flex items-center justify-center gap-1 transition whitespace-nowrap cursor-pointer text-[11px] sm:text-xs">
+          <span>📋</span><span>LOG (<span id="skywarn-subtab-badge-count">0</span>)</span>
+        </button>
       </div>
 
-      <!-- TACTICAL SPOTTER REPORTING CONSOLE (HIGH-STRESS STREAMLINED REPORTING TO NCS/EC) -->
-      <div class="bg-[#10151d] border-2 border-amber-500/80 rounded-2xl p-4 sm:p-5 font-mono-tac shadow-2xl space-y-4 hud-glow">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+      <!-- ======================================================== -->
+      <!-- SUBPANEL 1: SPOTTER REPORT CONSOLE                       -->
+      <!-- ======================================================== -->
+      <div id="skywarn-subpanel-report" class="skywarn-subpanel space-y-4">
+        <!-- Severe Weather Criteria Warning Banner -->
+        <div class="bg-gradient-to-r from-sky-950/70 via-[#10151d] to-[#10151d] border border-sky-500/40 rounded-xl p-3 sm:p-4 font-mono-tac flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/60 flex items-center justify-center text-2xl animate-pulse">
-              ⚡
+            <div class="w-10 h-10 rounded-lg bg-sky-500/20 border border-sky-500/50 flex items-center justify-center text-sky-400 text-xl flex-shrink-0 animate-pulse">
+              ⛈️
             </div>
             <div>
               <div class="flex items-center gap-2">
-                <h4 class="text-sm font-black text-white tracking-wider uppercase">TACTICAL SPOTTER REPORTING CONSOLE</h4>
-                <span class="px-2 py-0.5 rounded text-[9px] bg-red-950 text-red-300 border border-red-800 font-bold animate-pulse">DIRECT NET</span>
+                <span class="text-[10px] text-sky-400 font-bold tracking-wider uppercase">NWS FORT WORTH REPORTING CRITERIA</span>
+                <span class="px-1.5 py-0.2 rounded bg-sky-950 text-sky-300 text-[9px] border border-sky-800 font-bold">STRICT THRESHOLD</span>
               </div>
-              <p class="text-[11px] text-slate-300 mt-0.5">
-                Reports transmit strictly to Net Control Station (NCS) or EC Brian Davis (KG5TZT) on repeater FF 110 (145.110 MHz). No direct reporting to NWS by individual operators.
+              <h4 class="text-sm font-bold text-white">Report Severe Phenomena Meeting Official NWS Guidelines</h4>
+              <p class="text-xs text-slate-300">
+                <span class="text-rose-400 font-bold">🌪️ Tornado / Rotating Wall Cloud</span> • 
+                <span class="text-sky-300 font-bold">🧊 Hail ≥ 1.00" (Quarter+)</span> • 
+                <span class="text-amber-400 font-bold">💨 Wind ≥ 58 MPH</span> • 
+                <span class="text-blue-300 font-bold">🌊 Flash Flooding</span>
               </p>
             </div>
           </div>
-          <div class="flex items-center gap-2 flex-wrap">
-            <a href="tel:9036445856" class="px-3 py-1.5 bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-600 text-emerald-300 font-bold rounded-lg text-xs flex items-center gap-1.5 transition shadow" title="Direct Phone to EC Brian Davis">
-              <span>📞</span><span>CALL EC BRIAN (903-644-5856)</span>
+
+          <div class="flex items-center gap-2 self-start md:self-auto bg-[#080b10] px-3 py-2 rounded-lg border border-slate-800">
+            <div class="text-right">
+              <span class="text-[9px] text-slate-400 block leading-tight">ACTIVE SKYWARN VOICE NET:</span>
+              <span class="text-xs font-bold text-emerald-400">Ch 01 - FF 110 (145.110 TSQ 146.2)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- MAIN TACTICAL REPORTING FORM CARD -->
+        <div class="bg-[#10151d] border-2 border-amber-500/80 rounded-2xl p-4 sm:p-5 font-mono-tac shadow-2xl space-y-4 hud-glow">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/60 flex items-center justify-center text-xl animate-pulse">
+                ⚡
+              </div>
+              <div>
+                <h4 class="text-sm font-black text-white tracking-wider uppercase">TACTICAL SPOTTER REPORTING CONSOLE</h4>
+                <p class="text-[11px] text-slate-400">Reports transmit to Net Control Station (NCS) on repeater FF 110 (145.110 MHz).</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded text-[10px] bg-red-950 text-red-300 border border-red-800 font-bold animate-pulse">DIRECT NET LOG</span>
+            </div>
+          </div>
+
+          <!-- STEP 1: 1-TAP SEVERE PHENOMENON QUICK SELECTOR -->
+          <div class="space-y-2">
+            <label class="text-xs font-black text-amber-400 block uppercase tracking-wider flex items-center gap-1.5">
+              <span>STEP 1:</span><span>SELECT OBSERVED SEVERE CONDITION (1-TAP QUICK SELECT):</span>
+            </label>
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
+              <!-- Tornado -->
+              <button type="button" onclick="selectQuickSkywarnType('🌪️ Tornado / Rotating Wall Cloud', 'TORNADO / WALL CLOUD: Rapid rotation and lowering observed.', 'CRITICAL / LIFE SAFETY', 'bg-red-950 text-red-300 border-red-600')" class="quick-phenom-btn p-3 rounded-xl bg-red-950/40 hover:bg-red-900/60 border-2 border-red-600/70 text-left transition space-y-1 cursor-pointer">
+                <span class="text-2xl block">🌪️</span>
+                <div class="font-black text-xs text-red-300 leading-tight">TORNADO / WALL CLOUD</div>
+                <div class="text-[9px] text-red-400 font-bold">Funnel / Rotation</div>
+              </button>
+
+              <!-- Large Hail -->
+              <button type="button" onclick="selectQuickSkywarnType('🧊 Large Hail (>= 1.00 inch Quarter+)', 'HAIL: Severe hail >= 1.00 inch covering ground.', 'SEVERE CRITERIA', 'bg-sky-950 text-sky-300 border-sky-600')" class="quick-phenom-btn p-3 rounded-xl bg-sky-950/40 hover:bg-sky-900/60 border-2 border-sky-600/70 text-left transition space-y-1 cursor-pointer">
+                <span class="text-2xl block">🧊</span>
+                <div class="font-black text-xs text-sky-300 leading-tight">LARGE HAIL</div>
+                <div class="text-[9px] text-sky-400 font-bold">Quarter, Golf Ball, Baseball</div>
+              </button>
+
+              <!-- Damaging Wind -->
+              <button type="button" onclick="selectQuickSkywarnType('💨 Damaging Wind (>= 58 MPH)', 'WIND: Damaging wind gusts estimated >= 58 MPH. Trees/limbs down.', 'SEVERE CRITERIA', 'bg-amber-950 text-amber-300 border-amber-600')" class="quick-phenom-btn p-3 rounded-xl bg-amber-950/40 hover:bg-amber-900/60 border-2 border-amber-600/70 text-left transition space-y-1 cursor-pointer">
+                <span class="text-2xl block">💨</span>
+                <div class="font-black text-xs text-amber-300 leading-tight">DAMAGING WIND</div>
+                <div class="text-[9px] text-amber-400 font-bold">58+ MPH / Trees Snapped</div>
+              </button>
+
+              <!-- Flash Flood -->
+              <button type="button" onclick="selectQuickSkywarnType('🌊 Flash Flooding / Road Impassable', 'FLOOD: Water rising rapidly across roadway. Impassable bridge.', 'FLASH FLOOD', 'bg-blue-950 text-blue-300 border-blue-600')" class="quick-phenom-btn p-3 rounded-xl bg-blue-950/40 hover:bg-blue-900/60 border-2 border-blue-600/70 text-left transition space-y-1 cursor-pointer">
+                <span class="text-2xl block">🌊</span>
+                <div class="font-black text-xs text-blue-300 leading-tight">FLASH FLOOD</div>
+                <div class="text-[9px] text-blue-400 font-bold">Water Over Road / Bridges</div>
+              </button>
+
+              <!-- Structural Damage -->
+              <button type="button" onclick="selectQuickSkywarnType('💥 Structural Damage / Hazards', 'DAMAGE: Structural roof damage, barns damaged, power lines sparking.', 'LOCAL EMERGENCY', 'bg-purple-950 text-purple-300 border-purple-600')" class="quick-phenom-btn p-3 rounded-xl bg-purple-950/40 hover:bg-purple-900/60 border-2 border-purple-600/70 text-left transition space-y-1 cursor-pointer">
+                <span class="text-2xl block">💥</span>
+                <div class="font-black text-xs text-purple-300 leading-tight">DAMAGE / HAZARD</div>
+                <div class="text-[9px] text-purple-400 font-bold">Roof Loss / Power Lines</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 2: MEASUREMENTS & SUB-CRITERIA -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 p-3 bg-[#080b10] rounded-xl border border-slate-800">
+            <!-- Hail Sizes -->
+            <div class="space-y-1.5">
+              <div class="flex justify-between items-center">
+                <span class="text-[10px] text-slate-400 font-bold block uppercase">HAIL SIZE (NWS STANDARDS):</span>
+                <span class="text-[9px] text-amber-400 font-bold">MIN SEVERE: 1.00"</span>
+              </div>
+              <div class="flex flex-wrap gap-1.5 text-xs">
+                <button type="button" data-hail='Penny 0.75"' onclick="setSkywarnHailSize('Penny 0.75" (Sub-severe)')" class="hail-btn px-2 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded text-slate-400 font-bold cursor-pointer">Penny 0.75"</button>
+                <button type="button" data-hail='Quarter 1.00"' onclick="setSkywarnHailSize('Quarter 1.00" (Severe Min)')" class="hail-btn px-2 py-1 bg-sky-950 hover:bg-sky-900 border border-sky-700 rounded text-sky-300 font-bold cursor-pointer">Quarter 1.00" ★</button>
+                <button type="button" data-hail='Half Dollar 1.25"' onclick="setSkywarnHailSize('Half Dollar 1.25"')" class="hail-btn px-2 py-1 bg-sky-950 hover:bg-sky-900 border border-sky-700 rounded text-sky-300 font-bold cursor-pointer">Half Dollar 1.25"</button>
+                <button type="button" data-hail='Ping Pong 1.50"' onclick="setSkywarnHailSize('Ping Pong 1.50"')" class="hail-btn px-2 py-1 bg-sky-950 hover:bg-sky-900 border border-sky-700 rounded text-sky-300 font-bold cursor-pointer">Ping Pong 1.50"</button>
+                <button type="button" data-hail='Golf Ball 1.75"' onclick="setSkywarnHailSize('Golf Ball 1.75" (Dangerous)')" class="hail-btn px-2 py-1 bg-amber-950 hover:bg-amber-900 border border-amber-700 rounded text-amber-300 font-bold cursor-pointer">Golf Ball 1.75" ⚠️</button>
+                <button type="button" data-hail='Tennis Ball 2.50"' onclick="setSkywarnHailSize('Tennis Ball 2.50"')" class="hail-btn px-2 py-1 bg-rose-950 hover:bg-rose-900 border border-rose-700 rounded text-rose-300 font-bold cursor-pointer">Tennis Ball 2.50"</button>
+                <button type="button" data-hail='Baseball 2.75"' onclick="setSkywarnHailSize('Baseball 2.75"+ (Destructive)')" class="hail-btn px-2 py-1 bg-red-950 hover:bg-red-900 border border-red-700 rounded text-red-300 font-bold cursor-pointer">Baseball 2.75"+ 🚨</button>
+              </div>
+              <input type="text" id="skywarn-hail" value="None" placeholder="e.g. Quarter 1.00 in" class="w-full mt-1 bg-[#05080c] border border-slate-700 rounded-lg p-2 text-xs text-white font-mono-tac outline-none font-bold">
+            </div>
+
+            <!-- Wind Speed -->
+            <div class="space-y-1.5">
+              <div class="flex justify-between items-center">
+                <span class="text-[10px] text-slate-400 font-bold block uppercase">WIND SPEED / GUSTS:</span>
+                <span class="text-[9px] text-amber-400 font-bold">MIN SEVERE: 58 MPH</span>
+              </div>
+              <div class="flex flex-wrap gap-1.5 text-xs">
+                <button type="button" data-wind="50-59 MPH" onclick="setSkywarnWindSpeed('50-59 MPH (Estimated - Large Limbs Down)')" class="wind-btn px-2 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded text-slate-300 font-bold cursor-pointer">50-59 MPH</button>
+                <button type="button" data-wind="60-69 MPH" onclick="setSkywarnWindSpeed('60-69 MPH (Severe - Trees Snapped / Utility Poles)')" class="wind-btn px-2 py-1 bg-amber-950 hover:bg-amber-900 border border-amber-700 rounded text-amber-300 font-bold cursor-pointer">60-69 MPH ★</button>
+                <button type="button" data-wind="70+ MPH" onclick="setSkywarnWindSpeed('70+ MPH (Extreme Hurricane-Force Winds)')" class="wind-btn px-2 py-1 bg-red-950 hover:bg-red-900 border border-red-700 rounded text-red-300 font-bold cursor-pointer">70+ MPH 🚨</button>
+                <button type="button" data-wind="Trees on Road" onclick="setSkywarnWindSpeed('Trees Down Across Roadway')" class="wind-btn px-2 py-1 bg-amber-950 hover:bg-amber-900 border border-amber-700 rounded text-amber-300 font-bold cursor-pointer">Trees on Road</button>
+                <button type="button" data-wind="Power Lines Down" onclick="setSkywarnWindSpeed('Power Lines Down / Sparking')" class="wind-btn px-2 py-1 bg-rose-950 hover:bg-rose-900 border border-rose-700 rounded text-rose-300 font-bold cursor-pointer">Power Lines Down</button>
+              </div>
+              <input type="text" id="skywarn-wind" value="Calm" placeholder="e.g. 60-69 MPH" class="w-full mt-1 bg-[#05080c] border border-slate-700 rounded-lg p-2 text-xs text-white font-mono-tac outline-none font-bold">
+            </div>
+          </div>
+
+          <!-- STEP 3: LOCATION & REAL DEVICE GPS -->
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-3 p-3 bg-[#080b10] rounded-xl border border-slate-800">
+            <div class="md:col-span-7 space-y-1">
+              <div class="flex items-center justify-between">
+                <label class="text-[11px] font-bold text-slate-300 uppercase flex items-center gap-1.5">
+                  <span>STEP 3:</span><span>OBSERVATION LOCATION &amp; GPS:</span>
+                </label>
+                <button type="button" id="skywarn-gps-btn" onclick="autofillSpotterGpsLocation()" class="text-xs px-2.5 py-1 bg-emerald-950 hover:bg-emerald-900 border border-emerald-600 text-emerald-300 rounded font-bold flex items-center gap-1 cursor-pointer shadow transition">
+                  <span>📍</span><span>AUTOFILL DEVICE GPS</span>
+                </button>
+              </div>
+              <input type="text" id="skywarn-location" placeholder="e.g. US 84 &amp; FM 488, Fairfield, TX" class="w-full bg-[#05080c] border border-slate-700 focus:border-emerald-500 rounded-lg p-2.5 text-xs text-white font-mono-tac outline-none font-bold">
+              <div id="skywarn-gps-status-pill" class="text-[10px] text-emerald-400 font-mono">
+                📍 GPS: Standby — tap "AUTOFILL DEVICE GPS" to lock phone position.
+              </div>
+            </div>
+
+            <div class="md:col-span-5 space-y-1">
+              <label class="text-[11px] font-bold text-slate-300 uppercase">COUNTY CROSSROADS PRESETS:</label>
+              <select id="skywarn-preset-crossroads" onchange="applyCrossroadsPreset(this.value)" class="w-full bg-[#05080c] border border-slate-700 focus:border-emerald-500 rounded-lg p-2 text-xs text-slate-200 font-mono-tac outline-none cursor-pointer">
+                <option value="">-- Choose Key Freestone Crossroads --</option>
+                <option value="Fairfield - US 84 &amp; TX 75 (Courthouse Square)">Fairfield - US 84 &amp; TX 75 (Courthouse Square)</option>
+                <option value="Fairfield - I-45 &amp; US 84 Interchange">Fairfield - I-45 &amp; US 84 Interchange</option>
+                <option value="Teague - Main St &amp; US 84">Teague - Main St &amp; US 84</option>
+                <option value="Wortham - TX 14 &amp; Main St">Wortham - TX 14 &amp; Main St</option>
+                <option value="Streetman - I-45 &amp; FM 416">Streetman - I-45 &amp; FM 416</option>
+                <option value="Butler - US 84 &amp; FM 489">Butler - US 84 &amp; FM 489</option>
+                <option value="Oakwood - US 79 &amp; Trinity River Bridge">Oakwood - US 79 &amp; Trinity River Bridge</option>
+                <option value="Dew - I-45 &amp; FM 489">Dew - I-45 &amp; FM 489</option>
+                <option value="Kirvin - FM 80 &amp; FM 1449">Kirvin - FM 80 &amp; FM 1449</option>
+                <option value="Richland Chambers Lake - FM 488 &amp; FM 416">Richland Chambers Lake - FM 488 &amp; FM 416</option>
+              </select>
+              <div class="space-y-0.5 pt-1">
+                <span class="text-[10px] text-slate-400 font-bold block uppercase">STORM MOVEMENT:</span>
+                <input type="text" id="skywarn-motion" value="Moving East @ 25 MPH" placeholder="e.g. Moving ENE @ 30 MPH" class="w-full bg-[#05080c] border border-slate-700 rounded-lg p-2 text-xs text-amber-400 font-mono-tac outline-none font-bold">
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 4: ATTACHED GEO-TAGGED OBSERVATION PHOTO -->
+          <div class="space-y-1.5">
+            <label class="text-[11px] font-bold text-slate-300 uppercase flex items-center justify-between">
+              <span>STEP 4: ATTACHED GEO-TAGGED STORM PHOTO:</span>
+              <span class="text-[10px] text-slate-500 font-mono">WATERMARKED FOR NWS FORECASTERS</span>
+            </label>
+            <div id="skywarn-attached-photo-container">
+              <!-- Rendered via updateAttachedPhotoCard() -->
+            </div>
+          </div>
+
+          <!-- STEP 5: IMPACT REMARKS & QUICK TAGS -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between items-center">
+              <label class="text-[11px] font-bold text-slate-300 uppercase">STEP 5: OBSERVATION REMARKS &amp; IMPACT DETAILS:</label>
+              <div class="flex items-center gap-1 text-[9px] flex-wrap">
+                <span class="text-slate-500">QUICK TAGS:</span>
+                <button type="button" onclick="appendSkywarnTag('Power lines down across roadway.')" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded cursor-pointer">+ Power</button>
+                <button type="button" onclick="appendSkywarnTag('Large trees uprooted / branches blocking lanes.')" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded cursor-pointer">+ Trees</button>
+                <button type="button" onclick="appendSkywarnTag('Water rapidly rising over roadway.')" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded cursor-pointer">+ Flooding</button>
+                <button type="button" onclick="appendSkywarnTag('Persistent cloud rotation observed with inflow.')" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded cursor-pointer">+ Rotation</button>
+              </div>
+            </div>
+            <textarea id="skywarn-notes" rows="3" class="w-full bg-[#05080c] border border-slate-700 rounded-lg p-2.5 text-white font-mono-tac text-xs focus:border-emerald-500 outline-none leading-relaxed" placeholder="Describe cloud rotation, hail accumulation, specific damage, power line hazards, and highway conditions..."></textarea>
+          </div>
+
+          <!-- STEP 6: SUMMARY & TRANSMIT BUTTON -->
+          <div class="p-3.5 bg-gradient-to-r from-amber-950/40 via-slate-900 to-[#080b10] border-2 border-amber-500/60 rounded-xl space-y-3">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <span class="text-[10px] text-slate-400 font-bold block uppercase">CURRENT REPORT SUMMARY:</span>
+                <div id="skywarn-active-summary-text" class="text-sm font-black text-amber-300">
+                  ⚡ Ready to report: Tap a severe condition above
+                </div>
+              </div>
+              <div id="skywarn-active-severity-badge" class="px-2.5 py-1 rounded text-xs font-black bg-slate-900 text-slate-400 border border-slate-700 self-start sm:self-auto">
+                STANDBY
+              </div>
+            </div>
+
+            <!-- Hidden values for parameter synchronization -->
+            <input type="hidden" id="skywarn-type" value="🌪️ Tornado / Rotating Wall Cloud">
+
+            <!-- BIG HIGH-CONTRAST ACTION BUTTON -->
+            <button type="button" onclick="dispatchSkywarnToNcs()" class="w-full py-3.5 px-4 bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-600 hover:from-emerald-500 hover:to-emerald-400 text-slate-950 font-black rounded-xl text-sm shadow-[0_0_20px_rgba(16,185,129,0.5)] transition flex items-center justify-center gap-2 cursor-pointer tracking-wider font-mono-tac uppercase">
+              <span class="text-lg">📢</span>
+              <span>TRANSMIT REPORT TO NET CONTROL / EC</span>
+            </button>
+          </div>
+
+          <!-- GENERATED ON-AIR NET SCRIPT (READ OVER REPEATER) -->
+          <div id="skywarn-voice-script-card" class="p-3.5 bg-[#080b10] border-2 border-emerald-500/60 rounded-xl space-y-2 hidden">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                <span>🎙️</span><span>ON-AIR VOICE SCRIPT (READ OVER REPEATER FF 110):</span>
+              </span>
+              <button type="button" onclick="copySkywarnVoiceScript()" class="px-2.5 py-1 bg-emerald-950 hover:bg-emerald-900 border border-emerald-700 text-emerald-300 rounded text-[10px] font-bold transition cursor-pointer">
+                📋 COPY SCRIPT
+              </button>
+            </div>
+            <p id="skywarn-voice-script-text" class="text-xs text-white p-3 bg-black rounded-lg border border-slate-800 font-mono-tac leading-relaxed select-all">
+              "Net Control, this is Storm Spotter KG5TZT with a SEVERE WEATHER REPORT..."
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- SUBPANEL 2: TACTICAL CAMERA HUD & PHOTO LAB              -->
+      <!-- ======================================================== -->
+      <div id="skywarn-subpanel-camera" class="skywarn-subpanel hidden space-y-4">
+        <!-- Hidden Native File Inputs -->
+        <input type="file" id="skywarn-camera-input" accept="image/*" capture="environment" class="hidden" onchange="handleRealSkywarnPhoto(event)">
+        <input type="file" id="skywarn-gallery-input" accept="image/*" class="hidden" onchange="handleRealSkywarnPhoto(event)">
+
+        <!-- Tactical Viewfinder HUD Display Card -->
+        <div class="relative bg-black rounded-2xl overflow-hidden border-2 border-emerald-500/60 shadow-[0_0_30px_rgba(16,185,129,0.2)] min-h-[420px] flex flex-col justify-between p-4 font-mono-tac">
+          <!-- Dark Storm Backdrop -->
+          <div id="skywarn-camera-canvas" class="absolute inset-0 bg-gradient-to-b from-slate-950 via-[#0a101d] to-emerald-950/40 opacity-95 transition"></div>
+
+          <!-- Tactical Crosshairs & Radar Reticle -->
+          <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div class="w-48 h-48 border border-emerald-500/40 rounded-full flex items-center justify-center">
+              <div class="w-28 h-28 border border-emerald-500/25 rounded-full flex items-center justify-center">
+                <div class="w-3 h-3 bg-emerald-400 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.9)] animate-pulse"></div>
+              </div>
+            </div>
+            <div class="absolute w-64 h-0.5 bg-emerald-500/20"></div>
+            <div class="absolute h-64 w-0.5 bg-emerald-500/20"></div>
+            <!-- Angle ticks -->
+            <span class="absolute top-6 text-[9px] text-emerald-400/80 font-bold">N 0°</span>
+            <span class="absolute right-6 text-[9px] text-emerald-400/80 font-bold">E 90°</span>
+            <span class="absolute bottom-6 text-[9px] text-emerald-400/80 font-bold">S 180°</span>
+            <span class="absolute left-6 text-[9px] text-emerald-400/80 font-bold">W 270°</span>
+          </div>
+
+          <!-- Top HUD Data Overlay (Exact Real-Time Telemetry) -->
+          <div class="relative z-10 flex justify-between items-start text-xs text-emerald-400 bg-black/80 backdrop-blur-md p-3 rounded-xl border border-emerald-500/40">
+            <div class="space-y-0.5">
+              <div>LAT: <span id="hud-val-lat" class="text-white font-bold">31.7249° N</span></div>
+              <div>LON: <span id="hud-val-lon" class="text-white font-bold">96.1652° W</span></div>
+              <div>GRID: <span id="hud-val-grid" class="text-amber-400 font-bold">EM11xq</span> • ELEV: <span id="hud-val-elev" class="text-slate-300">462 FT</span></div>
+              <div>ACCURACY: <span id="hud-val-acc" class="text-emerald-300 font-bold">±12 FT</span></div>
+            </div>
+            <div class="text-right space-y-0.5">
+              <div>BEARING: <span id="photo-hud-azimuth" class="text-amber-400 font-bold">285° WNW</span></div>
+              <div>LOC 24H: <span id="photo-hud-local" class="text-white font-bold">--:--:--</span></div>
+              <div>UTC ZULU: <span id="photo-hud-utc" class="text-emerald-400 font-bold">--:--:--Z</span></div>
+              <div class="text-[9px] text-slate-400">STATUS: <span class="text-emerald-400 font-bold">HUD ACTIVE</span></div>
+            </div>
+          </div>
+
+          <!-- Compass Azimuth Selector Tape -->
+          <div class="relative z-10 bg-black/75 backdrop-blur-md p-2.5 rounded-xl border border-slate-800 text-[10px] space-y-1.5 my-auto">
+            <div class="flex justify-between items-center text-slate-400">
+              <span class="font-bold flex items-center gap-1.5">
+                <span>🧭</span><span>DIGITAL AZIMUTH COMPASS:</span>
+              </span>
+              <span id="compass-bearing-label" class="text-amber-400 font-bold text-xs">285° WNW</span>
+            </div>
+            <div class="flex items-center gap-1 overflow-x-auto scrollbar-thin py-0.5">
+              <button type="button" onclick="setSkywarnHeading(0, '0° N')" class="heading-btn px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg border border-slate-700 whitespace-nowrap cursor-pointer font-bold">N (0°)</button>
+              <button type="button" onclick="setSkywarnHeading(45, '45° NE')" class="heading-btn px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg border border-slate-700 whitespace-nowrap cursor-pointer font-bold">NE (45°)</button>
+              <button type="button" onclick="setSkywarnHeading(90, '90° E')" class="heading-btn px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg border border-slate-700 whitespace-nowrap cursor-pointer font-bold">E (90°)</button>
+              <button type="button" onclick="setSkywarnHeading(135, '135° SE')" class="heading-btn px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg border border-slate-700 whitespace-nowrap cursor-pointer font-bold">SE (135°)</button>
+              <button type="button" onclick="setSkywarnHeading(180, '180° S')" class="heading-btn px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg border border-slate-700 whitespace-nowrap cursor-pointer font-bold">S (180°)</button>
+              <button type="button" onclick="setSkywarnHeading(225, '225° SW')" class="heading-btn px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg border border-slate-700 whitespace-nowrap cursor-pointer font-bold">SW (225°)</button>
+              <button type="button" onclick="setSkywarnHeading(270, '270° W')" class="heading-btn px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg border border-slate-700 whitespace-nowrap cursor-pointer font-bold">W (270°)</button>
+              <button type="button" onclick="setSkywarnHeading(285, '285° WNW')" class="heading-btn px-2.5 py-1 bg-emerald-950 text-emerald-300 rounded-lg border border-emerald-500 font-bold whitespace-nowrap cursor-pointer">WNW (285°)</button>
+              <button type="button" onclick="setSkywarnHeading(315, '315° NW')" class="heading-btn px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg border border-slate-700 whitespace-nowrap cursor-pointer font-bold">NW (315°)</button>
+            </div>
+          </div>
+
+          <!-- Bottom HUD Action Bar -->
+          <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-black/85 backdrop-blur-md p-3.5 rounded-xl border border-emerald-500/30">
+            <div class="text-[11px] text-slate-300 leading-tight">
+              <div>STATION: <strong id="hud-bottom-call" class="text-emerald-400">KG5TZT (Brian Davis)</strong></div>
+              <div>SPOTTER ID: <span id="hud-bottom-id" class="text-amber-400 font-bold">TX-FRE-01</span> • <span class="text-slate-400">NWS FORT WORTH</span></div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" onclick="triggerSkywarnCamera()" class="px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-slate-950 font-black text-xs rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.5)] transition flex items-center gap-2 cursor-pointer">
+                <span class="text-base">📸</span>
+                <span>OPEN CAMERA (SNAP &amp; STAMP)</span>
+              </button>
+
+              <button type="button" onclick="triggerSkywarnGallery()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs rounded-xl border border-slate-700 transition flex items-center gap-1.5 cursor-pointer">
+                <span>🖼️</span>
+                <span>FROM PHOTOS</span>
+              </button>
+
+              <button type="button" onclick="initDeviceCompass()" class="px-2.5 py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold text-xs rounded-xl border border-slate-800 transition flex items-center gap-1 cursor-pointer" title="Calibrate Compass Sensor">
+                <span>🧭</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STAMPED STORM PHOTOS SESSION GALLERY -->
+        <div class="bg-[#10151d] border border-slate-800 rounded-xl p-4 space-y-3 font-mono-tac">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-2">
+            <div class="flex items-center gap-2">
+              <span class="text-slate-200 font-bold text-xs uppercase tracking-wider">CAPTURED &amp; WATERMARKED OBSERVATION PHOTOS</span>
+              <span id="skywarn-photo-count-badge" class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 text-[10px] border border-emerald-800 font-bold">0 STAMPED</span>
+            </div>
+            <span class="text-[10px] text-slate-400">PHOTOS STAMPED WITH GPS, BEARING &amp; UTC FOR NWS FORECASTERS</span>
+          </div>
+
+          <!-- Gallery Grid -->
+          <div id="skywarn-photos-gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <!-- Rendered dynamically via renderSkywarnPhotos() -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- SUBPANEL 3: LIVE COUNTY WEATHER RADAR                    -->
+      <!-- ======================================================== -->
+      <div id="skywarn-subpanel-radar" class="skywarn-subpanel hidden space-y-4 font-mono-tac">
+        <div class="bg-[#10151d] border border-slate-800 rounded-xl p-4 space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-2">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🛰️</span>
+              <div>
+                <h4 class="text-sm font-bold text-white uppercase tracking-wider">LIVE FREESTONE COUNTY NEXRAD WEATHER RADAR</h4>
+                <p class="text-[10px] text-slate-400">Live precipitation reflectivity loop centered on Fairfield, Texas &amp; surrounding mutual-aid counties.</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <button type="button" data-station="fairfield" onclick="setRadarStation('fairfield')" class="radar-station-btn px-2.5 py-1 rounded-lg text-xs font-black bg-sky-950 text-sky-300 border border-sky-500 cursor-pointer">FREESTONE</button>
+              <button type="button" data-station="kfws" onclick="setRadarStation('kfws')" class="radar-station-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-[#080b10] text-slate-300 border border-slate-800 hover:bg-slate-900 cursor-pointer">KFWS DALLAS</button>
+              <button type="button" data-station="kgrk" onclick="setRadarStation('kgrk')" class="radar-station-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-[#080b10] text-slate-300 border border-slate-800 hover:bg-slate-900 cursor-pointer">KGRK CENTRAL TX</button>
+              <button type="button" data-station="khgx" onclick="setRadarStation('khgx')" class="radar-station-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-[#080b10] text-slate-300 border border-slate-800 hover:bg-slate-900 cursor-pointer">KHGX HOUSTON</button>
+              <button type="button" data-station="kshv" onclick="setRadarStation('kshv')" class="radar-station-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-[#080b10] text-slate-300 border border-slate-800 hover:bg-slate-900 cursor-pointer">KSHV SHREVEPORT</button>
+            </div>
+          </div>
+
+          <!-- Interactive Radar Loop Container -->
+          <div class="relative w-full rounded-xl overflow-hidden border-2 border-slate-700 bg-black min-h-[440px] sm:min-h-[500px]">
+            <iframe id="skywarn-radar-iframe" src="https://embed.windy.com/embed2.html?lat=31.725&lon=-96.165&detailLat=31.725&detailLon=-96.165&width=650&height=480&zoom=8&level=surface&overlay=radar&product=radar&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=mph&metricTemp=%C2%B0F&radarRange=-1" class="w-full h-[460px] sm:h-[520px] border-0" allow="geolocation" title="Freestone County Live Weather Radar" loading="lazy"></iframe>
+          </div>
+
+          <!-- Direct Official NWS Resource Links -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 pt-2">
+            <a href="https://radar.weather.gov/station/kfws/standard" target="_blank" rel="noopener" class="p-2.5 bg-[#080b10] hover:bg-slate-800 border border-slate-800 rounded-lg text-left transition space-y-0.5">
+              <div class="text-xs font-bold text-sky-400 flex items-center justify-between">
+                <span>KFWS NWS RADAR</span><span>↗</span>
+              </div>
+              <div class="text-[10px] text-slate-400">Official Fort Worth NEXRAD Radar Loop</div>
+            </a>
+
+            <a href="https://www.spc.noaa.gov/products/outlook/day1otlk.html" target="_blank" rel="noopener" class="p-2.5 bg-[#080b10] hover:bg-slate-800 border border-slate-800 rounded-lg text-left transition space-y-0.5">
+              <div class="text-xs font-bold text-amber-400 flex items-center justify-between">
+                <span>SPC DAY 1 OUTLOOK</span><span>↗</span>
+              </div>
+              <div class="text-[10px] text-slate-400">NOAA Storm Prediction Center Risk Areas</div>
+            </a>
+
+            <a href="https://forecast.weather.gov/product.php?site=FWD&issuedby=FWD&product=AFD&format=CI&version=1&glossary=1" target="_blank" rel="noopener" class="p-2.5 bg-[#080b10] hover:bg-slate-800 border border-slate-800 rounded-lg text-left transition space-y-0.5">
+              <div class="text-xs font-bold text-purple-400 flex items-center justify-between">
+                <span>NWS FORECAST DISCUSSION</span><span>↗</span>
+              </div>
+              <div class="text-[10px] text-slate-400">Meteorologist Synoptic AFD Briefing</div>
+            </a>
+
+            <a href="https://forecast.weather.gov/MapClick.php?lat=31.7249&lon=-96.1652" target="_blank" rel="noopener" class="p-2.5 bg-[#080b10] hover:bg-slate-800 border border-slate-800 rounded-lg text-left transition space-y-0.5">
+              <div class="text-xs font-bold text-emerald-400 flex items-center justify-between">
+                <span>FAIRFIELD 7-DAY FORECAST</span><span>↗</span>
+              </div>
+              <div class="text-[10px] text-slate-400">Point Forecast for Fairfield, TX</div>
             </a>
           </div>
         </div>
+      </div>
 
-        <!-- STRESS-RESISTANT 1-TAP SEVERE PHENOMENON SELECTOR -->
-        <div class="space-y-2">
-          <label class="text-xs font-black text-amber-400 block uppercase tracking-wider">
-            STEP 1: SELECT OBSERVED SEVERE CONDITION (1-TAP QUICK SELECT):
-          </label>
-          <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
-            <!-- 1. Tornado -->
-            <button type="button" onclick="selectQuickSkywarnType('🌪️ TORNADO / FUNNEL', 'TORNADO: Touchdown / Active Funnel on Ground', 'CRITICAL / LIFE SAFETY', 'bg-red-950 text-red-300 border-red-600')" class="p-3 rounded-xl bg-red-950/50 hover:bg-red-900 border-2 border-red-600/70 text-left transition space-y-1 cursor-pointer">
-              <span class="text-2xl block">🌪️</span>
-              <div class="font-black text-xs text-red-300 leading-tight">TORNADO / WALL CLOUD</div>
-              <div class="text-[9px] text-red-400 font-bold">Funnel / Rotation</div>
-            </button>
-
-            <!-- 2. Large Hail -->
-            <button type="button" onclick="selectQuickSkywarnType('🧊 LARGE HAIL', 'HAIL: Severe Hail >= 1.00 inch', 'SEVERE CRITERIA', 'bg-sky-950 text-sky-300 border-sky-600')" class="p-3 rounded-xl bg-sky-950/50 hover:bg-sky-900 border-2 border-sky-600/70 text-left transition space-y-1 cursor-pointer">
-              <span class="text-2xl block">🧊</span>
-              <div class="font-black text-xs text-sky-300 leading-tight">LARGE HAIL</div>
-              <div class="text-[9px] text-sky-400 font-bold">Quarter, Golf Ball, Baseball</div>
-            </button>
-
-            <!-- 3. Damaging Wind -->
-            <button type="button" onclick="selectQuickSkywarnType('💨 DAMAGING WIND', 'WIND: Damaging Wind >= 58 MPH', 'SEVERE CRITERIA', 'bg-amber-950 text-amber-300 border-amber-600')" class="p-3 rounded-xl bg-amber-950/50 hover:bg-amber-900 border-2 border-amber-600/70 text-left transition space-y-1 cursor-pointer">
-              <span class="text-2xl block">💨</span>
-              <div class="font-black text-xs text-amber-300 leading-tight">DAMAGING WIND</div>
-              <div class="text-[9px] text-amber-400 font-bold">58+ MPH / Trees Down</div>
-            </button>
-
-            <!-- 4. Flash Flood -->
-            <button type="button" onclick="selectQuickSkywarnType('🌊 FLASH FLOOD', 'FLOOD: Flash Flooding / Road Impassable', 'FLASH FLOOD', 'bg-blue-950 text-blue-300 border-blue-600')" class="p-3 rounded-xl bg-blue-950/50 hover:bg-blue-900 border-2 border-blue-600/70 text-left transition space-y-1 cursor-pointer">
-              <span class="text-2xl block">🌊</span>
-              <div class="font-black text-xs text-blue-300 leading-tight">FLASH FLOOD</div>
-              <div class="text-[9px] text-blue-400 font-bold">Water Over Road / Bridges</div>
-            </button>
-
-            <!-- 5. Damage / Hazard -->
-            <button type="button" onclick="selectQuickSkywarnType('💥 STRUCTURAL DAMAGE', 'DAMAGE: Structural Roof / Power Outage', 'LOCAL EMERGENCY', 'bg-purple-950 text-purple-300 border-purple-600')" class="p-3 rounded-xl bg-purple-950/50 hover:bg-purple-900 border-2 border-purple-600/70 text-left transition space-y-1 cursor-pointer">
-              <span class="text-2xl block">💥</span>
-              <div class="font-black text-xs text-purple-300 leading-tight">DAMAGE / HAZARD</div>
-              <div class="text-[9px] text-purple-400 font-bold">Roof Loss / Power Lines</div>
-            </button>
-          </div>
-        </div>
-
-        <!-- SPECIFIC QUICK MEASUREMENTS & SUB-CRITERIA -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 p-3 bg-[#080b10] rounded-xl border border-slate-800">
-          <!-- Hail Sizes -->
-          <div class="space-y-1.5">
-            <span class="text-[10px] text-slate-400 font-bold block uppercase">QUICK HAIL SIZE SELECTOR (VISUAL OBJECT):</span>
-            <div class="flex flex-wrap gap-1.5 text-xs">
-              <button type="button" onclick="setSkywarnHailSize('Penny (0.75 in)')" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded text-slate-200 font-bold">Penny 0.75"</button>
-              <button type="button" onclick="setSkywarnHailSize('Quarter (1.00 in) - SEVERE')" class="px-2 py-1 bg-sky-950 hover:bg-sky-900 border border-sky-700 rounded text-sky-300 font-bold">Quarter 1.00" ★</button>
-              <button type="button" onclick="setSkywarnHailSize('Half Dollar (1.25 in)')" class="px-2 py-1 bg-sky-950 hover:bg-sky-900 border border-sky-700 rounded text-sky-300 font-bold">Half Dollar 1.25"</button>
-              <button type="button" onclick="setSkywarnHailSize('Golf Ball (1.75 in) - DANGEROUS')" class="px-2 py-1 bg-amber-950 hover:bg-amber-900 border border-amber-700 rounded text-amber-300 font-bold">Golf Ball 1.75" ⚠️</button>
-              <button type="button" onclick="setSkywarnHailSize('Tennis Ball (2.50 in)')" class="px-2 py-1 bg-rose-950 hover:bg-rose-900 border border-rose-700 rounded text-rose-300 font-bold">Tennis Ball 2.50"</button>
-              <button type="button" onclick="setSkywarnHailSize('Baseball (2.75 in+) - DESTRUCTIVE')" class="px-2 py-1 bg-red-950 hover:bg-red-900 border border-red-700 rounded text-red-300 font-bold">Baseball 2.75"+ 🚨</button>
-            </div>
-          </div>
-
-          <!-- Wind Speed -->
-          <div class="space-y-1.5">
-            <span class="text-[10px] text-slate-400 font-bold block uppercase">QUICK WIND SPEED SELECTOR:</span>
-            <div class="flex flex-wrap gap-1.5 text-xs">
-              <button type="button" onclick="setSkywarnWindSpeed('50-59 MPH (Estimated - Large Limbs Down)')" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded text-slate-200 font-bold">50-59 MPH</button>
-              <button type="button" onclick="setSkywarnWindSpeed('60-69 MPH (Severe - Trees Snapped / Utility Poles)')" class="px-2 py-1 bg-amber-950 hover:bg-amber-900 border border-amber-700 rounded text-amber-300 font-bold">60-69 MPH ★</button>
-              <button type="button" onclick="setSkywarnWindSpeed('70+ MPH (Extreme Hurricane-Force Winds)')" class="px-2 py-1 bg-red-950 hover:bg-red-900 border border-red-700 rounded text-red-300 font-bold">70+ MPH 🚨</button>
-              <button type="button" onclick="setSkywarnWindSpeed('Trees Down Across Roadway')" class="px-2 py-1 bg-amber-950 hover:bg-amber-900 border border-amber-700 rounded text-amber-300 font-bold">Trees on Road</button>
-              <button type="button" onclick="setSkywarnWindSpeed('Power Lines Down / Sparking')" class="px-2 py-1 bg-rose-950 hover:bg-rose-900 border border-rose-700 rounded text-rose-300 font-bold">Power Lines Down</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- LOCATION & CROSSROADS (STEP 2) -->
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 p-3 bg-[#080b10] rounded-xl border border-slate-800">
-          <div class="md:col-span-6 space-y-1">
-            <div class="flex items-center justify-between">
-              <label class="text-[11px] font-bold text-slate-300 uppercase">LOCATION / CROSSROADS:</label>
-              <button type="button" onclick="autofillSpotterGpsLocation()" class="text-[10px] text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-1 cursor-pointer">
-                <span>📍</span><span>GPS AUTOFILL</span>
+      <!-- ======================================================== -->
+      <!-- SUBPANEL 4: COUNTY ACTIVE SEVERE WEATHER LOG             -->
+      <!-- ======================================================== -->
+      <div id="skywarn-subpanel-feed" class="skywarn-subpanel hidden space-y-4 font-mono-tac">
+        <div class="bg-[#10151d] border border-slate-800 rounded-xl p-4 space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-2">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <h4 class="text-xs font-bold text-white uppercase tracking-wider">FREESTONE COUNTY LIVE SPOTTER LOG &amp; REPORTS FEED</h4>
+              <span id="skywarn-feed-count" class="px-2 py-0.5 rounded text-[10px] font-bold bg-sky-950 text-sky-300 border border-sky-800">0 REPORTS ACTIVE</span>
+              <button id="btn-purge-all-skywarn" type="button" onclick="purgeAllSkywarnReports()" class="ml-2 px-2 py-0.5 bg-red-950/80 hover:bg-red-900 border border-red-800 text-red-300 rounded text-[9px] font-bold flex items-center gap-1 transition cursor-pointer" title="EC Purge All Expired Storm Reports">
+                <span>🗑️</span><span>PURGE ALL</span>
               </button>
             </div>
-            <input type="text" id="skywarn-location" placeholder="e.g. FM 488 &amp; FM 416, Fairfield, TX" class="w-full bg-[#05080c] border border-slate-700 focus:border-emerald-500 rounded-lg p-2.5 text-xs text-white font-mono-tac outline-none font-bold">
+            <span class="text-[10px] text-slate-400">SYNCHRONIZED WITH NET CONTROL ON FF 110 &amp; WRTM 760</span>
           </div>
 
-          <div class="md:col-span-6 space-y-1">
-            <label class="text-[11px] font-bold text-slate-300 uppercase">COUNTY CROSSROADS PRESETS:</label>
-            <select id="skywarn-preset-crossroads" onchange="applyCrossroadsPreset(this.value)" class="w-full bg-[#05080c] border border-slate-700 focus:border-emerald-500 rounded-lg p-2 text-xs text-slate-200 font-mono-tac outline-none cursor-pointer">
-              <option value="">-- Choose Key Freestone Crossroads --</option>
-              <option value="Fairfield - US 84 & TX 75 (Courthouse Square)">Fairfield - US 84 &amp; TX 75 (Courthouse Square)</option>
-              <option value="Fairfield - I-45 & US 84 Interchange">Fairfield - I-45 &amp; US 84 Interchange</option>
-              <option value="Teague - Main St & US 84">Teague - Main St &amp; US 84</option>
-              <option value="Wortham - TX 14 & Main St">Wortham - TX 14 &amp; Main St</option>
-              <option value="Streetman - I-45 & FM 416">Streetman - I-45 &amp; FM 416</option>
-              <option value="Butler - US 84 & FM 489">Butler - US 84 &amp; FM 489</option>
-              <option value="Oakwood - US 79 & Trinity River Bridge">Oakwood - US 79 &amp; Trinity River Bridge</option>
-              <option value="Dew - I-45 & FM 489">Dew - I-45 &amp; FM 489</option>
-              <option value="Kirvin - FM 80 & FM 1449">Kirvin - FM 80 &amp; FM 1449</option>
-              <option value="Richland Chambers Lake - FM 488 & FM 416">Richland Chambers Lake - FM 488 &amp; FM 416</option>
-            </select>
+          <div id="skywarn-reports-feed" class="space-y-3">
+            <!-- Rendered dynamically via renderSkywarnReportsFeed() -->
           </div>
-        </div>
-
-        <!-- ACTIVE DETAILS SUMMARY & TRANSMIT BUTTON (STEP 3) -->
-        <div class="p-3 bg-gradient-to-r from-amber-950/40 via-slate-900 to-[#080b10] border-2 border-amber-500/60 rounded-xl space-y-3">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div>
-              <span class="text-[10px] text-slate-400 font-bold block uppercase">CURRENT REPORT SUMMARY:</span>
-              <div id="skywarn-active-summary-text" class="text-sm font-black text-amber-300">
-                ⚡ Ready to report: Tap a severe condition above
-              </div>
-            </div>
-            <div id="skywarn-active-severity-badge" class="px-2.5 py-1 rounded text-xs font-black bg-slate-900 text-slate-400 border border-slate-700 self-start sm:self-auto">
-              STANDBY
-            </div>
-          </div>
-
-          <!-- Hidden storage fields for selected parameters -->
-          <input type="hidden" id="skywarn-type" value="THUNDERSTORM">
-          <input type="hidden" id="skywarn-hail" value="None">
-          <input type="hidden" id="skywarn-wind" value="Calm">
-          <input type="hidden" id="skywarn-motion" value="Moving East @ 25 MPH">
-          <input type="hidden" id="skywarn-notes" value="">
-
-          <!-- BIG HIGH-CONTRAST ACTION BUTTON -->
-          <button type="button" onclick="dispatchSkywarnToNcs()" class="w-full py-3.5 px-4 bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-600 hover:from-emerald-500 hover:to-emerald-400 text-slate-950 font-black rounded-xl text-sm shadow-[0_0_20px_rgba(16,185,129,0.5)] transition flex items-center justify-center gap-2 cursor-pointer tracking-wider font-mono-tac uppercase">
-            <span>📢</span>
-            <span>TRANSMIT REPORT TO NET CONTROL / EC</span>
-          </button>
-        </div>
-
-        <!-- GENERATED ON-AIR NET SCRIPT (READ OVER REPEATER) -->
-        <div id="skywarn-voice-script-card" class="p-3 bg-[#080b10] border border-emerald-500/50 rounded-xl space-y-2 hidden">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
-              <span>🎙️</span><span>ON-AIR VOICE SCRIPT (READ OVER REPEATER FF 110):</span>
-            </span>
-            <button type="button" onclick="copySkywarnVoiceScript()" class="px-2 py-0.5 bg-emerald-950 hover:bg-emerald-900 border border-emerald-700 text-emerald-300 rounded text-[10px] font-bold transition cursor-pointer">
-              📋 COPY SCRIPT
-            </button>
-          </div>
-          <p id="skywarn-voice-script-text" class="text-xs text-white p-2.5 bg-black rounded-lg border border-slate-800 font-mono-tac leading-relaxed select-all">
-            "KG5TZT to NET CONTROL, I have a severe weather report..."
-          </p>
-        </div>
-      </div>
-
-      <!-- COUNTY ACTIVE SEVERE WEATHER LOG TABLE (REAL-TIME ACROSS ALL OPERATORS) -->
-      <div class="bg-[#10151d] border border-slate-800 rounded-xl p-4 font-mono-tac space-y-3">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-          <div class="flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            <h4 class="text-xs font-bold text-white uppercase tracking-wider">COUNTY ACTIVE SEVERE WEATHER LOG</h4>
-          </div>
-          <span class="text-[10px] text-slate-400">Reports Logged to NCS / EC</span>
-        </div>
-        <div id="skywarn-reports-table-container" class="space-y-2 max-h-72 overflow-y-auto">
-          <!-- Populated by renderSkywarnReportsTable() -->
-        </div>
-      </div>
-      <!-- Main Spotter Grid: Left = HUD Viewfinder & Photo Lab, Right = NWS Criteria Form -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <!-- LEFT: Real-time Tactical Viewfinder HUD & Stamped Storm Photos -->
-        <div class="space-y-3 font-mono-tac">
-          <div class="relative bg-black rounded-xl overflow-hidden border-2 border-emerald-500/50 shadow-[0_0_25px_rgba(16,185,129,0.15)] min-h-[380px] flex flex-col justify-between p-4">
-            <!-- Simulated Dark Storm Sky Backdrop -->
-            <div id="skywarn-camera-canvas" class="absolute inset-0 bg-gradient-to-b from-slate-950 via-[#0f172a] to-emerald-950/50 opacity-90 transition"></div>
-            
-            <!-- Tactical Crosshairs & Radar Reticle -->
-            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div class="w-40 h-40 border border-emerald-500/40 rounded-full flex items-center justify-center">
-                <div class="w-24 h-24 border border-emerald-500/20 rounded-full flex items-center justify-center">
-                  <div class="w-2.5 h-2.5 bg-emerald-400 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div>
-                </div>
-              </div>
-              <div class="absolute w-56 h-0.5 bg-emerald-500/20"></div>
-              <div class="absolute h-56 w-0.5 bg-emerald-500/20"></div>
-              <!-- Angle ticks -->
-              <span class="absolute top-8 text-[9px] text-emerald-400/80 font-bold">N 0°</span>
-              <span class="absolute right-8 text-[9px] text-emerald-400/80 font-bold">E 90°</span>
-              <span class="absolute bottom-8 text-[9px] text-emerald-400/80 font-bold">S 180°</span>
-              <span class="absolute left-8 text-[9px] text-emerald-400/80 font-bold">W 270°</span>
-            </div>
-
-            <!-- Top HUD Data Overlay (Exact Freestone County Coordinates) -->
-            <div class="relative z-10 flex justify-between items-start text-xs text-emerald-400 bg-black/75 backdrop-blur-sm p-3 rounded-lg border border-emerald-500/30">
-              <div class="space-y-0.5">
-                <div>LAT: <span id="hud-val-lat" class="text-white font-bold">31.7249° N</span></div>
-                <div>LON: <span id="hud-val-lon" class="text-white font-bold">96.1652° W</span></div>
-                <div>GRID: <span class="text-amber-400 font-bold">EM11xq</span> • ELEV: <span class="text-slate-300">460 FT</span></div>
-              </div>
-              <div class="text-right space-y-0.5">
-                <div>BEARING: <span id="photo-hud-azimuth" class="text-amber-400 font-bold">285° WNW</span></div>
-                <div>LOC 24H: <span id="photo-hud-local" class="text-white font-bold">18:22:15</span></div>
-                <div>UTC ZULU: <span id="photo-hud-utc" class="text-emerald-400 font-bold">23:22:15Z</span></div>
-              </div>
-            </div>
-
-            <!-- Compass Azimuth Selector Tape -->
-            <div class="relative z-10 bg-black/70 p-2 rounded-lg border border-slate-800 text-[10px] space-y-1">
-              <div class="flex justify-between items-center text-slate-400">
-                <span>DIGITAL AZIMUTH COMPASS:</span>
-                <span id="compass-bearing-label" class="text-amber-400 font-bold">285° WNW</span>
-              </div>
-              <div class="flex items-center gap-1 overflow-x-auto scrollbar-thin py-0.5">
-                <button onclick="setSkywarnHeading(0, '0° N')" class="px-2 py-0.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded border border-slate-700 whitespace-nowrap">N (0°)</button>
-                <button onclick="setSkywarnHeading(45, '45° NE')" class="px-2 py-0.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded border border-slate-700 whitespace-nowrap">NE (45°)</button>
-                <button onclick="setSkywarnHeading(90, '90° E')" class="px-2 py-0.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded border border-slate-700 whitespace-nowrap">E (90°)</button>
-                <button onclick="setSkywarnHeading(135, '135° SE')" class="px-2 py-0.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded border border-slate-700 whitespace-nowrap">SE (135°)</button>
-                <button onclick="setSkywarnHeading(180, '180° S')" class="px-2 py-0.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded border border-slate-700 whitespace-nowrap">S (180°)</button>
-                <button onclick="setSkywarnHeading(225, '225° SW')" class="px-2 py-0.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded border border-slate-700 whitespace-nowrap">SW (225°)</button>
-                <button onclick="setSkywarnHeading(270, '270° W')" class="px-2 py-0.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded border border-slate-700 whitespace-nowrap">W (270°)</button>
-                <button onclick="setSkywarnHeading(285, '285° WNW')" class="px-2 py-0.5 bg-emerald-950 text-emerald-300 rounded border border-emerald-600 font-bold whitespace-nowrap">WNW (285°)</button>
-                <button onclick="setSkywarnHeading(315, '315° NW')" class="px-2 py-0.5 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded border border-slate-700 whitespace-nowrap">NW (315°)</button>
-              </div>
-            </div>
-
-            <!-- Bottom HUD Command Bar -->
-            <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-black/80 p-3 rounded-lg border border-emerald-500/20">
-              <div class="text-[11px] text-slate-300 leading-tight">
-                <div>STATION: <strong id="hud-bottom-call" class="text-emerald-400">KG5TZT (Brian Davis)</strong></div>
-                <div>SPOTTER ID: <span class="text-amber-400 font-bold">TX-FRE-01</span> • <span class="text-slate-400">NWS FWD</span></div>
-              </div>
-              <div class="flex items-center gap-2">
-                <button onclick="captureStormPhoto()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg shadow-[0_0_15px_rgba(16,185,129,0.5)] transition flex items-center gap-1.5">
-                  <span>📸</span>
-                  <span>SNAP & GEO-TAG</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Stamped Storm Photos Session Gallery -->
-          <div class="bg-[#10151d] border border-slate-800 rounded-xl p-3 space-y-2">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-              <div class="flex items-center gap-2">
-                <span class="text-slate-300 font-bold text-xs">CAPTURED OBSERVATION PHOTOS</span>
-                <span id="skywarn-photo-count-badge" class="px-1.5 py-0.2 rounded bg-emerald-950 text-emerald-300 text-[10px] border border-emerald-800 font-bold">1 STAMPED</span>
-              </div>
-              <span class="text-[10px] text-slate-500">WATERMARKED FOR NWS FORECASTERS</span>
-            </div>
-            <div id="skywarn-photos-gallery" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-              <!-- Rendered dynamically via JS -->
-            </div>
-          </div>
-        </div>
-
-        <!-- RIGHT: Severe Weather Criteria Report Form (NWS Fort Worth Dispatch) -->
-        <div class="bg-[#10151d] border border-slate-800 rounded-xl p-4 space-y-4 font-mono-tac hud-glow">
-          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-            <div>
-              <h4 class="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
-                <span>⚡</span>
-                <span>NWS SEVERE CRITERIA REPORT FORM</span>
-              </h4>
-              <p class="text-[10px] text-slate-400">Formatted for transmission to NWS Fort Worth & County ARES Net Control.</p>
-            </div>
-            <span id="skywarn-severity-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-800">
-              HIGH PRIORITY
-            </span>
-          </div>
-
-          <div class="space-y-3 text-xs">
-            <!-- Phenomenon Observed -->
-            <div>
-              <label class="block text-slate-300 font-bold mb-1">PHENOMENON OBSERVED</label>
-              <select id="skywarn-type" onchange="updatePhenomenonSeverity()" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2.5 text-white font-mono-tac text-xs focus:border-emerald-500 outline-none">
-                <option value="Tornado on the Ground">🌪️ Tornado on the Ground (EMERGENCY / IMMEDIATE THREAT)</option>
-                <option value="Funnel Cloud / Persistent Rotating Wall Cloud" selected>🌀 Funnel Cloud / Persistent Rotating Wall Cloud</option>
-                <option value="Severe Hail (>= 1.00 inch Quarter or Larger)">🧊 Severe Hail (>= 1.00 inch Quarter or Larger)</option>
-                <option value="Damaging Wind (>= 58 MPH / Trees Down)">💨 Damaging Wind (>= 58 MPH / Trees / Power Lines Down)</option>
-                <option value="Flash Flooding (Road Impassable / Water Over Bridge)">🌊 Flash Flooding (Road Impassable / Water Over Bridge)</option>
-                <option value="Significant Structural Damage / Collapsed Barn">💥 Significant Structural Damage / Collapsed Barn / Roof Loss</option>
-              </select>
-            </div>
-
-            <!-- Hail Size Quick-Selector Buttons -->
-            <div>
-              <div class="flex justify-between items-center mb-1">
-                <label class="text-slate-300 font-bold">HAIL SIZE (NWS STANDARDS):</label>
-                <span class="text-[10px] text-slate-500">MIN. SEVERE: 1.00" (QUARTER)</span>
-              </div>
-              <div class="grid grid-cols-4 gap-1.5">
-                <button type="button" onclick="selectHailSize('0.75 in (Dime - Sub-severe)')" class="hail-pill px-1.5 py-1 bg-[#080b10] hover:bg-slate-800 border border-slate-800 rounded text-[10px] text-slate-400 text-center">0.75" Dime</button>
-                <button type="button" onclick="selectHailSize('1.00 in (Quarter - Severe)')" class="hail-pill px-1.5 py-1 bg-amber-950/60 hover:bg-amber-900 border border-amber-600/80 rounded text-[10px] text-amber-300 font-bold text-center">1.00" Quarter</button>
-                <button type="button" onclick="selectHailSize('1.25 in (Half Dollar)')" class="hail-pill px-1.5 py-1 bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500 rounded text-[10px] text-emerald-300 font-bold text-center ring-1 ring-emerald-500">1.25" Half $</button>
-                <button type="button" onclick="selectHailSize('1.50 in (Ping Pong)')" class="hail-pill px-1.5 py-1 bg-[#080b10] hover:bg-slate-800 border border-slate-800 rounded text-[10px] text-slate-300 text-center">1.50" Ping Pong</button>
-                <button type="button" onclick="selectHailSize('1.75 in (Golf Ball - Severe)')" class="hail-pill px-1.5 py-1 bg-[#080b10] hover:bg-slate-800 border border-slate-800 rounded text-[10px] text-amber-400 font-bold text-center">1.75" Golf Ball</button>
-                <button type="button" onclick="selectHailSize('2.00 in (Egg)')" class="hail-pill px-1.5 py-1 bg-[#080b10] hover:bg-slate-800 border border-slate-800 rounded text-[10px] text-rose-400 font-bold text-center">2.00" Hen Egg</button>
-                <button type="button" onclick="selectHailSize('2.75 in (Baseball)')" class="hail-pill px-1.5 py-1 bg-[#080b10] hover:bg-slate-800 border border-slate-800 rounded text-[10px] text-rose-400 font-bold text-center">2.75" Baseball</button>
-                <button type="button" onclick="selectHailSize('4.00+ in (Softball - Destructive)')" class="hail-pill px-1.5 py-1 bg-[#080b10] hover:bg-slate-800 border border-slate-800 rounded text-[10px] text-rose-500 font-black text-center">4.00"+ Softball</button>
-              </div>
-              <input type="text" id="skywarn-hail" value="1.25 in (Half Dollar)" class="w-full mt-1.5 bg-[#080b10] border border-slate-700 rounded-lg p-2 text-emerald-400 font-bold font-mono-tac text-xs focus:border-emerald-500 outline-none">
-            </div>
-
-            <!-- Wind Speed & Measurement Type -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label class="block text-slate-300 font-bold mb-1">EST. / MEASURED WIND SPEED</label>
-                <input type="text" id="skywarn-wind" value="65 MPH (Measured - Anemometer)" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-white font-mono-tac text-xs focus:border-emerald-500 outline-none">
-              </div>
-              <div>
-                <label class="block text-slate-300 font-bold mb-1">STORM MOVEMENT & SPEED</label>
-                <input type="text" id="skywarn-motion" value="Moving ENE @ 35 MPH" placeholder="e.g. Moving NE @ 30 MPH" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-amber-400 font-bold font-mono-tac text-xs focus:border-emerald-500 outline-none">
-              </div>
-            </div>
-
-            <!-- Specific Spotter Observation Location -->
-            <div>
-              <div class="flex justify-between items-center mb-1">
-                <label class="text-slate-300 font-bold">OBSERVATION LOCATION / ROAD INTERSECTION</label>
-                <button type="button" onclick="autofillSpotterGpsLocation()" class="text-emerald-400 text-[10px] hover:underline flex items-center gap-1">
-                  <span>📍</span>
-                  <span>USE CURRENT GPS</span>
-                </button>
-              </div>
-              <input type="text" id="skywarn-location" value="US-84 West at FM 488 (3.2 mi West of Fairfield Square) • EM11xq" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-white font-mono-tac text-xs focus:border-emerald-500 outline-none">
-            </div>
-
-            <!-- Detailed Impact & Observations -->
-            <div>
-              <div class="flex justify-between items-center mb-1">
-                <label class="text-slate-300 font-bold">OBSERVATION DETAILS & DAMAGE IMPACT</label>
-                <div class="flex items-center gap-1 text-[9px]">
-                  <span class="text-slate-500">QUICK TAGS:</span>
-                  <button type="button" onclick="appendSkywarnTag('Power lines down across Hwy.')" class="px-1.5 py-0.2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded">+ Power</button>
-                  <button type="button" onclick="appendSkywarnTag('Large oak trees uprooted.')" class="px-1.5 py-0.2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded">+ Trees</button>
-                  <button type="button" onclick="appendSkywarnTag('Water over bridge on FM 488.')" class="px-1.5 py-0.2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded">+ Flooding</button>
-                </div>
-              </div>
-              <textarea id="skywarn-notes" rows="3" class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2 text-white font-mono-tac text-xs focus:border-emerald-500 outline-none leading-relaxed" placeholder="Describe cloud rotation, debris, hail accumulation, specific damage, power line hazards, and highway conditions...">Rotating wall cloud observed with clear funnel lowering approximately 40% to ground. Rapid condensation and inflow visible. Quarter to half-dollar hail covering ground. Two 8-inch tree limbs down on US-84.</textarea>
-            </div>
-
-            <!-- Multi-Channel Transmission Deck -->
-            <div class="space-y-2 pt-1 border-t border-slate-800">
-              <div class="flex gap-2">
-                <button onclick="dispatchSkywarnNWS()" class="flex-1 py-3 bg-amber-600 hover:bg-amber-500 text-white font-mono-tac text-xs font-bold rounded-lg shadow-lg transition flex items-center justify-center gap-2">
-                  <span>⚡</span>
-                  <span>DISPATCH TO NWS FWD & NET CONTROL</span>
-                </button>
-              </div>
-
-              <div class="grid grid-cols-2 gap-2">
-                <button onclick="openSkywarnVoiceScriptModal()" class="py-2 px-3 bg-purple-950/80 hover:bg-purple-900 border border-purple-700/80 text-purple-200 font-mono-tac text-xs font-bold rounded-lg transition flex items-center justify-center gap-1.5">
-                  <span>🎙️</span>
-                  <span>10-SEC VOICE SCRIPT</span>
-                </button>
-                <button onclick="exportSkywarnText()" class="py-2 px-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-mono-tac text-xs font-bold rounded-lg border border-slate-700 transition flex items-center justify-center gap-1.5">
-                  <span>📋</span>
-                  <span>COPY NWS TEXT</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Live County Skywarn Spotter Log & Feed -->
-      <div class="bg-[#10151d] border border-slate-800 rounded-xl p-4 space-y-3 font-mono-tac">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-2">
-          <div class="flex items-center gap-2">
-            <span class="text-sm">📡</span>
-            <h4 class="text-xs font-bold text-white uppercase tracking-wider">FREESTONE COUNTY LIVE SPOTTER LOG & REPORTS FEED</h4>
-            <span id="skywarn-feed-count" class="px-2 py-0.2 rounded text-[10px] font-bold bg-sky-950 text-sky-300 border border-sky-800">0 REPORTS ACTIVE</span>
-            <button id="btn-purge-all-skywarn" type="button" onclick="purgeAllSkywarnReports()" class="ml-2 px-2 py-0.5 bg-red-950/80 hover:bg-red-900 border border-red-800 text-red-300 rounded text-[9px] font-bold flex items-center gap-1 transition" title="EC Purge All Expired Storm Reports">
-              <span>🗑️</span><span>PURGE ALL</span>
-            </button>
-          </div>
-          <span class="text-[10px] text-slate-400">SYNCHRONIZED WITH NET CONTROL ON FF 110 & WRTM 760</span>
-        </div>
-
-        <div id="skywarn-reports-feed" class="space-y-2.5">
-          <!-- Rendered dynamically via renderSkywarnReportsFeed() -->
         </div>
       </div>
     </section>
+
 
         <!-- 5. OFF-GRID & ONLINE TACTICAL MAPPING (OPENSTREETMAP OFFLINE TILE PACK) -->
     <section id="view-map" class="tab-content hidden space-y-4 font-mono-tac text-xs">
@@ -4528,7 +4549,7 @@
 
       <!-- Modal Footer -->
       <div class="flex items-center justify-between border-t border-purple-900/60 p-3 bg-[#07090e] flex-shrink-0">
-        <span class="text-[10px] text-purple-300">Freestone County ARES Dispatch Validator • Build 68</span>
+        <span class="text-[10px] text-purple-300">Freestone County ARES Dispatch Validator • Build 69</span>
         <button type="button" onclick="closeAlertSoundVerifyModal()" class="px-4 py-2 bg-purple-800 hover:bg-purple-700 text-white font-bold rounded-xl text-xs transition cursor-pointer">
           CLOSE CONSOLE
         </button>
@@ -5800,6 +5821,71 @@
         <button onclick="closeSkywarnGuideModal()" class="w-full py-2.5 bg-sky-800 hover:bg-sky-700 text-white font-bold rounded-lg transition">
           CLOSE GUIDE
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: SKYWARN WATERMARKED STORM PHOTO VIEWER -->
+  <div id="skywarn-photo-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4 hidden font-mono-tac" onclick="if(event.target===this) closeSkywarnPhotoModal();">
+    <div class="bg-[#10151d] border-2 border-emerald-500/70 rounded-2xl max-w-2xl w-full p-4 sm:p-5 space-y-4 shadow-[0_0_50px_rgba(16,185,129,0.35)] max-h-[95vh] overflow-y-auto" onclick="event.stopPropagation();">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-2.5">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">📸</span>
+          <div>
+            <h4 id="modal-photo-title" class="text-emerald-400 font-black text-sm">STORM SPOTTER OBSERVATION PHOTO</h4>
+            <span class="text-[10px] text-slate-400">WATERMARKED GROUND-TRUTH FIELD IMAGERY</span>
+          </div>
+        </div>
+        <button type="button" onclick="closeSkywarnPhotoModal()" class="text-slate-400 hover:text-white text-lg font-bold p-1 cursor-pointer">✕</button>
+      </div>
+
+      <!-- Main Photo Display -->
+      <div class="relative bg-black rounded-xl overflow-hidden border-2 border-slate-800 flex items-center justify-center max-h-[60vh]">
+        <img id="modal-photo-img" src="" alt="Watermarked Storm Photo" class="max-w-full max-h-[58vh] object-contain rounded">
+      </div>
+
+      <!-- Metadata Badges -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] bg-[#080b10] p-3 rounded-xl border border-slate-800">
+        <div>
+          <span class="text-slate-500 block">OPERATOR &amp; ID:</span>
+          <strong id="modal-photo-call" class="text-emerald-400">KG5TZT (TX-FRE-01)</strong>
+        </div>
+        <div>
+          <span class="text-slate-500 block">GPS COORDINATES:</span>
+          <strong id="modal-photo-coords" class="text-white">31.7249° N, 96.1652° W</strong>
+        </div>
+        <div>
+          <span class="text-slate-500 block">AZIMUTH &amp; GRID:</span>
+          <strong id="modal-photo-bearing" class="text-amber-400">285° WNW (EM11xq)</strong>
+        </div>
+        <div>
+          <span class="text-slate-500 block">LOCAL &amp; UTC TIME:</span>
+          <strong id="modal-photo-time" class="text-sky-300">18:22:15 CST (23:22:15Z)</strong>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800">
+        <div class="flex items-center gap-2">
+          <button type="button" id="modal-photo-save-btn" onclick="" class="px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 text-slate-950 font-black text-xs rounded-xl shadow-lg transition flex items-center gap-2 cursor-pointer">
+            <span>💾</span>
+            <span>SAVE TO PHONE / CAMERA ROLL</span>
+          </button>
+
+          <button type="button" id="modal-photo-attach-btn" onclick="" class="px-3.5 py-2.5 bg-amber-950 hover:bg-amber-900 border border-amber-700 text-amber-300 font-bold text-xs rounded-xl transition flex items-center gap-1.5 cursor-pointer">
+            <span>⚡</span>
+            <span>ATTACH TO REPORT</span>
+          </button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button type="button" id="modal-photo-delete-btn" onclick="" class="px-3 py-2 bg-red-950/70 hover:bg-red-900 border border-red-800 text-red-300 font-bold text-xs rounded-xl transition cursor-pointer">
+            🗑️ DELETE
+          </button>
+          <button type="button" onclick="closeSkywarnPhotoModal()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs rounded-xl transition cursor-pointer">
+            CLOSE
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -10043,24 +10129,220 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
     // SKYWARN SEVERE WEATHER OBSERVATION ENGINE
     // ==========================================
 
+    // ==========================================
+    // 4. SKYWARN / STORM SPOTTING ENGINE (PRODUCTION OVERHAUL)
+    // ==========================================
+
+    let skywarnClockInterval = null;
+    let skywarnOrientationBound = false;
+
+    // Subtab Switcher
+    function switchSkywarnSubtab(tabName) {
+      const tabs = ['report', 'camera', 'radar', 'feed'];
+      tabs.forEach(t => {
+        const panel = document.getElementById('skywarn-subpanel-' + t);
+        const btn = document.getElementById('skywarn-tab-btn-' + t);
+        if (panel) {
+          if (t === tabName) panel.classList.remove('hidden');
+          else panel.classList.add('hidden');
+        }
+        if (btn) {
+          if (t === tabName) {
+            btn.className = 'flex-1 py-2 px-3 rounded-lg font-bold bg-amber-500/20 text-amber-300 border border-amber-500/60 flex items-center justify-center gap-1.5 transition whitespace-nowrap shadow cursor-pointer';
+          } else {
+            btn.className = 'flex-1 py-2 px-3 rounded-lg font-bold text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent flex items-center justify-center gap-1.5 transition whitespace-nowrap cursor-pointer';
+          }
+        }
+      });
+
+      if (tabName === 'camera') {
+        renderSkywarnPhotos();
+      } else if (tabName === 'feed') {
+        renderSkywarnReportsFeed();
+      }
+    }
+
+    // Main Tab Activation
     function renderSkywarnTab() {
       // 1. Update station credentials
+      const myCall = (appState && appState.myCall && appState.myCall !== 'GUEST') ? appState.myCall : 'KG5TZT';
+      const myName = (appState && appState.myName) ? appState.myName : 'Brian Davis';
+      const mem = (appState && appState.members) ? appState.members.find(x => x.call === myCall) : null;
+      const mySpotterId = (myCall === 'KG5TZT') ? 'TX-FRE-01' : ((mem && mem.id) ? `TX-FRE-${String(mem.id).padStart(2, '0')}` : 'TX-FRE-06');
+
       const callEl = document.getElementById('skywarn-station-call');
       const idEl = document.getElementById('skywarn-station-id');
       const bCall = document.getElementById('hud-bottom-call');
-      if (callEl) callEl.textContent = `${appState.myCall} (${appState.myName.split(' ')[0]})`;
-      if (bCall) bCall.textContent = `${appState.myCall} (${appState.myName})`;
-      if (idEl) {
-        const m = appState.members.find(x => x.call === appState.myCall);
-        idEl.textContent = (m && m.id) ? `TX-FRE-${String(m.id).padStart(2, '0')}` : 'TX-FRE-01';
+      const bId = document.getElementById('hud-bottom-id');
+
+      if (callEl) callEl.textContent = `${myCall} (${myName.split(' ')[0]})`;
+      if (idEl) idEl.textContent = mySpotterId;
+      if (bCall) bCall.textContent = `${myCall} (${myName})`;
+      if (bId) bId.textContent = mySpotterId;
+
+      // 2. Load cached photos if empty
+      if (!appState.capturedStormPhotos || appState.capturedStormPhotos.length === 0) {
+        try {
+          const rawPhotos = safeStorage.getItem('fc_ares_skywarn_photos');
+          if (rawPhotos) appState.capturedStormPhotos = JSON.parse(rawPhotos);
+        } catch(e) {}
       }
 
-      // 2. Render Photos Gallery & Reports Feed
+      // 3. Load cached reports if empty
+      if (!appState.skywarnReports || appState.skywarnReports.length === 0) {
+        try {
+          const rawReports = safeStorage.getItem('fc_ares_skywarn_reports');
+          if (rawReports) appState.skywarnReports = JSON.parse(rawReports);
+        } catch(e) {}
+      }
+
+      // 4. Update HUD Clocks
+      updateSkywarnHudClocks();
+      if (skywarnClockInterval) clearInterval(skywarnClockInterval);
+      skywarnClockInterval = setInterval(updateSkywarnHudClocks, 1000);
+
+      // 5. Render components
+      updateAttachedPhotoCard();
       renderSkywarnPhotos();
       renderSkywarnReportsFeed();
-      updatePhenomenonSeverity();
+
+      // 6. Attempt non-blocking GPS warmup if no fix yet
+      if (!appState.spotterLat && navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function(pos) {
+            applyGpsCoords(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy, pos.coords.altitude, false);
+          },
+          function(err) {},
+          { enableHighAccuracy: true, timeout: 6000, maximumAge: 60000 }
+        );
+      }
     }
 
+    function updateSkywarnHudClocks() {
+      const now = new Date();
+      const local24 = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0') + ':' + String(now.getSeconds()).padStart(2, '0');
+      const zulu = now.toISOString().substring(11, 19) + 'Z';
+
+      const locEl = document.getElementById('photo-hud-local');
+      const zuluEl = document.getElementById('photo-hud-utc');
+      if (locEl) locEl.textContent = local24;
+      if (zuluEl) zuluEl.textContent = zulu;
+    }
+
+    // Real Device GPS Autofill
+    function autofillSpotterGpsLocation() {
+      const btn = document.getElementById('skywarn-gps-btn');
+      const statusPill = document.getElementById('skywarn-gps-status-pill');
+
+      if (!navigator.geolocation) {
+        alert('⚠️ Geolocation is not supported by your browser or device.');
+        return;
+      }
+
+      if (btn) {
+        btn.innerHTML = '<span>⏳</span><span>LOCKING GPS SATELLITES...</span>';
+        btn.classList.add('animate-pulse');
+      }
+      if (statusPill) {
+        statusPill.textContent = '⏳ Communicating with device GPS receiver...';
+        statusPill.className = 'text-[10px] text-amber-400 font-mono animate-pulse';
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        function(pos) {
+          if (btn) {
+            btn.innerHTML = '<span>📍</span><span>GPS LOCKED (DEVICE)</span>';
+            btn.classList.remove('animate-pulse');
+          }
+          applyGpsCoords(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy, pos.coords.altitude, true);
+        },
+        function(err) {
+          if (btn) {
+            btn.innerHTML = '<span>📍</span><span>AUTOFILL DEVICE GPS</span>';
+            btn.classList.remove('animate-pulse');
+          }
+          let msg = 'Unable to acquire device GPS fix.';
+          if (err.code === 1) {
+            msg = '⚠️ Location Permission Denied.\n\nPlease enable Location Services:\n• iOS: Settings > Privacy & Security > Location Services > Safari (or App) > While Using.\n• Android: App Settings > Permissions > Location > Allow.';
+          } else if (err.code === 2) {
+            msg = '⚠️ GPS Position Unavailable. Ensure clear view of the sky.';
+          } else if (err.code === 3) {
+            msg = '⚠️ GPS request timed out. Retrying with cell tower/Wi-Fi location...';
+          }
+          if (statusPill) {
+            statusPill.textContent = '⚠️ GPS Denied/Failed. Using Fairfield default or enter manually.';
+            statusPill.className = 'text-[10px] text-rose-400 font-mono';
+          }
+          alert(msg);
+        },
+        { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
+      );
+    }
+
+    function applyGpsCoords(lat, lng, accuracyM, altitudeM, updateInput) {
+      const accFt = accuracyM ? Math.round(accuracyM * 3.28084) : 15;
+      const elevFt = altitudeM !== null && altitudeM !== undefined ? Math.round(altitudeM * 3.28084) : 462;
+      const grid = (typeof latLngToMaidenhead === 'function') ? latLngToMaidenhead(lat, lng) : 'EM11xq';
+
+      appState.spotterLat = lat;
+      appState.spotterLng = lng;
+      appState.spotterGrid = grid;
+      appState.spotterAccuracy = accFt;
+      appState.spotterAltitude = elevFt;
+
+      const latStr = `${Math.abs(lat).toFixed(4)}° ${lat >= 0 ? 'N' : 'S'}`;
+      const lngStr = `${Math.abs(lng).toFixed(4)}° ${lng >= 0 ? 'W' : 'E'}`;
+
+      const hudLat = document.getElementById('hud-val-lat');
+      const hudLon = document.getElementById('hud-val-lon');
+      const hudGrid = document.getElementById('hud-val-grid');
+      const hudElev = document.getElementById('hud-val-elev');
+      const hudAcc = document.getElementById('hud-val-acc');
+      const statusPill = document.getElementById('skywarn-gps-status-pill');
+
+      if (hudLat) hudLat.textContent = latStr;
+      if (hudLon) hudLon.textContent = lngStr;
+      if (hudGrid) hudGrid.textContent = grid;
+      if (hudElev) hudElev.textContent = `${elevFt} FT`;
+      if (hudAcc) hudAcc.textContent = `±${accFt} FT`;
+
+      if (statusPill) {
+        statusPill.textContent = `✓ Locked: ${latStr}, ${lngStr} (${grid}) • Elev: ${elevFt}ft • Acc: ±${accFt}ft`;
+        statusPill.className = 'text-[10px] text-emerald-400 font-mono font-bold';
+      }
+
+      if (updateInput) {
+        const locInput = document.getElementById('skywarn-location');
+        if (locInput) {
+          const cur = locInput.value.trim();
+          if (cur && !cur.includes('°')) {
+            locInput.value = `${cur} • ${latStr}, ${lngStr} (${grid})`;
+          } else {
+            locInput.value = `${latStr}, ${lngStr} (${grid})`;
+          }
+        }
+      }
+    }
+
+    // Crossroads Presets
+    function applyCrossroadsPreset(val) {
+      if (!val) return;
+      const locInput = document.getElementById('skywarn-location');
+      if (locInput) {
+        const lat = appState.spotterLat;
+        const lng = appState.spotterLng;
+        const grid = appState.spotterGrid || 'EM11xq';
+        if (lat && lng) {
+          const latStr = `${Math.abs(lat).toFixed(4)}° ${lat >= 0 ? 'N' : 'S'}`;
+          const lngStr = `${Math.abs(lng).toFixed(4)}° ${lng >= 0 ? 'W' : 'E'}`;
+          locInput.value = `${val} • ${latStr}, ${lngStr} (${grid})`;
+        } else {
+          locInput.value = val;
+        }
+      }
+    }
+
+    // Compass Heading
     function setSkywarnHeading(deg, label) {
       appState.skywarnHeading = deg;
       appState.skywarnHeadingLabel = label;
@@ -10068,55 +10350,119 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
       const compLabel = document.getElementById('compass-bearing-label');
       if (azDisplay) azDisplay.textContent = label;
       if (compLabel) compLabel.textContent = label;
-    }
-
-    function selectHailSize(sizeStr) {
-      const hailInput = document.getElementById('skywarn-hail');
-      if (hailInput) hailInput.value = sizeStr;
 
       // Update pill styling
-      document.querySelectorAll('.hail-pill').forEach(btn => {
-        btn.classList.remove('ring-1', 'ring-emerald-500', 'bg-emerald-950/80', 'text-emerald-300');
-        if (btn.textContent.includes(sizeStr.split(' ')[0])) {
-          btn.classList.add('ring-1', 'ring-emerald-500', 'bg-emerald-950/80', 'text-emerald-300');
+      document.querySelectorAll('.heading-btn').forEach(btn => {
+        btn.classList.remove('bg-emerald-950', 'text-emerald-300', 'border-emerald-500');
+        btn.classList.add('bg-slate-900', 'text-slate-300', 'border-slate-700');
+        if (btn.textContent.includes(deg + '°') || (deg === 285 && btn.textContent.includes('285'))) {
+          btn.classList.remove('bg-slate-900', 'text-slate-300', 'border-slate-700');
+          btn.classList.add('bg-emerald-950', 'text-emerald-300', 'border-emerald-500');
         }
       });
-      updatePhenomenonSeverity();
     }
 
-    function updatePhenomenonSeverity() {
-      const typeSelect = document.getElementById('skywarn-type');
-      const badge = document.getElementById('skywarn-severity-badge');
-      if (!typeSelect || !badge) return;
-
-      const val = typeSelect.value;
-      if (val.includes('Tornado')) {
-        badge.textContent = '🚨 LIFE THREAT / TORNADO';
-        badge.className = 'px-2 py-0.5 rounded text-[10px] font-black bg-rose-950 text-rose-300 border-2 border-rose-500 shadow-[0_0_12px_rgba(244,63,94,0.4)] animate-pulse';
-      } else if (val.includes('Funnel') || val.includes('Wall Cloud')) {
-        badge.textContent = '⚠️ HIGH PRIORITY / ROTATION';
-        badge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-600';
-      } else if (val.includes('Hail')) {
-        badge.textContent = '🧊 SEVERE HAIL';
-        badge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-sky-950 text-sky-300 border border-sky-600';
-      } else if (val.includes('Wind')) {
-        badge.textContent = '💨 DAMAGING WIND';
-        badge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-blue-950 text-blue-300 border border-blue-600';
-      } else if (val.includes('Flooding')) {
-        badge.textContent = '🌊 FLASH FLOOD WARNING';
-        badge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-950 text-cyan-300 border border-cyan-600';
+    function initDeviceCompass() {
+      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        DeviceOrientationEvent.requestPermission()
+          .then(state => {
+            if (state === 'granted') {
+              bindCompassListener();
+              alert('✓ iOS Compass sensor calibrated & active.');
+            } else {
+              alert('⚠️ Compass permission was denied. You can still tap the heading buttons manually.');
+            }
+          })
+          .catch(e => {
+            console.warn(e);
+            bindCompassListener();
+          });
       } else {
-        badge.textContent = '💥 STRUCTURAL IMPACT';
-        badge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-purple-950 text-purple-300 border border-purple-600';
+        bindCompassListener();
+        alert('✓ Compass orientation sensor initialized.');
       }
     }
 
-    function autofillSpotterGpsLocation() {
-      const locInput = document.getElementById('skywarn-location');
-      if (locInput) {
-        locInput.value = `31.7249° N, 96.1652° W (EM11xq) • Fairfield City Center / EOC`;
-        alert('GPS LOCATION AUTO-FILLED:\n\nCoordinates: 31.7249° N, 96.1652° W\nMaidenhead Grid: EM11xq\nDatum: WGS84');
+    function bindCompassListener() {
+      if (skywarnOrientationBound) return;
+      window.addEventListener('deviceorientation', handleDeviceOrientation, true);
+      skywarnOrientationBound = true;
+    }
+
+    function handleDeviceOrientation(e) {
+      let heading = null;
+      if (e.webkitCompassHeading !== undefined && e.webkitCompassHeading !== null) {
+        heading = e.webkitCompassHeading;
+      } else if (e.alpha !== null && e.alpha !== undefined) {
+        heading = (360 - e.alpha) % 360;
       }
+      if (heading !== null && !isNaN(heading)) {
+        const deg = Math.round(heading);
+        const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+        const idx = Math.round(deg / 22.5) % 16;
+        const label = `${deg}° ${directions[idx]}`;
+        appState.skywarnHeading = deg;
+        appState.skywarnHeadingLabel = label;
+        const azDisplay = document.getElementById('photo-hud-azimuth');
+        const compLabel = document.getElementById('compass-bearing-label');
+        if (azDisplay) azDisplay.textContent = label;
+        if (compLabel) compLabel.textContent = label;
+      }
+    }
+
+    // Step 1: 1-Tap Quick Phenomenon Selector
+    function selectQuickSkywarnType(label, details, severity, colorClass) {
+      const typeInput = document.getElementById('skywarn-type');
+      if (typeInput) typeInput.value = label;
+
+      const summaryText = document.getElementById('skywarn-active-summary-text');
+      if (summaryText) summaryText.textContent = `⚡ Selected: ${label}`;
+
+      const badge = document.getElementById('skywarn-active-severity-badge');
+      if (badge) {
+        badge.textContent = severity || 'CRITICAL';
+        badge.className = 'px-2.5 py-1 rounded text-xs font-black ' + (colorClass || 'bg-amber-950 text-amber-300 border border-amber-600');
+      }
+
+      const notes = document.getElementById('skywarn-notes');
+      if (notes && details) {
+        if (!notes.value.includes(details)) {
+          notes.value = (details + (notes.value ? '\n' + notes.value : '')).trim();
+        }
+      }
+
+      // Update button highlights
+      document.querySelectorAll('.quick-phenom-btn').forEach(btn => {
+        btn.classList.remove('ring-2', 'ring-white', 'shadow-lg');
+        if (btn.textContent.includes(label.split(' ')[1] || '')) {
+          btn.classList.add('ring-2', 'ring-white', 'shadow-lg');
+        }
+      });
+    }
+
+    // Step 2: Measurements Quick Selectors
+    function setSkywarnHailSize(sizeStr) {
+      const h = document.getElementById('skywarn-hail');
+      if (h) h.value = sizeStr;
+
+      document.querySelectorAll('.hail-btn').forEach(btn => {
+        btn.classList.remove('ring-2', 'ring-emerald-400', 'bg-emerald-950', 'text-emerald-300');
+        if (btn.dataset.hail && sizeStr.includes(btn.dataset.hail)) {
+          btn.classList.add('ring-2', 'ring-emerald-400', 'bg-emerald-950', 'text-emerald-300');
+        }
+      });
+    }
+
+    function setSkywarnWindSpeed(speedStr) {
+      const w = document.getElementById('skywarn-wind');
+      if (w) w.value = speedStr;
+
+      document.querySelectorAll('.wind-btn').forEach(btn => {
+        btn.classList.remove('ring-2', 'ring-emerald-400', 'bg-emerald-950', 'text-emerald-300');
+        if (btn.dataset.wind && speedStr.includes(btn.dataset.wind)) {
+          btn.classList.add('ring-2', 'ring-emerald-400', 'bg-emerald-950', 'text-emerald-300');
+        }
+      });
     }
 
     function appendSkywarnTag(tagText) {
@@ -10130,37 +10476,301 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
       }
     }
 
-    function captureStormPhoto() {
+    // Step 4: Camera & Photo Processing
+    function triggerSkywarnCamera() {
+      const input = document.getElementById('skywarn-camera-input');
+      if (input) input.click();
+    }
+
+    function triggerSkywarnGallery() {
+      const input = document.getElementById('skywarn-gallery-input');
+      if (input) input.click();
+    }
+
+    function handleRealSkywarnPhoto(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          stampAndSaveStormPhoto(file, img);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function stampAndSaveStormPhoto(file, img) {
+      const maxW = 1600;
+      const maxH = 1600;
+      let w = img.width;
+      let h = img.height;
+
+      if (w > maxW || h > maxH) {
+        if (w > h) {
+          h = Math.round((h * maxW) / w);
+          w = maxW;
+        } else {
+          w = Math.round((w * maxH) / h);
+          h = maxH;
+        }
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+
+      // Draw photo
+      ctx.drawImage(img, 0, 0, w, h);
+
+      // Metadata
       const now = new Date();
       const local24 = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0') + ':' + String(now.getSeconds()).padStart(2, '0');
       const zulu = now.toISOString().substring(11, 19) + 'Z';
-      
+      const dateStr = now.toISOString().split('T')[0];
+
+      const call = (appState && appState.myCall && appState.myCall !== 'GUEST') ? appState.myCall : 'KG5TZT';
+      const name = (appState && appState.myName) ? appState.myName : 'Brian Davis';
+      const spotterId = (call === 'KG5TZT') ? 'TX-FRE-01' : (appState.mySpotterId || 'TX-FRE-06');
+
+      const lat = appState.spotterLat || 31.7249;
+      const lng = appState.spotterLng || -96.1652;
+      const grid = appState.spotterGrid || ((typeof latLngToMaidenhead === 'function') ? latLngToMaidenhead(lat, lng) : 'EM11xq');
+      const latStr = `${Math.abs(lat).toFixed(4)}° ${lat >= 0 ? 'N' : 'S'}`;
+      const lngStr = `${Math.abs(lng).toFixed(4)}° ${lng >= 0 ? 'W' : 'E'}`;
+      const elevFt = appState.spotterAltitude || 462;
+      const accFt = appState.spotterAccuracy ? `±${appState.spotterAccuracy} FT` : '±12 FT';
+      const bearing = appState.skywarnHeadingLabel || '285° WNW';
+      const phenomenon = (document.getElementById('skywarn-type') ? document.getElementById('skywarn-type').value : '🌪️ ROTATING WALL CLOUD');
+
+      // Top Tactical Header
+      const topBarH = Math.max(48, Math.round(h * 0.055));
+      ctx.fillStyle = 'rgba(5, 8, 12, 0.85)';
+      ctx.fillRect(0, 0, w, topBarH);
+      ctx.fillStyle = '#10b981';
+      ctx.fillRect(0, topBarH - 3, w, 3);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `bold ${Math.max(15, Math.round(topBarH * 0.42))}px monospace`;
+      ctx.fillText('FREESTONE CO. ARES // NWS FORT WORTH SKYWARN', 16, Math.round(topBarH * 0.65));
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.textAlign = 'right';
+      ctx.fillText(`UTC: ${zulu} | ${dateStr}`, w - 16, Math.round(topBarH * 0.65));
+      ctx.textAlign = 'left';
+
+      // Bottom Telemetry Banner
+      const botBarH = Math.max(90, Math.round(h * 0.12));
+      const botY = h - botBarH;
+      ctx.fillStyle = 'rgba(5, 8, 12, 0.88)';
+      ctx.fillRect(0, botY, w, botBarH);
+      ctx.fillStyle = '#f59e0b';
+      ctx.fillRect(0, botY, w, 2);
+
+      const f1 = Math.max(14, Math.round(botBarH * 0.22));
+      ctx.font = `bold ${f1}px monospace`;
+      ctx.fillStyle = '#f59e0b';
+      ctx.fillText(`PHENOMENON: ${phenomenon.toUpperCase()}`, 16, botY + f1 + 8);
+
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#10b981';
+      ctx.fillText(`OP: ${call} (${name}) | SPOTTER ID: ${spotterId}`, w - 16, botY + f1 + 8);
+      ctx.textAlign = 'left';
+
+      const f2 = Math.max(12, Math.round(botBarH * 0.19));
+      ctx.font = `bold ${f2}px monospace`;
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(`📍 GPS: ${latStr}, ${lngStr} | GRID: ${grid} | ELEV: ${elevFt} FT | ACC: ${accFt}`, 16, botY + f1 + f2 + 18);
+
+      const f3 = Math.max(11, Math.round(botBarH * 0.17));
+      ctx.font = `bold ${f3}px monospace`;
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText(`🧭 AZIMUTH: ${bearing} | LOCAL 24H: ${local24} CST | CH: FF 110 (145.110 MHz)`, 16, botY + f1 + f2 + f3 + 26);
+
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#34d399';
+      ctx.fillText('VERIFIED GROUND TRUTH // NWS FWD SPOTTER NETWORK', w - 16, botY + f1 + f2 + f3 + 26);
+      ctx.textAlign = 'left';
+
+      const watermarkedDataUrl = canvas.toDataURL('image/jpeg', 0.88);
+
       const newPhoto = {
         id: 'photo-' + Date.now(),
-        title: document.getElementById('skywarn-type') ? document.getElementById('skywarn-type').value.split(' ')[1] || 'Storm Feature' : 'Severe Weather Feature',
+        title: phenomenon.split(' ')[0] + ' ' + (phenomenon.split(' ')[1] || 'Storm Feature'),
+        phenomenon: phenomenon,
         time24: local24,
         zuluTime: zulu,
-        coords: '31.7249° N, 96.1652° W',
-        grid: 'EM11xq',
-        bearing: appState.skywarnHeadingLabel || '285° WNW',
-        call: appState.myCall,
-        spotterId: (appState.myCall === 'KG5TZT') ? 'TX-FRE-01' : 'TX-FRE-06',
-        tag: 'GEO-STAMPED'
+        date: dateStr,
+        coords: `${latStr}, ${lngStr}`,
+        lat: lat,
+        lng: lng,
+        grid: grid,
+        elevation: elevFt,
+        accuracy: accFt,
+        bearing: bearing,
+        call: call,
+        spotterId: spotterId,
+        tag: 'GEO-STAMPED',
+        dataUrl: watermarkedDataUrl
       };
 
+      if (!appState.capturedStormPhotos) appState.capturedStormPhotos = [];
       appState.capturedStormPhotos.unshift(newPhoto);
-      renderSkywarnPhotos();
 
-      // Visual flash animation on viewfinder
-      const canvas = document.getElementById('skywarn-camera-canvas');
-      if (canvas) {
-        canvas.classList.add('bg-white');
-        setTimeout(() => canvas.classList.remove('bg-white'), 120);
+      // Set active photo on report form
+      appState.activeAttachedPhoto = newPhoto;
+
+      // Save locally (max 10 photos)
+      try {
+        safeStorage.setItem('fc_ares_skywarn_photos', JSON.stringify(appState.capturedStormPhotos.slice(0, 10)));
+      } catch(e) {
+        try {
+          safeStorage.setItem('fc_ares_skywarn_photos', JSON.stringify(appState.capturedStormPhotos.slice(0, 4)));
+        } catch(e2) {}
       }
 
-      alert(`📸 PHOTO CAPTURED & EMBEDDED!\n\n• Operator: ${newPhoto.call} (Spotter ID: ${newPhoto.spotterId})\n• Coordinates: ${newPhoto.coords}\n• Maidenhead Grid: ${newPhoto.grid}\n• Azimuth: ${newPhoto.bearing}\n• Local 24H: ${local24} CST\n• UTC / Zulu: ${zulu}\n\nWatermark cryptographically stamped for NWS Fort Worth radar ground-truth verification.`);
+      // Flash viewfinder animation
+      const canvasEl = document.getElementById('skywarn-camera-canvas');
+      if (canvasEl) {
+        canvasEl.classList.add('bg-white');
+        setTimeout(() => canvasEl.classList.remove('bg-white'), 120);
+      }
+
+      updateAttachedPhotoCard();
+      renderSkywarnPhotos();
+
+      // Reset file input so user can retake if desired
+      const cInput = document.getElementById('skywarn-camera-input');
+      const gInput = document.getElementById('skywarn-gallery-input');
+      if (cInput) cInput.value = '';
+      if (gInput) gInput.value = '';
+
+      // Immediately open photo modal
+      openSkywarnPhotoModal(newPhoto.id);
     }
 
+    // Save Photo to Phone / Camera Roll
+    async function savePhotoToPhone(photoId) {
+      const p = (appState.capturedStormPhotos || []).find(x => x.id === photoId) || appState.activeAttachedPhoto;
+      if (!p || !p.dataUrl) {
+        alert('⚠️ Photo not found.');
+        return;
+      }
+
+      const filename = `SKYWARN_${(p.spotterId || 'TX-FRE').replace(/[^a-zA-Z0-9_-]/g, '')}_${Date.now()}.jpg`;
+
+      try {
+        const res = await fetch(p.dataUrl);
+        const blob = await res.blob();
+        const file = new File([blob], filename, { type: 'image/jpeg' });
+
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: `SKYWARN Storm Photo - ${p.title || 'Severe Weather'}`,
+            text: `Freestone County ARES Storm Spotter Photo: ${p.title || 'Severe Weather'} at ${p.coords} (${p.grid}) by ${p.call}`
+          });
+          return;
+        }
+      } catch(e) {
+        console.log('Share canceled or not supported, falling back to download:', e);
+      }
+
+      try {
+        const a = document.createElement('a');
+        a.href = p.dataUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        alert(`✓ Photo downloaded as "${filename}". Check your device photo library or downloads folder.`);
+      } catch(err) {
+        alert('⚠️ Download error: ' + err.message);
+      }
+    }
+
+    // Attached Photo Card in Report Console
+    function updateAttachedPhotoCard() {
+      const container = document.getElementById('skywarn-attached-photo-container');
+      if (!container) return;
+
+      const photo = appState.activeAttachedPhoto;
+      if (!photo) {
+        container.innerHTML = `
+          <div class="p-3 bg-[#080b10] rounded-xl border border-dashed border-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-lg text-slate-400">
+                📷
+              </div>
+              <div>
+                <div class="text-slate-300 font-bold">NO OBSERVATION PHOTO ATTACHED</div>
+                <div class="text-[10px] text-slate-500">Attach a stamped photo for ground-truth radar verification by NWS Fort Worth</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="triggerSkywarnCamera()" class="px-3 py-1.5 bg-emerald-950 hover:bg-emerald-900 border border-emerald-700 text-emerald-300 font-bold rounded-lg text-[11px] flex items-center gap-1.5 transition cursor-pointer">
+                <span>📸</span><span>SNAP CAMERA</span>
+              </button>
+              <button type="button" onclick="triggerSkywarnGallery()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold rounded-lg text-[11px] flex items-center gap-1.5 transition cursor-pointer">
+                <span>🖼️</span><span>PHOTOS</span>
+              </button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="p-3 bg-gradient-to-r from-emerald-950/40 via-[#080b10] to-[#080b10] rounded-xl border-2 border-emerald-500/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-lg">
+          <div class="flex items-center gap-3">
+            <img src="${photo.dataUrl}" alt="Attached storm photo" onclick="openSkywarnPhotoModal('${photo.id}')" class="w-14 h-14 object-cover rounded-lg border-2 border-emerald-400 cursor-pointer hover:opacity-90 transition shadow">
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="px-1.5 py-0.2 rounded bg-emerald-950 text-emerald-300 font-bold border border-emerald-700 text-[9px]">✓ PHOTO ATTACHED</span>
+                <span class="text-white font-bold text-xs">${photo.title}</span>
+              </div>
+              <div class="text-[10px] text-slate-300 mt-0.5">
+                <span>📍 ${photo.coords} (${photo.grid})</span> • <span class="text-amber-400 font-mono">${photo.time24} Local</span>
+              </div>
+              <div class="text-[10px] text-slate-400">
+                <span>🧭 Bearing: <strong class="text-slate-200">${photo.bearing}</strong></span> • <span>Op: <strong class="text-emerald-400">${photo.call}</strong></span>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 self-end sm:self-center">
+            <button type="button" onclick="openSkywarnPhotoModal('${photo.id}')" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold rounded-lg text-[11px] transition cursor-pointer">
+              🔍 PREVIEW
+            </button>
+            <button type="button" onclick="savePhotoToPhone('${photo.id}')" class="px-2.5 py-1.5 bg-emerald-950 hover:bg-emerald-900 border border-emerald-700 text-emerald-300 font-bold rounded-lg text-[11px] transition cursor-pointer" title="Save to Phone / Camera Roll">
+              💾 SAVE
+            </button>
+            <button type="button" onclick="detachActivePhoto()" class="px-2 py-1.5 bg-red-950/70 hover:bg-red-900 border border-red-800 text-red-300 font-bold rounded-lg text-[11px] transition cursor-pointer" title="Detach Photo">
+              ✕ DETACH
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function detachActivePhoto() {
+      appState.activeAttachedPhoto = null;
+      updateAttachedPhotoCard();
+    }
+
+    function attachPhotoToActiveReport(photoId) {
+      const p = (appState.capturedStormPhotos || []).find(x => x.id === photoId);
+      if (!p) return;
+      appState.activeAttachedPhoto = p;
+      updateAttachedPhotoCard();
+      closeSkywarnPhotoModal();
+      switchSkywarnSubtab('report');
+      alert(`✓ Photo "${p.title}" attached to active spotter report form.`);
+    }
+
+    // Photo Gallery Rendering
     function renderSkywarnPhotos() {
       const container = document.getElementById('skywarn-photos-gallery');
       const countBadge = document.getElementById('skywarn-photo-count-badge');
@@ -10170,87 +10780,228 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
       if (countBadge) countBadge.textContent = `${photos.length} STAMPED`;
 
       if (photos.length === 0) {
-        container.innerHTML = '<div class="text-[10px] text-slate-500 italic p-2 col-span-2">No observation photos captured yet. Tap "SNAP & GEO-TAG" above to stamp field imagery.</div>';
+        container.innerHTML = `
+          <div class="text-center py-6 px-4 bg-[#080b10] rounded-xl border border-slate-800 col-span-full space-y-2">
+            <div class="text-2xl">📸</div>
+            <div class="text-xs text-slate-300 font-bold">NO STORM PHOTOS IN CURRENT SESSION</div>
+            <p class="text-[11px] text-slate-500 max-w-sm mx-auto">
+              Tap "OPEN CAMERA" or "FROM PHOTOS" above to capture storm imagery. Photos are automatically stamped with real GPS coordinates, Maidenhead grid, azimuth bearing, and Zulu time.
+            </p>
+          </div>
+        `;
         return;
       }
 
       container.innerHTML = photos.map(p => {
         return `
-          <div class="p-2.5 rounded-lg bg-[#080b10] border border-slate-800 space-y-1.5 hover:border-emerald-500/50 transition">
-            <div class="flex justify-between items-center text-[10px]">
-              <span class="px-1.5 py-0.2 rounded bg-emerald-950 text-emerald-300 font-bold border border-emerald-800">${p.tag}</span>
-              <span class="text-amber-400 font-bold">${p.time24} Local (${p.zuluTime})</span>
+          <div class="p-3 rounded-xl bg-[#080b10] border border-slate-800 space-y-2 hover:border-emerald-500/50 transition shadow">
+            <div class="relative rounded-lg overflow-hidden border border-slate-800 aspect-video bg-black flex items-center justify-center">
+              <img src="${p.dataUrl}" alt="${p.title}" onclick="openSkywarnPhotoModal('${p.id}')" class="w-full h-full object-cover cursor-pointer hover:scale-105 transition duration-200">
+              <span class="absolute top-1.5 left-1.5 px-1.5 py-0.2 rounded bg-black/80 text-emerald-400 font-bold border border-emerald-500/50 text-[9px] backdrop-blur-sm">
+                ${p.tag || 'GEO-STAMPED'}
+              </span>
+              <span class="absolute top-1.5 right-1.5 px-1.5 py-0.2 rounded bg-black/80 text-amber-300 font-bold border border-amber-500/50 text-[9px] backdrop-blur-sm font-mono">
+                ${p.time24} CST
+              </span>
             </div>
-            <div class="text-white font-bold text-[11px] truncate">${p.title}</div>
-            <div class="text-[10px] text-slate-400 leading-tight">
-              <div>📍 ${p.coords} (${p.grid})</div>
-              <div>🧭 Bearing: <strong class="text-slate-200">${p.bearing}</strong> • Op: <strong class="text-emerald-400">${p.call}</strong></div>
+
+            <div class="space-y-1">
+              <div class="flex items-center justify-between text-[11px]">
+                <strong class="text-white truncate">${p.title}</strong>
+                <span class="text-slate-400 text-[10px] font-mono">${p.zuluTime}</span>
+              </div>
+              <div class="text-[10px] text-slate-400 leading-tight space-y-0.5">
+                <div>📍 ${p.coords} (${p.grid})</div>
+                <div>🧭 Bearing: <strong class="text-slate-200">${p.bearing}</strong> • Op: <strong class="text-emerald-400">${p.call}</strong></div>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between gap-1 pt-1.5 border-t border-slate-800 text-[10px]">
+              <button type="button" onclick="savePhotoToPhone('${p.id}')" class="flex-1 py-1 px-1.5 bg-emerald-950 hover:bg-emerald-900 border border-emerald-700 text-emerald-300 font-bold rounded flex items-center justify-center gap-1 transition cursor-pointer" title="Save to Phone Photos / Downloads">
+                <span>💾</span><span>SAVE</span>
+              </button>
+              <button type="button" onclick="attachPhotoToActiveReport('${p.id}')" class="flex-1 py-1 px-1.5 bg-amber-950 hover:bg-amber-900 border border-amber-700 text-amber-300 font-bold rounded flex items-center justify-center gap-1 transition cursor-pointer" title="Attach to Spotter Report">
+                <span>⚡</span><span>ATTACH</span>
+              </button>
+              <button type="button" onclick="openSkywarnPhotoModal('${p.id}')" class="py-1 px-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold rounded transition cursor-pointer" title="Preview / Fullscreen">
+                🔍
+              </button>
+              <button type="button" onclick="deleteSkywarnPhoto('${p.id}')" class="py-1 px-2 bg-red-950/60 hover:bg-red-900 border border-red-800 text-red-300 font-bold rounded transition cursor-pointer" title="Delete Photo">
+                🗑️
+              </button>
             </div>
           </div>
         `;
       }).join('');
     }
 
+    function deleteSkywarnPhoto(photoId) {
+      if (!confirm('🗑️ Delete this storm photo from your session gallery?')) return;
+      appState.capturedStormPhotos = (appState.capturedStormPhotos || []).filter(x => x.id !== photoId);
+      if (appState.activeAttachedPhoto && appState.activeAttachedPhoto.id === photoId) {
+        appState.activeAttachedPhoto = null;
+      }
+      try {
+        safeStorage.setItem('fc_ares_skywarn_photos', JSON.stringify(appState.capturedStormPhotos));
+      } catch(e) {}
+      renderSkywarnPhotos();
+      updateAttachedPhotoCard();
+      closeSkywarnPhotoModal();
+    }
+
+    // Photo Viewer Modal
+    function openSkywarnPhotoModal(photoId) {
+      const p = (appState.capturedStormPhotos || []).find(x => x.id === photoId) || appState.activeAttachedPhoto;
+      if (!p) return;
+      openSkywarnPhotoModalDirect(p);
+    }
+
+    function openSkywarnPhotoModalDirect(p) {
+      const m = document.getElementById('skywarn-photo-modal');
+      const img = document.getElementById('modal-photo-img');
+      const title = document.getElementById('modal-photo-title');
+      const call = document.getElementById('modal-photo-call');
+      const coords = document.getElementById('modal-photo-coords');
+      const bearing = document.getElementById('modal-photo-bearing');
+      const time = document.getElementById('modal-photo-time');
+
+      const saveBtn = document.getElementById('modal-photo-save-btn');
+      const attachBtn = document.getElementById('modal-photo-attach-btn');
+      const delBtn = document.getElementById('modal-photo-delete-btn');
+
+      if (img) img.src = p.dataUrl;
+      if (title) title.textContent = `STORM PHOTO: ${p.title || 'Severe Observation'}`;
+      if (call) call.textContent = `${p.call} (${p.spotterId || 'TX-FRE-01'})`;
+      if (coords) coords.textContent = `${p.coords} (Elev: ${p.elevation || 462}ft)`;
+      if (bearing) bearing.textContent = `${p.bearing} (${p.grid || 'EM11xq'})`;
+      if (time) time.textContent = `${p.time24} Local (${p.zuluTime})`;
+
+      if (saveBtn) saveBtn.setAttribute('onclick', `savePhotoToPhone('${p.id}')`);
+      if (attachBtn) attachBtn.setAttribute('onclick', `attachPhotoToActiveReport('${p.id}')`);
+      if (delBtn) delBtn.setAttribute('onclick', `deleteSkywarnPhoto('${p.id}')`);
+
+      if (m) m.classList.remove('hidden');
+    }
+
+    function closeSkywarnPhotoModal() {
+      const m = document.getElementById('skywarn-photo-modal');
+      if (m) m.classList.add('hidden');
+    }
+
+    function previewReportPhoto(reportId) {
+      const r = (appState.skywarnReports || []).find(x => x.id === reportId);
+      if (!r || !r.photoDataUrl) return;
+
+      const tempPhoto = {
+        id: r.id,
+        title: r.photoTitle || r.phenomenon,
+        phenomenon: r.phenomenon,
+        time24: r.time24 || r.timestamp,
+        zuluTime: r.zuluTime,
+        coords: `${r.lat || 31.7249}° N, ${Math.abs(r.lng || -96.1652)}° W`,
+        grid: r.grid || 'EM11xq',
+        bearing: r.bearing || '285° WNW',
+        call: r.call,
+        spotterId: r.spotterId || 'TX-FRE-01',
+        elevation: 462,
+        dataUrl: r.photoDataUrl
+      };
+
+      openSkywarnPhotoModalDirect(tempPhoto);
+    }
+
+    // Reports Feed Rendering
     function renderSkywarnReportsFeed() {
       const container = document.getElementById('skywarn-reports-feed');
       const countEl = document.getElementById('skywarn-feed-count');
+      const subtabBadge = document.getElementById('skywarn-subtab-badge-count');
       if (!container) return;
 
-      const reports = appState.skywarnReports || [];
+      const reports = (appState && appState.skywarnReports) ? appState.skywarnReports : [];
       if (countEl) countEl.textContent = `${reports.length} REPORTS ACTIVE`;
+      if (subtabBadge) subtabBadge.textContent = String(reports.length);
 
       if (reports.length === 0) {
-        container.innerHTML = '<div class="text-slate-500 text-center py-4 bg-[#080b10] rounded border border-slate-800">No storm reports submitted during this operational period.</div>';
+        container.innerHTML = `
+          <div class="text-slate-500 text-center py-6 bg-[#080b10] rounded-xl border border-slate-800 text-xs space-y-1">
+            <div class="text-2xl">📡</div>
+            <div class="font-bold text-slate-300">NO STORM REPORTS LOGGED FOR THIS OPERATIONAL PERIOD</div>
+            <p class="text-[11px] text-slate-500">Submitted spotter reports will appear here in real-time across all field operators.</p>
+          </div>
+        `;
         return;
       }
 
       container.innerHTML = reports.map(r => {
         let badgeColor = 'bg-amber-950 text-amber-300 border-amber-700';
-        if (r.phenomenon.includes('Tornado')) badgeColor = 'bg-rose-950 text-rose-300 border-rose-600 font-black';
-        else if (r.phenomenon.includes('Hail')) badgeColor = 'bg-sky-950 text-sky-300 border-sky-600';
-        else if (r.phenomenon.includes('Wind')) badgeColor = 'bg-blue-950 text-blue-300 border-blue-600';
+        if (r.phenomenon && r.phenomenon.includes('Tornado')) badgeColor = 'bg-rose-950 text-rose-300 border-rose-600 font-black';
+        else if (r.phenomenon && r.phenomenon.includes('Hail')) badgeColor = 'bg-sky-950 text-sky-300 border-sky-600';
+        else if (r.phenomenon && r.phenomenon.includes('Wind')) badgeColor = 'bg-blue-950 text-blue-300 border-blue-600';
+        else if (r.phenomenon && r.phenomenon.includes('Flood')) badgeColor = 'bg-cyan-950 text-cyan-300 border-cyan-600';
+
+        const photoHtml = (r.hasPhoto && r.photoDataUrl) ? `
+          <div class="flex items-center gap-2 p-2 bg-black/50 rounded-lg border border-slate-800">
+            <img src="${r.photoDataUrl}" alt="Attached storm photo" onclick="previewReportPhoto('${r.id}')" class="w-12 h-12 object-cover rounded border border-emerald-500 cursor-pointer hover:opacity-90 shadow">
+            <div class="text-[10px] text-slate-300">
+              <div class="text-emerald-400 font-bold flex items-center gap-1">
+                <span>📷</span><span>GEO-TAGGED PHOTO ATTACHED</span>
+              </div>
+              <div class="text-slate-400">${r.photoTitle || 'Observation Imagery'}</div>
+              <button type="button" onclick="previewReportPhoto('${r.id}')" class="text-sky-400 hover:underline font-bold text-[9px] mt-0.5 cursor-pointer">
+                Tap to View Full Watermarked Photo ↗
+              </button>
+            </div>
+          </div>
+        ` : '';
 
         return `
-          <div class="bg-[#080b10] p-3 rounded-lg border border-slate-800/90 space-y-2 hover:border-slate-700 transition">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 border-b border-slate-800/80 pb-1.5">
+          <div class="bg-[#080b10] p-3.5 rounded-xl border border-slate-800 space-y-2.5 hover:border-slate-700 transition font-mono-tac shadow">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 border-b border-slate-800 pb-2">
               <div class="flex items-center gap-2 flex-wrap">
                 <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badgeColor}">
-                  ${r.phenomenon}
+                  ${r.phenomenon || '⚡ Severe Weather'}
                 </span>
-                <span class="text-white font-bold text-xs">${r.call} (${r.name})</span>
-                <span class="text-[10px] text-slate-400 font-mono">• Spotter ID: <strong class="text-amber-400">${r.spotterId}</strong></span>
+                <span class="text-white font-bold text-xs">${r.call} (${r.name || 'Operator'})</span>
+                <span class="text-[10px] text-slate-400 font-mono">• Spotter ID: <strong class="text-amber-400">${r.spotterId || 'TX-FRE-01'}</strong></span>
               </div>
-              <div class="text-[10px] font-bold text-amber-400 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-900/60">
-                ${r.time24} LOCAL (${r.zuluTime})
+              <div class="text-[10px] font-bold text-amber-400 bg-amber-950/60 px-2.5 py-0.5 rounded border border-amber-900/60 self-start sm:self-auto font-mono">
+                ${r.time24 || r.timestamp || '--:--'} LOCAL (${r.zuluTime || '--:--Z'})
               </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-slate-300">
               <div>
-                <span class="text-slate-500 text-[10px] block">OBSERVATION LOCATION & BEARING:</span>
-                <strong class="text-white">📍 ${r.location}</strong>
-                <div class="text-[10px] text-slate-400">Grid: ${r.grid} • Bearing: ${r.bearing} • Motion: ${r.motion}</div>
+                <span class="text-slate-500 text-[10px] block font-bold">OBSERVATION LOCATION &amp; BEARING:</span>
+                <strong class="text-white">📍 ${r.location || 'Freestone County'}</strong>
+                <div class="text-[10px] text-slate-400 mt-0.5">
+                  Grid: <strong class="text-amber-400">${r.grid || 'EM11xq'}</strong> • Bearing: <strong class="text-slate-200">${r.bearing || '285° WNW'}</strong> • Motion: <strong class="text-slate-200">${r.motion || 'Moving East'}</strong>
+                </div>
               </div>
               <div>
-                <span class="text-slate-500 text-[10px] block">MEASURED / OBSERVED PARAMETERS:</span>
-                <div class="text-white font-semibold">💨 Wind: ${r.wind} | 🧊 Hail: ${r.hail}</div>
+                <span class="text-slate-500 text-[10px] block font-bold">MEASURED / OBSERVED PARAMETERS:</span>
+                <div class="text-white font-semibold">💨 Wind: ${r.wind || 'None'} | 🧊 Hail: ${r.hail || 'None'}</div>
               </div>
             </div>
 
-            <div class="text-[11px] text-slate-300 bg-black/40 p-2 rounded border border-slate-800/60">
-              <strong class="text-slate-400">Impact Remarks:</strong> ${r.damage}
+            ${photoHtml}
+
+            <div class="text-[11px] text-slate-300 bg-black/60 p-2.5 rounded-lg border border-slate-800">
+              <strong class="text-slate-400">Impact Remarks:</strong> ${r.damage || r.details || 'None reported.'}
             </div>
 
             <div class="flex justify-between items-center text-[10px] pt-1 flex-wrap gap-2">
               <span class="text-emerald-400 font-bold flex items-center gap-1">
                 <span>✓</span>
-                <span>${r.status}</span>
+                <span>${r.status || 'TRANSMITTED TO NCS (FF 110)'}</span>
               </span>
               <div class="flex items-center gap-2">
-                <button onclick="shareReportVoiceScript('${r.id}')" class="text-purple-300 hover:text-white underline font-bold">
-                  🎙️ Read Over Repeater
+                <button type="button" onclick="shareReportVoiceScript('${r.id}')" class="px-2 py-0.5 bg-purple-950 hover:bg-purple-900 border border-purple-800 text-purple-300 rounded font-bold transition flex items-center gap-1 cursor-pointer">
+                  <span>🎙️</span><span>READ OVER NET</span>
                 </button>
-                <button onclick="deleteSkywarnReport('${r.id}', event)" class="px-2 py-0.5 bg-red-950/80 hover:bg-red-900 border border-red-800 text-red-300 rounded font-bold transition flex items-center gap-1" title="Delete Storm Report from active log">
+                <button type="button" onclick="exportSingleReportText('${r.id}')" class="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 rounded font-bold transition flex items-center gap-1 cursor-pointer">
+                  <span>📋</span><span>COPY TEXT</span>
+                </button>
+                <button type="button" onclick="deleteSkywarnReport('${r.id}', event)" class="px-2 py-0.5 bg-red-950/80 hover:bg-red-900 border border-red-800 text-red-300 rounded font-bold transition flex items-center gap-1 cursor-pointer" title="Delete Storm Report">
                   <span>🗑️</span><span>DELETE</span>
                 </button>
               </div>
@@ -10260,78 +11011,101 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
       }).join('');
     }
 
-    function dispatchSkywarnNWS() {
-      const type = document.getElementById('skywarn-type').value;
-      const wind = document.getElementById('skywarn-wind').value;
-      const hail = document.getElementById('skywarn-hail').value;
-      const motion = document.getElementById('skywarn-motion').value;
-      const loc = document.getElementById('skywarn-location').value;
-      const notes = document.getElementById('skywarn-notes').value || 'Rotation and damaging hail observed.';
+    // Transmit Spotter Report to Net Control
+    async function dispatchSkywarnToNcs() {
+      const call = (appState && appState.myCall && appState.myCall !== 'GUEST') ? appState.myCall : 'KG5TZT';
+      const name = (appState && appState.myName) ? appState.myName : 'Brian Davis';
+      const mem = (appState && appState.members) ? appState.members.find(x => x.call === call) : null;
+      const spotterId = (call === 'KG5TZT') ? 'TX-FRE-01' : ((mem && mem.id) ? `TX-FRE-${String(mem.id).padStart(2, '0')}` : 'TX-FRE-06');
+
+      const type = document.getElementById('skywarn-type') ? document.getElementById('skywarn-type').value : '🌪️ Tornado / Rotating Wall Cloud';
+      const hail = document.getElementById('skywarn-hail') ? document.getElementById('skywarn-hail').value.trim() : 'None';
+      const wind = document.getElementById('skywarn-wind') ? document.getElementById('skywarn-wind').value.trim() : 'Calm';
+      const motion = document.getElementById('skywarn-motion') ? document.getElementById('skywarn-motion').value.trim() : 'Moving East @ 25 MPH';
+      const loc = document.getElementById('skywarn-location') ? document.getElementById('skywarn-location').value.trim() : '';
+      const notes = document.getElementById('skywarn-notes') ? document.getElementById('skywarn-notes').value.trim() : 'Severe storm observation';
+
+      if (!loc) {
+        alert('⚠️ Please specify or auto-fill your Location / Crossroads before transmitting.');
+        return;
+      }
 
       const now = new Date();
       const local24 = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
       const zulu = now.toISOString().substring(11, 16) + 'Z';
 
-      const newReport = {
+      const attachedPhoto = appState.activeAttachedPhoto || null;
+      const lat = appState.spotterLat || 31.7249;
+      const lng = appState.spotterLng || -96.1652;
+      const grid = appState.spotterGrid || ((typeof latLngToMaidenhead === 'function') ? latLngToMaidenhead(lat, lng) : 'EM11xq');
+      const bearing = appState.skywarnHeadingLabel || '285° WNW';
+
+      const report = {
         id: 'sw-' + Date.now(),
-        call: appState.myCall,
-        name: appState.myName,
-        spotterId: (appState.myCall === 'KG5TZT') ? 'TX-FRE-01' : 'TX-FRE-06',
-        level: appState.myLevel,
+        call: call,
+        name: name,
+        spotterId: spotterId,
+        level: appState.myLevel || 'Master EC',
+        timestamp: local24,
         time24: local24,
         zuluTime: zulu,
+        date: now.toISOString().split('T')[0],
         phenomenon: type,
         wind: wind,
         hail: hail,
-        location: loc,
-        lat: 31.7249,
-        lng: -96.1652,
-        grid: 'EM11xq',
-        bearing: appState.skywarnHeadingLabel || '285° WNW',
         motion: motion,
+        location: loc,
+        lat: lat,
+        lng: lng,
+        grid: grid,
+        bearing: bearing,
         damage: notes,
-        status: 'TRANSMITTED TO NWS FWD & NET CONTROL',
-        hasPhoto: true
+        details: notes,
+        status: 'TRANSMITTED TO NCS / EC (FF 110)',
+        hasPhoto: !!attachedPhoto,
+        photoDataUrl: attachedPhoto ? attachedPhoto.dataUrl : null,
+        photoTitle: attachedPhoto ? attachedPhoto.title : null
       };
 
-      appState.skywarnReports.unshift(newReport);
+      if (!appState.skywarnReports) appState.skywarnReports = [];
+      appState.skywarnReports.unshift(report);
+
+      // Persist to safeStorage
+      try {
+        safeStorage.setItem('fc_ares_skywarn_reports', JSON.stringify(appState.skywarnReports));
+      } catch(e) {
+        const lightweight = appState.skywarnReports.map(r => ({ ...r, photoDataUrl: null }));
+        safeStorage.setItem('fc_ares_skywarn_reports', JSON.stringify(lightweight));
+      }
+
       renderSkywarnReportsFeed();
 
-      const payload = `*** NWS SKYWARN SEVERE WEATHER REPORT ***
-Station: ${newReport.call} (${newReport.name})
-Spotter ID: ${newReport.spotterId} (Freestone County ARES)
-Time: ${local24} Local (${zulu})
-Location: ${loc}
-Coordinates: 31.7249 N, 96.1652 W (Grid EM11xq)
-Bearing: ${newReport.bearing} | Storm Motion: ${motion}
-Phenomenon: ${type}
-Wind Speed: ${wind} | Hail Size: ${hail}
-Impact / Damage: ${notes}
-Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
+      // Update On-Air Script Card
+      const scriptCard = document.getElementById('skywarn-voice-script-card');
+      const scriptTextEl = document.getElementById('skywarn-voice-script-text');
+      const scriptContent = `"Net Control, this is Storm Spotter ${call} (${name}, ID: ${spotterId}) with a SEVERE WEATHER REPORT.\nLOCATION: ${loc} (Grid: ${grid})\nPHENOMENON: ${type}\nHAIL: ${hail} | WIND: ${wind} | MOTION: ${motion}\nDAMAGE / IMPACT: ${notes}\nOver to Net Control."`;
+      if (scriptTextEl) scriptTextEl.textContent = scriptContent;
+      if (scriptCard) scriptCard.classList.remove('hidden');
 
-      alert(`⚡ SEVERE WEATHER REPORT DISPATCHED!\n\n${payload}\n\nReport logged to tactical feed and transmitted to NWS Fort Worth & County ARES Net Control.`);
+      // Sync to Firebase Cloud
+      if (fbDb) {
+        try {
+          const cloudReport = { ...report, photoDataUrl: report.photoDataUrl ? '[IMAGE ATTACHED]' : null };
+          await fbDb.ref('skywarn_reports/' + report.id).set(cloudReport);
+          await fbDb.ref('skywarn_reports_list').set(appState.skywarnReports.map(r => ({ ...r, photoDataUrl: null })));
+        } catch(e) {}
+      }
+      await fbRestPut('skywarn_reports/' + report.id, { ...report, photoDataUrl: null });
+      pushRosterSyncToCloud();
+
+      alert(`📢 SPOTTER REPORT TRANSMITTED TO NET CONTROL / EC\n\nCallsign: ${call} (${spotterId})\nPhenomenon: ${type}\nLocation: ${loc}\nGrid: ${grid}\n\n✓ Logged to County Severe Weather Log\n✓ Synced to Net Control on repeater FF 110 (145.110 MHz)\n\nRead the generated on-air voice script below over the net.`);
     }
 
-    function exportSkywarnText() {
-      const type = document.getElementById('skywarn-type').value;
-      const wind = document.getElementById('skywarn-wind').value;
-      const hail = document.getElementById('skywarn-hail').value;
-      const loc = document.getElementById('skywarn-location').value;
-      const notes = document.getElementById('skywarn-notes').value;
-
-      const txt = `SKYWARN REPORT [NWS FWD]: Station: ${appState.myCall} (TX-FRE-01) | Time: ${new Date().toISOString().substring(11, 16)}Z | Loc: ${loc} | Event: ${type} | Wind: ${wind} | Hail: ${hail} | Remarks: ${notes}`;
-      navigator.clipboard.writeText(txt).then(() => {
-        alert('NWS REPORT TEXT COPIED TO CLIPBOARD!\n\nReady to paste into Winlink Express or SMS gateway.');
-      }).catch(() => {
-        prompt('Copy NWS Report Text:', txt);
-      });
-    }
-
-    // Skywarn Modals
+    // Voice Script Modals & Helpers
     function openSkywarnVoiceScriptModal() {
       const m = document.getElementById('skywarn-script-modal');
       const textEl = document.getElementById('skywarn-voice-script-text');
-      
+
       const type = document.getElementById('skywarn-type') ? document.getElementById('skywarn-type').value : 'Rotating Wall Cloud';
       const wind = document.getElementById('skywarn-wind') ? document.getElementById('skywarn-wind').value : '65 MPH';
       const hail = document.getElementById('skywarn-hail') ? document.getElementById('skywarn-hail').value : '1.25 in';
@@ -10343,9 +11117,8 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
       const local24 = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
 
       if (textEl) {
-        textEl.textContent = `"Net Control, this is Storm Spotter ${appState.myCall} with a SEVERE REPORT. Location: ${loc}. Time: ${local24} Local. Phenomenon: ${type}, hail size ${hail}, wind speed ${wind}. Storm is ${motion}. Damage: ${notes}. Over."`;
+        textEl.textContent = `"Net Control, this is Storm Spotter ${appState.myCall || 'KG5TZT'} with a SEVERE REPORT. Location: ${loc || 'Fairfield'}. Time: ${local24} Local. Phenomenon: ${type}, hail size ${hail}, wind speed ${wind}. Storm is ${motion}. Damage: ${notes}. Over."`;
       }
-
       if (m) m.classList.remove('hidden');
     }
 
@@ -10364,10 +11137,21 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
     }
 
     function shareReportVoiceScript(reportId) {
-      const r = appState.skywarnReports.find(x => x.id === reportId);
+      const r = (appState.skywarnReports || []).find(x => x.id === reportId);
       if (!r) return;
-      const script = `"Net Control, this is Storm Spotter ${r.call} relaying report: At ${r.time24} Local, observed ${r.phenomenon} near ${r.location}. Wind: ${r.wind}, Hail: ${r.hail}. Damage: ${r.damage}. Over."`;
+      const script = `"Net Control, this is Storm Spotter ${r.call} relaying report: At ${r.time24 || r.timestamp} Local, observed ${r.phenomenon} near ${r.location}. Wind: ${r.wind}, Hail: ${r.hail}. Damage: ${r.damage || r.details}. Over."`;
       prompt('On-Air Voice Script for Net Control Relay (Ctrl+C / Cmd+C):', script);
+    }
+
+    function exportSingleReportText(reportId) {
+      const r = (appState.skywarnReports || []).find(x => x.id === reportId);
+      if (!r) return;
+      const txt = `SKYWARN REPORT [NWS FWD]: Station: ${r.call} (${r.spotterId}) | Time: ${r.zuluTime} | Loc: ${r.location} (${r.grid}) | Event: ${r.phenomenon} | Wind: ${r.wind} | Hail: ${r.hail} | Remarks: ${r.damage || r.details}`;
+      navigator.clipboard.writeText(txt).then(() => {
+        alert('NWS REPORT TEXT COPIED TO CLIPBOARD!\n\nReady to paste into Winlink Express or SMS gateway.');
+      }).catch(() => {
+        prompt('Copy NWS Report Text:', txt);
+      });
     }
 
     function openSkywarnGuideModal() {
@@ -10379,6 +11163,33 @@ Transmitted: Voice Net FF 110 (145.110 TSQ 146.2) & Digital RMS Gateway`;
       const m = document.getElementById('skywarn-guide-modal');
       if (m) m.classList.add('hidden');
     }
+
+    // Weather Radar Station Selector
+    function setRadarStation(key) {
+      const iframe = document.getElementById('skywarn-radar-iframe');
+      if (!iframe) return;
+
+      const stations = {
+        'fairfield': { lat: 31.725, lon: -96.165, zoom: 8 },
+        'kfws': { lat: 32.573, lon: -97.303, zoom: 8 },
+        'kgrk': { lat: 31.058, lon: -97.683, zoom: 8 },
+        'khgx': { lat: 29.471, lon: -95.079, zoom: 8 },
+        'kshv': { lat: 32.451, lon: -93.841, zoom: 8 }
+      };
+
+      const st = stations[key] || stations['fairfield'];
+      iframe.src = `https://embed.windy.com/embed2.html?lat=${st.lat}&lon=${st.lon}&detailLat=${st.lat}&detailLon=${st.lon}&width=650&height=480&zoom=${st.zoom}&level=surface&overlay=radar&product=radar&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=mph&metricTemp=%C2%B0F&radarRange=-1`;
+
+      document.querySelectorAll('.radar-station-btn').forEach(btn => {
+        btn.classList.remove('bg-sky-950', 'text-sky-300', 'border-sky-500', 'font-black');
+        btn.classList.add('bg-[#080b10]', 'text-slate-300', 'border-slate-800');
+        if (btn.dataset.station === key) {
+          btn.classList.remove('bg-[#080b10]', 'text-slate-300', 'border-slate-800');
+          btn.classList.add('bg-sky-950', 'text-sky-300', 'border-sky-500', 'font-black');
+        }
+      });
+    }
+
 
     // Voting
     function castVote(choice) {
@@ -16888,91 +17699,6 @@ Your console is now authorized and unlocked.`);
     }
 
     // ==========================================
-    // SKYWARN SPOTTER NET REPORTING & ACTIONS
-    // ==========================================
-    function selectQuickSkywarnType(label, details, severity, colorClass) {
-      const notesEl = document.getElementById('skywarn-notes');
-      if (notesEl && details) {
-        if (!notesEl.value.includes(details)) {
-          notesEl.value = details + (notesEl.value ? '\n' + notesEl.value : '');
-        }
-      }
-      const badgeEl = document.getElementById('selected-condition-badge');
-      if (badgeEl) {
-        badgeEl.textContent = label;
-        badgeEl.className = 'px-2 py-0.5 rounded text-[10px] font-bold ' + colorClass;
-      }
-    }
-
-    function setSkywarnHailSize(sizeStr) {
-      if (typeof selectHailSize === 'function') {
-        selectHailSize(sizeStr);
-      } else {
-        const h = document.getElementById('skywarn-hail');
-        if (h) h.value = sizeStr;
-      }
-    }
-
-    function setSkywarnWindSpeed(speedStr) {
-      const windEl = document.getElementById('skywarn-wind');
-      if (windEl) windEl.value = speedStr;
-    }
-
-    function getSkywarnReports() {
-      try {
-        const raw = safeStorage.getItem('fc_ares_skywarn_reports');
-        if (raw) return JSON.parse(raw);
-      } catch(e) {}
-      return (appState && appState.skywarnReports) ? appState.skywarnReports : [];
-    }
-
-    function saveSkywarnReports(reports) {
-      try {
-        safeStorage.setItem('fc_ares_skywarn_reports', JSON.stringify(reports));
-      } catch(e) {}
-      if (appState) appState.skywarnReports = reports;
-    }
-
-    function dispatchSkywarnToNcs() {
-      const call = (appState && appState.myCall && appState.myCall !== 'GUEST') ? appState.myCall : 'KG5TZT';
-      const name = (appState && appState.myName) ? appState.myName : 'Brian Davis';
-      const hail = (document.getElementById('skywarn-hail') ? document.getElementById('skywarn-hail').value : 'None');
-      const wind = (document.getElementById('skywarn-wind') ? document.getElementById('skywarn-wind').value : 'None');
-      const motion = (document.getElementById('skywarn-motion') ? document.getElementById('skywarn-motion').value : 'Stationary');
-      const loc = (document.getElementById('skywarn-location') ? document.getElementById('skywarn-location').value : 'Fairfield');
-      const notes = (document.getElementById('skywarn-notes') ? document.getElementById('skywarn-notes').value : '');
-      
-      const report = {
-        id: 'rep-' + Date.now(),
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        date: new Date().toISOString().split('T')[0],
-        call: call,
-        name: name,
-        location: loc,
-        hail: hail,
-        wind: wind,
-        motion: motion,
-        details: notes,
-        relayedToNcs: true,
-        phenomenon: (hail.includes('Quarter') || hail.includes('Golf') || hail.includes('Baseball')) ? '🧊 Severe Hail' : '⚡ Severe Storm'
-      };
-
-      const reports = getSkywarnReports();
-      reports.unshift(report);
-      saveSkywarnReports(reports);
-      renderSkywarnReportsFeed();
-
-      const scriptCard = document.getElementById('skywarn-voice-script-card');
-      const scriptTextEl = document.getElementById('skywarn-generated-voice-script');
-      const scriptContent = `Net Control, this is ${call} (${name}) with a SEVERE WEATHER REPORT.\nLOCATION: ${loc}\nHAIL: ${hail} | WIND: ${wind} | MOTION: ${motion}\nDETAILS: ${notes}\nOver to Net Control.`;
-      if (scriptTextEl) scriptTextEl.textContent = scriptContent;
-      if (scriptCard) scriptCard.classList.remove('hidden');
-
-      pushRosterSyncToCloud();
-      alert(`📢 SPOTTER REPORT TRANSMITTED TO NET CONTROL / EC\n\nCallsign: ${call}\nLocation: ${loc}\n\nYour spotter report has been logged to the Freestone County Severe Weather Log and synced to Net Control.\nRead the generated on-air voice script over repeater FF 110 (145.110 MHz).`);
-    }
-
-    // ==========================================
     // MAGIC LINK MODAL AUTHENTICATION
     // ==========================================
     function closeMagicLinkModal() {
@@ -19262,7 +19988,7 @@ Your console is now authorized and unlocked.`);
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.15 (Build 68)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.17 (Build 69)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>
