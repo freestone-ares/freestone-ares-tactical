@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Freestone County ARES Tactical Mobile v7.9.18</title>
+  <title>Freestone County ARES Tactical Mobile v7.9.19</title>
   <meta name="description" content="Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES">
   <meta name="theme-color" content="#0b0e14">
   <meta name="mobile-web-app-capable" content="yes">
@@ -703,7 +703,21 @@
         </div>
 
         <!-- SIGN IN FORM -->
-        <div class="space-y-4">
+        <div id="auth-box-login" class="space-y-4">
+          <!-- EMERGENCY COORDINATOR 1-TAP INSTANT ACCESS (BRIAN DAVIS - KG5TZT) -->
+          <div class="p-3 bg-gradient-to-r from-purple-950/80 via-slate-900 to-purple-950/60 border border-purple-500/70 rounded-xl space-y-1.5 shadow-md">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black text-purple-300 flex items-center gap-1.5 font-mono-tac">
+                <span>⚡</span><span>EMERGENCY COORDINATOR RAPID SIGN-IN</span>
+              </span>
+              <span class="px-1.5 py-0.2 rounded text-[9px] font-black bg-purple-500 text-slate-950">LEVEL 6 EC</span>
+            </div>
+            <p class="text-[10px] text-slate-300 leading-tight">Emergency deployment mode: Tap below for instant EC console unlock.</p>
+            <button type="button" onclick="quickEcLogin()" class="w-full py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-black text-xs rounded-lg shadow transition flex items-center justify-center gap-2 cursor-pointer font-mono-tac uppercase tracking-wider">
+              <span>🛡️</span><span>SIGN IN AS EC BRIAN DAVIS (KG5TZT)</span>
+            </button>
+          </div>
+
           <!-- Callsign Field -->
           <div class="space-y-1">
             <label class="text-[10px] text-slate-300 font-bold block uppercase tracking-wider">OPERATOR CALLSIGN:</label>
@@ -2181,7 +2195,7 @@
         <!-- Slide Footer Keyboard & Swipe Hints -->
         <div class="flex items-center justify-between text-[11px] text-slate-400 px-2 font-mono-tac">
           <div>💡 <strong>Tips:</strong> Swipe left / right on touchscreen or use PREV / NEXT to flip through training slides.</div>
-          <div>Marine-Proof Training System &bull; Build 70 (v7.9.18)</div>
+          <div>Marine-Proof Training System &bull; Build 71 (v7.9.19)</div>
         </div>
 
       </div> <!-- End of manual-guide-container -->
@@ -13585,6 +13599,17 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
       }
     }
 
+    function quickEcLogin() {
+      const callInput = document.getElementById('login-callsign');
+      const pwInput = document.getElementById('login-password');
+      if (callInput) {
+        callInput.value = 'KG5TZT';
+        handleCallsignInput('KG5TZT');
+      }
+      if (pwInput) pwInput.value = 'Chief@svfd1';
+      handlePasswordLogin();
+    }
+
     function showAuthTab(tab, preCall = '', preName = '', prePhone = '') {
       const boxLogin = document.getElementById('auth-box-login');
       const boxReg = document.getElementById('auth-box-register');
@@ -13592,11 +13617,9 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
       const btnSignin = document.getElementById('tab-btn-signin');
       const btnReg = document.getElementById('tab-btn-register');
 
-      if (!boxLogin || !boxReg || !boxPending) return;
-
-      boxLogin.classList.add('hidden');
-      boxReg.classList.add('hidden');
-      boxPending.classList.add('hidden');
+      if (boxLogin) boxLogin.classList.add('hidden');
+      if (boxReg) boxReg.classList.add('hidden');
+      if (boxPending) boxPending.classList.add('hidden');
 
       if (btnSignin && btnReg) {
         btnSignin.className = 'py-2 px-3 rounded-lg font-bold transition flex items-center justify-center gap-1.5 bg-slate-900 text-slate-300 hover:text-white border border-slate-700';
@@ -13604,7 +13627,7 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
       }
 
       if (tab === 'register') {
-        boxReg.classList.remove('hidden');
+        if (boxReg) boxReg.classList.remove('hidden');
         if (btnReg) btnReg.className = 'py-2 px-3 rounded-lg font-bold transition flex items-center justify-center gap-1.5 bg-emerald-600 text-slate-950 shadow';
         if (preCall) {
           const callEl = document.getElementById('reg-callsign');
@@ -13619,13 +13642,16 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
           if (phoneEl) phoneEl.value = prePhone;
         }
       } else if (tab === 'pending') {
-        boxPending.classList.remove('hidden');
+        if (boxPending) boxPending.classList.remove('hidden');
       } else {
-        boxLogin.classList.remove('hidden');
+        if (boxLogin) boxLogin.classList.remove('hidden');
         if (btnSignin) btnSignin.className = 'py-2 px-3 rounded-lg font-bold transition flex items-center justify-center gap-1.5 bg-emerald-600 text-slate-950 shadow';
         if (preCall) {
           const callEl = document.getElementById('login-callsign');
-          if (callEl) callEl.value = preCall;
+          if (callEl) {
+            callEl.value = preCall;
+            handleCallsignInput(preCall);
+          }
         }
       }
     }
@@ -18180,9 +18206,7 @@ Your console is now authorized and unlocked.`);
     // Modal login triggers (replaces magic link modal)
     function openLoginModal(preCall = '') {
       switchTab('auth');
-      if (preCall) {
-        showAuthTab('login', preCall);
-      }
+      showAuthTab('login', preCall);
     }
 
     function closeLoginModal() {
@@ -19483,7 +19507,7 @@ Your console is now authorized and unlocked.`);
         category: 'OFFICIAL OPERATOR FIELD MANUAL',
         title: 'FREESTONE COUNTY ARES TACTICAL MOBILE',
         subtitle: 'COMPLETE OPERATOR FIELD GUIDE • MARINE-PROOF EDITION',
-        meta: 'Step-By-Step Illustrated Visual Instructions for Android & iOS\nCross-Platform Unified Architecture • Build 70 (v7.9.18) • November 2026\nCounty Emergency Coordinator: Brian Davis (KG5TZT)',
+        meta: 'Step-By-Step Illustrated Visual Instructions for Android & iOS\nCross-Platform Unified Architecture • Build 71 (v7.9.19) • November 2026\nCounty Emergency Coordinator: Brian Davis (KG5TZT)',
         image: 'guide_screens/screen_02_dashboard_annotated.png'
       },
       {
@@ -19701,7 +19725,7 @@ Your console is now authorized and unlocked.`);
           '1. Tap the CHAPTER JUMP dropdown (Badge 1) to quickly leap to PACE Plans, Winlink setups, or LiFePO4 battery guides.',
           '2. Use the PREV and NEXT buttons (Badge 2) or type a page number to flip through documents.',
           '3. Use the zoom dropdown and fullscreen button (Badge 3) to inspect detailed radio circuit schematics.',
-          '4. Tap "SAVE PDF" (Badge 4) to download an offline copy to your phone's files folder.'
+          '4. Tap "SAVE PDF" (Badge 4) to download an offline copy to your phone\'s files folder.'
         ],
         howItWorks: 'The built-in PDF viewer renders the complete 84-page manual without needing third-party apps.',
         tip: 'You can upload a revised Field Manual PDF anytime using the "UPDATE / UPLOAD MANUAL" button. Revisions save permanently to your phone.'
@@ -20667,7 +20691,7 @@ Your console is now authorized and unlocked.`);
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.18 (Build 70)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.19 (Build 71)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>
