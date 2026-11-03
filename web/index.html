@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Freestone County ARES Tactical Mobile v7.9.19</title>
+  <title>Freestone County ARES Tactical Mobile v7.9.20</title>
   <meta name="description" content="Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES">
   <meta name="theme-color" content="#0b0e14">
   <meta name="mobile-web-app-capable" content="yes">
@@ -2195,7 +2195,7 @@
         <!-- Slide Footer Keyboard & Swipe Hints -->
         <div class="flex items-center justify-between text-[11px] text-slate-400 px-2 font-mono-tac">
           <div>💡 <strong>Tips:</strong> Swipe left / right on touchscreen or use PREV / NEXT to flip through training slides.</div>
-          <div>Marine-Proof Training System &bull; Build 71 (v7.9.19)</div>
+          <div>Marine-Proof Training System &bull; Build 72 (v7.9.20)</div>
         </div>
 
       </div> <!-- End of manual-guide-container -->
@@ -3219,6 +3219,10 @@
         </div>
       </div>
 
+      <!-- Native Tactical File Inputs (Offscreen, active in DOM layout for universal iOS/Android WebView & Mobile Browsers) -->
+      <input type="file" id="skywarn-camera-input" accept="image/*" capture="environment" style="position:fixed; top:-9999px; left:-9999px; width:1px; height:1px; opacity:0.01; pointer-events:none;" onchange="handleRealSkywarnPhoto(event)">
+      <input type="file" id="skywarn-gallery-input" accept="image/*" style="position:fixed; top:-9999px; left:-9999px; width:1px; height:1px; opacity:0.01; pointer-events:none;" onchange="handleRealSkywarnPhoto(event)">
+
       <!-- SKYWARN SUBTAB SWITCHER -->
       <div class="flex border-b border-slate-800 text-xs font-mono-tac overflow-x-auto scrollbar-thin bg-[#080b10] rounded-xl p-1 gap-1">
         <button type="button" id="skywarn-tab-btn-report" onclick="switchSkywarnSubtab('report')" class="flex-1 py-2 px-2 rounded-lg font-bold bg-amber-500/20 text-amber-300 border border-amber-500/60 flex items-center justify-center gap-1 transition whitespace-nowrap shadow cursor-pointer text-[11px] sm:text-xs">
@@ -3475,10 +3479,6 @@
       <!-- SUBPANEL 2: TACTICAL CAMERA HUD & PHOTO LAB              -->
       <!-- ======================================================== -->
       <div id="skywarn-subpanel-camera" class="skywarn-subpanel hidden space-y-4">
-        <!-- Hidden Native File Inputs -->
-        <input type="file" id="skywarn-camera-input" accept="image/*" capture="environment" class="hidden" onchange="handleRealSkywarnPhoto(event)">
-        <input type="file" id="skywarn-gallery-input" accept="image/*" class="hidden" onchange="handleRealSkywarnPhoto(event)">
-
         <!-- Tactical Viewfinder HUD Display Card -->
         <div class="relative bg-black rounded-2xl overflow-hidden border-2 border-emerald-500/60 shadow-[0_0_30px_rgba(16,185,129,0.2)] min-h-[420px] flex flex-col justify-between p-4 font-mono-tac">
           <!-- Dark Storm Backdrop -->
@@ -3553,15 +3553,15 @@
             </div>
 
             <div class="flex flex-wrap items-center gap-2">
-              <button type="button" onclick="triggerSkywarnCamera()" class="px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-slate-950 font-black text-xs rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.5)] transition flex items-center gap-2 cursor-pointer">
+              <label for="skywarn-camera-input" onclick="triggerSkywarnCamera(event)" class="px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-slate-950 font-black text-xs rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.5)] transition flex items-center gap-2 cursor-pointer select-none">
                 <span class="text-base">📸</span>
                 <span>OPEN CAMERA (SNAP &amp; STAMP)</span>
-              </button>
+              </label>
 
-              <button type="button" onclick="triggerSkywarnGallery()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs rounded-xl border border-slate-700 transition flex items-center gap-1.5 cursor-pointer">
+              <label for="skywarn-gallery-input" onclick="triggerSkywarnGallery(event)" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs rounded-xl border border-slate-700 transition flex items-center gap-1.5 cursor-pointer select-none">
                 <span>🖼️</span>
                 <span>FROM PHOTOS</span>
-              </button>
+              </label>
 
               <button type="button" onclick="initDeviceCompass()" class="px-2.5 py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold text-xs rounded-xl border border-slate-800 transition flex items-center gap-1 cursor-pointer" title="Calibrate Compass Sensor">
                 <span>🧭</span>
@@ -3592,26 +3592,81 @@
       <!-- ======================================================== -->
       <div id="skywarn-subpanel-radar" class="skywarn-subpanel hidden space-y-4 font-mono-tac">
         <div class="bg-[#10151d] border border-slate-800 rounded-xl p-4 space-y-3">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-2">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 border-b border-slate-800 pb-2">
             <div class="flex items-center gap-2">
               <span class="text-xl">🛰️</span>
               <div>
                 <h4 class="text-sm font-bold text-white uppercase tracking-wider">LIVE FREESTONE COUNTY NEXRAD WEATHER RADAR</h4>
-                <p class="text-[10px] text-slate-400">Live precipitation reflectivity loop centered on Fairfield, Texas &amp; surrounding mutual-aid counties.</p>
+                <p class="text-[10px] text-slate-400">Tactical reflectivity radar centered on Fairfield, Texas &amp; surrounding mutual-aid counties.</p>
               </div>
             </div>
+            <!-- Radar Mode Switcher -->
+            <div class="flex items-center gap-1 bg-[#080b10] p-1 rounded-lg border border-slate-800 flex-wrap">
+              <button type="button" id="btn-radar-mode-leaflet" onclick="setSkywarnRadarMode('leaflet')" class="px-2.5 py-1 rounded text-xs font-bold bg-sky-600 text-white border border-sky-400 transition cursor-pointer">
+                🛰️ TACTICAL NEXRAD
+              </button>
+              <button type="button" id="btn-radar-mode-windy" onclick="setSkywarnRadarMode('windy')" class="px-2.5 py-1 rounded text-xs font-bold bg-slate-900 text-slate-300 border border-slate-800 hover:bg-slate-800 transition cursor-pointer">
+                🌀 WINDY HD
+              </button>
+              <button type="button" id="btn-radar-mode-nws" onclick="setSkywarnRadarMode('nws')" class="px-2.5 py-1 rounded text-xs font-bold bg-slate-900 text-slate-300 border border-slate-800 hover:bg-slate-800 transition cursor-pointer">
+                📡 NWS DIRECT
+              </button>
+            </div>
+          </div>
+
+          <!-- Radar Substation Selectors & Live Status Bar -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-[#080b10] p-2 rounded-lg border border-slate-800">
             <div class="flex items-center gap-1.5 flex-wrap">
+              <span class="text-[10px] text-slate-400 font-bold uppercase">STATION:</span>
               <button type="button" data-station="fairfield" onclick="setRadarStation('fairfield')" class="radar-station-btn px-2.5 py-1 rounded-lg text-xs font-black bg-sky-950 text-sky-300 border border-sky-500 cursor-pointer">FREESTONE</button>
               <button type="button" data-station="kfws" onclick="setRadarStation('kfws')" class="radar-station-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-[#080b10] text-slate-300 border border-slate-800 hover:bg-slate-900 cursor-pointer">KFWS DALLAS</button>
               <button type="button" data-station="kgrk" onclick="setRadarStation('kgrk')" class="radar-station-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-[#080b10] text-slate-300 border border-slate-800 hover:bg-slate-900 cursor-pointer">KGRK CENTRAL TX</button>
               <button type="button" data-station="khgx" onclick="setRadarStation('khgx')" class="radar-station-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-[#080b10] text-slate-300 border border-slate-800 hover:bg-slate-900 cursor-pointer">KHGX HOUSTON</button>
               <button type="button" data-station="kshv" onclick="setRadarStation('kshv')" class="radar-station-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-[#080b10] text-slate-300 border border-slate-800 hover:bg-slate-900 cursor-pointer">KSHV SHREVEPORT</button>
             </div>
+            <div class="flex items-center gap-2">
+              <span id="skywarn-radar-timestamp-label" class="text-[10px] text-emerald-400 font-mono flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                <span>NOAA NEXRAD N0Q ACTIVE</span>
+              </span>
+              <button type="button" onclick="refreshSkywarnNexradLayer()" class="px-2 py-0.5 bg-emerald-950 hover:bg-emerald-900 border border-emerald-700 text-emerald-300 rounded text-[10px] font-bold transition flex items-center gap-1 cursor-pointer" title="Refresh Latest Radar Reflectivity Scan">
+                <span>🔄</span><span>REFRESH SCAN</span>
+              </button>
+            </div>
           </div>
 
-          <!-- Interactive Radar Loop Container -->
-          <div class="relative w-full rounded-xl overflow-hidden border-2 border-slate-700 bg-black min-h-[440px] sm:min-h-[500px]">
+          <!-- MODE 1: NATIVE LEAFLET NEXRAD CONTAINER (Universal Android & iOS, 100% Reliable Native Tiles) -->
+          <div id="skywarn-leaflet-radar-container" class="relative w-full rounded-xl overflow-hidden border-2 border-slate-700 bg-black min-h-[440px] sm:min-h-[500px]">
+            <div id="skywarn-leaflet-radar-canvas" class="w-full h-[460px] sm:h-[520px] bg-slate-950 z-10"></div>
+            <!-- Reflectivity Legend Bar -->
+            <div class="absolute bottom-2 left-2 z-20 bg-black/85 backdrop-blur-md px-2.5 py-1.5 rounded-lg border border-slate-700 text-[9px] flex items-center gap-1.5 flex-wrap">
+              <span class="text-slate-400 font-bold">dBZ REFLECTIVITY:</span>
+              <span class="px-1.5 py-0.2 rounded bg-[#04e9e7] text-black font-bold">5-15 LGT</span>
+              <span class="px-1.5 py-0.2 rounded bg-[#00e000] text-black font-bold">20-30 RAIN</span>
+              <span class="px-1.5 py-0.2 rounded bg-[#ffff00] text-black font-bold">35-45 MOD</span>
+              <span class="px-1.5 py-0.2 rounded bg-[#ff9000] text-black font-bold">45-50 HVY</span>
+              <span class="px-1.5 py-0.2 rounded bg-[#ff0000] text-white font-bold">50-55 SEV</span>
+              <span class="px-1.5 py-0.2 rounded bg-[#ff00ff] text-white font-bold">60+ HAIL/CORE</span>
+            </div>
+          </div>
+
+          <!-- MODE 2: INTERACTIVE WINDY HD CONTAINER -->
+          <div id="skywarn-windy-container" class="hidden relative w-full rounded-xl overflow-hidden border-2 border-slate-700 bg-black min-h-[440px] sm:min-h-[500px]">
             <iframe id="skywarn-radar-iframe" src="https://embed.windy.com/embed2.html?lat=31.725&lon=-96.165&detailLat=31.725&detailLon=-96.165&width=650&height=480&zoom=8&level=surface&overlay=radar&product=radar&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=mph&metricTemp=%C2%B0F&radarRange=-1" class="w-full h-[460px] sm:h-[520px] border-0" allow="geolocation" title="Freestone County Live Weather Radar" loading="lazy"></iframe>
+          </div>
+
+          <!-- MODE 3: NWS LIVE PRODUCTS CONTAINER -->
+          <div id="skywarn-nws-container" class="hidden space-y-3 bg-[#080b10] p-4 rounded-xl border border-slate-800">
+            <div class="text-xs font-bold text-white uppercase flex items-center gap-2">
+              <span>📡</span><span>OFFICIAL NATIONAL WEATHER SERVICE LIVE PRODUCTS (KFWS &amp; SPC)</span>
+            </div>
+            <div class="relative w-full rounded-xl overflow-hidden border border-slate-700 bg-black">
+              <img id="skywarn-nws-kfws-loop" src="https://radar.weather.gov/ridge/standard/KFWS_loop.gif" alt="KFWS Dallas/Fort Worth Radar Loop" class="w-full max-h-[460px] object-contain mx-auto bg-black" onerror="this.src='https://radar.weather.gov/ridge/standard/KGRK_loop.gif'">
+            </div>
+            <div class="flex items-center justify-between text-[11px] text-slate-400">
+              <span>NOAA National Weather Service • KFWS Fort Worth Standard Reflectivity Loop</span>
+              <button type="button" onclick="const img=document.getElementById('skywarn-nws-kfws-loop'); if(img){img.src='https://radar.weather.gov/ridge/standard/KFWS_loop.gif?t='+Date.now();}" class="px-2 py-1 bg-sky-950 border border-sky-800 text-sky-300 rounded text-[10px] font-bold cursor-pointer">🔄 RELOAD GIF LOOP</button>
+            </div>
           </div>
 
           <!-- Direct Official NWS Resource Links -->
@@ -10183,12 +10238,16 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
 
       if (tabName === 'camera') {
         if (isIosOrientationRequiresPermission() && !appState.compassPermissionGranted) {
-          requestCompassPermission();
+          updateCompassStatusUI(false);
         } else {
           setupSkywarnCompassAutoInit();
         }
         updateCompassStatusUI(compassActive, appState.skywarnHeading, appState.skywarnHeadingLabel);
         renderSkywarnPhotos();
+      } else if (tabName === 'radar') {
+        if (skywarnRadarMode === 'leaflet') {
+          setTimeout(() => { initSkywarnRadarMap(); }, 60);
+        }
       } else if (tabName === 'feed') {
         renderSkywarnReportsFeed();
       }
@@ -10423,7 +10482,11 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
                 bindCompassListener();
                 updateCompassStatusUI(true);
               } else {
-                alert('⚠️ Compass permission was denied. You can manually tap any direction pill (N, NE, E, SE, S, SW, W, NW) to set your observation azimuth.');
+                updateCompassStatusUI(false);
+                const badge = document.getElementById('compass-status-badge');
+                if (badge) {
+                  badge.textContent = 'MANUAL AZIMUTH (TAP N, NE, E, SE, S, SW, W, NW)';
+                }
               }
             })
             .catch(err => {
@@ -10578,16 +10641,6 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
           updateCompassStatusUI(true);
         } else {
           updateCompassStatusUI(false);
-          const viewSkywarn = document.getElementById('view-skywarn');
-          if (viewSkywarn) {
-            const tapHandler = function() {
-              requestCompassPermission();
-              viewSkywarn.removeEventListener('click', tapHandler);
-              viewSkywarn.removeEventListener('touchend', tapHandler);
-            };
-            viewSkywarn.addEventListener('click', tapHandler, { once: true, passive: true });
-            viewSkywarn.addEventListener('touchend', tapHandler, { once: true, passive: true });
-          }
         }
       } else {
         // Android or non-iOS browser: start immediately!
@@ -10663,20 +10716,24 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
     }
 
     // Step 4: Camera & Photo Processing
-    function triggerSkywarnCamera() {
-      if (isIosOrientationRequiresPermission() && !appState.compassPermissionGranted) {
-        requestCompassPermission();
-      }
+    function triggerSkywarnCamera(e) {
       const input = document.getElementById('skywarn-camera-input');
-      if (input) input.click();
+      if (input) {
+        input.value = '';
+        if (!e || (e.target && e.target.tagName !== 'LABEL' && !e.target.closest('label'))) {
+          input.click();
+        }
+      }
     }
 
-    function triggerSkywarnGallery() {
-      if (isIosOrientationRequiresPermission() && !appState.compassPermissionGranted) {
-        requestCompassPermission();
-      }
+    function triggerSkywarnGallery(e) {
       const input = document.getElementById('skywarn-gallery-input');
-      if (input) input.click();
+      if (input) {
+        input.value = '';
+        if (!e || (e.target && e.target.tagName !== 'LABEL' && !e.target.closest('label'))) {
+          input.click();
+        }
+      }
     }
 
     function handleRealSkywarnPhoto(event) {
@@ -10903,12 +10960,12 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
               </div>
             </div>
             <div class="flex items-center gap-2">
-              <button type="button" onclick="triggerSkywarnCamera()" class="px-3 py-1.5 bg-emerald-950 hover:bg-emerald-900 border border-emerald-700 text-emerald-300 font-bold rounded-lg text-[11px] flex items-center gap-1.5 transition cursor-pointer">
+              <label for="skywarn-camera-input" onclick="triggerSkywarnCamera(event)" class="px-3 py-1.5 bg-emerald-950 hover:bg-emerald-900 border border-emerald-700 text-emerald-300 font-bold rounded-lg text-[11px] flex items-center gap-1.5 transition cursor-pointer select-none">
                 <span>📸</span><span>SNAP CAMERA</span>
-              </button>
-              <button type="button" onclick="triggerSkywarnGallery()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold rounded-lg text-[11px] flex items-center gap-1.5 transition cursor-pointer">
+              </label>
+              <label for="skywarn-gallery-input" onclick="triggerSkywarnGallery(event)" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold rounded-lg text-[11px] flex items-center gap-1.5 transition cursor-pointer select-none">
                 <span>🖼️</span><span>PHOTOS</span>
-              </button>
+              </label>
             </div>
           </div>
         `;
@@ -11356,21 +11413,148 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
       if (m) m.classList.add('hidden');
     }
 
+    // Weather Radar System (Leaflet Native + Windy HD + NWS Live)
+    let skywarnRadarMap = null;
+    let skywarnRadarNexradLayer = null;
+    let skywarnRadarMode = 'leaflet';
+
+    function setSkywarnRadarMode(mode) {
+      skywarnRadarMode = mode;
+      const leafletCont = document.getElementById('skywarn-leaflet-radar-container');
+      const windyCont = document.getElementById('skywarn-windy-container');
+      const nwsCont = document.getElementById('skywarn-nws-container');
+
+      const btnLeaflet = document.getElementById('btn-radar-mode-leaflet');
+      const btnWindy = document.getElementById('btn-radar-mode-windy');
+      const btnNws = document.getElementById('btn-radar-mode-nws');
+
+      if (leafletCont) leafletCont.classList.toggle('hidden', mode !== 'leaflet');
+      if (windyCont) windyCont.classList.toggle('hidden', mode !== 'windy');
+      if (nwsCont) nwsCont.classList.toggle('hidden', mode !== 'nws');
+
+      const modeBtns = [
+        { btn: btnLeaflet, m: 'leaflet' },
+        { btn: btnWindy, m: 'windy' },
+        { btn: btnNws, m: 'nws' }
+      ];
+
+      modeBtns.forEach(item => {
+        if (!item.btn) return;
+        if (item.m === mode) {
+          item.btn.className = 'px-2.5 py-1 rounded text-xs font-bold bg-sky-600 text-white border border-sky-400 transition cursor-pointer';
+        } else {
+          item.btn.className = 'px-2.5 py-1 rounded text-xs font-bold bg-slate-900 text-slate-300 border border-slate-800 hover:bg-slate-800 transition cursor-pointer';
+        }
+      });
+
+      if (mode === 'leaflet') {
+        initSkywarnRadarMap();
+      }
+    }
+
+    function initSkywarnRadarMap() {
+      const container = document.getElementById('skywarn-leaflet-radar-canvas');
+      if (!container) return;
+      if (typeof L === 'undefined') {
+        console.warn('[SKYWARN Radar] Leaflet library not loaded.');
+        return;
+      }
+
+      if (!skywarnRadarMap) {
+        skywarnRadarMap = L.map('skywarn-leaflet-radar-canvas', {
+          center: [31.7248, -96.1650],
+          zoom: 9,
+          minZoom: 6,
+          maxZoom: 16,
+          zoomControl: true,
+          attributionControl: true
+        });
+
+        // Tactical Dark OpenStreetMap base tiles
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          className: 'tactical-dark-tiles',
+          attribution: '&copy; OpenStreetMap | NOAA NWS NEXRAD'
+        }).addTo(skywarnRadarMap);
+
+        // Real-Time NOAA IEM NEXRAD N0Q Base Reflectivity Layer
+        refreshSkywarnNexradLayer();
+
+        // Fairfield EOC / ARES Ops Marker
+        const eocIcon = L.divIcon({
+          className: 'bg-transparent',
+          html: '<div style="background:#10b981; border:2px solid #ffffff; width:16px; height:16px; border-radius:50%; box-shadow:0 0 14px #10b981;"></div>',
+          iconSize: [16, 16],
+          iconAnchor: [8, 8]
+        });
+        L.marker([31.7248, -96.1650], { icon: eocIcon })
+          .addTo(skywarnRadarMap)
+          .bindPopup('<strong style="color:#0f172a;">FAIRFIELD EOC / ARES OPS</strong><br><span style="color:#64748b; font-size:11px;">Freestone County Spotter Net HQ</span>');
+
+        // KFWS Radar Site Marker
+        const kfwsIcon = L.divIcon({
+          className: 'bg-transparent',
+          html: '<div style="background:#38bdf8; border:1px solid #ffffff; width:12px; height:12px; border-radius:3px;"></div>',
+          iconSize: [12, 12],
+          iconAnchor: [6, 6]
+        });
+        L.marker([32.573, -97.303], { icon: kfwsIcon })
+          .addTo(skywarnRadarMap)
+          .bindPopup('<strong style="color:#0f172a;">KFWS NEXRAD WSR-88D</strong><br><span style="color:#64748b; font-size:11px;">NWS Fort Worth Radar</span>');
+
+        // KGRK Radar Site Marker
+        L.marker([31.058, -97.683], { icon: kfwsIcon })
+          .addTo(skywarnRadarMap)
+          .bindPopup('<strong style="color:#0f172a;">KGRK NEXRAD WSR-88D</strong><br><span style="color:#64748b; font-size:11px;">Central Texas / Fort Cavazos</span>');
+      }
+
+      setTimeout(() => {
+        if (skywarnRadarMap) {
+          skywarnRadarMap.invalidateSize();
+        }
+      }, 150);
+    }
+
+    function refreshSkywarnNexradLayer() {
+      if (!skywarnRadarMap) return;
+      if (skywarnRadarNexradLayer) {
+        skywarnRadarMap.removeLayer(skywarnRadarNexradLayer);
+      }
+      const cacheBuster = Date.now();
+      skywarnRadarNexradLayer = L.tileLayer(`https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/{z}/{x}/{y}.png?t=${cacheBuster}`, {
+        opacity: 0.78,
+        maxZoom: 16,
+        attribution: 'NOAA NEXRAD N0Q via IEM'
+      }).addTo(skywarnRadarMap);
+
+      const statusEl = document.getElementById('skywarn-radar-timestamp-label');
+      if (statusEl) {
+        const now = new Date();
+        const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0') + ':' + String(now.getSeconds()).padStart(2, '0');
+        statusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span><span>LIVE NEXRAD SCAN: ${timeStr} CST</span>`;
+      }
+    }
+
     // Weather Radar Station Selector
     function setRadarStation(key) {
-      const iframe = document.getElementById('skywarn-radar-iframe');
-      if (!iframe) return;
-
       const stations = {
-        'fairfield': { lat: 31.725, lon: -96.165, zoom: 8 },
-        'kfws': { lat: 32.573, lon: -97.303, zoom: 8 },
-        'kgrk': { lat: 31.058, lon: -97.683, zoom: 8 },
+        'fairfield': { lat: 31.725, lon: -96.165, zoom: 9 },
+        'kfws': { lat: 32.573, lon: -97.303, zoom: 9 },
+        'kgrk': { lat: 31.058, lon: -97.683, zoom: 9 },
         'khgx': { lat: 29.471, lon: -95.079, zoom: 8 },
         'kshv': { lat: 32.451, lon: -93.841, zoom: 8 }
       };
 
       const st = stations[key] || stations['fairfield'];
-      iframe.src = `https://embed.windy.com/embed2.html?lat=${st.lat}&lon=${st.lon}&detailLat=${st.lat}&detailLon=${st.lon}&width=650&height=480&zoom=${st.zoom}&level=surface&overlay=radar&product=radar&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=mph&metricTemp=%C2%B0F&radarRange=-1`;
+
+      if (skywarnRadarMap) {
+        skywarnRadarMap.flyTo([st.lat, st.lon], st.zoom, { duration: 1.2 });
+      }
+
+      const iframe = document.getElementById('skywarn-radar-iframe');
+      if (iframe) {
+        iframe.src = `https://embed.windy.com/embed2.html?lat=${st.lat}&lon=${st.lon}&detailLat=${st.lat}&detailLon=${st.lon}&width=650&height=480&zoom=${st.zoom}&level=surface&overlay=radar&product=radar&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=mph&metricTemp=%C2%B0F&radarRange=-1`;
+      }
 
       document.querySelectorAll('.radar-station-btn').forEach(btn => {
         btn.classList.remove('bg-sky-950', 'text-sky-300', 'border-sky-500', 'font-black');
@@ -19507,7 +19691,7 @@ Your console is now authorized and unlocked.`);
         category: 'OFFICIAL OPERATOR FIELD MANUAL',
         title: 'FREESTONE COUNTY ARES TACTICAL MOBILE',
         subtitle: 'COMPLETE OPERATOR FIELD GUIDE • MARINE-PROOF EDITION',
-        meta: 'Step-By-Step Illustrated Visual Instructions for Android & iOS\nCross-Platform Unified Architecture • Build 71 (v7.9.19) • November 2026\nCounty Emergency Coordinator: Brian Davis (KG5TZT)',
+        meta: 'Step-By-Step Illustrated Visual Instructions for Android & iOS\nCross-Platform Unified Architecture • Build 72 (v7.9.20) • November 2026\nCounty Emergency Coordinator: Brian Davis (KG5TZT)',
         image: 'guide_screens/screen_02_dashboard_annotated.png'
       },
       {
@@ -20691,7 +20875,7 @@ Your console is now authorized and unlocked.`);
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.19 (Build 71)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.20 (Build 72)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>
