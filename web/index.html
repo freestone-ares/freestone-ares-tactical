@@ -2121,10 +2121,10 @@
 
             <!-- Download PPTX / PDF Buttons -->
             <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-              <a href="Freestone_ARES_Tactical_User_Guide.pptx" download="Freestone_ARES_Tactical_User_Guide.pptx" class="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-black rounded-lg text-xs shadow flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap">
+              <a href="Freestone_ARES_Tactical_User_Guide.pptx" onclick="return openAndroidSafeAsset('Freestone_ARES_Tactical_User_Guide.pptx', event);" download="Freestone_ARES_Tactical_User_Guide.pptx" class="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-black rounded-lg text-xs shadow flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap">
                 <span>📊</span><span>DOWNLOAD PPTX</span>
               </a>
-              <a href="Freestone_ARES_Tactical_User_Guide.pdf" download="Freestone_ARES_Tactical_User_Guide.pdf" target="_blank" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-slate-700 font-black rounded-lg text-xs shadow flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap">
+              <a href="Freestone_ARES_Tactical_User_Guide.pdf" onclick="return openAndroidSafeAsset('Freestone_ARES_Tactical_User_Guide.pdf', event);" download="Freestone_ARES_Tactical_User_Guide.pdf" target="_blank" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-slate-700 font-black rounded-lg text-xs shadow flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap">
                 <span>📄</span><span>PRINTABLE PDF</span>
               </a>
             </div>
@@ -19657,9 +19657,69 @@ Your console is now authorized and unlocked.`);
       alert('✅ Reverted back to the official bundled Revision 7.5 Tactical Field Binder.');
     }
 
+    function openAndroidSafeAsset(assetPath, event) {
+      if (window.AndroidBridge && typeof window.AndroidBridge.openManualWithFileProvider === 'function') {
+        if (event && event.preventDefault) event.preventDefault();
+        window.AndroidBridge.openManualWithFileProvider(assetPath);
+        return false;
+      }
+      return true;
+    }
+
+    // Background memory optimization hook for Samsung / Android low-memory & UI-hidden states
+    window.releaseBackgroundMemory = function() {
+      try {
+        const manualView = document.getElementById('view-manual');
+        const isManualHidden = !manualView || manualView.classList.contains('hidden');
+        if ((document.hidden || isManualHidden) && tacticalPdfDoc) {
+          if (typeof tacticalPdfDoc.cleanup === 'function') {
+            tacticalPdfDoc.cleanup();
+          }
+          if (typeof tacticalPdfDoc.destroy === 'function') {
+            tacticalPdfDoc.destroy();
+          }
+          tacticalPdfDoc = null;
+          const canvas = document.getElementById('manual-pdf-canvas');
+          if (canvas) {
+            canvas.width = 1;
+            canvas.height = 1;
+          }
+        }
+      } catch (e) {
+        console.warn('releaseBackgroundMemory warning:', e);
+      }
+    };
+
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden && typeof window.releaseBackgroundMemory === 'function') {
+        window.releaseBackgroundMemory();
+      } else if (!document.hidden) {
+        const manualView = document.getElementById('view-manual');
+        if (manualView && !manualView.classList.contains('hidden') && !tacticalPdfDoc) {
+          initTacticalManualViewer(true);
+        }
+      }
+    });
+
     async function exportCurrentManualPdf() {
       const customRecord = await loadManualFromIndexedDB();
       if (customRecord && customRecord.data) {
+        if (window.AndroidBridge && typeof window.AndroidBridge.openBase64PdfWithFileProvider === 'function') {
+          try {
+            const bytes = new Uint8Array(customRecord.data);
+            let binary = '';
+            const chunkSize = 0x8000;
+            for (let i = 0; i < bytes.length; i += chunkSize) {
+              binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize));
+            }
+            const base64Data = btoa(binary);
+            if (window.AndroidBridge.openBase64PdfWithFileProvider(base64Data, customRecord.name || 'Tactical_Field_Binder_Revision.pdf')) {
+              return;
+            }
+          } catch (e) {
+            console.warn('Android FileProvider custom PDF export fallback:', e);
+          }
+        }
         const blob = new Blob([customRecord.data], { type: 'application/pdf' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -19670,6 +19730,11 @@ Your console is now authorized and unlocked.`);
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
       } else {
+        if (window.AndroidBridge && typeof window.AndroidBridge.openManualWithFileProvider === 'function') {
+          if (window.AndroidBridge.openManualWithFileProvider(DEFAULT_BUNDLED_PATH)) {
+            return;
+          }
+        }
         const a = document.createElement('a');
         a.href = DEFAULT_BUNDLED_PATH;
         a.download = 'Tactical_Field_Binder_7.5.pdf';

@@ -3,6 +3,8 @@ package org.freestone.ares;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ClipData;
+import android.content.ComponentCallbacks2;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -11,18 +13,22 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.PowerManager;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
 import android.webkit.PermissionRequest;
+import android.webkit.RenderProcessGoneDetail;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -35,7 +41,9 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -103,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         requestAppPermissions();
+        requestBatteryOptimizationExemption();
 
         // Start continuous background emergency dispatch monitoring service
         try {
@@ -164,8 +173,25 @@ public class MainActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                } else if (url.endsWith(".pdf") || url.endsWith(".pptx")) {
+                    if (openAssetWithFileProvider(url)) {
+                        return true;
+                    }
                 }
                 return false;
+            }
+
+            @Override
+            public boolean onRenderProcessGone(WebView view, RenderProcessGoneDetail detail) {
+                if (view != null) {
+                    ViewGroup parent = (ViewGroup) view.getParent();
+                    if (parent != null) {
+                        parent.removeView(view);
+                    }
+                    view.destroy();
+                }
+                recreate();
+                return true;
             }
 
             @Override
@@ -286,6 +312,135 @@ public class MainActivity extends AppCompatActivity {
         webView.loadUrl("file:///android_asset/index.html");
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (webView != null) {
+            webView.onPause();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (webView != null) {
+            webView.onResume();
+        }
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+        if (webView != null) {
+            if (level >= ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN ||
+                level >= ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW) {
+                webView.clearCache(false);
+                webView.freeMemory();
+            }
+            if (level >= ComponentCallbacks2.TRIM_MEMORY_BACKGROUND) {
+                webView.evaluateJavascript("if (window.releaseBackgroundMemory) window.releaseBackgroundMemory();", null);
+                System.gc();
+            }
+        }
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        if (webView != null) {
+            webView.clearCache(false);
+            webView.freeMemory();
+        }
+        System.gc();
+    }
+
+    @SuppressLint("BatteryLife")
+    private void requestBatteryOptimizationExemption() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            try {
+                PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+                String pkg = getPackageName();
+                if (pm != null && !pm.isIgnoringBatteryOptimizations(pkg)) {
+                    Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                    intent.setData(Uri.parse("package:" + pkg));
+                    startActivity(intent);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public boolean openAssetWithFileProvider(String assetOrUrl) {
+        try {
+            String assetPath = assetOrUrl;
+            if (assetPath.startsWith("file:///android_asset/")) {
+                assetPath = assetPath.substring("file:///android_asset/".length());
+            } else if (assetPath.startsWith("/")) {
+                assetPath = assetPath.substring(1);
+            }
+
+            File docsDir = new File(getCacheDir(), "docs");
+            if (!docsDir.exists()) {
+                docsDir.mkdirs();
+            }
+
+            String fileName = new File(assetPath).getName();
+            if (fileName.isEmpty()) {
+                fileName = "Tactical_Field_Binder_7.5.pdf";
+            }
+            File outFile = new File(docsDir, fileName);
+
+            if (!outFile.exists() || outFile.length() == 0) {
+                try (InputStream is = getAssets().open(assetPath);
+                     FileOutputStream fos = new FileOutputStream(outFile)) {
+                    byte[] buffer = new byte[16384];
+                    int read;
+                    while ((read = is.read(buffer)) != -1) {
+                        fos.write(buffer, 0, read);
+                    }
+                    fos.flush();
+                }
+            }
+
+            Uri contentUri = FileProvider.getUriForFile(
+                    this,
+                    getApplicationContext().getPackageName() + ".fileprovider",
+                    outFile
+            );
+
+            String mimeType = "application/pdf";
+            if (fileName.toLowerCase(Locale.US).endsWith(".pptx")) {
+                mimeType = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+            }
+
+            Intent viewIntent = new Intent(Intent.ACTION_VIEW);
+            viewIntent.setDataAndType(contentUri, mimeType);
+            viewIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            List<ResolveInfo> resInfoList = getPackageManager().queryIntentActivities(viewIntent, PackageManager.MATCH_DEFAULT_ONLY);
+            for (ResolveInfo resolveInfo : resInfoList) {
+                String packageName = resolveInfo.activityInfo.packageName;
+                grantUriPermission(packageName, contentUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            }
+
+            if (!resInfoList.isEmpty()) {
+                startActivity(Intent.createChooser(viewIntent, "Open " + fileName));
+            } else {
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType(mimeType);
+                shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                startActivity(Intent.createChooser(shareIntent, "Save or Share " + fileName));
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            runOnUiThread(() -> Toast.makeText(MainActivity.this, "Unable to open document: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            return false;
+        }
+    }
+
     private void requestAppPermissions() {
         List<String> permissions = new ArrayList<>();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -384,6 +539,58 @@ public class MainActivity extends AppCompatActivity {
         @JavascriptInterface
         public void suppressSenderAlert(int seconds) {
             EmergencyDispatchService.senderSuppressedUntil = System.currentTimeMillis() + (seconds * 1000L);
+        }
+
+        @JavascriptInterface
+        public boolean openManualWithFileProvider(String assetPath) {
+            String target = (assetPath == null || assetPath.trim().isEmpty())
+                    ? "assets/docs/Tactical_Field_Binder_7.5.pdf"
+                    : assetPath;
+            return openAssetWithFileProvider(target);
+        }
+
+        @JavascriptInterface
+        public boolean openBase64PdfWithFileProvider(String base64Data, String fileName) {
+            try {
+                File docsDir = new File(getCacheDir(), "docs");
+                if (!docsDir.exists()) {
+                    docsDir.mkdirs();
+                }
+                String safeName = (fileName == null || fileName.trim().isEmpty())
+                        ? "Tactical_Field_Binder_Revision.pdf"
+                        : new File(fileName).getName();
+                File outFile = new File(docsDir, safeName);
+                byte[] pdfBytes = android.util.Base64.decode(base64Data, android.util.Base64.DEFAULT);
+                try (FileOutputStream fos = new FileOutputStream(outFile)) {
+                    fos.write(pdfBytes);
+                    fos.flush();
+                }
+                Uri contentUri = FileProvider.getUriForFile(
+                        MainActivity.this,
+                        getApplicationContext().getPackageName() + ".fileprovider",
+                        outFile
+                );
+                Intent viewIntent = new Intent(Intent.ACTION_VIEW);
+                viewIntent.setDataAndType(contentUri, "application/pdf");
+                viewIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK);
+                List<ResolveInfo> resInfoList = getPackageManager().queryIntentActivities(viewIntent, PackageManager.MATCH_DEFAULT_ONLY);
+                for (ResolveInfo resolveInfo : resInfoList) {
+                    grantUriPermission(resolveInfo.activityInfo.packageName, contentUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                }
+                if (!resInfoList.isEmpty()) {
+                    startActivity(Intent.createChooser(viewIntent, "Open " + safeName));
+                } else {
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    shareIntent.setType("application/pdf");
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+                    shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    startActivity(Intent.createChooser(shareIntent, "Save or Share " + safeName));
+                }
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
         }
     }
 }

@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <!-- Camera & Storage Permissions for Mandatory Photo ID & SKYWARN Spotting -->
@@ -55,6 +56,10 @@
             <action android:name="android.intent.action.VIEW" />
             <data android:scheme="sms" />
         </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:mimeType="application/pdf" />
+        </intent>
     </queries>
 
     <application
@@ -68,6 +73,7 @@
         android:theme="@style/Theme.FreestoneARES"
         android:usesCleartextTraffic="true"
         android:hardwareAccelerated="true"
+        android:largeHeap="true"
         tools:targetApi="34">
 
         <provider
@@ -96,6 +102,7 @@
             android:name=".EmergencyDispatchService"
             android:enabled="true"
             android:exported="false"
+            android:stopWithTask="false"
             android:foregroundServiceType="dataSync" />
 
         <!-- Automatic Restart on Device Boot or App Update -->

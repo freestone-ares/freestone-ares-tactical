@@ -14,6 +14,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.util.Log;
 
@@ -39,6 +40,7 @@ public class EmergencyDispatchService extends Service {
 
     private boolean isRunning = false;
     private Thread monitorThread;
+    private PowerManager.WakeLock wakeLock;
 
     private int lastKnownLevel = -1;
     private String lastIncidentFingerprint = null;
@@ -50,7 +52,39 @@ public class EmergencyDispatchService extends Service {
         Log.i(TAG, "EmergencyDispatchService onCreate: Initializing active CAD dispatch monitoring");
         createNotificationChannels();
         startForeground(NOTIF_ID_FOREGROUND, buildMonitorNotification());
+        acquirePartialWakeLock();
         startMonitoringLoop();
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+        if (level >= TRIM_MEMORY_RUNNING_LOW || level >= TRIM_MEMORY_BACKGROUND) {
+            System.gc();
+        }
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        System.gc();
+    }
+
+    private void acquirePartialWakeLock() {
+        try {
+            if (wakeLock == null) {
+                PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+                if (pm != null) {
+                    wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "FreestoneARES::EmergencyDispatchWakeLock");
+                    wakeLock.setReferenceCounted(false);
+                }
+            }
+            if (wakeLock != null && !wakeLock.isHeld()) {
+                wakeLock.acquire(10 * 60 * 1000L);
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "WakeLock notice: " + e.getMessage());
+        }
     }
 
     @Override
@@ -75,7 +109,11 @@ public class EmergencyDispatchService extends Service {
         );
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         if (alarmManager != null) {
-            alarmManager.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 1500, restartPending);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 1500, restartPending);
+            } else {
+                alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 1500, restartPending);
+            }
         }
     }
 
@@ -87,6 +125,11 @@ public class EmergencyDispatchService extends Service {
             monitorThread.interrupt();
             monitorThread = null;
         }
+        try {
+            if (wakeLock != null && wakeLock.isHeld()) {
+                wakeLock.release();
+            }
+        } catch (Exception ignored) {}
         super.onDestroy();
     }
 
@@ -168,6 +211,7 @@ public class EmergencyDispatchService extends Service {
                 Log.i(TAG, "Monitoring daemon thread started. Polling Firebase REST API every 6s.");
                 while (isRunning) {
                     try {
+                        acquirePartialWakeLock();
                         checkActivationLevel();
                         checkActiveIncident();
                     } catch (Exception e) {
