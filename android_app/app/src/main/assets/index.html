@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Freestone County ARES Tactical Mobile v7.9.22</title>
+  <title>Freestone County ARES Tactical Mobile v7.9.23</title>
   <meta name="description" content="Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES">
   <meta name="theme-color" content="#0b0e14">
   <meta name="mobile-web-app-capable" content="yes">
@@ -277,6 +277,36 @@
     }
     .tactical-pin:hover {
       transform: scale(1.2);
+    }
+
+    /* =====================================================================
+       UI SCROLLING, COMPOSITING & RENDERING PERFORMANCE OPTIMIZATION ENGINE
+       ===================================================================== */
+    html, body {
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: none;
+      scroll-behavior: smooth;
+    }
+    /* Eliminate 60fps continuous infinite layout/paint thrashing on mobile GPUs */
+    .animate-ping {
+      animation: none !important;
+      opacity: 0.85;
+    }
+    .animate-bounce {
+      animation: none !important;
+    }
+    /* Hardware-accelerated compositing & viewport virtualization for scrollable feeds */
+    .tab-content {
+      will-change: opacity;
+      transform: translateZ(0);
+    }
+    .roster-card-item {
+      content-visibility: auto;
+      contain-intrinsic-size: auto 220px;
+      contain: layout style paint;
+    }
+    #roster-grid, #ec-operator-directory-list, #active-alerts-feed-container {
+      contain: layout style;
     }
 
   </style>
@@ -921,14 +951,14 @@
             </div>
           </div>
 
-          <!-- EMERGENCY PAGING DELEGATION CONTROLLER (EC OUT-OF-TOWN DISPATCH TRANSFER) -->
-          <div class="bg-[#10151d] border-2 border-red-500/80 rounded-xl p-5 space-y-4 font-mono-tac shadow-xl">
+          <!-- EC DISPATCH & ACTIVATION PRIVILEGE ADMIN MANAGEMENT PANEL -->
+          <div id="ec-dispatch-admin-panel" class="bg-[#10151d] border-2 border-red-500/90 rounded-xl p-5 space-y-4 font-mono-tac shadow-[0_0_25px_rgba(239,68,68,0.2)]">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-3 gap-2">
-              <div class="flex items-center gap-2">
-                <span class="text-xl animate-pulse">🚨</span>
+              <div class="flex items-center gap-2.5">
+                <span class="text-xl">🛡️</span>
                 <div>
-                  <h4 class="text-sm font-black text-red-400 tracking-wider">EMERGENCY PAGING &amp; DISPATCH DELEGATION</h4>
-                  <p class="text-[10px] text-slate-400">Exclusive Level 6 Authority Transfer &bull; Temporary Out-Of-Town Dispatch Delegation</p>
+                  <h4 class="text-sm font-black text-red-400 tracking-wider">EC DISPATCH &amp; ACTIVATION PRIVILEGE MANAGEMENT PANEL</h4>
+                  <p class="text-[10px] text-slate-400">Exclusive EC Root Control &bull; Assign or Revoke Activation Level &amp; Mission Dispatch Privileges</p>
                 </div>
               </div>
               <span id="ec-paging-status-badge" class="px-2.5 py-1 rounded text-xs font-black bg-slate-900 text-slate-400 border border-slate-700">
@@ -936,23 +966,23 @@
               </span>
             </div>
 
-            <p class="text-xs text-slate-300">
-              Emergency Paging (tone sirens, active alert broadcasting, mass dispatch, and county emergency activation posture) is restricted strictly to <strong>Emergency Coordinator Brian Davis (KG5TZT - Level 6)</strong>. If you are going out of town, delegate emergency dispatch authority to a trusted operator below. When you return, turn off access with a single click to restore exclusive Level 6 lock.
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Activation levels (Levels 1&ndash;3) and mission dispatches are strictly restricted to the <strong>Emergency Coordinator (Brian Davis &mdash; KG5TZT)</strong> role by default. Use this admin management panel to securely assign or revoke activation level and mission dispatch privileges for specific trusted operators in real time.
             </p>
 
-            <!-- Active Delegations Container -->
-            <div id="ec-active-delegations-box" class="p-3 bg-[#080b10] border border-slate-800 rounded-xl space-y-2">
+            <!-- Active Delegations & Operator Privilege Matrix Container -->
+            <div id="ec-active-delegations-box" class="p-3 bg-[#080b10] border border-slate-800 rounded-xl space-y-3">
               <!-- Rendered dynamically by renderEcPagingDelegationCard() -->
             </div>
 
-            <!-- Quick Delegation Selector -->
-            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-1 border-t border-slate-900">
-              <select id="ec-paging-delegate-select" class="flex-1 bg-[#080b10] border border-slate-700 rounded-lg p-2 text-xs text-white font-bold">
-                <option value="">Select Operator to Delegate Paging Access...</option>
+            <!-- Quick Privilege Assignment Selector -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-2 border-t border-slate-900">
+              <select id="ec-paging-delegate-select" class="flex-1 bg-[#080b10] border border-slate-700 rounded-lg p-2.5 text-xs text-white font-bold">
+                <option value="">Select Operator to Assign Dispatch &amp; Activation Privileges...</option>
               </select>
-              <button type="button" onclick="delegatePagingFromDropdown()" class="px-3.5 py-2 bg-gradient-to-r from-red-700 to-red-600 hover:from-red-600 text-white font-bold rounded-lg text-xs transition flex items-center justify-center gap-1.5 shadow cursor-pointer whitespace-nowrap">
+              <button type="button" onclick="delegatePagingFromDropdown()" class="px-4 py-2.5 bg-gradient-to-r from-red-700 to-red-600 hover:from-red-600 text-white font-bold rounded-lg text-xs transition flex items-center justify-center gap-1.5 shadow cursor-pointer whitespace-nowrap">
                 <span>⚡</span>
-                <span>GRANT PAGING ACCESS</span>
+                <span>ASSIGN DISPATCH PRIVILEGE</span>
               </button>
             </div>
           </div>
@@ -1565,21 +1595,26 @@
               </div>
             </div>
 
-            <!-- DIRECT 1-TAP RESPONSE LEVEL 1-4 DISPATCH (DIRECT EC BRIAN DAVIS CONTROL) -->
+            <!-- DIRECT 1-TAP RESPONSE LEVEL 1-3 DISPATCH (EC ROLE OR EC-DELEGATED ONLY) -->
             <div id="dash-ec-response-controls" class="pt-2.5 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-              <div class="flex items-center gap-1.5">
-                <span class="text-xs">🚨</span>
-                <span class="text-[10px] text-amber-400 font-black uppercase tracking-wider">EC RESPONSE POSTURE (LEVELS 1 - 3):</span>
+              <div class="flex items-center justify-between sm:justify-start gap-2 flex-wrap">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-xs">🚨</span>
+                  <span class="text-[10px] text-amber-400 font-black uppercase tracking-wider">EC RESPONSE POSTURE (LEVELS 1 - 3):</span>
+                </div>
+                <button type="button" id="dash-btn-dispatch-admin" onclick="openEcDispatchAdminPanel()" class="px-2 py-1 rounded bg-slate-900 hover:bg-slate-800 border border-amber-500/60 text-amber-300 text-[9.5px] font-bold transition cursor-pointer flex items-center gap-1 shadow">
+                  <span>🛡️</span><span>DISPATCH PRIVILEGES</span>
+                </button>
               </div>
               <div class="grid grid-cols-3 gap-1.5 w-full sm:w-auto font-mono-tac">
                 <button type="button" onclick="setCountyResponseLevel(3)" id="dash-resp-btn-3" class="px-3 py-1.5 rounded-lg bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/80 text-emerald-300 text-[10px] font-black text-center transition cursor-pointer flex items-center justify-center gap-1 shadow">
-                  <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span>LVL 3: MONITORING</span>
+                  <span class="w-2 h-2 rounded-full bg-emerald-400"></span><span>LVL 3: MONITORING</span>
                 </button>
                 <button type="button" onclick="setCountyResponseLevel(2)" id="dash-resp-btn-2" class="px-2.5 py-1.5 rounded-lg bg-amber-950/80 hover:bg-amber-900 border border-amber-500/80 text-amber-300 text-[10px] font-black text-center transition cursor-pointer flex items-center justify-center gap-1 shadow">
                   <span class="w-2 h-2 rounded-full bg-amber-400"></span><span>LVL 2: STAND BY</span>
                 </button>
                 <button type="button" onclick="setCountyResponseLevel(1)" id="dash-resp-btn-1" class="px-2.5 py-1.5 rounded-lg bg-red-950/80 hover:bg-red-900 border border-red-500/80 text-red-300 text-[10px] font-black text-center transition cursor-pointer flex items-center justify-center gap-1 shadow">
-                  <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span><span>LVL 1: FULL ACTIVATION</span>
+                  <span class="w-2 h-2 rounded-full bg-red-500"></span><span>LVL 1: FULL ACTIVATION</span>
                 </button>
               </div>
             </div>
@@ -2195,7 +2230,7 @@
         <!-- Slide Footer Keyboard & Swipe Hints -->
         <div class="flex items-center justify-between text-[11px] text-slate-400 px-2 font-mono-tac">
           <div>💡 <strong>Tips:</strong> Swipe left / right on touchscreen or use PREV / NEXT to flip through training slides.</div>
-          <div>Marine-Proof Training System &bull; Build 74 (v7.9.22)</div>
+          <div>Marine-Proof Training System &bull; Build 75 (v7.9.23)</div>
         </div>
 
       </div> <!-- End of manual-guide-container -->
@@ -2518,13 +2553,10 @@
           </div>
           <div class="flex items-center gap-2 flex-shrink-0 flex-wrap">
             <button id="btn-test-siren" type="button" onclick="playSelectedSiren()" class="px-3 py-1.5 bg-red-700 hover:bg-red-600 text-white font-bold rounded-lg flex items-center justify-center gap-1.5 transition shadow cursor-pointer text-xs">
-              <span>🔊 TEST DISPATCH TONE</span>
+              <span>🔊 PREVIEW TONE</span>
             </button>
             <button id="btn-test-sitrep" type="button" onclick="playTwoToneBeep()" class="px-3 py-1.5 bg-emerald-800 hover:bg-emerald-700 text-white font-bold rounded-lg flex items-center justify-center gap-1.5 transition shadow cursor-pointer text-xs">
-              <span>📡 TEST SITREP CHIRP</span>
-            </button>
-            <button id="btn-test-active-alert" type="button" onclick="testActiveAlertDispatcher()" class="px-3 py-1.5 bg-gradient-to-r from-red-700 to-amber-700 hover:from-red-600 text-white font-bold rounded-lg flex items-center justify-center gap-1.5 transition shadow cursor-pointer text-xs" title="Test Active Alert banner, tones, and vibration">
-              <span>🚨 TEST ACTIVE ALERT</span>
+              <span>📡 PREVIEW BEEP</span>
             </button>
             <button id="btn-stop-siren" type="button" onclick="stopSirenAudio()" class="hidden px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg flex items-center justify-center gap-1.5 transition shadow cursor-pointer text-xs">
               <span>⏹️ STOP</span>
@@ -2591,9 +2623,9 @@
                 <span>📢 NEW</span>
               </button>
 
-              <!-- VERIFY ALERT RULES BUTTON -->
-              <button id="btn-audio-verify" onclick="openAlertSoundVerifyModal()" class="py-2 px-2.5 bg-purple-900/80 hover:bg-purple-800 text-purple-200 border border-purple-500/70 font-mono-tac text-xs font-bold rounded-lg transition flex items-center gap-1 shadow" title="Open Alert Audio Verification Console">
-                <span>🧪 VERIFY RULES</span>
+              <!-- EC DISPATCH ADMIN PANEL SHORTCUT -->
+              <button id="btn-ec-dispatch-admin" onclick="openEcDispatchAdminPanel()" class="py-2 px-2.5 bg-amber-950/80 hover:bg-amber-900 text-amber-300 border border-amber-500/70 font-mono-tac text-xs font-bold rounded-lg transition flex items-center gap-1 shadow" title="Manage Operator Dispatch Privileges (EC Admin)">
+                <span>🛡️ DISPATCH ADMIN</span>
               </button>
             </div>
 
@@ -3735,12 +3767,12 @@
           <div class="flex flex-wrap items-center gap-2">
             <h3 class="font-bold text-sm text-slate-100 flex items-center gap-1.5">
               <span>🗺️</span>
-              <span>FREESTONE COUNTY COMMON OPERATING PICTURE (COP)</span>
+              <span>FREESTONE COUNTY OFFLINE NAVIGATION MAP</span>
             </h3>
             <span id="map-mode-badge" class="px-2 py-0.5 rounded text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold">OPENSTREETMAP TACTICAL DARK</span>
             <span id="map-tilepack-status-badge" class="px-2 py-0.5 rounded text-[10px] bg-purple-950 text-purple-300 border border-purple-800 font-bold">OFFLINE TILE PACK: READY (18.6 MB)</span>
           </div>
-          <p class="text-xs text-slate-400 mt-1">Interactive OpenStreetMap tile pack covering all Freestone County roads, repeaters, VFDs, shelters, and live ARES units.</p>
+          <p class="text-xs text-slate-400 mt-1">Raw offline &amp; online navigation map covering all Freestone County roads, highways, and terrain without overlay clutter.</p>
         </div>
         
         <!-- Controls: Basemap Selector, Tile Pack Manager, Locate GPS -->
@@ -3753,7 +3785,6 @@
               <option value="osm">Daylight Street (OSM - No Key)</option>
               <option value="satellite">High-Res Satellite Aerial</option>
               <option value="topo">Topographic Relief (USGS/ESRI)</option>
-              <option value="vector">Offline Vector HUD</option>
             </select>
           </div>
 
@@ -3769,64 +3800,17 @@
             <span>LOCATE ME</span>
           </button>
 
-          <!-- Recenter County Center (Fairfield EOC) -->
-          <button onclick="recenterCountyMap()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-lg border border-slate-700 transition" title="Recenter to Fairfield EOC">
+          <!-- Recenter County Center (Fairfield) -->
+          <button onclick="recenterCountyMap()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-lg border border-slate-700 transition" title="Recenter to Freestone County">
             <span>⌖</span>
           </button>
         </div>
       </div>
 
-      <!-- Tactical Map Canvas (Leaflet Slippy Map + Offline Vector Layer) -->
-      <div id="map-canvas-container" class="relative bg-[#070a0f] rounded-xl border border-slate-800 overflow-hidden min-h-[540px] h-[64vh] shadow-2xl">
-        
-        <!-- 1. Interactive Leaflet Map Div -->
+      <!-- Raw Offline Navigation Map Canvas -->
+      <div id="map-canvas-container" class="relative bg-[#070a0f] rounded-xl border border-slate-800 overflow-hidden min-h-[560px] h-[72vh] shadow-2xl">
+        <!-- Interactive Leaflet Map Div -->
         <div id="leaflet-map-canvas" class="w-full h-full z-10"></div>
-
-        <!-- 2. Fallback Vector HUD (Shown when Vector mode is selected or Leaflet is loading) -->
-        <div id="layer-offline-bg" class="absolute inset-0 bg-[#060a0f] hidden z-0 transition-opacity duration-300">
-          <div class="absolute inset-0 bg-[linear-gradient(to_right,#064e3b_1px,transparent_1px),linear-gradient(to_bottom,#064e3b_1px,transparent_1px)] bg-[size:50px_50px] opacity-25"></div>
-          
-          <svg class="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50%" cy="48%" r="60" stroke="#10b981" stroke-width="1" stroke-dasharray="4 4" fill="none" opacity="0.3" />
-            <text x="54%" y="48%" fill="#34d399" font-size="9" font-family="monospace" opacity="0.6">5 MI</text>
-            <circle cx="50%" cy="48%" r="120" stroke="#10b981" stroke-width="1" stroke-dasharray="4 4" fill="none" opacity="0.25" />
-            <text x="59%" y="48%" fill="#34d399" font-size="9" font-family="monospace" opacity="0.6">10 MI</text>
-            <circle cx="50%" cy="48%" r="180" stroke="#10b981" stroke-width="1" stroke-dasharray="4 4" fill="none" opacity="0.2" />
-            <text x="64%" y="48%" fill="#34d399" font-size="9" font-family="monospace" opacity="0.6">15 MI</text>
-            <circle cx="50%" cy="48%" r="240" stroke="#10b981" stroke-width="1" stroke-dasharray="4 4" fill="none" opacity="0.15" />
-            <text x="69%" y="48%" fill="#34d399" font-size="9" font-family="monospace" opacity="0.6">20 MI</text>
-            
-            <text x="30" y="40" fill="#059669" font-size="12" font-family="monospace" font-weight="bold" opacity="0.5">GRID: EM11wq (WORTHAM)</text>
-            <text x="48%" y="40" fill="#059669" font-size="12" font-family="monospace" font-weight="bold" opacity="0.5">GRID: EM11xq (FAIRFIELD EOC)</text>
-            <text x="75%" y="40" fill="#059669" font-size="12" font-family="monospace" font-weight="bold" opacity="0.5">GRID: EM11yr (LAKE FAIRFIELD)</text>
-          </svg>
-        </div>
-
-        <!-- Floating Layer Toggles (Bottom Left Overlay) -->
-        <div class="absolute bottom-3 left-3 bg-[#0d1520]/95 backdrop-blur-md border border-slate-700/80 rounded-lg p-2.5 font-mono-tac text-[11px] text-slate-300 z-30 flex flex-wrap items-center gap-3 shadow-2xl">
-          <span class="text-slate-400 font-bold text-[10px] uppercase">TACTICAL LAYERS:</span>
-          <label class="flex items-center gap-1.5 cursor-pointer hover:text-white">
-            <input type="checkbox" id="chk-layer-repeaters" checked onchange="toggleLeafletLayer('repeaters', this.checked)" class="accent-emerald-500"> 📡 Repeaters (3)
-          </label>
-          <label class="flex items-center gap-1.5 cursor-pointer hover:text-white">
-            <input type="checkbox" id="chk-layer-staging" checked onchange="toggleLeafletLayer('staging', this.checked)" class="accent-red-500"> 📍 Staging (2)
-          </label>
-          <label class="flex items-center gap-1.5 cursor-pointer hover:text-white">
-            <input type="checkbox" id="chk-layer-facilities" checked onchange="toggleLeafletLayer('facilities', this.checked)" class="accent-blue-500"> 🏥 Medical & Shelters (3)
-          </label>
-          <label class="flex items-center gap-1.5 cursor-pointer hover:text-white">
-            <input type="checkbox" id="chk-layer-vfds" checked onchange="toggleLeafletLayer('vfds', this.checked)" class="accent-amber-500"> 🚒 VFDs (5)
-          </label>
-          <label class="flex items-center gap-1.5 cursor-pointer hover:text-white">
-            <input type="checkbox" id="chk-layer-spotters" checked onchange="toggleLeafletLayer('spotters', this.checked)" class="accent-purple-500"> ⛈️ Spotter Posts (4)
-          </label>
-          <label class="flex items-center gap-1.5 cursor-pointer hover:text-white">
-            <input type="checkbox" id="chk-layer-responders" checked onchange="toggleLeafletLayer('responders', this.checked)" class="accent-emerald-400"> 👤 Responders (5)
-          </label>
-          <label class="flex items-center gap-1.5 cursor-pointer hover:text-white">
-            <input type="checkbox" id="chk-layer-rings" checked onchange="toggleLeafletLayer('rings', this.checked)" class="accent-teal-500"> ⭕ Range Rings
-          </label>
-        </div>
 
         <!-- Compass & Coordinate Indicator (Top Right Overlay) -->
         <div class="absolute top-3 right-3 bg-[#0d1520]/95 backdrop-blur-md border border-slate-700/80 rounded-lg p-2 font-mono-tac text-[10px] text-slate-300 z-30 flex items-center gap-2 shadow-2xl">
@@ -3835,53 +3819,6 @@
           <span id="map-live-center-coords" class="text-white font-mono">31.7248° N, 96.1650° W</span>
           <span class="text-slate-500">|</span>
           <span id="map-live-center-grid" class="text-amber-400 font-bold">GRID: EM11xq</span>
-        </div>
-      </div>
-
-      <!-- TACTICAL MARKER INSPECTOR / ROUTING CARD -->
-      <div id="map-inspector-card" class="bg-[#10151d] border border-emerald-500/50 rounded-xl p-4 font-mono-tac text-xs space-y-3 shadow-lg">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-2">
-          <div class="flex items-center gap-2">
-            <span id="inspect-icon" class="text-2xl">📍</span>
-            <div>
-              <h4 id="inspect-title" class="font-bold text-sm text-emerald-300">Freestone County EOC & Courthouse (Primary Staging)</h4>
-              <p id="inspect-subtitle" class="text-[11px] text-slate-400">118 E Commerce St, Fairfield, TX 75840</p>
-            </div>
-          </div>
-          <div class="flex items-center gap-2">
-            <span id="inspect-badge" class="px-2 py-0.5 rounded text-[10px] bg-red-950 text-red-300 border border-red-800 font-bold">PRIMARY STAGING</span>
-            <span id="inspect-grid" class="px-2 py-0.5 rounded text-[10px] bg-amber-950 text-amber-300 border border-amber-800 font-bold">EM11xq</span>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-[11px]">
-          <div class="bg-black/50 p-2.5 rounded border border-slate-800">
-            <span class="text-slate-400 block text-[10px]">COORDINATES / GPS:</span>
-            <span id="inspect-coords" class="text-white font-bold font-mono">31.7248° N, 96.1650° W</span>
-          </div>
-          <div class="bg-black/50 p-2.5 rounded border border-slate-800">
-            <span class="text-slate-400 block text-[10px]">TACTICAL COMMS CHANNEL:</span>
-            <span id="inspect-channel" class="text-emerald-400 font-bold font-mono">Ch 01 - FF 110 (145.110 TSQ 146.2)</span>
-          </div>
-          <div class="bg-black/50 p-2.5 rounded border border-slate-800">
-            <span class="text-slate-400 block text-[10px]">DISTANCE & HEADING:</span>
-            <span id="inspect-dist" class="text-amber-400 font-bold">0.0 mi (Incident Center)</span>
-          </div>
-          <div class="bg-black/50 p-2.5 rounded border border-slate-800 flex items-center justify-between gap-1">
-            <button id="inspect-nav-btn" onclick="openTurnByTurnModal('staging')" class="w-full py-1.5 bg-blue-950 hover:bg-blue-900 border border-blue-700 text-blue-200 rounded font-bold text-[10px] flex items-center justify-center gap-1 transition">
-              <span>🚗</span>
-              <span>CUE SHEET</span>
-            </button>
-            <a id="inspect-gps-btn" href="https://www.google.com/maps/dir/?api=1&destination=31.7248,-96.1650" target="_blank" class="w-full py-1.5 bg-emerald-950 hover:bg-emerald-900 border border-emerald-700 text-emerald-200 rounded font-bold text-[10px] flex items-center justify-center gap-1 transition text-center">
-              <span>🗺️</span>
-              <span>GPS NAV</span>
-            </a>
-          </div>
-        </div>
-
-        <div id="inspect-status-note" class="p-2.5 rounded bg-black/40 border border-slate-800 text-[11px] text-slate-300 flex items-center gap-2">
-          <span>ℹ️</span>
-          <span>Freestone County Emergency Operations Center. On-site emergency generator, amateur radio mast array, and liaison to County Sheriff dispatch.</span>
         </div>
       </div>
     </section>
@@ -4476,162 +4413,6 @@
         </button>
         <button type="button" id="b-modal-submit-btn" onclick="saveBroadcastIncident()" class="w-full sm:flex-1 py-2.5 px-4 bg-red-600 hover:bg-red-500 text-white font-black rounded-xl shadow-lg transition flex items-center justify-center gap-2 cursor-pointer text-xs uppercase tracking-wider">
           <span>Transmit Alert</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: ALERT AUDIO & DISPATCH VERIFICATION CONSOLE -->
-  <div id="alert-verify-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4 hidden overflow-y-auto">
-    <div class="bg-[#0b0e14] border-2 border-purple-500/80 rounded-2xl max-w-2xl w-full max-h-[92vh] flex flex-col font-mono-tac text-xs hud-glow shadow-[0_0_35px_rgba(168,85,247,0.3)] my-auto overflow-hidden">
-      <!-- Modal Header -->
-      <div class="flex items-center justify-between border-b border-purple-900/60 p-4 bg-[#07090e] flex-shrink-0">
-        <div class="flex items-center gap-2.5">
-          <span class="text-xl">🧪</span>
-          <div>
-            <h3 class="text-purple-300 font-bold text-sm tracking-wide">ALERT AUDIO & DISPATCH RULES VERIFICATION</h3>
-            <p class="text-[11px] text-slate-400">Interactive live validator for sender silence, dispatch sirens, and update beeps</p>
-          </div>
-        </div>
-        <button type="button" onclick="closeAlertSoundVerifyModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center font-bold text-base transition cursor-pointer">✕</button>
-      </div>
-
-      <!-- Realtime Suppression Status Bar -->
-      <div class="px-4 py-2.5 bg-slate-950 border-b border-slate-800 flex items-center justify-between flex-wrap gap-2 text-[11px]">
-        <div class="flex items-center gap-2">
-          <span class="text-slate-400">Current Station State:</span>
-          <span id="verify-suppression-status" class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-950 text-emerald-300 border border-emerald-600">
-            🔊 RECEIVER MODE (Normal Alerting Ready)
-          </span>
-        </div>
-        <div class="flex items-center gap-2">
-          <span id="verify-suppression-time" class="text-slate-400 font-mono">Ready</span>
-          <button type="button" onclick="clearSenderSuppressionForTest()" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-[10px] cursor-pointer" title="Reset suppression to Receiver mode">
-            Reset to Receiver Mode
-          </button>
-        </div>
-      </div>
-
-      <!-- Scrollable Test Body -->
-      <div class="p-4 sm:p-5 overflow-y-auto space-y-3.5 flex-1 text-slate-300">
-        <!-- Test Cards Grid -->
-        <div class="space-y-3">
-
-          <!-- Scenario 1: Transmit Alert as Sender -->
-          <div class="p-3 rounded-xl bg-[#0e131c] border border-red-500/40 space-y-2">
-            <div class="flex items-start justify-between gap-2">
-              <div>
-                <span class="text-[10px] font-bold text-red-400 uppercase tracking-wider block">Requirement 1 • Sender Device</span>
-                <h4 class="text-white font-bold text-xs">Transmit Emergency Alert (Sender Station)</h4>
-                <p class="text-[11px] text-slate-400 mt-0.5">When transmitting an alert from this phone, all local sounds, sirens, and tones MUST BE 100% SILENT.</p>
-              </div>
-              <button type="button" onclick="testScenarioSenderSilence()" class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white font-bold rounded-lg text-xs shadow flex-shrink-0 cursor-pointer">
-                ▶ Run Test 1
-              </button>
-            </div>
-            <div class="text-[10px] text-emerald-400 bg-emerald-950/40 p-1.5 rounded border border-emerald-900/50">
-              Rule: Engaging alert broadcasts immediately activates 90s audio suppression across JavaScript, iOS AppDelegate, and Android Service. Transmitting device makes 0 sound.
-            </div>
-          </div>
-
-          <!-- Scenario 2: Initial Dispatch on Receiver -->
-          <div class="p-3 rounded-xl bg-[#0e131c] border border-amber-500/40 space-y-2">
-            <div class="flex items-start justify-between gap-2">
-              <div>
-                <span class="text-[10px] font-bold text-amber-400 uppercase tracking-wider block">Requirement 2 • Receiver Device</span>
-                <h4 class="text-white font-bold text-xs">Receive Initial Emergency Dispatch (Update #1)</h4>
-                <p class="text-[11px] text-slate-400 mt-0.5">On receiver devices, the heavy emergency Minitor pager siren sounds ONLY ONCE upon initial callout.</p>
-              </div>
-              <button type="button" onclick="testScenarioReceiverInitialDispatch()" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg text-xs shadow flex-shrink-0 cursor-pointer">
-                ▶ Run Test 2
-              </button>
-            </div>
-            <div class="text-[10px] text-amber-400 bg-amber-950/40 p-1.5 rounded border border-amber-900/50">
-              Rule: Initial dispatch (updateCount &lt;= 1) sounds the authentic Motorola Minitor pager siren + APNs siren push.
-            </div>
-          </div>
-
-          <!-- Scenario 3: Subsequent Incident Update on Receiver -->
-          <div class="p-3 rounded-xl bg-[#0e131c] border border-cyan-500/40 space-y-2">
-            <div class="flex items-start justify-between gap-2">
-              <div>
-                <span class="text-[10px] font-bold text-cyan-400 uppercase tracking-wider block">Requirement 3 • Receiver Device</span>
-                <h4 class="text-white font-bold text-xs">Receive Incident Update (Update #2+)</h4>
-                <p class="text-[11px] text-slate-400 mt-0.5">After initial dispatch, updates play a crisp two-tone alert beep with banner. Siren NEVER re-sounds.</p>
-              </div>
-              <button type="button" onclick="testScenarioReceiverUpdateBeep()" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-lg text-xs shadow flex-shrink-0 cursor-pointer">
-                ▶ Run Test 3
-              </button>
-            </div>
-            <div class="text-[10px] text-cyan-400 bg-cyan-950/40 p-1.5 rounded border border-cyan-900/50">
-              Rule: Subsequent updates (updateCount &gt; 1) play synthesized 880Hz / 1200Hz two-tone alert beep + banner. Emergency siren stays off.
-            </div>
-          </div>
-
-          <!-- Scenario 4: Field SITREP Posted -->
-          <div class="p-3 rounded-xl bg-[#0e131c] border border-slate-700 space-y-2">
-            <div class="flex items-start justify-between gap-2">
-              <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Requirement 4 • All Stations</span>
-                <h4 class="text-white font-bold text-xs">Receive Field SITREP</h4>
-                <p class="text-[11px] text-slate-400 mt-0.5">Field SITREPs update the response board and feed silently. Zero sirens and zero beeps.</p>
-              </div>
-              <button type="button" onclick="testScenarioSitrepSilence()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-lg text-xs shadow flex-shrink-0 cursor-pointer">
-                ▶ Run Test 4
-              </button>
-            </div>
-            <div class="text-[10px] text-slate-400 bg-slate-900/50 p-1.5 rounded border border-slate-800">
-              Rule: isSitrepOnly suppresses all audible alerts on iOS, Android, and web.
-            </div>
-          </div>
-
-          <!-- Scenario 5: Responder Status Change -->
-          <div class="p-3 rounded-xl bg-[#0e131c] border border-slate-700 space-y-2">
-            <div class="flex items-start justify-between gap-2">
-              <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Requirement 5 • All Stations</span>
-                <h4 class="text-white font-bold text-xs">Receive Responder Status Update ("En Route")</h4>
-                <p class="text-[11px] text-slate-400 mt-0.5">When responders click En Route or On Scene, status boards sync live with ZERO audible alert tones.</p>
-              </div>
-              <button type="button" onclick="testScenarioResponderStatusSilence()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-lg text-xs shadow flex-shrink-0 cursor-pointer">
-                ▶ Run Test 5
-              </button>
-            </div>
-            <div class="text-[10px] text-slate-400 bg-slate-900/50 p-1.5 rounded border border-slate-800">
-              Rule: incident_responses telemetry updates table and map markers silently without triggering alert chimes.
-            </div>
-          </div>
-
-          <!-- Direct Button Verification -->
-          <div class="p-3 rounded-xl bg-[#14101e] border border-purple-500/40 flex items-center justify-between gap-2">
-            <div>
-              <span class="text-[10px] font-bold text-purple-400 uppercase tracking-wider block">Requirement 6 • Button Text Check</span>
-              <h4 class="text-white font-bold text-xs">Modal Button Reads Strictly "Transmit Alert"</h4>
-              <p class="text-[11px] text-slate-400 mt-0.5">Verify broadcast modal button has no "RE-SOUND SIRENS" or other phrases.</p>
-            </div>
-            <button type="button" onclick="testInspectBroadcastModalButton()" class="px-3 py-1.5 bg-purple-700 hover:bg-purple-600 text-white font-bold rounded-lg text-xs shadow flex-shrink-0 cursor-pointer">
-              ▶ Inspect Button
-            </button>
-          </div>
-        </div>
-
-        <!-- Realtime Live Audit Log -->
-        <div class="space-y-1.5 pt-2 border-t border-slate-800">
-          <div class="flex items-center justify-between">
-            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Verification Audit Log:</span>
-            <button type="button" onclick="document.getElementById('verify-log-box').innerHTML = ''" class="text-[10px] text-slate-500 hover:text-slate-300 cursor-pointer">Clear Log</button>
-          </div>
-          <div id="verify-log-box" class="space-y-1.5 max-h-40 overflow-y-auto p-2 rounded-lg bg-black/60 border border-slate-800/80">
-            <div class="text-[10px] text-slate-500 italic p-1">Click any test button above to run real-time verification...</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Modal Footer -->
-      <div class="flex items-center justify-between border-t border-purple-900/60 p-3 bg-[#07090e] flex-shrink-0">
-        <span class="text-[10px] text-purple-300">Freestone County ARES Dispatch Validator • Build 70</span>
-        <button type="button" onclick="closeAlertSoundVerifyModal()" class="px-4 py-2 bg-purple-800 hover:bg-purple-700 text-white font-bold rounded-xl text-xs transition cursor-pointer">
-          CLOSE CONSOLE
         </button>
       </div>
     </div>
@@ -6911,6 +6692,44 @@ assignedSpots: [
       alert(`✓ COUNTYWIDE 6-MONTH PROFILE AUDIT SCHEDULED!\n\nAll operators will be prompted to review and verify their credentials upon their next login.`);
     }
 
+// Strict EC Dispatch & Activation Authority Check:
+    // Returns true ONLY when signed in as Master EC (KG5TZT / Level 6) OR when explicitly assigned
+    // dispatch privileges via the EC Dispatch Admin Management Panel.
+    function hasEcDispatchAuthority() {
+      if (!appState.isLoggedIn || !appState.myCall || appState.myCall === 'GUEST') return false;
+      const call = String(appState.myCall || '').toUpperCase().trim();
+      const levelStr = String(appState.myLevel || '');
+      if (call === 'KG5TZT' || levelStr.includes('Level 6') || levelStr === 'EC') {
+        return true;
+      }
+      try {
+        const accounts = getRegisteredAccounts();
+        const userAcc = accounts[call] || {};
+        const userMem = (appState.members || []).find(m => String(m.call || '').toUpperCase() === call) || {};
+        return Boolean(userAcc.canSendAlerts === true || userMem.canSendAlerts === true);
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function openEcDispatchAdminPanel() {
+      const call = String(appState.myCall || '').toUpperCase().trim();
+      const clearance = getOperatorClearance();
+      if (call !== 'KG5TZT' && clearance.levelNum < 6) {
+        alert('🔒 EC ROOT ACCESS REQUIRED\n\nOnly Emergency Coordinator Brian Davis (KG5TZT) can access the EC Dispatch & Activation Privilege Management Panel.');
+        return;
+      }
+      switchTab('security-desk');
+      renderEcPagingDelegationCard();
+      renderEcOperatorDirectory();
+      setTimeout(() => {
+        const panel = document.getElementById('ec-dispatch-admin-panel');
+        if (panel) {
+          panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
+
 function getOperatorClearance() {
       const call = (appState.myCall || '').toUpperCase().trim();
       const levelStr = (appState.myLevel || '').toString();
@@ -6921,7 +6740,7 @@ function getOperatorClearance() {
         const accounts = getRegisteredAccounts();
         const userAcc = accounts[call] || {};
         const userMem = (appState.members || []).find(m => m.call.toUpperCase() === call) || {};
-        isEcDelegatedPaging = !!(userAcc.canSendAlerts || userMem.canSendAlerts);
+        isEcDelegatedPaging = Boolean(userAcc.canSendAlerts === true || userMem.canSendAlerts === true);
       } catch(e) {}
 
       // Level 6: Emergency Coordinator (EC) — Brian Davis (KG5TZT) [Exclusive Root Authority]
@@ -8362,19 +8181,19 @@ D. Out-of-County stations and visitors.
 
       if (!appState.activeIncident) {
         appState.activeIncident = {
-          level: 'LEVEL 1 - FULL ACTIVATION',
-          title: 'EMERGENCY INCIDENT // FREESTONE CO. ARES',
-          staging: 'Fairfield EOC',
-          mission: 'Tactical communications activation.',
+          level: 'LEVEL 3 - MONITORING',
+          title: 'ROUTINE OPERATIONS // FREESTONE CO. ARES',
+          staging: 'Standby / Home QTH',
+          mission: 'Routine monitoring on FF 110 (145.110 TSQ 146.2).',
           updateCount: 0,
           updates: [],
-          isClosed: false
+          isClosed: true
         };
       }
 
       appState.activeIncident.updateCount = (appState.activeIncident.updateCount || 0) + 1;
       appState.activeIncident.lastUpdated = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
-      appState.activeIncident.isClosed = false;
+      // NEVER mutate appState.activeIncident.isClosed or activation level from a field SITREP!
 
       const findCh = (num) => (appState.channels || []).find(c => c.ch === num) || { ch: '01', name: 'FF 110' };
       const pace = appState.activeIncident.pace || { p: '01', a: '02', c: '09', e: '06' };
@@ -8667,8 +8486,8 @@ D. Out-of-County stations and visitors.
     
     // Incident Demobilization Functions
     function openDemobModal() {
-      if (!appState.canSendAlerts) {
-        alert('🔒 ACCESS RESTRICTED: EMERGENCY COORDINATOR AUTHORIZATION REQUIRED\n\nOnly Brian Davis (KG5TZT) may issue formal demobilization directives and close the incident.');
+      if (!hasEcDispatchAuthority()) {
+        alert('🔒 ACCESS RESTRICTED: EMERGENCY COORDINATOR AUTHORIZATION REQUIRED\n\nOnly EC Brian Davis (KG5TZT) or an operator explicitly granted dispatch privileges in the EC Admin Panel may issue demobilization directives and close an incident.');
         return;
       }
       const modal = document.getElementById('demob-modal');
@@ -8685,6 +8504,10 @@ D. Out-of-County stations and visitors.
     }
 
     function submitDemobilization() {
+      if (!hasEcDispatchAuthority()) {
+        alert('🔒 ACCESS RESTRICTED: EMERGENCY COORDINATOR AUTHORIZATION REQUIRED');
+        return;
+      }
       const directive = document.getElementById('demob-directive').value.trim();
       const timeStr = document.getElementById('demob-time').value.trim();
       const hoursStr = document.getElementById('demob-hours').value.trim();
@@ -8957,9 +8780,17 @@ D. Out-of-County stations and visitors.
       window.location.href = `sms:${clean}?body=${body}`;
     }
 
+    let _lastResponderTableSig = '';
     function renderResponderTable() {
       const tbody = document.getElementById('responder-table-body');
       if (!tbody) return;
+      const sig = JSON.stringify({
+        filter: appState.responderFilter || 'ALL',
+        myCall: appState.myCall || '',
+        resps: (appState.responders || []).map(r => [r.call, r.status, r.assignedSpot, r.time, r.eta])
+      });
+      if (sig === _lastResponderTableSig && tbody.children.length > 0) return;
+      _lastResponderTableSig = sig;
       tbody.innerHTML = '';
 
       let activeCount = 0;
@@ -9169,11 +9000,30 @@ D. Out-of-County stations and visitors.
     }
 
     // Render Roster Grid with ARES Levels, Privacy Locks & Dispatch Badges
+    let _lastRosterGridSig = '';
     function renderRosterGrid(filter = '') {
       const container = document.getElementById('roster-grid');
       if (!container) return;
-      container.innerHTML = '';
       const term = filter.toLowerCase();
+      try {
+        const accountsSnap = getRegisteredAccounts();
+        const sig = JSON.stringify({
+          term,
+          logged: appState.isLoggedIn,
+          myCall: appState.myCall,
+          myStatus: appState.myOperationalStatus,
+          canSend: appState.canSendAlerts,
+          members: (appState.members || []).map(m => {
+            const c = String(m.call || '').toUpperCase();
+            const a = accountsSnap[c] || {};
+            const p = (appState.presence && appState.presence[c]) || {};
+            return [c, m.name, m.level, m.role, m.canSendAlerts, a.canSendAlerts, a.status, a.claimed, a.photo ? a.photo.length : 0, p.statusId, p.online];
+          })
+        });
+        if (sig === _lastRosterGridSig && container.children.length > 0) return;
+        _lastRosterGridSig = sig;
+      } catch (e) {}
+      container.innerHTML = '';
 
       // Update Verified Members Badge
       const countBadge = document.getElementById('roster-verified-badge');
@@ -9566,7 +9416,7 @@ D. Out-of-County stations and visitors.
           : `<span class="text-slate-400 font-mono">${maskPhone(rawIcePhone)} 🔒</span>`;
 
         const card = document.createElement('div');
-        card.className = `bg-[#10151d] border ${isMe ? 'border-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.2)]' : 'border-slate-800 hover:border-emerald-500/50'} rounded-xl p-3 sm:p-3.5 space-y-2.5 font-mono-tac text-xs transition hud-glow`;
+        card.className = `roster-card-item bg-[#10151d] border ${isMe ? 'border-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.2)]' : 'border-slate-800 hover:border-emerald-500/50'} rounded-xl p-3 sm:p-3.5 space-y-2.5 font-mono-tac text-xs transition hud-glow`;
         card.innerHTML = `
           <!-- Header Split: Left Section (Large Photo + 3 Stacked Boxes + ARES/RACES IDs) & Right Narrow Badge Column -->
           <div class="flex gap-2 items-stretch">
@@ -9682,8 +9532,16 @@ D. Out-of-County stations and visitors.
 
     // EC Member Authorization & Permissions Management
     function openPermissionsModal(id) {
+      const clearance = getOperatorClearance();
+      if (clearance.levelNum < 6 && String(appState.myCall || '').toUpperCase() !== 'KG5TZT') {
+        alert('🔒 EC ROOT ACCESS REQUIRED\n\nOnly Emergency Coordinator Brian Davis (KG5TZT) can modify operator permissions and dispatch privileges.');
+        return;
+      }
       const m = appState.members.find(x => x.id === id);
       if (!m) return;
+
+      const accounts = getRegisteredAccounts();
+      const acc = accounts[m.call.toUpperCase()] || {};
 
       document.getElementById('perm-member-id').value = m.id;
       document.getElementById('perm-callsign').textContent = m.call;
@@ -9692,7 +9550,7 @@ D. Out-of-County stations and visitors.
       document.getElementById('perm-ares-level').value = m.level || 'Operator';
       document.getElementById('perm-unit-role').value = m.role || 'Field Operator';
       document.getElementById('perm-verification-status').value = m.verified ? 'verified' : 'pending';
-      document.getElementById('perm-can-dispatch').checked = !!m.canSendAlerts;
+      document.getElementById('perm-can-dispatch').checked = Boolean(m.canSendAlerts || acc.canSendAlerts || m.call.toUpperCase() === 'KG5TZT');
 
       const badge = document.getElementById('perm-current-badge');
       if (badge) {
@@ -9708,30 +9566,50 @@ D. Out-of-County stations and visitors.
     }
 
     function saveMemberPermissions() {
+      const clearance = getOperatorClearance();
+      if (clearance.levelNum < 6 && String(appState.myCall || '').toUpperCase() !== 'KG5TZT') {
+        alert('🔒 EC ROOT ACCESS REQUIRED\n\nOnly Emergency Coordinator Brian Davis (KG5TZT) can modify operator permissions and dispatch privileges.');
+        return;
+      }
       const id = parseInt(document.getElementById('perm-member-id').value, 10);
       const m = appState.members.find(x => x.id === id);
       if (!m) return;
 
+      const call = m.call.toUpperCase();
       const newLevel = document.getElementById('perm-ares-level').value;
       const newRole = document.getElementById('perm-unit-role').value;
       const isVerified = document.getElementById('perm-verification-status').value === 'verified';
-      const canDispatch = document.getElementById('perm-can-dispatch').checked;
+      const canDispatch = (call === 'KG5TZT') ? true : document.getElementById('perm-can-dispatch').checked;
 
       m.level = newLevel;
       m.role = newRole;
       m.verified = isVerified;
       m.canSendAlerts = canDispatch;
 
+      const accounts = getRegisteredAccounts();
+      if (accounts[call]) {
+        accounts[call].level = newLevel;
+        accounts[call].role = newRole;
+        accounts[call].canSendAlerts = canDispatch;
+        safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(accounts));
+        saveAccountToCloud(call, accounts[call]);
+      }
+      saveRosterMembers();
+      pushRosterSyncToCloud();
+
       // If active user is this member, sync active session
-      if (m.call === appState.myCall) {
-        appState.canSendAlerts = canDispatch;
+      if (call === String(appState.myCall || '').toUpperCase()) {
+        appState.canSendAlerts = hasEcDispatchAuthority();
         appState.myRole = newRole;
         appState.myLevel = newLevel;
         updateDispatchControlsVisibility();
         updateSessionHeaderUI();
       }
 
+      _lastRosterGridSig = '';
       renderRosterGrid();
+      renderEcPagingDelegationCard();
+      renderEcOperatorDirectory();
       closePermissionsModal();
       alert(`EC PERMISSION UPDATE SAVED:\n\nOperator: ${m.call} (${m.name})\nLevel: ${m.level}\nRole: ${m.role}\nDispatch Authority: ${m.canSendAlerts ? 'AUTHORIZED' : 'DISABLED (Receive Only)'}`);
     }
@@ -12028,8 +11906,8 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
     let isAlertUpdateMode = false;
 
     function openUpdateAlertModal() {
-      if (!appState.canSendAlerts) {
-        alert('🔒 ACCESS RESTRICTED: EMERGENCY COORDINATOR AUTHORIZATION REQUIRED\n\nOnly Brian Davis (KG5TZT) or authorized Net Control dispatchers may update emergency alerts.');
+      if (!hasEcDispatchAuthority()) {
+        alert('🔒 ACCESS RESTRICTED: EMERGENCY COORDINATOR AUTHORIZATION REQUIRED\n\nOnly EC Brian Davis (KG5TZT) or an operator explicitly granted dispatch privileges in the EC Admin Panel may update mission dispatches.');
         return;
       }
       isAlertUpdateMode = true;
@@ -12074,8 +11952,8 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
     }
 
     function openBroadcastModal(isUpdate = false) {
-      if (!appState.canSendAlerts) {
-        alert('🔒 ACCESS RESTRICTED: EMERGENCY COORDINATOR AUTHORIZATION REQUIRED\n\nOnly Brian Davis (KG5TZT) or authorized Net Control dispatchers may broadcast emergency alerts.');
+      if (!hasEcDispatchAuthority()) {
+        alert('🔒 ACCESS RESTRICTED: EMERGENCY COORDINATOR AUTHORIZATION REQUIRED\n\nOnly EC Brian Davis (KG5TZT) or an operator explicitly granted dispatch privileges in the EC Admin Panel may dispatch emergency missions.');
         return;
       }
       if (isUpdate) {
@@ -12121,6 +11999,10 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
     }
 
     function saveBroadcastIncident() {
+      if (!hasEcDispatchAuthority()) {
+        alert('🔒 ACCESS RESTRICTED: EMERGENCY COORDINATOR AUTHORIZATION REQUIRED\n\nOnly EC Brian Davis (KG5TZT) or an operator explicitly granted dispatch privileges may transmit mission dispatches.');
+        return;
+      }
       const level = document.getElementById('b-level').value;
       const title = document.getElementById('b-title').value;
       const staging = document.getElementById('b-staging').value;
@@ -12451,120 +12333,8 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
           attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
         });
 
-        // Initialize Layer Groups
-        for (const key in mapLayers) {
-          mapLayers[key] = L.layerGroup().addTo(leafletMap);
-        }
-
-        // Add Markers: Repeaters
-        FREESTONE_MAP_POIS.repeaters.forEach(function(rep) {
-          const icon = L.divIcon({
-            className: 'custom-poi-marker',
-            html: '<div class="tactical-pin bg-cyan-950 border-2 border-cyan-400 text-cyan-200 text-xs w-8 h-8 rounded-full shadow-[0_0_12px_rgba(6,182,212,0.8)] flex items-center justify-center font-bold">📡</div>',
-            iconSize: [32, 32],
-            iconAnchor: [16, 16]
-          });
-          const marker = L.marker([rep.lat, rep.lng], { icon: icon });
-          marker.bindPopup('<b>' + rep.name + '</b><br><span style="color:#22d3ee;font-weight:bold;">' + rep.freq + '</span><br><span style="font-size:10px;color:#94a3b8;">' + rep.role + '</span>');
-          marker.on('click', function() { inspectMapItem('repeater', rep.id); });
-          mapLayers.repeaters.addLayer(marker);
-        });
-
-        // Add Markers: Staging EOCs
-        FREESTONE_MAP_POIS.staging.forEach(function(stg) {
-          const icon = L.divIcon({
-            className: 'custom-poi-marker',
-            html: '<div class="tactical-pin bg-red-950 border-2 border-red-500 text-red-200 text-xs w-9 h-9 rounded-full shadow-[0_0_15px_rgba(239,68,68,0.9)] flex items-center justify-center font-bold">📍</div>',
-            iconSize: [36, 36],
-            iconAnchor: [18, 18]
-          });
-          const marker = L.marker([stg.lat, stg.lng], { icon: icon });
-          marker.bindPopup('<b>' + stg.name + '</b><br><span style="color:#f87171;font-weight:bold;">' + stg.ch + '</span><br><span style="font-size:10px;color:#94a3b8;">' + stg.address + '</span>');
-          marker.on('click', function() { inspectMapItem('spot', stg.id); });
-          mapLayers.staging.addLayer(marker);
-        });
-
-        // Add Markers: Facilities & Shelters
-        FREESTONE_MAP_POIS.facilities.forEach(function(fac) {
-          const isHospital = fac.id === 'spot3';
-          const symbol = isHospital ? '🏥' : '🏫';
-          const icon = L.divIcon({
-            className: 'custom-poi-marker',
-            html: '<div class="tactical-pin bg-blue-950 border-2 border-blue-400 text-blue-200 text-xs w-8 h-8 rounded-full shadow-[0_0_12px_rgba(59,130,246,0.8)] flex items-center justify-center font-bold">' + symbol + '</div>',
-            iconSize: [32, 32],
-            iconAnchor: [16, 16]
-          });
-          const marker = L.marker([fac.lat, fac.lng], { icon: icon });
-          marker.bindPopup('<b>' + fac.name + '</b><br><span style="color:#60a5fa;font-weight:bold;">' + fac.ch + '</span><br><span style="font-size:10px;color:#94a3b8;">' + fac.address + '</span>');
-          marker.on('click', function() { inspectMapItem('spot', fac.id); });
-          mapLayers.facilities.addLayer(marker);
-        });
-
-        // Add Markers: VFD Stations
-        FREESTONE_MAP_POIS.vfds.forEach(function(vfd) {
-          const icon = L.divIcon({
-            className: 'custom-poi-marker',
-            html: '<div class="tactical-pin bg-amber-950 border-2 border-amber-500 text-amber-200 text-xs w-7 h-7 rounded-full shadow-[0_0_12px_rgba(245,158,11,0.8)] flex items-center justify-center font-bold">🚒</div>',
-            iconSize: [28, 28],
-            iconAnchor: [14, 14]
-          });
-          const marker = L.marker([vfd.lat, vfd.lng], { icon: icon });
-          marker.bindPopup('<b>' + vfd.name + '</b><br><span style="color:#fbbf24;font-weight:bold;">' + vfd.ch + '</span><br><span style="font-size:10px;color:#94a3b8;">' + vfd.address + '</span>');
-          marker.on('click', function() {
-            inspectMapItem('vfd', vfd.id);
-          });
-          mapLayers.vfds.addLayer(marker);
-        });
-
-        // Add Markers: Spotter Vantage Posts
-        FREESTONE_MAP_POIS.spotters.forEach(function(spt) {
-          const icon = L.divIcon({
-            className: 'custom-poi-marker',
-            html: '<div class="tactical-pin bg-purple-950 border-2 border-purple-400 text-purple-200 text-xs w-7 h-7 rounded-full shadow-[0_0_12px_rgba(168,85,247,0.8)] flex items-center justify-center font-bold">⛈️</div>',
-            iconSize: [28, 28],
-            iconAnchor: [14, 14]
-          });
-          const marker = L.marker([spt.lat, spt.lng], { icon: icon });
-          marker.bindPopup('<b>' + spt.name + '</b><br><span style="color:#c084fc;font-weight:bold;">' + spt.ch + '</span><br><span style="font-size:10px;color:#94a3b8;">' + spt.role + '</span>');
-          marker.on('click', function() { inspectMapItem('spot', spt.id); });
-          mapLayers.spotters.addLayer(marker);
-        });
-
-        // Add Markers: Active ARES Responders
-        appState.responders.forEach(function(resp) {
-          const icon = L.divIcon({
-            className: 'custom-poi-marker',
-            html: '<div class="tactical-pin bg-emerald-950 border-2 border-emerald-400 text-emerald-300 text-[10px] px-1.5 py-0.5 rounded shadow-[0_0_14px_rgba(16,185,129,0.9)] flex items-center gap-1 font-bold whitespace-nowrap"><span>👤</span><span>' + resp.call + '</span></div>',
-            iconSize: [60, 24],
-            iconAnchor: [30, 12]
-          });
-          const marker = L.marker([resp.lat, resp.lng], { icon: icon });
-          marker.bindPopup('<b>' + resp.name + ' (' + resp.call + ')</b><br><span style="color:#34d399;font-weight:bold;">Status: ' + resp.status + '</span><br><span style="font-size:10px;color:#94a3b8;">Assigned: ' + resp.assignedSpot + ' | ETA ' + resp.eta + '</span>');
-          marker.on('click', function() { inspectMapItem('responder', resp.call); });
-          mapLayers.responders.addLayer(marker);
-        });
-
-        // Add Tactical Range Rings Centered on Fairfield EOC
-        const centerEOC = [31.7248, -96.1650];
-        const ringDistances = [
-          { mi: 5, meters: 8046, color: '#10b981', opacity: 0.35 },
-          { mi: 10, meters: 16093, color: '#10b981', opacity: 0.28 },
-          { mi: 15, meters: 24140, color: '#10b981', opacity: 0.22 },
-          { mi: 20, meters: 32186, color: '#10b981', opacity: 0.16 }
-        ];
-
-        ringDistances.forEach(function(r) {
-          const circle = L.circle(centerEOC, {
-            radius: r.meters,
-            color: r.color,
-            weight: 1.5,
-            dashArray: '5, 5',
-            fillColor: r.color,
-            fillOpacity: 0.03,
-            interactive: false
-          });
-          mapLayers.rings.addLayer(circle);
-        });
+        // Raw Offline Navigation Map ONLY: All tactical overlay layers and pins (repeaters, fire/VFDs,
+        // police, hospitals/shelters, staging, spotters, responders, range rings) have been completely removed.
 
         // Track Map Movement and Update Live Coordinates HUD
         leafletMap.on('move', function() {
@@ -12584,32 +12354,19 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
           leafletMap.invalidateSize();
         }, 150);
 
-        console.log('[ARES Tactical Map] Leaflet Tactical Map engine initialized successfully.');
+        console.log('[ARES Navigation Map] Raw offline navigation map initialized.');
       } catch (err) {
-        console.error('[ARES Tactical Map] Initialization error:', err);
+        console.error('[ARES Navigation Map] Initialization error:', err);
       }
     }
 
-    // Basemap Switcher (Dark, OSM, Topo, Vector HUD)
+    // Basemap Switcher (Dark, OSM, Satellite, Topo)
     function changeMapBasemap(type) {
       currentMapBasemap = type;
-      const fallback = document.getElementById('layer-offline-bg');
       const leafletCanvas = document.getElementById('leaflet-map-canvas');
       const modeBadge = document.getElementById('map-mode-badge');
 
-      if (type === 'vector') {
-        if (leafletCanvas) leafletCanvas.classList.add('hidden');
-        if (fallback) fallback.classList.remove('hidden');
-        if (modeBadge) {
-          modeBadge.textContent = 'OFFLINE VECTOR HUD (MIL-GRID)';
-          modeBadge.className = 'px-2 py-0.5 rounded text-[10px] bg-amber-950 text-amber-300 border border-amber-800 font-bold';
-        }
-        return;
-      }
-
-      // Re-show Leaflet Canvas
       if (leafletCanvas) leafletCanvas.classList.remove('hidden');
-      if (fallback) fallback.classList.add('hidden');
 
       if (!leafletMap) {
         initTacticalMap();
@@ -12651,26 +12408,14 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
       }
     }
 
-    // Toggle Tactical Marker Layers
-    function toggleLeafletLayer(layerName, show) {
-      if (!leafletMap || !mapLayers[layerName]) return;
-      if (show) {
-        if (!leafletMap.hasLayer(mapLayers[layerName])) {
-          leafletMap.addLayer(mapLayers[layerName]);
-        }
-      } else {
-        if (leafletMap.hasLayer(mapLayers[layerName])) {
-          leafletMap.removeLayer(mapLayers[layerName]);
-        }
-      }
-    }
+    // No-op: Tactical marker overlay layers removed
+    function toggleLeafletLayer() {}
 
-    // Recenter County Center on Fairfield EOC
+    // Recenter County Center on Freestone County (Fairfield, TX)
     function recenterCountyMap() {
       if (leafletMap) {
-        leafletMap.flyTo([31.7248, -96.1650], 11, { duration: 1 });
+        leafletMap.flyTo([31.7248, -96.1650], 11, { duration: 0.8 });
       }
-      inspectMapItem('spot', 'staging');
     }
 
     // Locate Device Live GPS Position
@@ -12684,158 +12429,31 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
         function(pos) {
           const lat = pos.coords.latitude;
           const lng = pos.coords.longitude;
-          const accuracy = pos.coords.accuracy || 25;
           const grid = latLngToMaidenhead(lat, lng);
 
           if (!leafletMap) initTacticalMap();
 
           if (leafletMap) {
-            // Remove previous user marker
             if (userLocationMarker) leafletMap.removeLayer(userLocationMarker);
             if (userLocationAccuracy) leafletMap.removeLayer(userLocationAccuracy);
-
-            // Pulsing GPS Beacon Icon
-            const gpsIcon = L.divIcon({
-              className: 'gps-beacon',
-              html: '<div class="gps-pulse-marker bg-blue-500 border-2 border-white w-5 h-5 rounded-full shadow-[0_0_15px_rgba(59,130,246,1)]"></div>',
-              iconSize: [20, 20],
-              iconAnchor: [10, 10]
-            });
-
-            userLocationAccuracy = L.circle([lat, lng], {
-              radius: accuracy,
-              color: '#3b82f6',
-              weight: 1,
-              fillColor: '#3b82f6',
-              fillOpacity: 0.15
-            }).addTo(leafletMap);
-
-            userLocationMarker = L.marker([lat, lng], { icon: gpsIcon })
-              .addTo(leafletMap)
-              .bindPopup('<b>YOUR LIVE LOCATION</b><br><span style="color:#60a5fa;">' + lat.toFixed(4) + '° N, ' + Math.abs(lng).toFixed(4) + '° W</span><br>Grid: ' + grid + '<br>Accuracy: ' + Math.round(accuracy) + 'm')
-              .openPopup();
-
-            leafletMap.flyTo([lat, lng], 13, { duration: 1.2 });
+            leafletMap.flyTo([lat, lng], 13, { duration: 1.0 });
           }
 
-          // Update Inspector Card
-          const iconEl = document.getElementById('inspect-icon');
-          const titleEl = document.getElementById('inspect-title');
-          const subEl = document.getElementById('inspect-subtitle');
-          const badgeEl = document.getElementById('inspect-badge');
-          const gridEl = document.getElementById('inspect-grid');
-          const coordsEl = document.getElementById('inspect-coords');
-          const chanEl = document.getElementById('inspect-channel');
-          const distEl = document.getElementById('inspect-dist');
-          const noteEl = document.getElementById('inspect-status-note');
-          const gpsBtn = document.getElementById('inspect-gps-btn');
-
-          if (iconEl) iconEl.textContent = '🎯';
-          if (titleEl) titleEl.textContent = 'My Live Operator Position (' + appState.myCall + ')';
-          if (subEl) subEl.textContent = 'Device GPS Telemetry (Accuracy: ' + Math.round(accuracy) + ' meters)';
-          if (badgeEl) {
-            badgeEl.textContent = 'LIVE GPS FIX';
-            badgeEl.className = 'px-2 py-0.5 rounded text-[10px] bg-blue-950 text-blue-300 border border-blue-800 font-bold';
-          }
-          if (gridEl) gridEl.textContent = grid;
-          if (coordsEl) coordsEl.textContent = lat.toFixed(4) + '° N, ' + Math.abs(lng).toFixed(4) + '° W';
-          if (chanEl) chanEl.textContent = 'Primary: Ch 01 - FF 110 (145.110)';
-          if (distEl) distEl.textContent = 'Fix Acquired';
-          if (noteEl) noteEl.innerHTML = '<span>🎯</span><span>Live GPS position active. Telemetry broadcast enabled on local APRS 144.390 MHz beacon.</span>';
-          if (gpsBtn) gpsBtn.href = 'https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng;
+          const coordsEl = document.getElementById('map-live-center-coords');
+          const gridEl = document.getElementById('map-live-center-grid');
+          if (coordsEl) coordsEl.textContent = Math.abs(lat).toFixed(4) + '° ' + (lat >= 0 ? 'N' : 'S') + ', ' + Math.abs(lng).toFixed(4) + '° ' + (lng >= 0 ? 'E' : 'W');
+          if (gridEl) gridEl.textContent = 'GRID: ' + grid;
         },
         function(err) {
-          console.warn('[ARES Tactical GPS] Could not acquire GPS location:', err.message);
-          alert('GPS Location Notice: ' + err.message + '\n\nDefaulting to Freestone County EOC Staging coordinates (Fairfield, TX).');
+          console.warn('[ARES Navigation GPS] Could not acquire GPS location:', err.message);
           recenterCountyMap();
         },
         { enableHighAccuracy: true, timeout: 8000, maximumAge: 10000 }
       );
     }
 
-    // Inspect Map Item (POI, Repeater, Responder, VFD)
-    function inspectMapItem(type, id) {
-      const iconEl = document.getElementById('inspect-icon');
-      const titleEl = document.getElementById('inspect-title');
-      const subEl = document.getElementById('inspect-subtitle');
-      const badgeEl = document.getElementById('inspect-badge');
-      const gridEl = document.getElementById('inspect-grid');
-      const coordsEl = document.getElementById('inspect-coords');
-      const chanEl = document.getElementById('inspect-channel');
-      const distEl = document.getElementById('inspect-dist');
-      const noteEl = document.getElementById('inspect-status-note');
-      const navBtn = document.getElementById('inspect-nav-btn');
-      const gpsBtn = document.getElementById('inspect-gps-btn');
-
-      if (type === 'spot') {
-        const spot = appState.assignedSpots.find(function(s) { return s.id === id; }) || appState.assignedSpots[0];
-        if (iconEl) iconEl.textContent = id === 'staging' ? '📍' : id === 'spot1' ? '🏫' : id === 'spot2' ? '🏛️' : id === 'spot3' ? '🏥' : '🌊';
-        if (titleEl) titleEl.textContent = spot.name;
-        if (subEl) subEl.textContent = spot.address;
-        if (badgeEl) {
-          badgeEl.textContent = id === 'staging' ? 'INCIDENT STAGING POINT' : 'TACTICAL ASSIGNED SPOT';
-          badgeEl.className = id === 'staging' 
-            ? 'px-2 py-0.5 rounded text-[10px] bg-red-950 text-red-300 border border-red-800 font-bold'
-            : 'px-2 py-0.5 rounded text-[10px] bg-amber-950 text-amber-300 border border-amber-800 font-bold';
-        }
-        if (gridEl) gridEl.textContent = spot.grid;
-        if (coordsEl) coordsEl.textContent = spot.lat + '° N, ' + Math.abs(spot.lng) + '° W';
-        if (chanEl) chanEl.textContent = spot.primaryCh;
-        if (distEl) distEl.textContent = spot.eta;
-        if (noteEl) noteEl.innerHTML = '<span>ℹ️</span><span>' + spot.role + '</span>';
-        if (navBtn) navBtn.setAttribute('onclick', "openTurnByTurnModal('" + spot.id + "')");
-        if (gpsBtn) gpsBtn.href = 'https://www.google.com/maps/dir/?api=1&destination=' + spot.lat + ',' + spot.lng;
-      } else if (type === 'responder') {
-        const resp = appState.responders.find(function(r) { return r.call === id; });
-        if (!resp) return;
-        if (iconEl) iconEl.textContent = '👤';
-        if (titleEl) titleEl.textContent = resp.name + ' (' + resp.call + ')';
-        if (subEl) subEl.textContent = resp.gear + ' • Contact: ' + resp.phone;
-        if (badgeEl) {
-          badgeEl.textContent = resp.status;
-          badgeEl.className = 'px-2 py-0.5 rounded text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold';
-        }
-        if (gridEl) gridEl.textContent = resp.grid || 'EM11xq';
-        if (coordsEl) coordsEl.textContent = resp.lat + '° N, ' + Math.abs(resp.lng) + '° W';
-        if (chanEl) chanEl.textContent = 'Assigned: ' + (resp.assignedSpot || 'EOC Staging');
-        if (distEl) distEl.textContent = (resp.distToStaging || '0.0 mi') + ' (' + (resp.speedHeading || '0 MPH') + ')';
-        if (noteEl) noteEl.innerHTML = '<span>🚗</span><span>Live Responder Telemetry: Heading to ' + resp.assignedSpot + '. ETA ' + resp.eta + '.</span>';
-        if (navBtn) navBtn.setAttribute('onclick', "openTurnByTurnModal('" + (resp.spotId || 'staging') + "')");
-        if (gpsBtn) gpsBtn.href = 'https://www.google.com/maps/dir/?api=1&destination=' + resp.lat + ',' + resp.lng;
-      } else if (type === 'repeater') {
-        const rep = FREESTONE_MAP_POIS.repeaters.find(function(r) { return r.id === id; }) || FREESTONE_MAP_POIS.repeaters[0];
-        if (iconEl) iconEl.textContent = '📡';
-        if (titleEl) titleEl.textContent = rep.name;
-        if (subEl) subEl.textContent = rep.freq + ' • ' + rep.role;
-        if (badgeEl) {
-          badgeEl.textContent = id === 'W5NFL' ? 'PACE [P] PRIMARY NET' : id === 'KE5DFY' ? 'PACE [A] ALTERNATE NET' : 'PACE [C] CONTINGENCY';
-          badgeEl.className = 'px-2 py-0.5 rounded text-[10px] bg-cyan-950 text-cyan-300 border border-cyan-800 font-bold';
-        }
-        if (gridEl) gridEl.textContent = rep.grid;
-        if (coordsEl) coordsEl.textContent = rep.lat + '° N, ' + Math.abs(rep.lng) + '° W';
-        if (chanEl) chanEl.textContent = rep.freq;
-        if (distEl) distEl.textContent = 'In Service';
-        if (noteEl) noteEl.innerHTML = '<span>📡</span><span>' + rep.role + '</span>';
-        if (navBtn) navBtn.setAttribute('onclick', "openTurnByTurnModal('staging')");
-        if (gpsBtn) gpsBtn.href = 'https://www.google.com/maps/dir/?api=1&destination=' + rep.lat + ',' + rep.lng;
-      } else if (type === 'vfd') {
-        const vfd = FREESTONE_MAP_POIS.vfds.find(function(v) { return v.id === id; }) || FREESTONE_MAP_POIS.vfds[0];
-        if (iconEl) iconEl.textContent = '🚒';
-        if (titleEl) titleEl.textContent = vfd.name;
-        if (subEl) subEl.textContent = vfd.address;
-        if (badgeEl) {
-          badgeEl.textContent = 'FIRE & RESCUE';
-          badgeEl.className = 'px-2 py-0.5 rounded text-[10px] bg-amber-950 text-amber-300 border border-amber-800 font-bold';
-        }
-        if (gridEl) gridEl.textContent = vfd.grid;
-        if (coordsEl) coordsEl.textContent = vfd.lat + '° N, ' + Math.abs(vfd.lng) + '° W';
-        if (chanEl) chanEl.textContent = vfd.ch;
-        if (distEl) distEl.textContent = 'Mutual Aid Station';
-        if (noteEl) noteEl.innerHTML = '<span>🚒</span><span>' + vfd.role + '</span>';
-        if (navBtn) navBtn.setAttribute('onclick', "openTurnByTurnModal('staging')");
-        if (gpsBtn) gpsBtn.href = 'https://www.google.com/maps/dir/?api=1&destination=' + vfd.lat + ',' + vfd.lng;
-      }
-    }
+    // No-op: Tactical POI marker inspector removed
+    function inspectMapItem() {}
 
     // ==============================================================
     // TEXAS STATEWIDE & COUNTY OFFLINE TILE PACK ENGINE
@@ -13760,8 +13378,7 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
             if (acc && (acc.status === 'AUTHORIZED' || acc.isMaster)) {
               loginAsAuthorizedOperator(acc, false);
               renderEcAuthorizationQueue();
-              syncRosterWithCloud();
-              setInterval(syncRosterWithCloud, 5000);
+              initFirebaseEngine();
               return;
             }
           }
@@ -14794,6 +14411,7 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
       }
     }
 
+    let initialActivationSyncDone = false;
     function onRemoteActivationLevelReceived(remoteAct) {
       if (!remoteAct || !remoteAct.level) return;
       const newLvl = parseInt(remoteAct.level, 10);
@@ -14801,18 +14419,28 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
 
       const currentLvl = getCountyResponseLevel();
       const lastTs = parseInt(safeStorage.getItem('fc_ares_response_level_ts') || '0', 10);
-      const remoteTs = remoteAct.updatedAt || 0;
+      const remoteTs = parseInt(remoteAct.updatedAt || '0', 10);
 
-      // Update if level changed or remote timestamp is newer
-      if (newLvl !== currentLvl || remoteTs > lastTs) {
+      // First sync upon app launch: silently seed current county posture without firing ghost alerts
+      if (!initialActivationSyncDone) {
+        initialActivationSyncDone = true;
+        safeStorage.setItem('fc_ares_response_level', newLvl);
+        if (remoteTs > 0) safeStorage.setItem('fc_ares_response_level_ts', remoteTs);
+        renderCountyResponseLevelUI();
+        return;
+      }
+
+      // Only process if level changed and remote timestamp is genuinely newer
+      if (newLvl !== currentLvl && (remoteTs === 0 || remoteTs > lastTs)) {
         console.log(`🔔 Remote Activation Level update received from Cloud: Level ${newLvl}`);
         safeStorage.setItem('fc_ares_response_level', newLvl);
-        safeStorage.setItem('fc_ares_response_level_ts', remoteTs);
+        safeStorage.setItem('fc_ares_response_level_ts', remoteTs || Date.now());
         renderCountyResponseLevelUI();
 
-        // Sound two-tone alert if escalated to emergency posture (Level 1 or 2) on receiving stations
+        // Sound two-tone alert ONLY if escalated to emergency posture (Level 1 or 2) within the last 3 minutes
+        const isFreshChange = (remoteTs > 0) && (Math.abs(Date.now() - remoteTs) < 180000);
         const isSentByMe = Boolean(isSenderSuppressionActive() || (remoteAct.updatedBy && appState.myCall && remoteAct.updatedBy.toUpperCase() === appState.myCall.toUpperCase()));
-        if (!isSentByMe && newLvl <= 2 && newLvl < currentLvl) {
+        if (!isSentByMe && isFreshChange && newLvl <= 2 && newLvl < currentLvl) {
           if (isOperatorOnDuty()) {
             playTwoToneBeep();
           }
@@ -14888,10 +14516,8 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
     // 4. Delete / Purge Alerts Completely (EC Authorized)
     async function deleteActiveIncidentAlert(e) {
       if (e) e.stopPropagation();
-      const clearance = getOperatorClearance();
-      const myCall = String(appState.myCall || '').toUpperCase().trim();
-      if (clearance.levelNum < 6 && myCall !== 'KG5TZT') {
-        alert('🔒 Master Emergency Coordinator Brian Davis (KG5TZT) authorization required to delete incident alerts.');
+      if (!hasEcDispatchAuthority()) {
+        alert('🔒 EC DISPATCH AUTHORIZATION REQUIRED\n\nOnly Emergency Coordinator Brian Davis (KG5TZT) or an operator explicitly granted dispatch privileges in the EC Admin Panel may delete incident alerts.');
         return;
       }
 
@@ -15105,189 +14731,10 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
       }, 100);
     }
 
-    function testActiveAlertDispatcher() {
-      if (!isOperatorOnDuty()) {
-        alert('ℹ️ You are currently OFF DUTY.\n\nTo test the Active Alert audio and banner, switch your status to AVAILABLE or ON DUTY on the roster/profile first!');
-        return;
-      }
-      const testIncident = {
-        title: 'TEST EMERGENCY ACTIVATION // DRILL',
-        level: 'LEVEL 1 - FULL ACTIVATION',
-        staging: 'Fairfield EOC / Station 1',
-        mission: 'Tactical comms readiness drill for Freestone ARES.',
-        updateCount: 1,
-        lastUpdated: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-        updates: [{
-          sitrep: 'This is a live test of the Active Alert emergency dispatch system. Motorola Quick-Call II paging tones, heads-up banner, and vibration verified active.',
-          timeLocal: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          author: appState.myCall || 'KG5TZT'
-        }],
-        isClosed: false
-      };
-      playSelectedSiren();
-      showActiveAlertHeadsUpBanner(testIncident);
-      showSystemPushNotification(testIncident);
-    }
-
-    // Alert Sound & Dispatch Audio Verification Console
-    let verifyStatusTimer = null;
-
-    function openAlertSoundVerifyModal() {
-      const modal = document.getElementById('alert-verify-modal');
-      if (modal) {
-        modal.classList.remove('hidden');
-        updateVerifyModalStatus();
-        if (!verifyStatusTimer) {
-          verifyStatusTimer = setInterval(updateVerifyModalStatus, 500);
-        }
-      }
-    }
-
-    function closeAlertSoundVerifyModal() {
-      const modal = document.getElementById('alert-verify-modal');
-      if (modal) modal.classList.add('hidden');
-      if (verifyStatusTimer) {
-        clearInterval(verifyStatusTimer);
-        verifyStatusTimer = null;
-      }
-      stopSirenAudio();
-    }
-
-    function updateVerifyModalStatus() {
-      const statusEl = document.getElementById('verify-suppression-status');
-      const timeEl = document.getElementById('verify-suppression-time');
-      if (!statusEl) return;
-      const suppressedUntil = parseInt(safeStorage.getItem('fc_ares_sender_suppressed_until') || '0', 10);
-      const remainingSec = Math.max(0, Math.ceil((suppressedUntil - Date.now()) / 1000));
-      if (remainingSec > 0) {
-        statusEl.className = 'px-2.5 py-1 rounded-full text-xs font-bold bg-amber-950 text-amber-300 border border-amber-600 animate-pulse';
-        statusEl.textContent = '🔇 SENDER SUPPRESSION ACTIVE (Device Muted)';
-        if (timeEl) timeEl.textContent = `${remainingSec}s remaining`;
-      } else {
-        statusEl.className = 'px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-950 text-emerald-300 border border-emerald-600';
-        statusEl.textContent = '🔊 RECEIVER MODE (Normal Alerting Ready)';
-        if (timeEl) timeEl.textContent = 'Ready';
-      }
-    }
-
-    function clearSenderSuppressionForTest() {
-      safeStorage.removeItem('fc_ares_sender_suppressed_until');
-      setSenderSuppression(0);
-      updateVerifyModalStatus();
-      setVerifyResult('verify-log-box', 'ℹ️ Sender suppression cleared. Device is now in Receiver Mode.', 'text-cyan-400');
-    }
-
-    function setVerifyResult(boxId, message, colorClass = 'text-emerald-400') {
-      const box = document.getElementById(boxId || 'verify-log-box');
-      if (!box) return;
-      const now = new Date().toLocaleTimeString();
-      const p = document.createElement('div');
-      p.className = `p-2 rounded bg-slate-900/90 border border-slate-800 text-[11px] font-mono-tac ${colorClass} flex items-start gap-2`;
-      p.innerHTML = `<span class="text-slate-500 font-normal">[${now}]</span> <span>${message}</span>`;
-      box.insertBefore(p, box.firstChild);
-    }
-
-    function testScenarioSenderSilence() {
-      // 1. Engage sender suppression (same as saveBroadcastIncident)
-      setSenderSuppression(90);
-      updateVerifyModalStatus();
-
-      // 2. Simulate broadcast dispatch
-      let audioFired = false;
-      try {
-        if (isSenderSuppressionActive()) {
-          // Suppressed
-        } else {
-          audioFired = true;
-          playSelectedSiren();
-        }
-      } catch(e) {}
-
-      // 3. Confirm 100% silence
-      if (!audioFired) {
-        setVerifyResult('verify-log-box', '✅ TEST 1 PASSED: SENDER SILENCE GUARANTEED. Transmitting alert engaged 90s suppression across Web, iOS AppDelegate & Android. Zero sirens, zero beeps, zero audio played on sender phone.', 'text-emerald-400 font-bold');
-        showTacticalBannerNotification('🔇 SENDER SILENCE VERIFIED: 0 audio played on transmitting station');
-      } else {
-        setVerifyResult('verify-log-box', '❌ TEST 1 FAILED: Audio was not suppressed.', 'text-red-400 font-bold');
-      }
-    }
-
-    function testScenarioReceiverInitialDispatch() {
-      // Simulate receiver phone receiving initial dispatch
-      clearSenderSuppressionForTest();
-      if (!isOperatorOnDuty()) {
-        appState.myStatus = 'AVAILABLE / ON-DUTY';
-      }
-
-      setVerifyResult('verify-log-box', '🚨 TEST 2 (RECEIVER): Incoming INITIAL DISPATCH (Update #1). Playing authentic Motorola Minitor pager siren + heads-up banner...', 'text-amber-300 font-bold');
-      playSelectedSiren();
-
-      const mockIncident = {
-        title: 'STRUCTURE FIRE / COMM BACKUP (DRILL)',
-        level: 'LEVEL 1 - FULL ACTIVATION',
-        staging: 'Fairfield EOC / Staging 1',
-        mission: 'Provide backup VHF communications for mutual aid fire teams.',
-        updateCount: 1,
-        lastUpdated: new Date().toLocaleTimeString(),
-        updates: [{
-          sitrep: 'INITIAL CALLOUT: All Freestone ARES operators mobilize to primary PACE repeater.',
-          timeLocal: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          author: 'KG5TZT'
-        }],
-        isClosed: false
-      };
-      showActiveAlertHeadsUpBanner(mockIncident);
-      setVerifyResult('verify-log-box', '✅ TEST 2 PASSED: Initial dispatch siren sounded once + banner displayed. (APNs push sends siren.caf).', 'text-emerald-400 font-bold');
-    }
-
-    function testScenarioReceiverUpdateBeep() {
-      // Simulate receiver phone receiving subsequent update (Update #2)
-      clearSenderSuppressionForTest();
-      stopSirenAudio();
-
-      setVerifyResult('verify-log-box', '⚡ TEST 3 (RECEIVER): Incoming INCIDENT UPDATE #2. Playing crisp two-tone alert beep (880Hz / 1200Hz). SIREN IS SUPPRESSED...', 'text-cyan-300 font-bold');
-      playTwoToneBeep();
-
-      const mockIncident = {
-        title: 'STRUCTURE FIRE / COMM BACKUP (DRILL)',
-        level: 'LEVEL 1 - FULL ACTIVATION',
-        staging: 'Fairfield EOC / Staging 1',
-        mission: 'Provide backup VHF communications for mutual aid fire teams.',
-        updateCount: 2,
-        lastUpdated: new Date().toLocaleTimeString(),
-        updates: [{
-          sitrep: 'UPDATE #2: PACE primary frequency verified clear. Fairfield staging point active.',
-          timeLocal: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          author: 'KG5TZT'
-        }],
-        isClosed: false
-      };
-      showActiveAlertHeadsUpBanner(mockIncident);
-      setVerifyResult('verify-log-box', '✅ TEST 3 PASSED: Two-tone radio alert beep (880Hz / 1200Hz) sounded with update banner. Siren did NOT repeat.', 'text-emerald-400 font-bold');
-    }
-
-    function testScenarioSitrepSilence() {
-      stopSirenAudio();
-      setVerifyResult('verify-log-box', '📋 TEST 4: Incoming FIELD SITREP from KF5ZBL. Board updating silently...', 'text-slate-300');
-      showTacticalBannerNotification('📻 Field SITREP #2 from KF5ZBL: Weather clear, standing by on 145.110');
-      setVerifyResult('verify-log-box', '✅ TEST 4 PASSED: Field SITREP received silently. Zero sirens, zero beeps played.', 'text-emerald-400 font-bold');
-    }
-
-    function testScenarioResponderStatusSilence() {
-      stopSirenAudio();
-      setVerifyResult('verify-log-box', '🚗 TEST 5: Responder KD5JHQ updated status to "DISPATCHED / EN ROUTE"...', 'text-slate-300');
-      showTacticalBannerNotification('✓ Responder KD5JHQ is En Route to Staging');
-      setVerifyResult('verify-log-box', '✅ TEST 5 PASSED: Responder status synced silently. Zero sirens, zero beeps played.', 'text-emerald-400 font-bold');
-    }
-
-    function testInspectBroadcastModalButton() {
-      closeAlertSoundVerifyModal();
-      openBroadcastModal(false);
-      const submitBtn = document.getElementById('b-modal-submit-btn');
-      if (submitBtn) {
-        console.log('Broadcast Modal Submit Button text:', submitBtn.innerText);
-      }
-    }
+    // Automated / test alert triggers permanently disabled to prevent ghost dispatches
+    function testActiveAlertDispatcher() {}
+    function openAlertSoundVerifyModal() {}
+    function closeAlertSoundVerifyModal() {}
 
     function requestNotificationPermission() {
       if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'default') {
@@ -15433,12 +14880,14 @@ function toggleIncidentDetailsExpanded() {
 
       const inc = appState.activeIncident;
       const isRoutine = isRoutineIncident(inc);
+      const canDispatch = hasEcDispatchAuthority();
+      const isMasterEc = String(appState.myCall || '').toUpperCase().trim() === 'KG5TZT';
 
       if (isRoutine) {
         container.innerHTML = `
           <div class="bg-gradient-to-r from-emerald-950/60 via-[#0e141c] to-[#10151d] border-2 border-emerald-500/50 rounded-xl p-4 shadow flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-mono-tac">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center text-emerald-400 text-lg flex-shrink-0 animate-pulse">
+              <div class="w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center text-emerald-400 text-lg flex-shrink-0">
                 🟢
               </div>
               <div>
@@ -15450,10 +14899,21 @@ function toggleIncidentDetailsExpanded() {
                 <p class="text-[11px] text-slate-400 mt-0.5">All repeaters operational. Steady-state standby on FF 110 (145.110 TSQ 146.2).</p>
               </div>
             </div>
-            <div class="flex items-center gap-2 self-end sm:self-center">
-              <button onclick="openBroadcastModal(false)" class="px-3 py-2 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 text-white font-bold rounded-lg text-xs shadow flex items-center gap-1.5 transition">
-                <span>📢</span><span>DISPATCH NEW CALLOUT</span>
-              </button>
+            <div class="flex items-center gap-2 self-end sm:self-center flex-wrap">
+              ${canDispatch ? `
+                <button onclick="openBroadcastModal(false)" class="px-3 py-2 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 text-white font-bold rounded-lg text-xs shadow flex items-center gap-1.5 transition cursor-pointer">
+                  <span>📢</span><span>DISPATCH NEW CALLOUT</span>
+                </button>
+              ` : `
+                <span class="px-2.5 py-1.5 rounded-lg bg-slate-900/90 border border-slate-700 text-slate-400 text-[10px] font-bold flex items-center gap-1.5">
+                  <span>🔒</span><span>EC DISPATCH ONLY</span>
+                </span>
+              `}
+              ${isMasterEc ? `
+                <button onclick="openEcDispatchAdminPanel()" class="px-2.5 py-2 bg-slate-900 hover:bg-slate-800 border border-amber-500/70 text-amber-300 font-bold rounded-lg text-xs shadow flex items-center gap-1 transition cursor-pointer" title="Manage Operator Dispatch Privileges">
+                  <span>🛡️</span><span>DISPATCH ADMIN</span>
+                </button>
+              ` : ''}
             </div>
           </div>
         `;
@@ -15470,7 +14930,7 @@ function toggleIncidentDetailsExpanded() {
           <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-2 border-b border-red-500/40 pb-2.5">
             <div class="space-y-1">
               <div class="flex items-center gap-2 flex-wrap">
-                <span class="px-2.5 py-1 rounded text-xs font-black bg-red-600 text-white tracking-wider animate-pulse flex items-center gap-1 shadow">
+                <span class="px-2.5 py-1 rounded text-xs font-black bg-red-600 text-white tracking-wider flex items-center gap-1 shadow">
                   <span>🚨</span><span>${inc.level || 'LEVEL 1 - FULL ACTIVATION'}</span>
                 </span>
                 <span class="text-xs font-bold text-amber-400 bg-amber-950/80 px-2 py-0.5 rounded border border-amber-800">
@@ -15483,17 +14943,23 @@ function toggleIncidentDetailsExpanded() {
               </h2>
             </div>
             
+            ${canDispatch ? `
             <div class="flex items-center gap-2 flex-shrink-0" onclick="event.stopPropagation()">
-              <button onclick="deleteActiveIncidentAlert(event)" class="px-2.5 py-1.5 bg-red-950 hover:bg-red-900 border border-red-700 text-red-200 rounded-lg text-xs font-bold flex items-center gap-1 shadow" title="Delete and clear this alert">
+              <button onclick="deleteActiveIncidentAlert(event)" class="px-2.5 py-1.5 bg-red-950 hover:bg-red-900 border border-red-700 text-red-200 rounded-lg text-xs font-bold flex items-center gap-1 shadow cursor-pointer" title="Delete and clear this alert">
                 <span>🗑️</span><span class="hidden sm:inline">DELETE ALERT</span>
               </button>
-              <button onclick="openUpdateAlertModal()" class="px-3 py-1.5 bg-gradient-to-r from-amber-600 to-red-600 hover:from-amber-500 text-white rounded-lg text-xs font-bold flex items-center gap-1 shadow">
+              <button onclick="openUpdateAlertModal()" class="px-3 py-1.5 bg-gradient-to-r from-amber-600 to-red-600 hover:from-amber-500 text-white rounded-lg text-xs font-bold flex items-center gap-1 shadow cursor-pointer">
                 <span>⚡</span><span>UPDATE</span>
               </button>
-              <button onclick="openDemobModal()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-bold flex items-center gap-1 shadow">
+              <button onclick="openDemobModal()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-bold flex items-center gap-1 shadow cursor-pointer">
                 <span>🛑</span><span>CLOSE</span>
               </button>
             </div>
+            ` : `
+            <div class="flex items-center gap-2 flex-shrink-0">
+              <span class="px-2.5 py-1 rounded bg-slate-900/90 border border-slate-700 text-slate-400 text-[10px] font-bold">🔒 EC DISPATCH ONLY</span>
+            </div>
+            `}
           </div>
 
           <div class="bg-black/60 p-3 rounded-lg border border-red-500/40 text-xs text-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -15616,6 +15082,7 @@ function toggleIncidentDetailsExpanded() {
             if (remote.power) mem.power = remote.power;
             if (remote.capabilities) mem.capabilities = remote.capabilities;
             if (remote.isSpotter !== undefined) mem.isSpotter = !!remote.isSpotter;
+            if (remote.canSendAlerts !== undefined) mem.canSendAlerts = !!remote.canSendAlerts;
             if (remote.photo) mem.photo = remote.photo;
             if (remote.claimed || remote.status === 'AUTHORIZED' || remote.lastProfileVerified || remote.passwordHash) {
               mem.claimed = true;
@@ -15629,9 +15096,16 @@ function toggleIncidentDetailsExpanded() {
         safeStorage.setItem('fc_ares_user_accounts', JSON.stringify(localAccounts));
         safeStorage.setItem('fc_ares_roster_cache', JSON.stringify(appState.members));
         saveRosterMembers();
+        if (appState.isLoggedIn && appState.myCall && appState.myCall !== 'GUEST') {
+          appState.canSendAlerts = hasEcDispatchAuthority();
+          updateDispatchControlsVisibility();
+          renderCountyResponseLevelUI();
+          renderActiveAlertsCardFeed();
+        }
         renderRosterGrid();
         renderResponderTable();
         if (appState.myCall === 'KG5TZT') {
+          renderEcPagingDelegationCard();
           renderEcOperatorDirectory();
         }
         updateDashboardUserProfile();
@@ -15663,6 +15137,7 @@ function toggleIncidentDetailsExpanded() {
           // Listen to connection status
           fbDb.ref('.info/connected').on('value', function(snap) {
             const connected = !!snap.val();
+            window.fbRealtimeConnected = connected;
             if (connected) {
               updateSyncStatusBadge('ONLINE (REALTIME)');
             } else {
@@ -15759,17 +15234,23 @@ function toggleIncidentDetailsExpanded() {
         console.warn('Firebase SDK init notice:', err);
       }
 
-      // Start periodic REST sync fallback & presence heartbeat
+      // Start periodic REST sync fallback (ONLY runs when Firebase Realtime WebSocket is disconnected)
       syncRosterWithCloud();
       if (!fbPollTimer) {
         fbPollTimer = setInterval(function() {
-          syncRosterWithCloud(false);
-        }, 3000);
+          if (!window.fbRealtimeConnected && !document.hidden) {
+            syncRosterWithCloud(false);
+          }
+        }, 45000);
       }
 
       // Heartbeat presence beacon
       if (!fbPresenceTimer) {
-        fbPresenceTimer = setInterval(sendPresenceHeartbeat, 20000);
+        fbPresenceTimer = setInterval(function() {
+          if (!document.hidden) {
+            sendPresenceHeartbeat();
+          }
+        }, 45000);
       }
 
       // ActiveAlert Continuous Receiving & WakeLock Engine
@@ -16303,6 +15784,7 @@ Your console is now authorized and unlocked.`);
       renderResponderTable();
     }
 
+    let initialIncidentSyncDone = false;
     function onRemoteIncidentReceived(remoteInc) {
       if (!remoteInc) return;
       appState.activeIncident = remoteInc;
@@ -16310,28 +15792,36 @@ Your console is now authorized and unlocked.`);
       renderActiveIncidentUI();
       renderActiveAlertsCardFeed();
 
-      // Synchronize County Response Level with active incident posture
+      // Synchronize County Response Level UI with active incident posture (without clobbering cloud timestamp)
       const isRoutine = isRoutineIncident(remoteInc);
       const isEmergency = !remoteInc.isClosed && !isRoutine;
 
+      // Compute unique alert fingerprint
+      const topUpdate = (remoteInc.updates && remoteInc.updates.length > 0) ? remoteInc.updates[0] : {};
+      const alertFingerprint = `${remoteInc.title || ''}_${remoteInc.level || ''}_${remoteInc.updateCount || 0}_${remoteInc.lastUpdated || ''}_${topUpdate.timestamp || topUpdate.timeLocal || topUpdate.sitrep || ''}`;
+      const lastSeenKey = safeStorage.getItem('fc_ares_last_heard_alert_key') || '';
+
       if (!isEmergency) {
-        safeStorage.setItem('fc_ares_response_level', 3);
-        safeStorage.setItem('fc_ares_response_level_ts', Date.now());
+        initialIncidentSyncDone = true;
+        safeStorage.setItem('fc_ares_last_heard_alert_key', alertFingerprint);
         renderCountyResponseLevelUI();
         dismissHeadsUpAlertBanner();
         clearAllResponderStatuses(false);
         return;
-      } else {
-        const targetLvl = (remoteInc.level && remoteInc.level.includes('LEVEL 1')) ? 1 : ((remoteInc.level && remoteInc.level.includes('LEVEL 2')) ? 2 : 3);
-        safeStorage.setItem('fc_ares_response_level', targetLvl);
-        safeStorage.setItem('fc_ares_response_level_ts', Date.now());
-        renderCountyResponseLevelUI();
       }
 
-      // Compute unique alert fingerprint to trigger sound and banner on NEW alerts and updates
-      const topUpdate = (remoteInc.updates && remoteInc.updates.length > 0) ? remoteInc.updates[0] : {};
-      const alertFingerprint = `${remoteInc.title || ''}_${remoteInc.level || ''}_${remoteInc.updateCount || 0}_${remoteInc.lastUpdated || ''}_${topUpdate.timestamp || topUpdate.timeLocal || topUpdate.sitrep || ''}`;
-      const lastSeenKey = safeStorage.getItem('fc_ares_last_heard_alert_key') || '';
+      const targetLvl = (remoteInc.level && remoteInc.level.includes('LEVEL 1')) ? 1 : ((remoteInc.level && remoteInc.level.includes('LEVEL 2')) ? 2 : 3);
+      if (targetLvl <= 2) {
+        safeStorage.setItem('fc_ares_response_level', targetLvl);
+      }
+      renderCountyResponseLevelUI();
+
+      // On first cloud sync after app launch, record the existing incident fingerprint silently to prevent ghost sirens on startup
+      if (!initialIncidentSyncDone) {
+        initialIncidentSyncDone = true;
+        safeStorage.setItem('fc_ares_last_heard_alert_key', alertFingerprint);
+        return;
+      }
 
       if (alertFingerprint === lastSeenKey) {
         return;
@@ -16407,16 +15897,12 @@ Your console is now authorized and unlocked.`);
 
         const pendingList = getPendingAuthorizations();
 
-        // Push directly to Firebase Realtime Database WebSockets & REST for multi-platform delivery
+        // Push roster & pending authorizations ONLY (NEVER overwrite active_incident or county activation level during roster sync!)
         if (fbDb) {
           try {
             fbDb.ref('roster').set(payloadMembers);
             fbDb.ref('pending_authorizations').set(pendingList);
-            if (appState.activeIncident) {
-              fbDb.ref('active_incident').set(appState.activeIncident);
-            }
             fbDb.ref('calendar_events').set(appState.events || []);
-            fbDb.ref('countyResponseLevel').set(getCountyResponseLevel());
           } catch(e) {
             console.warn('Firebase RTDB push note:', e);
           }
@@ -16492,9 +15978,8 @@ Your console is now authorized and unlocked.`);
     }
 
     function setCountyResponseLevel(levelNum) {
-      const clearance = getOperatorClearance();
-      if (!clearance.canSendAlerts && clearance.levelNum < 6 && appState.myCall !== 'KG5TZT') {
-        alert('🔒 RESTRICTED ACTION\n\nOnly Emergency Coordinator Brian Davis (KG5TZT - Level 6) or an authorized Acting EC with delegated emergency authority has authorization to change the County Emergency Response Level.');
+      if (!hasEcDispatchAuthority()) {
+        alert('🔒 RESTRICTED ACTION: EC DISPATCH AUTHORIZATION REQUIRED\n\nActivation levels and mission dispatches are restricted strictly to Emergency Coordinator Brian Davis (KG5TZT) or operators explicitly assigned dispatch privileges via the EC Admin Management Panel.');
         return;
       }
 
@@ -16508,12 +15993,12 @@ Your console is now authorized and unlocked.`);
         }
       }
 
+      setSenderSuppression(90);
       safeStorage.setItem('fc_ares_response_level', num);
       safeStorage.setItem('fc_ares_response_level_ts', Date.now());
       renderCountyResponseLevelUI();
       broadcastActivationLevelToCloud(num);
 
-      playDispatchChime();
       alert(`🚨 COUNTY EMERGENCY RESPONSE LEVEL UPDATED!\n\nActive Status: ${cfg.badgeText}\nPosture: ${cfg.dashSubtext}\n\nBroadcasted in real time to all Freestone County ARES responder devices.`);
     }
 
@@ -16576,8 +16061,8 @@ Your console is now authorized and unlocked.`);
 
       // 4. EC Response Level Switcher button & Dashboard bar in Dashboard
       const dashBtnSetResp = document.getElementById('dash-btn-set-response-lvl');
-      const clearance = getOperatorClearance();
-      const isAuthorized = (clearance.levelNum >= 6 || appState.myCall === 'KG5TZT' || clearance.canSendAlerts);
+      const isAuthorized = hasEcDispatchAuthority();
+      const isMasterEc = String(appState.myCall || '').toUpperCase().trim() === 'KG5TZT';
 
       if (dashBtnSetResp) {
         if (isAuthorized) {
@@ -16594,6 +16079,15 @@ Your console is now authorized and unlocked.`);
         } else {
           dashEcControls.classList.add('hidden');
         }
+      }
+
+      const dashAdminBtn = document.getElementById('dash-btn-dispatch-admin');
+      if (dashAdminBtn) {
+        dashAdminBtn.classList.toggle('hidden', !isMasterEc);
+      }
+      const alertAdminBtn = document.getElementById('btn-ec-dispatch-admin');
+      if (alertAdminBtn) {
+        alertAdminBtn.classList.toggle('hidden', !isMasterEc);
       }
     }
 
@@ -16645,7 +16139,7 @@ Your console is now authorized and unlocked.`);
     }
 
     // ==========================================
-    // EC EMERGENCY PAGING DELEGATION SUBSYSTEM (OUT-OF-TOWN DISPATCH TRANSFER)
+    // EC DISPATCH & ACTIVATION PRIVILEGE MANAGEMENT PANEL
     // ==========================================
     function renderEcPagingDelegationCard() {
       const container = document.getElementById('ec-active-delegations-box');
@@ -16657,78 +16151,86 @@ Your console is now authorized and unlocked.`);
       const allCalls = Array.from(new Set([
         ...appState.members.map(m => m.call.toUpperCase()),
         ...Object.keys(accounts)
-      ])).filter(c => c !== 'KG5TZT');
+      ])).filter(c => c !== 'KG5TZT').sort();
 
       const delegatedCalls = allCalls.filter(c => {
         const acc = accounts[c] || {};
         const mem = appState.members.find(m => m.call.toUpperCase() === c) || {};
-        return !!(acc.canSendAlerts || mem.canSendAlerts);
+        return Boolean(acc.canSendAlerts === true || mem.canSendAlerts === true);
       });
 
       if (badge) {
         if (delegatedCalls.length > 0) {
-          badge.className = 'px-2.5 py-1 rounded text-xs font-black bg-amber-950 text-amber-300 border border-amber-600 animate-pulse';
+          badge.className = 'px-2.5 py-1 rounded text-xs font-black bg-amber-950 text-amber-300 border border-amber-600';
           badge.textContent = `DELEGATED: ${delegatedCalls.length} OPERATOR(S)`;
         } else {
-          badge.className = 'px-2.5 py-1 rounded text-xs font-black bg-slate-900 text-slate-400 border border-slate-700';
+          badge.className = 'px-2.5 py-1 rounded text-xs font-black bg-emerald-950 text-emerald-300 border border-emerald-700';
           badge.textContent = 'EXCLUSIVE EC LOCK (0 DELEGATED)';
         }
       }
 
-      if (delegatedCalls.length === 0) {
-        container.innerHTML = `
-          <div class="flex items-center justify-between gap-2 p-2 rounded-lg bg-[#0b0e14] border border-slate-800">
-            <div class="flex items-center gap-2">
-              <span class="text-emerald-400 font-bold text-base">✓</span>
-              <div>
-                <div class="text-xs font-bold text-white">Emergency Paging is strictly locked to EC Brian Davis (KG5TZT)</div>
-                <div class="text-[10px] text-slate-400">No external operators currently have siren or paging broadcast authority.</div>
+      const statusHeaderHtml = delegatedCalls.length === 0 ? `
+        <div class="flex items-center justify-between gap-2 p-2.5 rounded-lg bg-[#0b0e14] border border-emerald-800/70">
+          <div class="flex items-center gap-2">
+            <span class="text-emerald-400 font-bold text-base">🔒</span>
+            <div>
+              <div class="text-xs font-bold text-white">Activation Levels &amp; Mission Dispatches Locked Strictly to EC (KG5TZT)</div>
+              <div class="text-[10px] text-slate-400">Zero non-EC operators currently hold activation level or mission dispatch privileges.</div>
+            </div>
+          </div>
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800 whitespace-nowrap">EC ONLY</span>
+        </div>
+      ` : `
+        <div class="flex items-center justify-between p-2.5 rounded-lg bg-amber-950/30 border border-amber-700/80 flex-wrap gap-2">
+          <span class="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+            <span>⚡</span>
+            <span>${delegatedCalls.length} OPERATOR(S) ASSIGNED DISPATCH &amp; ACTIVATION PRIVILEGES</span>
+          </span>
+          <button onclick="revokeAllPagingDelegations()" class="px-2.5 py-1 bg-red-950 hover:bg-red-900 text-red-200 border border-red-600 rounded text-[10px] font-bold transition flex items-center gap-1 cursor-pointer shadow">
+            <span>🔒</span><span>REVOKE ALL PRIVILEGES</span>
+          </button>
+        </div>
+      `;
+
+      const operatorRowsHtml = allCalls.map(c => {
+        const acc = accounts[c] || {};
+        const mem = appState.members.find(m => m.call.toUpperCase() === c) || {};
+        const name = acc.name || mem.name || 'Volunteer Operator';
+        const level = acc.level || mem.level || 'Level 1 - Operator';
+        const isAuth = delegatedCalls.includes(c);
+        return `
+          <div class="p-2.5 rounded-lg ${isAuth ? 'bg-red-950/30 border border-red-600/80 shadow-[0_0_12px_rgba(239,68,68,0.15)]' : 'bg-[#0b0e14] border border-slate-800'} flex items-center justify-between gap-2 transition">
+            <div class="min-w-0">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="text-amber-400 font-black text-xs">${c}</span>
+                ${isAuth
+                  ? '<span class="text-[9px] bg-red-950 text-red-300 px-1.5 py-0.5 rounded border border-red-600 font-black">⚡ DISPATCH AUTHORIZED</span>'
+                  : '<span class="text-[9px] bg-slate-900 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700 font-bold">🔒 RECEIVE ONLY</span>'}
               </div>
+              <div class="text-white text-xs font-bold truncate mt-0.5">${name}</div>
+              <div class="text-[10px] text-slate-400 truncate">${level}</div>
             </div>
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800 whitespace-nowrap">SECURE LOCK</span>
+            <button onclick="toggleEcPagingDelegation('${c}')" class="px-3 py-1.5 ${isAuth ? 'bg-red-900 hover:bg-red-800 text-white border border-red-500' : 'bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-600'} rounded-lg text-[10px] font-black transition cursor-pointer flex-shrink-0 shadow">
+              ${isAuth ? '🔒 REVOKE PRIVILEGE' : '⚡ ASSIGN PRIVILEGE'}
+            </button>
           </div>
         `;
-      } else {
-        container.innerHTML = `
-          <div class="space-y-2">
-            <div class="flex items-center justify-between pb-1 border-b border-amber-950/80 flex-wrap gap-2">
-              <span class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
-                <span class="animate-pulse">🚨</span>
-                <span>OPERATORS CURRENTLY DELEGATED EMERGENCY PAGING AUTHORITY:</span>
-              </span>
-              <button onclick="revokeAllPagingDelegations()" class="px-2.5 py-1 bg-red-950 hover:bg-red-900 text-red-300 border border-red-700 rounded text-[10px] font-bold transition flex items-center gap-1 cursor-pointer">
-                <span>🔒</span><span>REVOKE ALL DELEGATIONS</span>
-              </button>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              ${delegatedCalls.map(c => {
-                const acc = accounts[c] || {};
-                const mem = appState.members.find(m => m.call.toUpperCase() === c) || {};
-                const name = acc.name || mem.name || 'Volunteer Operator';
-                const level = acc.level || mem.level || 'Level 1';
-                return `
-                  <div class="p-2.5 rounded-lg bg-red-950/30 border border-red-800/80 flex items-center justify-between gap-2 shadow-[0_0_10px_rgba(239,68,68,0.2)]">
-                    <div class="min-w-0">
-                      <div class="flex items-center gap-1.5">
-                        <span class="text-amber-400 font-black text-xs">${c}</span>
-                        <span class="text-[9px] bg-red-950 text-red-300 px-1 py-0.2 rounded border border-red-700 font-bold">ACTING EC DISPATCH</span>
-                      </div>
-                      <div class="text-white text-xs font-bold truncate">${name}</div>
-                      <div class="text-[10px] text-slate-400">${level}</div>
-                    </div>
-                    <button onclick="toggleEcPagingDelegation('${c}')" class="px-2.5 py-1.5 bg-red-950 hover:bg-red-900 text-red-300 border border-red-600 rounded text-[10px] font-bold transition cursor-pointer flex-shrink-0" title="Turn off emergency paging for ${c}">
-                      <span>🔒 TURN OFF</span>
-                    </button>
-                  </div>
-                `;
-              }).join('')}
+      }).join('');
+
+      container.innerHTML = `
+        <div class="space-y-3">
+          ${statusHeaderHtml}
+          <div class="space-y-1.5">
+            <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">OPERATOR DISPATCH PRIVILEGE MATRIX (1-TAP ASSIGN / REVOKE):</div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-80 overflow-y-auto pr-1">
+              ${operatorRowsHtml}
             </div>
           </div>
-        `;
-      }
+        </div>
+      `;
 
       if (select) {
-        select.innerHTML = '<option value="">Select Operator to Delegate Paging Access...</option>';
+        select.innerHTML = '<option value="">Select Operator to Assign Dispatch &amp; Activation Privileges...</option>';
         allCalls.forEach(c => {
           if (!delegatedCalls.includes(c)) {
             const acc = accounts[c] || {};
@@ -16787,16 +16289,19 @@ Your console is now authorized and unlocked.`);
       }
 
       // Refresh UI components
+      _lastRosterGridSig = '';
+      _lastEcDirSig = '';
       renderEcOperatorDirectory();
       renderEcPagingDelegationCard();
       renderRosterGrid();
       renderResponderTable();
+      renderActiveAlertsCardFeed();
 
       const name = accounts[call].name || (mem ? mem.name : call);
       if (newStatus) {
-        alert(`🚨 EMERGENCY AUTHORITY DELEGATED!\n\nCallsign: ${call} (${name})\n\nThis operator is now authorized as Acting EC to activate tone sirens, issue mass pages, broadcast incident alerts, and change the County Activation Level while EC Brian Davis is out of town.\n\nChanges have been synchronized across the county network in real time.`);
+        alert(`⚡ DISPATCH & ACTIVATION PRIVILEGE ASSIGNED!\n\nCallsign: ${call} (${name})\n\nThis operator is now authorized by EC Brian Davis (KG5TZT) to change County Activation Levels (Levels 1-3) and broadcast Mission Dispatches.\n\nSynchronized across the county network in real time.`);
       } else {
-        alert(`🔒 EMERGENCY AUTHORITY REVOKED\n\nCallsign: ${call} (${name})\n\nEmergency dispatch and activation level authority has been turned off and returned to exclusive Level 6 EC control.`);
+        alert(`🔒 DISPATCH & ACTIVATION PRIVILEGE REVOKED\n\nCallsign: ${call} (${name})\n\nActivation level and mission dispatch privileges have been revoked and returned to exclusive EC control.`);
       }
     }
 
@@ -16806,7 +16311,7 @@ Your console is now authorized and unlocked.`);
         alert('🔒 RESTRICTED ACTION\n\nOnly Emergency Coordinator Brian Davis (KG5TZT - Level 6) can manage emergency paging delegations.');
         return;
       }
-      if (!confirm('🔒 RESTORE EXCLUSIVE LEVEL 6 EC PAGING LOCK?\n\nThis will immediately turn off Emergency Paging authority for all delegated operators, restricting all sirens, paging, and alert broadcasts strictly to EC Brian Davis.\n\nProceed?')) {
+      if (!confirm('🔒 RESTORE EXCLUSIVE EC DISPATCH LOCK?\n\nThis will immediately revoke activation level and mission dispatch privileges from all delegated operators, restricting all dispatches strictly to EC Brian Davis (KG5TZT).\n\nProceed?')) {
         return;
       }
       const accounts = getRegisteredAccounts();
@@ -16828,18 +16333,21 @@ Your console is now authorized and unlocked.`);
       saveRosterMembers();
       pushRosterSyncToCloud();
 
+      _lastRosterGridSig = '';
+      _lastEcDirSig = '';
       renderEcOperatorDirectory();
       renderEcPagingDelegationCard();
       renderRosterGrid();
       renderResponderTable();
+      renderActiveAlertsCardFeed();
 
-      alert(`✓ EXCLUSIVE EC PAGING LOCK RESTORED!\n\nRevoked paging delegation from ${count} operator(s).\nEmergency Paging is now restricted 100% to EC Brian Davis (KG5TZT).`);
+      alert(`✓ EXCLUSIVE EC DISPATCH LOCK RESTORED!\n\nRevoked dispatch privileges from ${count} operator(s).\nActivation levels and mission dispatches are now restricted 100% to EC Brian Davis (KG5TZT).`);
     }
 
     function delegatePagingFromDropdown() {
       const select = document.getElementById('ec-paging-delegate-select');
       if (!select || !select.value) {
-        alert('Please select an operator to delegate emergency paging access.');
+        alert('Please select an operator to assign dispatch and activation privileges.');
         return;
       }
       toggleEcPagingDelegation(select.value);
@@ -16848,6 +16356,7 @@ Your console is now authorized and unlocked.`);
     // ==========================================
     // ACTIVE REGISTERED OPERATORS DIRECTORY LIST (SECURITY DESK)
     // ==========================================
+    let _lastEcDirSig = '';
     function renderEcOperatorDirectory() {
       const container = document.getElementById('ec-operator-directory-list');
       const countBadge = document.getElementById('ec-directory-count');
@@ -16862,6 +16371,16 @@ Your console is now authorized and unlocked.`);
       if (countBadge) {
         countBadge.textContent = `${allCalls.length} ROSTER OPERATORS`;
       }
+
+      try {
+        const sig = JSON.stringify(allCalls.map(c => {
+          const a = accounts[c] || {};
+          const m = appState.members.find(x => x.call.toUpperCase() === c) || {};
+          return [c, a.name || m.name, a.level || m.level, a.canSendAlerts, m.canSendAlerts, a.photo ? a.photo.length : 0];
+        }));
+        if (sig === _lastEcDirSig && container.children.length > 0) return;
+        _lastEcDirSig = sig;
+      } catch (e) {}
 
       container.innerHTML = '';
       allCalls.sort((a, b) => {
@@ -17668,20 +17187,13 @@ Your console is now authorized and unlocked.`);
       // Dashboard Incident Card & Live SITREPs
       renderDashboardActiveIncidentCard();
 
-      // Synchronize County Response Level UI with active incident status
-      if (isRoutine || inc.isClosed) {
-        safeStorage.setItem('fc_ares_response_level', 3);
-      } else {
-        const targetLvl = (inc.level && inc.level.includes('LEVEL 1')) ? 1 : ((inc.level && inc.level.includes('LEVEL 2')) ? 2 : 3);
-        safeStorage.setItem('fc_ares_response_level', targetLvl);
-      }
+      // Render County Response Level UI without mutating stored level timestamp
       renderCountyResponseLevelUI();
     }
 
     async function clearAllIncidentAlerts() {
-      const clearance = getOperatorClearance();
-      if (clearance.levelNum !== 6 && appState.myCall !== 'KG5TZT') {
-        alert('🔒 EC RESTRICTION:\n\nOnly Master Emergency Coordinator Brian Davis (KG5TZT) can purge all alerts.');
+      if (!hasEcDispatchAuthority()) {
+        alert('🔒 EC RESTRICTION:\n\nOnly Emergency Coordinator Brian Davis (KG5TZT) or an operator with assigned EC dispatch privileges can purge alerts.');
         return;
       }
 
@@ -18791,7 +18303,6 @@ Your console is now authorized and unlocked.`);
     renderCalendar();
     renderSkywarnTab();
     initTacticalMap();
-    inspectMapItem('spot', 'staging');
 
     // Auto-switch tab or login if specified in URL query or hash
     try {
@@ -19756,7 +19267,7 @@ Your console is now authorized and unlocked.`);
         category: 'OFFICIAL OPERATOR FIELD MANUAL',
         title: 'FREESTONE COUNTY ARES TACTICAL MOBILE',
         subtitle: 'COMPLETE OPERATOR FIELD GUIDE • MARINE-PROOF EDITION',
-        meta: 'Step-By-Step Illustrated Visual Instructions for Android & iOS\nCross-Platform Unified Architecture • Build 74 (v7.9.22) • November 2026\nCounty Emergency Coordinator: Brian Davis (KG5TZT)',
+        meta: 'Step-By-Step Illustrated Visual Instructions for Android & iOS\nCross-Platform Unified Architecture • Build 75 (v7.9.23) • November 2026\nCounty Emergency Coordinator: Brian Davis (KG5TZT)',
         image: 'guide_screens/screen_02_dashboard_annotated.png'
       },
       {
@@ -20940,7 +20451,7 @@ Your console is now authorized and unlocked.`);
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.22 (Build 74)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.23 (Build 75)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>

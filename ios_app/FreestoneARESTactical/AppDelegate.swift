@@ -7,8 +7,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     var window: UIWindow?
 
     private var monitorTimer: Timer?
-    private var lastKnownLevel: Int = -1
-    private var lastIncidentFingerprint: String? = nil
+    private var lastKnownLevel: Int {
+        get {
+            let val = UserDefaults.standard.integer(forKey: "fc_ares_native_last_level")
+            return val == 0 ? -1 : val
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "fc_ares_native_last_level")
+        }
+    }
+    private var lastIncidentFingerprint: String? {
+        get {
+            return UserDefaults.standard.string(forKey: "fc_ares_native_last_fingerprint")
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "fc_ares_native_last_fingerprint")
+        }
+    }
+    private var initialCheckDone: Bool = false
+    private var initialIncidentCheckDone: Bool = false
     private var bgTask: UIBackgroundTaskIdentifier = .invalid
     private var sirenPlayer: AVAudioPlayer?
 
@@ -58,14 +75,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func startDispatchMonitoring() {
         guard monitorTimer == nil else { return }
 
-        // Initial immediate checks
+        // Initial seed checks
         checkActivationLevel()
         checkActiveIncident()
 
-        // Continuous timer (runs both foreground and background due to background audio capability)
-        monitorTimer = Timer.scheduledTimer(withTimeInterval: 8.0, repeats: true) { [weak self] _ in
-            self?.checkActivationLevel()
-            self?.checkActiveIncident()
+        // Background standby timer (30s interval; skips when app is active in foreground since WebView handles realtime WebSocket)
+        monitorTimer = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
+            if UIApplication.shared.applicationState != .active {
+                self.checkActivationLevel()
+                self.checkActiveIncident()
+            }
         }
         RunLoop.main.add(monitorTimer!, forMode: .common)
     }
@@ -84,6 +104,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                     let level = json["level"] as? Int ?? 3
                     let badgeText = json["badgeText"] as? String ?? "LEVEL \(level)"
                     let subtext = json["dashSubtext"] as? String ?? "Emergency Posture Changed"
+                    let updatedAtMs = json["updatedAt"] as? Double ?? 0
+
+                    if !self.initialCheckDone {
+                        self.initialCheckDone = true
+                        self.lastKnownLevel = level
+                        return
+                    }
 
                     if self.isSenderSuppressed() {
                         self.lastKnownLevel = level
@@ -98,6 +125,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                     if level != self.lastKnownLevel {
                         let oldLevel = self.lastKnownLevel
                         self.lastKnownLevel = level
+
+                        // Only fire notification if change timestamp is fresh (within last 3 minutes)
+                        let nowMs = Date().timeIntervalSince1970 * 1000.0
+                        let isFresh = updatedAtMs > 0 && abs(nowMs - updatedAtMs) < 180000.0
+                        if !isFresh { return }
 
                         if level == 1 || level == 2 {
                             self.sendLocalEmergencyAlert(
@@ -139,11 +171,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                     let levelUpper = level.uppercased()
 
                     if isClosed || titleUpper.contains("ROUTINE") || levelUpper.contains("LEVEL 3 - MONITORING") || levelUpper.contains("LEVEL 4") {
+                        self.initialIncidentCheckDone = true
                         self.lastIncidentFingerprint = "ROUTINE"
                         return
                     }
 
                     let fingerprint = "\(title)_\(level)_\(updateCount)_\(lastUpdated)"
+
+                    if !self.initialIncidentCheckDone {
+                        self.initialIncidentCheckDone = true
+                        self.lastIncidentFingerprint = fingerprint
+                        return
+                    }
 
                     // 1. Sender suppression: transmitting device never alerts
                     if self.isSenderSuppressed() {
@@ -159,12 +198,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                     if fingerprint != self.lastIncidentFingerprint {
                         self.lastIncidentFingerprint = fingerprint
 
-                        // 2. Play subtle P25 chirp for field SITREPs
+                        // 2. Suppress sirens/chirps for field SITREPs
                         if let updates = json["updates"] as? [[String: Any]], let topUpdate = updates.first {
                             let isSitrepOnly = topUpdate["isSitrepOnly"] as? Bool ?? false
                             if isSitrepOnly {
-                                NSLog("[Freestone ARES] checkActiveIncident: Field SITREP received, playing P25 talk-permit chirp.")
-                                self.playSitrepBeep()
                                 return
                             }
                         }
@@ -177,7 +214,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                                 body: "📍 Staging: \(staging)\nMission: \(mission)"
                             )
                         } else {
-                            NSLog("[Freestone ARES] checkActiveIncident: Subsequent update #\(updateCount), playing P25 talk-permit chirp.")
                             self.playSitrepBeep()
                         }
                     }

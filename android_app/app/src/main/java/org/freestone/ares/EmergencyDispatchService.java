@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.media.RingtoneManager;
@@ -44,12 +45,18 @@ public class EmergencyDispatchService extends Service {
 
     private int lastKnownLevel = -1;
     private String lastIncidentFingerprint = null;
+    private boolean initialLevelSeeded = false;
+    private boolean initialIncidentSeeded = false;
+    private SharedPreferences prefs;
     public static volatile long senderSuppressedUntil = 0;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Log.i(TAG, "EmergencyDispatchService onCreate: Initializing active CAD dispatch monitoring");
+        prefs = getSharedPreferences("fc_ares_dispatch_service_prefs", Context.MODE_PRIVATE);
+        lastKnownLevel = prefs.getInt("last_known_level", -1);
+        lastIncidentFingerprint = prefs.getString("last_incident_fingerprint", null);
         createNotificationChannels();
         startForeground(NOTIF_ID_FOREGROUND, buildMonitorNotification());
         acquirePartialWakeLock();
@@ -208,7 +215,7 @@ public class EmergencyDispatchService extends Service {
         monitorThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.i(TAG, "Monitoring daemon thread started. Polling Firebase REST API every 6s.");
+                Log.i(TAG, "Monitoring daemon thread started. Polling Firebase REST API every 20s.");
                 while (isRunning) {
                     try {
                         acquirePartialWakeLock();
@@ -219,7 +226,7 @@ public class EmergencyDispatchService extends Service {
                     }
 
                     try {
-                        Thread.sleep(6000);
+                        Thread.sleep(20000);
                     } catch (InterruptedException ie) {
                         break;
                     }
@@ -231,6 +238,20 @@ public class EmergencyDispatchService extends Service {
         monitorThread.start();
     }
 
+    private void saveLastKnownLevel(int level) {
+        lastKnownLevel = level;
+        if (prefs != null) {
+            prefs.edit().putInt("last_known_level", level).apply();
+        }
+    }
+
+    private void saveLastFingerprint(String fp) {
+        lastIncidentFingerprint = fp;
+        if (prefs != null) {
+            prefs.edit().putString("last_incident_fingerprint", fp).apply();
+        }
+    }
+
     private void checkActivationLevel() {
         String jsonStr = httpGet(FIREBASE_URL + "/activation_level.json");
         if (jsonStr == null || jsonStr.trim().isEmpty() || jsonStr.equals("null")) return;
@@ -240,20 +261,30 @@ public class EmergencyDispatchService extends Service {
             int level = obj.optInt("level", 3);
             String badgeText = obj.optString("badgeText", "LEVEL " + level);
             String subtext = obj.optString("dashSubtext", "Emergency Posture Change");
+            long updatedAt = obj.optLong("updatedAt", 0L);
+
+            if (!initialLevelSeeded) {
+                initialLevelSeeded = true;
+                saveLastKnownLevel(level);
+                return;
+            }
 
             if (System.currentTimeMillis() < senderSuppressedUntil) {
-                lastKnownLevel = level;
+                saveLastKnownLevel(level);
                 return;
             }
 
             if (lastKnownLevel == -1) {
-                lastKnownLevel = level;
+                saveLastKnownLevel(level);
                 return;
             }
 
             if (level != lastKnownLevel) {
                 int oldLevel = lastKnownLevel;
-                lastKnownLevel = level;
+                saveLastKnownLevel(level);
+
+                boolean isFresh = updatedAt > 0 && Math.abs(System.currentTimeMillis() - updatedAt) < 180000L;
+                if (!isFresh) return;
 
                 // Level 1 or 2 is an emergency activation change!
                 if (level == 1 || level == 2) {
@@ -293,24 +324,31 @@ public class EmergencyDispatchService extends Service {
                 if (nm != null) {
                     nm.cancel(NOTIF_ID_ALERT);
                 }
-                lastIncidentFingerprint = "ROUTINE";
+                initialIncidentSeeded = true;
+                saveLastFingerprint("ROUTINE");
                 return;
             }
 
             String fingerprint = title + "_" + level + "_" + updateCount + "_" + lastUpdated;
 
+            if (!initialIncidentSeeded) {
+                initialIncidentSeeded = true;
+                saveLastFingerprint(fingerprint);
+                return;
+            }
+
             if (System.currentTimeMillis() < senderSuppressedUntil) {
-                lastIncidentFingerprint = fingerprint;
+                saveLastFingerprint(fingerprint);
                 return;
             }
 
             if (lastIncidentFingerprint == null) {
-                lastIncidentFingerprint = fingerprint;
+                saveLastFingerprint(fingerprint);
                 return;
             }
 
             if (!fingerprint.equals(lastIncidentFingerprint)) {
-                lastIncidentFingerprint = fingerprint;
+                saveLastFingerprint(fingerprint);
 
                 // Suppress siren alerts for field SITREPs
                 JSONArray updates = obj.optJSONArray("updates");

@@ -21,7 +21,7 @@ android {
         minSdk 24
         targetSdk 36
         versionCode System.getenv("BUILD_NUMBER") ? Math.max(74, System.getenv("BUILD_NUMBER").toInteger()) : 74
-        versionName "7.9.22"
+        versionName "7.9.23"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
