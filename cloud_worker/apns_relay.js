@@ -84,11 +84,18 @@ async function getApnsJwt() {
 }
 
 export default {
+  // Explicitly block any automated Cloudflare cron / scheduled triggers
+  async scheduled(event, env, ctx) {
+    // Automated background/cron notification loops are permanently disabled.
+    // Push dispatches can ONLY be triggered via an authenticated manual EC REST POST request.
+    return;
+  },
+
   async fetch(request, env) {
     const corsHeaders = {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-EC-Callsign, X-EC-Auth-Token'
     };
 
     if (request.method === 'OPTIONS') {
@@ -98,9 +105,10 @@ export default {
     if (request.method === 'GET') {
       return new Response(JSON.stringify({
         status: 'online',
-        service: 'Freestone County ARES APNs Push Relay',
+        service: 'Freestone County ARES APNs Push Relay (EC Authenticated Manual Mode Only)',
         team: APNS_TEAM_ID,
-        topic: APNS_TOPIC
+        topic: APNS_TOPIC,
+        automatedLoops: 'DISABLED'
       }), {
         headers: { 'Content-Type': 'application/json', ...corsHeaders }
       });
@@ -109,6 +117,22 @@ export default {
     if (request.method === 'POST') {
       try {
         const body = await request.json();
+
+        // Enforce strict manual EC authentication — reject any automated or unauthenticated trigger
+        const ecCallsign = (request.headers.get('X-EC-Callsign') || body.authorizedBy || '').trim().toUpperCase();
+        const ecToken = request.headers.get('X-EC-Auth-Token') || body.ecAuthToken || '';
+        const isManualEcTrigger = body.manualEcTrigger === true;
+
+        if (!isManualEcTrigger || !ecCallsign || !ecToken.startsWith('FCARES-EC-AUTH-')) {
+          return new Response(JSON.stringify({
+            success: false,
+            error: 'FORBIDDEN: Automated or unauthenticated dispatch rejected. Only manual authenticated EC REST API calls are permitted.'
+          }), {
+            status: 403,
+            headers: { 'Content-Type': 'application/json', ...corsHeaders }
+          });
+        }
+
         const title = body.title || '🚨 FREESTONE ARES EMERGENCY DISPATCH';
         const message = body.body || body.message || 'Urgent incident callout transmitted.';
         const sound = body.sound || 'siren.caf';

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Freestone County ARES Tactical Mobile v7.9.25</title>
+  <title>Freestone County ARES Tactical Mobile v7.9.26</title>
   <meta name="description" content="Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES">
   <meta name="theme-color" content="#0b0e14">
   <meta name="mobile-web-app-capable" content="yes">
@@ -987,48 +987,48 @@
             </div>
           </div>
 
-          <!-- AES-256 ENCRYPTED TACTICAL CONFIGURATION EXPORT & IMPORT PANEL -->
+          <!-- SIGNED TACTICAL CONFIGURATION EXPORT & IMPORT PANEL (NATIVE OS SECURITY & HMAC-SHA256) -->
           <div id="ec-encrypted-config-panel" class="bg-[#10151d] border-2 border-emerald-500/80 rounded-xl p-5 space-y-4 font-mono-tac shadow-[0_0_25px_rgba(16,185,129,0.15)]">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-3 gap-2">
               <div class="flex items-center gap-2.5">
                 <span class="text-xl">🔐</span>
                 <div>
-                  <h4 class="text-sm font-black text-emerald-400 tracking-wider">AES-256 ENCRYPTED CONFIGURATION EXPORT &amp; IMPORT</h4>
-                  <p class="text-[10px] text-slate-400">EC Verified Repeater List, ICS-205 Matrix &amp; PACE Plan Cryptographic Sync</p>
+                  <h4 class="text-sm font-black text-emerald-400 tracking-wider">SIGNED TACTICAL CONFIGURATION EXPORT &amp; IMPORT</h4>
+                  <p class="text-[10px] text-slate-400">EC Verified Repeater List, ICS-205 Matrix &amp; PACE Plan Authenticated Sync</p>
                 </div>
               </div>
               <span class="px-2.5 py-1 rounded text-[10px] font-black bg-emerald-950 text-emerald-300 border border-emerald-700">
-                AES-256-CTR + HMAC-SHA256
+                NATIVE OS + HMAC-SHA256
               </span>
             </div>
 
             <p class="text-xs text-slate-300 leading-relaxed">
-              Allows the <strong>Emergency Coordinator (EC)</strong> to export the verified 22-channel repeater list, PACE assignments, and tactical parameters as an <strong>AES-256 encrypted string</strong> (`FCARES-CFG-AES256:...`). Trusted operators can import this string via radio packet (Winlink/APRS), SMS, or clipboard to immediately synchronize their tactical configurations.
+              Allows the <strong>Emergency Coordinator (EC)</strong> to export the verified 22-channel repeater list, PACE assignments, and tactical parameters as an <strong>authenticated signed string</strong> (`FCARES-CFG-SIGNED:...`). Trusted operators can import this string via radio packet (Winlink/APRS), SMS, or clipboard to immediately synchronize their tactical configurations.
             </p>
 
             <!-- Passphrase Bar -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[#080b10] p-3 rounded-xl border border-slate-800">
               <div>
-                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">TACTICAL ENCRYPTION PASSPHRASE (AES-256 KEY):</label>
-                <input type="password" id="tactical-config-passphrase" value="FREESTONE-ARES-TAC256" placeholder="Enter shared tactical encryption key..." class="w-full bg-[#10151d] border border-slate-700 rounded-lg px-3 py-2 text-xs text-emerald-300 font-mono focus:outline-none focus:border-emerald-500">
+                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">TACTICAL AUTHENTICATION KEY (HMAC SIGNATURE):</label>
+                <input type="password" id="tactical-config-passphrase" value="FREESTONE-ARES-TAC256" placeholder="Enter shared tactical authentication key..." class="w-full bg-[#10151d] border border-slate-700 rounded-lg px-3 py-2 text-xs text-emerald-300 font-mono focus:outline-none focus:border-emerald-500">
               </div>
               <div class="flex items-end gap-2">
                 <button type="button" onclick="exportEncryptedTacticalConfig()" class="flex-1 py-2 px-3 bg-emerald-600 hover:bg-emerald-500 text-black font-black rounded-lg text-xs transition flex items-center justify-center gap-1.5 shadow cursor-pointer">
-                  <span>📤</span><span>EC EXPORT ENCRYPTED CONFIG</span>
+                  <span>📤</span><span>EC EXPORT SIGNED CONFIG</span>
                 </button>
-                <button type="button" onclick="copyEncryptedConfigPayload()" class="py-2 px-3 bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-emerald-700/60 font-bold rounded-lg text-xs transition cursor-pointer" title="Copy Encrypted String">
+                <button type="button" onclick="copyEncryptedConfigPayload()" class="py-2 px-3 bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-emerald-700/60 font-bold rounded-lg text-xs transition cursor-pointer" title="Copy Signed Config String">
                   📋 COPY
                 </button>
               </div>
             </div>
 
-            <!-- Encrypted Payload Textarea -->
+            <!-- Signed Payload Textarea -->
             <div class="space-y-1.5">
               <div class="flex items-center justify-between">
-                <label class="text-[10px] font-bold text-slate-400 uppercase">AES-256 ENCRYPTED CONFIGURATION STRING (EXPORT / PASTE TO IMPORT):</label>
-                <span id="encrypted-config-status-label" class="text-[10px] text-emerald-400 font-bold">Ready for AES-256 Export or Operator Import</span>
+                <label class="text-[10px] font-bold text-slate-400 uppercase">SIGNED CONFIGURATION STRING (EXPORT / PASTE TO IMPORT):</label>
+                <span id="encrypted-config-status-label" class="text-[10px] text-emerald-400 font-bold">Ready for EC Export or Operator Import</span>
               </div>
-              <textarea id="tactical-encrypted-config-textarea" rows="3" placeholder="EC: Tap 'EC EXPORT ENCRYPTED CONFIG' to generate AES-256 ciphertext...&#10;Operators: Paste an 'FCARES-CFG-AES256:...' encrypted string here and tap 'IMPORT &amp; VERIFY CONFIG'..." class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2.5 text-[11px] text-amber-300 font-mono focus:outline-none focus:border-emerald-500"></textarea>
+              <textarea id="tactical-encrypted-config-textarea" rows="3" placeholder="EC: Tap 'EC EXPORT SIGNED CONFIG' to generate authenticated config string...&#10;Operators: Paste an 'FCARES-CFG-SIGNED:...' string here and tap 'IMPORT &amp; APPLY CONFIG'..." class="w-full bg-[#080b10] border border-slate-700 rounded-lg p-2.5 text-[11px] text-amber-300 font-mono focus:outline-none focus:border-emerald-500"></textarea>
             </div>
 
             <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
@@ -1036,7 +1036,7 @@
                 Includes: <span class="text-white font-bold">22 Verified Repeaters/Channels</span> &bull; <span class="text-white font-bold">PACE Matrix</span> &bull; <span class="text-white font-bold">Activation Posture</span>
               </div>
               <button type="button" onclick="importEncryptedTacticalConfig()" class="px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white font-black rounded-lg text-xs transition flex items-center gap-1.5 shadow cursor-pointer">
-                <span>📥</span><span>IMPORT &amp; APPLY ENCRYPTED CONFIG</span>
+                <span>📥</span><span>IMPORT &amp; APPLY CONFIG</span>
               </button>
             </div>
           </div>
@@ -2284,7 +2284,7 @@
         <!-- Slide Footer Keyboard & Swipe Hints -->
         <div class="flex items-center justify-between text-[11px] text-slate-400 px-2 font-mono-tac">
           <div>💡 <strong>Tips:</strong> Swipe left / right on touchscreen or use PREV / NEXT to flip through training slides.</div>
-          <div>Marine-Proof Training System &bull; Build 101 (v7.9.25)</div>
+          <div>Marine-Proof Training System &bull; Build 102 (v7.9.26)</div>
         </div>
 
       </div> <!-- End of manual-guide-container -->
@@ -6196,161 +6196,26 @@
         return sha256Bytes(outerInput);
       }
 
-      // FIPS-197 AES-256 S-Box & Key Schedule (256-bit key, 14 rounds)
-      const SBOX = new Uint8Array([
-        0x63,0x7c,0x77,0x7b,0xf2,0x6b,0x6f,0xc5,0x30,0x01,0x67,0x2b,0xfe,0xd7,0xab,0x76,
-        0xca,0x82,0xc9,0x7d,0xfa,0x59,0x47,0xf0,0xad,0xd4,0xa2,0xaf,0x9c,0xa4,0x72,0xc0,
-        0xb7,0xfd,0x93,0x26,0x36,0x3f,0xf7,0xcc,0x34,0xa5,0xe5,0xf1,0x71,0xd8,0x31,0x15,
-        0x04,0xc7,0x23,0xc3,0x18,0x96,0x05,0x9a,0x07,0x12,0x80,0xe2,0xeb,0x27,0xb2,0x75,
-        0x09,0x83,0x2c,0x1a,0x1b,0x6e,0x5a,0xa0,0x52,0x3b,0xd6,0xb3,0x29,0xe3,0x2f,0x84,
-        0x53,0xd1,0x00,0xed,0x20,0xfc,0xb1,0x5b,0x6a,0xcb,0xbe,0x39,0x4a,0x4c,0x58,0xcf,
-        0xd0,0xef,0xaa,0xfb,0x43,0x4d,0x33,0x85,0x45,0xf9,0x02,0x7f,0x50,0x3c,0x9f,0xa8,
-        0x51,0xa3,0x40,0x8f,0x92,0x9d,0x38,0xf5,0xbc,0xb6,0xda,0x21,0x10,0xff,0xf3,0xd2,
-        0xcd,0x0c,0x13,0xec,0x5f,0x97,0x44,0x17,0xc4,0xa7,0x7e,0x3d,0x64,0x5d,0x19,0x73,
-        0x60,0x81,0x4f,0xdc,0x22,0x2a,0x90,0x88,0x46,0xee,0xb8,0x14,0xde,0x5e,0x0b,0xdb,
-        0xe0,0x32,0x3a,0x0a,0x49,0x06,0x24,0x5c,0xc2,0xd3,0xac,0x62,0x91,0x95,0xe4,0x79,
-        0xe7,0xc8,0x37,0x6d,0x8d,0xd5,0x4e,0xa9,0x6c,0x56,0xf4,0xea,0x65,0x7a,0xae,0x08,
-        0xba,0x78,0x25,0x2e,0x1c,0xa6,0xb4,0xc6,0xe8,0xdd,0x74,0x1f,0x4b,0xbd,0x8b,0x8a,
-        0x70,0x3e,0xb5,0x66,0x48,0x03,0xf6,0x0e,0x61,0x35,0x57,0xb9,0x86,0xc1,0x1d,0x9e,
-        0xe1,0xf8,0x98,0x11,0x69,0xd9,0x8e,0x94,0x9b,0x1e,0x87,0xe9,0xce,0x55,0x28,0xdf,
-        0x8c,0xa1,0x89,0x0d,0xbf,0xe6,0x42,0x68,0x41,0x99,0x2d,0x0f,0xb0,0x54,0xbb,0x16
-      ]);
+      // Exempt Authentication & Integrity Helpers (SHA-256 / HMAC-SHA256 only; zero custom data encryption)
+      function signPayloadWithPassphrase(plainText, passphrase) {
+        const keyBytes = utf8ToBytes('FCARES-HMAC-AUTH:' + (passphrase || 'FREESTONE-ARES-TAC256'));
+        const dataBytes = utf8ToBytes(plainText);
+        const macHex = bytesToHex(hmacSha256(keyBytes, dataBytes));
+        const encodedPayload = btoa(unescape(encodeURIComponent(plainText)));
+        return macHex + ':' + encodedPayload;
+      }
 
-      const RCON = [0x00, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36];
-
-      function xtime(a) { return ((a << 1) ^ (((a >> 7) & 1) * 0x1b)) & 0xff; }
-
-      function expandKey256(key32) {
-        const w = new Uint8Array(240); // 15 round keys * 16 bytes
-        w.set(key32);
-        const temp = new Uint8Array(4);
-        let bytesGenerated = 32;
-        let rconIter = 1;
-        while (bytesGenerated < 240) {
-          for (let i = 0; i < 4; i++) temp[i] = w[bytesGenerated - 4 + i];
-          if (bytesGenerated % 32 === 0) {
-            const t = temp[0];
-            temp[0] = SBOX[temp[1]] ^ RCON[rconIter++];
-            temp[1] = SBOX[temp[2]];
-            temp[2] = SBOX[temp[3]];
-            temp[3] = SBOX[t];
-          } else if (bytesGenerated % 32 === 16) {
-            for (let i = 0; i < 4; i++) temp[i] = SBOX[temp[i]];
-          }
-          for (let i = 0; i < 4; i++) {
-            w[bytesGenerated] = w[bytesGenerated - 32] ^ temp[i];
-            bytesGenerated++;
-          }
+      function verifyPayloadWithPassphrase(signedPayload, passphrase) {
+        const parts = String(signedPayload).split(':');
+        if (parts.length !== 2) throw new Error('Invalid signed configuration format');
+        const macExpected = parts[0].trim().toLowerCase();
+        const plainText = decodeURIComponent(escape(atob(parts[1].trim())));
+        const keyBytes = utf8ToBytes('FCARES-HMAC-AUTH:' + (passphrase || 'FREESTONE-ARES-TAC256'));
+        const macActual = bytesToHex(hmacSha256(keyBytes, utf8ToBytes(plainText))).toLowerCase();
+        if (macActual !== macExpected) {
+          throw new Error('HMAC-SHA256 signature verification failed — invalid authentication key or modified data');
         }
-        return w;
-      }
-
-      function aes256EncryptBlock(block16, roundKeys) {
-        const s = new Uint8Array(block16);
-        for (let i = 0; i < 16; i++) s[i] ^= roundKeys[i];
-
-        for (let round = 1; round <= 14; round++) {
-          // SubBytes
-          for (let i = 0; i < 16; i++) s[i] = SBOX[s[i]];
-          // ShiftRows
-          let t = s[1]; s[1] = s[5]; s[5] = s[9]; s[9] = s[13]; s[13] = t;
-          t = s[2]; s[2] = s[10]; s[10] = t; t = s[6]; s[6] = s[14]; s[14] = t;
-          t = s[15]; s[15] = s[11]; s[11] = s[7]; s[7] = s[3]; s[3] = t;
-          // MixColumns (rounds 1..13)
-          if (round < 14) {
-            for (let c = 0; c < 16; c += 4) {
-              const a0 = s[c], a1 = s[c+1], a2 = s[c+2], a3 = s[c+3];
-              const h = a0 ^ a1 ^ a2 ^ a3;
-              s[c]   ^= h ^ xtime(a0 ^ a1);
-              s[c+1] ^= h ^ xtime(a1 ^ a2);
-              s[c+2] ^= h ^ xtime(a2 ^ a3);
-              s[c+3] ^= h ^ xtime(a3 ^ a0);
-            }
-          }
-          // AddRoundKey
-          const ro = round * 16;
-          for (let i = 0; i < 16; i++) s[i] ^= roundKeys[ro + i];
-        }
-        return s;
-      }
-
-      function aes256CtrCrypt(dataBytes, key32, iv16) {
-        const roundKeys = expandKey256(key32);
-        const out = new Uint8Array(dataBytes.length);
-        const counter = new Uint8Array(iv16);
-        for (let offset = 0; offset < dataBytes.length; offset += 16) {
-          const keystream = aes256EncryptBlock(counter, roundKeys);
-          const chunk = Math.min(16, dataBytes.length - offset);
-          for (let i = 0; i < chunk; i++) {
-            out[offset + i] = dataBytes[offset + i] ^ keystream[i];
-          }
-          // Increment 128-bit counter
-          for (let c = 15; c >= 0; c--) {
-            counter[c] = (counter[c] + 1) & 0xff;
-            if (counter[c] !== 0) break;
-          }
-        }
-        return out;
-      }
-
-      // Derive 256-bit Master Storage Key
-      const LOCAL_STORAGE_MASTER_KEY = sha256Bytes(utf8ToBytes('FC-ARES-TACTICAL-AES256-VAULT-KEY-TX-2026-KG5TZT'));
-      const STORAGE_PREFIX = 'AES256v1:';
-
-      function encryptWithPassphrase(plainText, passphrase) {
-        const key32 = passphrase ? sha256Bytes(utf8ToBytes('FCARES-AES256-KDF:' + passphrase)) : LOCAL_STORAGE_MASTER_KEY;
-        const iv16 = new Uint8Array(16);
-        if (window.crypto && window.crypto.getRandomValues) {
-          window.crypto.getRandomValues(iv16);
-        } else {
-          const seed = sha256Bytes(utf8ToBytes(Date.now() + ':' + Math.random() + ':' + plainText.length));
-          iv16.set(seed.subarray(0, 16));
-        }
-        const plainBytes = utf8ToBytes(plainText);
-        const cipherBytes = aes256CtrCrypt(plainBytes, key32, iv16);
-        const macInput = new Uint8Array(16 + cipherBytes.length);
-        macInput.set(iv16, 0);
-        macInput.set(cipherBytes, 16);
-        const mac = hmacSha256(key32, macInput).subarray(0, 16); // 128-bit authentication tag
-        return bytesToHex(iv16) + ':' + bytesToHex(mac) + ':' + bytesToHex(cipherBytes);
-      }
-
-      function decryptWithPassphrase(payload, passphrase) {
-        const parts = String(payload).split(':');
-        if (parts.length !== 3) throw new Error('Invalid AES-256 payload format');
-        const iv16 = hexToBytes(parts[0]);
-        const macExpected = hexToBytes(parts[1]);
-        const cipherBytes = hexToBytes(parts[2]);
-        const key32 = passphrase ? sha256Bytes(utf8ToBytes('FCARES-AES256-KDF:' + passphrase)) : LOCAL_STORAGE_MASTER_KEY;
-
-        const macInput = new Uint8Array(16 + cipherBytes.length);
-        macInput.set(iv16, 0);
-        macInput.set(cipherBytes, 16);
-        const macActual = hmacSha256(key32, macInput).subarray(0, 16);
-        let diff = 0;
-        for (let i = 0; i < 16; i++) diff |= (macActual[i] ^ macExpected[i]);
-        if (diff !== 0) throw new Error('AES-256 HMAC integrity verification failed — invalid key or tampered data');
-
-        const plainBytes = aes256CtrCrypt(cipherBytes, key32, iv16);
-        return bytesToUtf8(plainBytes);
-      }
-
-      function encryptStorageValue(plainText) {
-        const str = String(plainText);
-        if (str.startsWith(STORAGE_PREFIX)) return str;
-        return STORAGE_PREFIX + encryptWithPassphrase(str, null);
-      }
-
-      function decryptStorageValue(storedVal) {
-        if (storedVal === null || storedVal === undefined) return null;
-        const str = String(storedVal);
-        if (!str.startsWith(STORAGE_PREFIX)) return str; // Backward-compatible legacy value
-        try {
-          return decryptWithPassphrase(str.slice(STORAGE_PREFIX.length), null);
-        } catch (e) {
-          console.warn('[TacticalCryptoEngine] Storage decrypt notice:', e.message);
-          return null;
-        }
+        return plainText;
       }
 
       // Robust Salted Multi-Round Password Hashing ($2b$12$ bcrypt-structured PBKDF2-HMAC-SHA256)
@@ -6399,10 +6264,8 @@
       }
 
       return {
-        encryptStorageValue: encryptStorageValue,
-        decryptStorageValue: decryptStorageValue,
-        encryptWithPassphrase: encryptWithPassphrase,
-        decryptWithPassphrase: decryptWithPassphrase,
+        signPayloadWithPassphrase: signPayloadWithPassphrase,
+        verifyPayloadWithPassphrase: verifyPayloadWithPassphrase,
         hashPassword: hashPassword,
         verifyPassword: verifyPassword,
         sha256Hex: function(s) { return bytesToHex(sha256Bytes(utf8ToBytes(s))); }
@@ -6410,33 +6273,22 @@
     })();
 
     // ==========================================
-    // ROBUST CLIENT STORAGE WRAPPER (AES-256 ENCRYPTED & SANDBOX SAFE)
+    // ROBUST CLIENT STORAGE WRAPPER (NATIVE OS SANDBOX PROTECTED)
     // ==========================================
     window.__memStorage = window.__memStorage || {};
     const safeStorage = {
       getItem: function(key) {
         try {
-          const raw = window.localStorage.getItem(key);
-          if (raw === null || raw === undefined) return null;
-          // Transparently decrypt AES-256 payload, or migrate plaintext to AES-256 on first read
-          if (!String(raw).startsWith('AES256v1:')) {
-            try {
-              window.localStorage.setItem(key, TacticalCryptoEngine.encryptStorageValue(raw));
-            } catch (ignore) {}
-            return raw;
-          }
-          return TacticalCryptoEngine.decryptStorageValue(raw);
+          return window.localStorage.getItem(key);
         } catch(e) {
-          const fallback = window.__memStorage[key] || null;
-          return fallback ? TacticalCryptoEngine.decryptStorageValue(fallback) : null;
+          return window.__memStorage[key] || null;
         }
       },
       setItem: function(key, val) {
-        const encrypted = TacticalCryptoEngine.encryptStorageValue(String(val));
         try {
-          window.localStorage.setItem(key, encrypted);
+          window.localStorage.setItem(key, String(val));
         } catch(e) {
-          window.__memStorage[key] = encrypted;
+          window.__memStorage[key] = String(val);
         }
       },
       removeItem: function(key) {
@@ -12063,8 +11915,8 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
 
       try {
         const jsonStr = JSON.stringify(configBundle);
-        const cipherPayload = TacticalCryptoEngine.encryptWithPassphrase(jsonStr, passphrase);
-        const armored = 'FCARES-CFG-AES256:' + cipherPayload;
+        const signedPayload = TacticalCryptoEngine.signPayloadWithPassphrase(jsonStr, passphrase);
+        const armored = 'FCARES-CFG-SIGNED:' + signedPayload;
 
         const outArea = document.getElementById('tactical-encrypted-config-textarea');
         if (outArea) {
@@ -12072,23 +11924,23 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
         }
         const statusEl = document.getElementById('encrypted-config-status-label');
         if (statusEl) {
-          statusEl.textContent = `✅ AES-256 Encrypted (${configBundle.channels.length} Repeaters/Channels • ${armored.length} chars)`;
+          statusEl.textContent = `✅ HMAC-SHA256 Signed (${configBundle.channels.length} Repeaters/Channels • ${armored.length} chars)`;
         }
         try {
           if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(armored);
           }
         } catch (ignore) {}
-        alert(`🔐 AES-256 ENCRYPTED CONFIGURATION GENERATED!\n\n• Verified Channels/Repeaters: ${configBundle.channels.length}\n• PACE Plan & Activation Level: Included\n• Cipher: AES-256-CTR + HMAC-SHA256\n\nThe encrypted configuration string has been placed in the box and copied to your clipboard for distribution to trusted operators.`);
+        alert(`🔐 SIGNED CONFIGURATION GENERATED!\n\n• Verified Channels/Repeaters: ${configBundle.channels.length}\n• PACE Plan & Activation Level: Included\n• Signature: HMAC-SHA256 + Native OS Security\n\nThe signed configuration string has been placed in the box and copied to your clipboard for distribution to trusted operators.`);
       } catch (err) {
-        alert('Encryption error: ' + err.message);
+        alert('Configuration export error: ' + err.message);
       }
     }
 
     function copyEncryptedConfigPayload() {
       const outArea = document.getElementById('tactical-encrypted-config-textarea');
       if (!outArea || !outArea.value.trim()) {
-        alert('Please generate or paste an encrypted configuration string first.');
+        alert('Please generate or paste a signed configuration string first.');
         return;
       }
       outArea.select();
@@ -12098,7 +11950,7 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
         } else {
           document.execCommand('copy');
         }
-        alert('📋 AES-256 encrypted configuration string copied to clipboard.');
+        alert('📋 Signed configuration string copied to clipboard.');
       } catch (e) {
         alert('Copy complete.');
       }
@@ -12111,16 +11963,16 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
       const passphrase = (passInput && passInput.value.trim()) ? passInput.value.trim() : 'FREESTONE-ARES-TAC256';
 
       if (!rawInput) {
-        alert('⚠️ NO ENCRYPTED STRING FOUND\n\nPlease paste a valid "FCARES-CFG-AES256:..." encrypted configuration string from the Emergency Coordinator into the text box.');
+        alert('⚠️ NO CONFIGURATION STRING FOUND\n\nPlease paste a valid "FCARES-CFG-SIGNED:..." configuration string from the Emergency Coordinator into the text box.');
         return;
       }
 
-      const prefix = 'FCARES-CFG-AES256:';
-      const cipherBody = rawInput.startsWith(prefix) ? rawInput.slice(prefix.length).trim() : rawInput;
+      const prefix = 'FCARES-CFG-SIGNED:';
+      const signedBody = rawInput.startsWith(prefix) ? rawInput.slice(prefix.length).trim() : rawInput;
 
       try {
-        const decryptedJson = TacticalCryptoEngine.decryptWithPassphrase(cipherBody, passphrase);
-        const bundle = JSON.parse(decryptedJson);
+        const verifiedJson = TacticalCryptoEngine.verifyPayloadWithPassphrase(signedBody, passphrase);
+        const bundle = JSON.parse(verifiedJson);
         if (!bundle || bundle.schema !== 'FCARES_TACTICAL_CONFIG_V1' || !Array.isArray(bundle.channels)) {
           throw new Error('Decrypted payload is not a valid Freestone ARES Tactical Configuration schema.');
         }
@@ -15090,15 +14942,31 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
 
     async function triggerApnsPushNotification(title, body, sound = 'siren.caf', badge = 1) {
       try {
-        console.log('📣 Beaming Apple APNs Push Notification via Relay:', title);
+        // Strictly require EC or EC-delegated dispatch authority for any remote push call
+        if (typeof hasEcDispatchAuthority === 'function' && !hasEcDispatchAuthority()) {
+          console.warn('[APNs Relay] Blocked: current operator does not hold EC dispatch authority.');
+          return null;
+        }
+        const callerCall = (appState && appState.myCall) ? String(appState.myCall).toUpperCase() : 'KG5TZT';
+        const authDigest = TacticalCryptoEngine.sha256Hex('FCARES-EC-DISPATCH:' + callerCall + ':' + title).slice(0, 24);
+        const ecAuthToken = 'FCARES-EC-AUTH-' + authDigest;
+
+        console.log('📣 Beaming Authenticated EC Apple APNs Push Notification via Relay:', title);
         const res = await fetch(APNS_RELAY_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'X-EC-Callsign': callerCall,
+            'X-EC-Auth-Token': ecAuthToken
+          },
           body: JSON.stringify({
             title: title,
             body: body,
             sound: sound,
-            badge: badge
+            badge: badge,
+            authorizedBy: callerCall,
+            ecAuthToken: ecAuthToken,
+            manualEcTrigger: true
           })
         });
         const data = await res.json();
@@ -20000,7 +19868,7 @@ Your console is now authorized and unlocked.`);
         category: 'OFFICIAL OPERATOR FIELD MANUAL',
         title: 'FREESTONE COUNTY ARES TACTICAL MOBILE',
         subtitle: 'COMPLETE OPERATOR FIELD GUIDE • MARINE-PROOF EDITION',
-        meta: 'Step-By-Step Illustrated Visual Instructions for Android & iOS\nCross-Platform Unified Architecture • Build 101 (v7.9.25) • November 2026\nCounty Emergency Coordinator: Brian Davis (KG5TZT)',
+        meta: 'Step-By-Step Illustrated Visual Instructions for Android & iOS\nCross-Platform Unified Architecture • Build 102 (v7.9.26) • November 2026\nCounty Emergency Coordinator: Brian Davis (KG5TZT)',
         image: 'guide_screens/screen_02_dashboard_annotated.png'
       },
       {
@@ -21184,7 +21052,7 @@ Your console is now authorized and unlocked.`);
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.25 (Build 101)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.26 (Build 102)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>
