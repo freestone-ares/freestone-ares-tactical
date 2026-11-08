@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Freestone County ARES Tactical Mobile v7.9.23</title>
+  <title>Freestone County ARES Tactical Mobile v7.9.24</title>
   <meta name="description" content="Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES">
   <meta name="theme-color" content="#0b0e14">
   <meta name="mobile-web-app-capable" content="yes">
@@ -391,11 +391,11 @@
 
       <!-- ROW 2: Large High-Visibility Emergency Activation Bar -->
       <div id="header-ares-status-container" class="w-full pt-1">
-        <div id="header-ares-status-badge" onclick="handleHeaderStatusClick()" class="w-full flex items-center justify-between gap-2 py-2 px-3 sm:px-4 rounded-lg bg-emerald-950/95 hover:bg-emerald-900/90 border-2 border-emerald-500/80 text-emerald-200 font-black text-xs sm:text-sm shadow-[0_0_15px_rgba(16,185,129,0.3)] select-none cursor-pointer transition tracking-wider text-center" title="County Activation Level — EC Brian Davis tap to set Response Level 1-4">
+        <div id="header-ares-status-badge" onclick="handleHeaderStatusClick()" class="w-full flex items-center justify-between gap-2 py-2 px-3 sm:px-4 rounded-lg bg-emerald-950/95 hover:bg-emerald-900/90 border-2 border-emerald-500/80 text-emerald-200 font-black text-xs sm:text-sm shadow-[0_0_15px_rgba(16,185,129,0.3)] select-none cursor-pointer transition tracking-wider text-center" title="County Activation Level — EC Brian Davis tap to set Response Level 1-3">
           <div class="flex items-center gap-2 min-w-0">
             <span id="header-ares-status-dot" class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse flex-shrink-0 shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>
             <span class="text-[10px] sm:text-xs text-slate-300 font-bold uppercase tracking-widest hidden xs:inline">POSTURE:</span>
-            <strong id="header-ares-status-text" class="text-emerald-300 tracking-wider font-extrabold uppercase truncate">LEVEL 3 • MONITORING</strong>
+            <strong id="header-ares-status-text" class="text-emerald-300 tracking-wider font-extrabold uppercase truncate">LEVEL 3 • MONITORING (STEADY STATE)</strong>
           </div>
           <div class="flex items-center gap-1.5 flex-shrink-0 text-[10px] font-bold text-emerald-400/90 bg-black/40 px-2 py-0.5 rounded border border-emerald-500/30">
             <span id="header-ares-status-hint">⚡ TAP TO VIEW / SET</span>
@@ -902,18 +902,18 @@
             </div>
           </div>
 
-          <!-- COUNTY RESPONSE LEVEL 1-4 CONTROLLER (BRIAN DAVIS - EC DIRECT CONTROL) -->
+          <!-- COUNTY RESPONSE LEVEL 1-3 CONTROLLER (BRIAN DAVIS - EC DIRECT CONTROL) -->
           <div class="bg-[#10151d] border-2 border-emerald-500/60 rounded-xl p-5 space-y-4 font-mono-tac shadow-xl">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
               <div class="flex items-center gap-2">
                 <span class="text-xl">🚨</span>
                 <div>
                   <h4 class="text-sm font-black text-white tracking-wider">COUNTY EMERGENCY RESPONSE LEVEL CONTROL</h4>
-                  <p class="text-[10px] text-slate-400">Emergency Coordinator Operational Posture Dispatch (Levels 1 to 4)</p>
+                  <p class="text-[10px] text-slate-400">Emergency Coordinator Operational Posture Dispatch (Levels 1 to 3)</p>
                 </div>
               </div>
               <span id="ec-current-level-badge" class="px-2.5 py-1 rounded text-xs font-black bg-emerald-950 text-emerald-400 border border-emerald-700">
-                ACTIVE: LEVEL 4
+                ACTIVE: LEVEL 3
               </span>
             </div>
 
@@ -922,31 +922,31 @@
             </p>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 font-mono-tac">
-              <!-- Level 3: Monitoring -->
+              <!-- Level 3: Monitoring (Steady State) -->
               <button onclick="setCountyResponseLevel(3)" id="btn-resp-lvl-3" class="p-3 rounded-xl border border-emerald-500/80 bg-emerald-950/60 hover:bg-emerald-950/90 text-left transition space-y-1 cursor-pointer shadow">
                 <div class="flex items-center justify-between">
-                  <span class="text-xs font-black text-emerald-400">LEVEL 3: MONITORING</span>
-                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span class="text-xs font-black text-emerald-400">LEVEL 3: MONITORING (STEADY STATE)</span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
                 </div>
-                <p class="text-[10px] text-slate-300">Routine Monitoring / Steady State. All repeaters normal, standby on FF 110.</p>
+                <p class="text-[10px] text-slate-300">Monitoring (Steady State). All repeaters normal, routine standby on FF 110.</p>
               </button>
 
-              <!-- Level 2: Stand By -->
+              <!-- Level 2: Escalated/Severe Weather -->
               <button onclick="setCountyResponseLevel(2)" id="btn-resp-lvl-2" class="p-3 rounded-xl border border-amber-500/80 bg-amber-950/60 hover:bg-amber-950/90 text-left transition space-y-1 cursor-pointer shadow">
                 <div class="flex items-center justify-between">
-                  <span class="text-xs font-black text-amber-400">LEVEL 2: STAND BY</span>
+                  <span class="text-xs font-black text-amber-400">LEVEL 2: ESCALATED/SEVERE WEATHER</span>
                   <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
                 </div>
-                <p class="text-[10px] text-slate-300">Stand By posture. Operators on alert, monitoring repeaters & storm spotters.</p>
+                <p class="text-[10px] text-slate-300">Escalated/Severe Weather posture. Operators on alert, monitoring repeaters &amp; storm spotters.</p>
               </button>
 
-              <!-- Level 1: Full Activation -->
+              <!-- Level 1: Full County Activation (Emergency) -->
               <button onclick="setCountyResponseLevel(1)" id="btn-resp-lvl-1" class="p-3 rounded-xl border border-red-500/80 bg-red-950/60 hover:bg-red-950/90 text-left transition space-y-1 cursor-pointer shadow">
                 <div class="flex items-center justify-between">
-                  <span class="text-xs font-black text-red-400">LEVEL 1: FULL ACTIVATION</span>
-                  <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+                  <span class="text-xs font-black text-red-400">LEVEL 1: FULL COUNTY ACTIVATION (EMERGENCY)</span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
                 </div>
-                <p class="text-[10px] text-slate-300">Full County Activation. Emergency operational posture, repeaters mobilized.</p>
+                <p class="text-[10px] text-slate-300">Full County Activation (Emergency). Maximum emergency posture, all repeaters &amp; operators mobilized.</p>
               </button>
             </div>
           </div>
@@ -1577,16 +1577,16 @@
             </div>
           </div>
 
-          <!-- COUNTY READINESS LEVEL & ESCALATION BAR (WITH DIRECT LEVEL 1-4 BUTTONS) -->
+          <!-- COUNTY READINESS LEVEL & ESCALATION BAR (WITH DIRECT LEVEL 1-3 BUTTONS) -->
           <div class="p-4 bg-[#10151d] border-2 border-emerald-500/40 rounded-xl space-y-3 text-xs shadow-lg">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <div class="flex items-center gap-2">
                   <span id="county-status-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
                   <span class="text-slate-400 text-[11px]">COUNTY EMERGENCY STATUS:</span>
-                  <strong id="county-status-text" class="text-emerald-400 font-black">LEVEL 4 &bull; NORMAL MONITORING</strong>
+                  <strong id="county-status-text" class="text-emerald-400 font-black">LEVEL 3 &bull; MONITORING (STEADY STATE)</strong>
                 </div>
-                <p id="county-status-subtext" class="text-[11px] text-slate-400 mt-0.5">No active countywide disasters. Routine weekly readiness monitoring.</p>
+                <p id="county-status-subtext" class="text-[11px] text-slate-400 mt-0.5">Monitoring (Steady State). All repeaters normal, standby on FF 110.</p>
               </div>
               <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
                 <button id="dash-btn-paging-1" onclick="handleDashboardAlertClick()" class="px-3 py-1.5 bg-red-950 hover:bg-red-900 text-red-300 border border-red-800 rounded text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
@@ -1606,15 +1606,15 @@
                   <span>🛡️</span><span>DISPATCH PRIVILEGES</span>
                 </button>
               </div>
-              <div class="grid grid-cols-3 gap-1.5 w-full sm:w-auto font-mono-tac">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-1.5 w-full sm:w-auto font-mono-tac">
                 <button type="button" onclick="setCountyResponseLevel(3)" id="dash-resp-btn-3" class="px-3 py-1.5 rounded-lg bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/80 text-emerald-300 text-[10px] font-black text-center transition cursor-pointer flex items-center justify-center gap-1 shadow">
-                  <span class="w-2 h-2 rounded-full bg-emerald-400"></span><span>LVL 3: MONITORING</span>
+                  <span class="w-2 h-2 rounded-full bg-emerald-400"></span><span>LVL 3: MONITORING (STEADY STATE)</span>
                 </button>
                 <button type="button" onclick="setCountyResponseLevel(2)" id="dash-resp-btn-2" class="px-2.5 py-1.5 rounded-lg bg-amber-950/80 hover:bg-amber-900 border border-amber-500/80 text-amber-300 text-[10px] font-black text-center transition cursor-pointer flex items-center justify-center gap-1 shadow">
-                  <span class="w-2 h-2 rounded-full bg-amber-400"></span><span>LVL 2: STAND BY</span>
+                  <span class="w-2 h-2 rounded-full bg-amber-400"></span><span>LVL 2: ESCALATED/SEVERE WEATHER</span>
                 </button>
                 <button type="button" onclick="setCountyResponseLevel(1)" id="dash-resp-btn-1" class="px-2.5 py-1.5 rounded-lg bg-red-950/80 hover:bg-red-900 border border-red-500/80 text-red-300 text-[10px] font-black text-center transition cursor-pointer flex items-center justify-center gap-1 shadow">
-                  <span class="w-2 h-2 rounded-full bg-red-500"></span><span>LVL 1: FULL ACTIVATION</span>
+                  <span class="w-2 h-2 rounded-full bg-red-500"></span><span>LVL 1: FULL COUNTY ACTIVATION (EMERGENCY)</span>
                 </button>
               </div>
             </div>
@@ -2230,7 +2230,7 @@
         <!-- Slide Footer Keyboard & Swipe Hints -->
         <div class="flex items-center justify-between text-[11px] text-slate-400 px-2 font-mono-tac">
           <div>💡 <strong>Tips:</strong> Swipe left / right on touchscreen or use PREV / NEXT to flip through training slides.</div>
-          <div>Marine-Proof Training System &bull; Build 75 (v7.9.23)</div>
+          <div>Marine-Proof Training System &bull; Build 100 (v7.9.24)</div>
         </div>
 
       </div> <!-- End of manual-guide-container -->
@@ -4311,10 +4311,9 @@
         <div>
           <label class="text-slate-400 block mb-1 font-bold">ACTIVATION READINESS LEVEL</label>
           <select id="b-level" class="w-full bg-[#0b0e14] border border-slate-700 rounded-lg p-2.5 text-white font-bold text-xs focus:outline-none focus:border-red-500">
-            <option value="LEVEL 1 ACTIVATION">LEVEL 1 - FULL COUNTY ACTIVATION (EMERGENCY)</option>
-            <option value="LEVEL 2 ACTIVATION">LEVEL 2 - ESCALATED / SEVERE WEATHER (WATCH)</option>
-            <option value="LEVEL 3 ACTIVATION">LEVEL 3 - INCREASED READINESS / STAGING</option>
-            <option value="LEVEL 4 ACTIVATION" selected>LEVEL 3 - MONITORING (STEADY STATE)</option>
+            <option value="LEVEL 1 - FULL COUNTY ACTIVATION (EMERGENCY)" selected>LEVEL 1 - FULL COUNTY ACTIVATION (EMERGENCY)</option>
+            <option value="LEVEL 2 - ESCALATED/SEVERE WEATHER">LEVEL 2 - ESCALATED/SEVERE WEATHER</option>
+            <option value="LEVEL 3 - MONITORING (STEADY STATE)">LEVEL 3 - MONITORING (STEADY STATE)</option>
           </select>
         </div>
 
@@ -14401,11 +14400,11 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
       // Trigger APNs Push only if standalone activation level change (not bundled with an incident broadcast)
       if (sendApnsPush) {
         if (num === 1) {
-          triggerApnsPushNotification('🚨 EMERGENCY ACTIVATION: LEVEL 1', 'Freestone County ARES escalated to Level 1 Full Activation. All verified operators mobilize.', 'siren.caf', 1);
+          triggerApnsPushNotification('🚨 LEVEL 1: FULL COUNTY ACTIVATION (EMERGENCY)', 'Freestone County ARES escalated to Level 1 Full County Activation (Emergency). All verified operators mobilize.', 'siren.caf', 1);
         } else if (num === 2) {
-          triggerApnsPushNotification('⚠️ EMERGENCY POSTURE: LEVEL 2', 'Freestone County ARES placed on Level 2 Standby. Monitor primary PACE repeater.', 'default', 1);
+          triggerApnsPushNotification('⚠️ LEVEL 2: ESCALATED/SEVERE WEATHER', 'Freestone County ARES placed on Level 2 Escalated/Severe Weather posture. Monitor primary PACE repeater.', 'default', 1);
         } else if (num === 3) {
-          triggerApnsPushNotification('🟢 FREESTONE ARES: STEADY STATE', 'Emergency posture secured. County returned to Level 3 Monitoring standby.', 'default', 0);
+          triggerApnsPushNotification('🟢 LEVEL 3: MONITORING (STEADY STATE)', 'Emergency posture secured. County returned to Level 3 Monitoring (Steady State).', 'default', 0);
           clearNativeAppBadge();
         }
       }
@@ -15937,38 +15936,38 @@ Your console is now authorized and unlocked.`);
     }
 
     // ==========================================
-    // COUNTY EMERGENCY RESPONSE LEVEL CONTROLLER (LEVELS 1-4)
+    // COUNTY EMERGENCY RESPONSE LEVEL CONTROLLER (3 LEVELS ONLY)
     // ==========================================
     const COUNTY_RESPONSE_CONFIG = {
       3: {
         level: 3,
-        badgeText: 'LEVEL 3 • MONITORING',
+        badgeText: 'LEVEL 3 • MONITORING (STEADY STATE)',
         dotClass: 'bg-emerald-400 animate-pulse',
         containerClass: 'bg-emerald-950/95 border-emerald-500/80 text-emerald-200',
-        dashText: 'LEVEL 3 • MONITORING',
-        dashSubtext: 'Routine Monitoring / Steady State. All repeaters normal, standby on FF 110.',
+        dashText: 'LEVEL 3 • MONITORING (STEADY STATE)',
+        dashSubtext: 'Monitoring (Steady State). All repeaters normal, routine standby on FF 110.',
         dashClass: 'text-emerald-400 font-black',
         dashDot: 'bg-emerald-400 animate-pulse'
       },
       2: {
         level: 2,
-        badgeText: 'LEVEL 2 • STAND BY',
+        badgeText: 'LEVEL 2 • ESCALATED/SEVERE WEATHER',
         dotClass: 'bg-amber-400 animate-pulse',
         containerClass: 'bg-amber-950/95 border-amber-500 text-amber-200',
-        dashText: 'LEVEL 2 • STAND BY',
-        dashSubtext: 'Stand By posture. Operators on alert, monitoring repeaters & storm spotter channels.',
+        dashText: 'LEVEL 2 • ESCALATED/SEVERE WEATHER',
+        dashSubtext: 'Escalated/Severe Weather posture. Operators on alert, monitoring repeaters & storm spotter channels.',
         dashClass: 'text-amber-400 font-black',
         dashDot: 'bg-amber-400 animate-pulse'
       },
       1: {
         level: 1,
-        badgeText: 'LEVEL 1 • FULL ACTIVATION',
-        dotClass: 'bg-red-500 animate-ping',
+        badgeText: 'LEVEL 1 • FULL COUNTY ACTIVATION (EMERGENCY)',
+        dotClass: 'bg-red-500',
         containerClass: 'bg-red-950/95 border-red-500 text-red-200',
-        dashText: 'LEVEL 1 • FULL ACTIVATION',
-        dashSubtext: 'Full County Activation. Emergency operational posture, repeaters mobilized.',
+        dashText: 'LEVEL 1 • FULL COUNTY ACTIVATION (EMERGENCY)',
+        dashSubtext: 'Full County Activation (Emergency). Maximum emergency operational posture, all repeaters & operators mobilized.',
         dashClass: 'text-red-400 font-black',
-        dashDot: 'bg-red-500 animate-ping'
+        dashDot: 'bg-red-500'
       }
     };
 
@@ -16033,7 +16032,6 @@ Your console is now authorized and unlocked.`);
         ecBadge.textContent = `ACTIVE: LEVEL ${lvl}`;
         if (lvl === 1) ecBadge.className = 'px-2.5 py-1 rounded text-xs font-black bg-red-950 text-red-300 border border-red-700 animate-pulse';
         else if (lvl === 2) ecBadge.className = 'px-2.5 py-1 rounded text-xs font-black bg-amber-950 text-amber-300 border border-amber-700';
-        else if (lvl === 3) ecBadge.className = 'px-2.5 py-1 rounded text-xs font-black bg-sky-950 text-sky-300 border border-sky-700';
         else ecBadge.className = 'px-2.5 py-1 rounded text-xs font-black bg-emerald-950 text-emerald-400 border border-emerald-700';
       }
 
@@ -17091,12 +17089,10 @@ Your console is now authorized and unlocked.`);
       // Incident Level Badge
       const levelBadge = document.getElementById('incident-level-badge');
       if (levelBadge) {
-        levelBadge.textContent = inc.level || 'LEVEL 3 - MONITORING';
+        levelBadge.textContent = inc.level || 'LEVEL 3 - MONITORING (STEADY STATE)';
         if (inc.level && inc.level.includes('LEVEL 1')) {
           levelBadge.className = 'px-2.5 py-0.5 rounded text-xs font-mono-tac font-bold bg-red-700 text-white tracking-wider animate-pulse';
         } else if (inc.level && inc.level.includes('LEVEL 2')) {
-          levelBadge.className = 'px-2.5 py-0.5 rounded text-xs font-mono-tac font-bold bg-orange-700 text-white tracking-wider';
-        } else if (inc.level && inc.level.includes('LEVEL 3')) {
           levelBadge.className = 'px-2.5 py-0.5 rounded text-xs font-mono-tac font-bold bg-amber-700 text-white tracking-wider';
         } else {
           levelBadge.className = 'px-2.5 py-0.5 rounded text-xs font-mono-tac font-bold bg-emerald-700 text-white tracking-wider';
@@ -19267,7 +19263,7 @@ Your console is now authorized and unlocked.`);
         category: 'OFFICIAL OPERATOR FIELD MANUAL',
         title: 'FREESTONE COUNTY ARES TACTICAL MOBILE',
         subtitle: 'COMPLETE OPERATOR FIELD GUIDE • MARINE-PROOF EDITION',
-        meta: 'Step-By-Step Illustrated Visual Instructions for Android & iOS\nCross-Platform Unified Architecture • Build 75 (v7.9.23) • November 2026\nCounty Emergency Coordinator: Brian Davis (KG5TZT)',
+        meta: 'Step-By-Step Illustrated Visual Instructions for Android & iOS\nCross-Platform Unified Architecture • Build 100 (v7.9.24) • November 2026\nCounty Emergency Coordinator: Brian Davis (KG5TZT)',
         image: 'guide_screens/screen_02_dashboard_annotated.png'
       },
       {
@@ -20451,7 +20447,7 @@ Your console is now authorized and unlocked.`);
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.23 (Build 75)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.24 (Build 100)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>
