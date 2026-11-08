@@ -231,6 +231,8 @@ public class EmergencyDispatchService extends Service {
     }
 
     private void startMonitoringLoop() {
+        // [BUILD 104 SECURITY LOCK] Remote polling loop commented out to physically block ghost messages
+        /*
         if (isRunning) return;
         isRunning = true;
 
@@ -261,6 +263,7 @@ public class EmergencyDispatchService extends Service {
         });
         monitorThread.setName("ARES-Firebase-Monitor");
         monitorThread.start();
+        */
     }
 
     private void saveLastKnownLevel(int level) {

@@ -68,10 +68,10 @@ jobs:
         with:
           tag_name: v7.9.27
           target_commitish: ${{ github.sha }}
-          name: "Freestone ARES Tactical v7.9.27 Build 103 (Cross-Platform Responsive Engine, Universal Photo Picker & PACE/Spotter Flexbox Alignment)"
+          name: "Freestone ARES Tactical v7.9.27 Build 104 (Remote Alert Listeners Blocked, Responsive Engine & Universal Photo Picker)"
           make_latest: true
           body: |
-            ## Freestone County ARES - Tactical Operations Field Build (v7.9.27 / Build 103)
+            ## Freestone County ARES - Tactical Operations Field Build (v7.9.27 / Build 104)
             
             Universal release for Android Phones & Tablets and Apple iOS, iPadOS, and macOS (Designed for iPad).
             

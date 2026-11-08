@@ -113,7 +113,8 @@ public class MainActivity extends AppCompatActivity {
         requestAppPermissions();
         requestBatteryOptimizationExemption();
 
-        // Start continuous background emergency dispatch monitoring service
+        // [BUILD 104 SECURITY LOCK] Background emergency dispatch monitoring service commented out to physically block ghost messages
+        /*
         try {
             Intent serviceIntent = new Intent(this, EmergencyDispatchService.class);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -124,6 +125,10 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        */
+        try {
+            stopService(new Intent(this, EmergencyDispatchService.class));
+        } catch (Exception ignored) {}
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);

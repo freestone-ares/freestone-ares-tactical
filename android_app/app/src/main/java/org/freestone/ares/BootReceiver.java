@@ -11,6 +11,8 @@ public class BootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        // [BUILD 104 SECURITY LOCK] Auto-start of background alert listener disabled to physically block ghost messages
+        /*
         String action = intent != null ? intent.getAction() : null;
         if (Intent.ACTION_BOOT_COMPLETED.equals(action) ||
             Intent.ACTION_MY_PACKAGE_REPLACED.equals(action) ||
@@ -28,5 +30,6 @@ public class BootReceiver extends BroadcastReceiver {
                 Log.e(TAG, "Failed to start EmergencyDispatchService from BootReceiver: " + e.getMessage());
             }
         }
+        */
     }
 }

@@ -15174,6 +15174,8 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
 
     let initialActivationSyncDone = false;
     function onRemoteActivationLevelReceived(remoteAct) {
+      // [BUILD 104 SECURITY LOCK] Remote activation level alert listener disabled to physically block ghost messages
+      /*
       if (!remoteAct || !remoteAct.level) return;
       const newLvl = parseInt(remoteAct.level, 10);
       if (newLvl < 1 || newLvl > 3) return;
@@ -15182,7 +15184,6 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
       const lastTs = parseInt(safeStorage.getItem('fc_ares_response_level_ts') || '0', 10);
       const remoteTs = parseInt(remoteAct.updatedAt || '0', 10);
 
-      // First sync upon app launch: silently seed current county posture without firing ghost alerts
       if (!initialActivationSyncDone) {
         initialActivationSyncDone = true;
         safeStorage.setItem('fc_ares_response_level', newLvl);
@@ -15191,24 +15192,12 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
         return;
       }
 
-      // Only process if level changed and remote timestamp is genuinely newer
       if (newLvl !== currentLvl && (remoteTs === 0 || remoteTs > lastTs)) {
-        console.log(`🔔 Remote Activation Level update received from Cloud: Level ${newLvl}`);
         safeStorage.setItem('fc_ares_response_level', newLvl);
         safeStorage.setItem('fc_ares_response_level_ts', remoteTs || Date.now());
         renderCountyResponseLevelUI();
-
-        // Sound two-tone alert ONLY if escalated to emergency posture (Level 1 or 2) within the last 3 minutes
-        const isFreshChange = (remoteTs > 0) && (Math.abs(Date.now() - remoteTs) < 180000);
-        const isSentByMe = Boolean(isSenderSuppressionActive() || (remoteAct.updatedBy && appState.myCall && remoteAct.updatedBy.toUpperCase() === appState.myCall.toUpperCase()));
-        if (!isSentByMe && isFreshChange && newLvl <= 2 && newLvl < currentLvl) {
-          if (isOperatorOnDuty()) {
-            playTwoToneBeep();
-          }
-          const cfg = COUNTY_RESPONSE_CONFIG[newLvl];
-          showTacticalBannerNotification(`🚨 EMERGENCY POSTURE CHANGE: ${cfg.badgeText}`);
-        }
       }
+      */
     }
 
     // 3. Realtime Cloud Incident / Alert Broadcast
@@ -15263,6 +15252,8 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
     }
 
     function onRemoteAlertsReceived(remoteAlerts) {
+      // [BUILD 104 SECURITY LOCK] Remote alerts feed listener disabled to physically block ghost messages
+      /*
       if (!remoteAlerts) return;
       let list = [];
       if (Array.isArray(remoteAlerts)) {
@@ -15272,6 +15263,7 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
       }
       appState.alertsHistory = list.sort((a,b) => (b.timestamp||0) - (a.timestamp||0));
       renderActiveAlertsCardFeed();
+      */
     }
 
     // 4. Delete / Purge Alerts Completely (EC Authorized)
@@ -15498,6 +15490,8 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
     function closeAlertSoundVerifyModal() {}
 
     function requestNotificationPermission() {
+      // [BUILD 104 SECURITY LOCK] Push notification permission initialization commented out to block ghost messages
+      /*
       if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'default') {
         try {
           Notification.requestPermission().then(function(perm) {
@@ -15505,9 +15499,12 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
           });
         } catch(e) {}
       }
+      */
     }
 
     function showSystemPushNotification(inc) {
+      // [BUILD 104 SECURITY LOCK] Remote system push notification display commented out to block ghost messages
+      /*
       if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
         try {
           const topUpdate = (inc.updates && inc.updates.length > 0) ? inc.updates[0] : {};
@@ -15528,6 +15525,7 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
           console.warn('System push notification note:', e);
         }
       }
+      */
     }
 
     // Screen WakeLock Keep-Alive (ActiveAlert Style: prevents device from sleeping while on duty)
@@ -15906,6 +15904,8 @@ function toggleIncidentDetailsExpanded() {
             }
           });
 
+          // [BUILD 104 SECURITY LOCK] Remote Alert Listeners (activation_level, active_incident, alerts) commented out to physically block ghost messages
+          /*
           // 1. Live Activation Level Listener (Instant Countywide Paging)
           fbDb.ref('activation_level').on('value', function(snap) {
             const remoteAct = snap.val();
@@ -15929,6 +15929,7 @@ function toggleIncidentDetailsExpanded() {
               onRemoteAlertsReceived(remoteAlerts);
             }
           });
+          */
 
           // 4. Live Skywarn Storm Spotter Reports Listener
           fbDb.ref('skywarn_reports_list').on('value', function(snap) {
@@ -16056,6 +16057,8 @@ function toggleIncidentDetailsExpanded() {
         const remotePending = await fbRestGet('pending_authorizations');
         onRemotePendingReceived(remotePending || []);
 
+        // [BUILD 104 SECURITY LOCK] Remote Alert REST Polling commented out to physically block ghost messages
+        /*
         const remoteAct = await fbRestGet('activation_level');
         if (remoteAct) {
           onRemoteActivationLevelReceived(remoteAct);
@@ -16070,6 +16073,7 @@ function toggleIncidentDetailsExpanded() {
         if (remoteAlerts) {
           onRemoteAlertsReceived(remoteAlerts);
         }
+        */
 
         const remoteSky = await fbRestGet('skywarn_reports_list');
         if (remoteSky) {
@@ -16547,80 +16551,14 @@ Your console is now authorized and unlocked.`);
 
     let initialIncidentSyncDone = false;
     function onRemoteIncidentReceived(remoteInc) {
+      // [BUILD 104 SECURITY LOCK] Remote incident alert listener commented out to physically block ghost messages
+      /*
       if (!remoteInc) return;
       appState.activeIncident = remoteInc;
       safeStorage.setItem('fc_ares_active_incident', JSON.stringify(remoteInc));
       renderActiveIncidentUI();
       renderActiveAlertsCardFeed();
-
-      // Synchronize County Response Level UI with active incident posture (without clobbering cloud timestamp)
-      const isRoutine = isRoutineIncident(remoteInc);
-      const isEmergency = !remoteInc.isClosed && !isRoutine;
-
-      // Compute unique alert fingerprint
-      const topUpdate = (remoteInc.updates && remoteInc.updates.length > 0) ? remoteInc.updates[0] : {};
-      const alertFingerprint = `${remoteInc.title || ''}_${remoteInc.level || ''}_${remoteInc.updateCount || 0}_${remoteInc.lastUpdated || ''}_${topUpdate.timestamp || topUpdate.timeLocal || topUpdate.sitrep || ''}`;
-      const lastSeenKey = safeStorage.getItem('fc_ares_last_heard_alert_key') || '';
-
-      if (!isEmergency) {
-        initialIncidentSyncDone = true;
-        safeStorage.setItem('fc_ares_last_heard_alert_key', alertFingerprint);
-        renderCountyResponseLevelUI();
-        dismissHeadsUpAlertBanner();
-        clearAllResponderStatuses(false);
-        return;
-      }
-
-      const targetLvl = (remoteInc.level && remoteInc.level.includes('LEVEL 1')) ? 1 : ((remoteInc.level && remoteInc.level.includes('LEVEL 2')) ? 2 : 3);
-      if (targetLvl <= 2) {
-        safeStorage.setItem('fc_ares_response_level', targetLvl);
-      }
-      renderCountyResponseLevelUI();
-
-      // On first cloud sync after app launch, record the existing incident fingerprint silently to prevent ghost sirens on startup
-      if (!initialIncidentSyncDone) {
-        initialIncidentSyncDone = true;
-        safeStorage.setItem('fc_ares_last_heard_alert_key', alertFingerprint);
-        return;
-      }
-
-      if (alertFingerprint === lastSeenKey) {
-        return;
-      }
-      safeStorage.setItem('fc_ares_last_heard_alert_key', alertFingerprint);
-
-      // 1. SUPPRESSION FOR SENDER: The device that transmitted this update/incident never sounds sirens or alerts
-      const myCall = (appState.myCall || '').toUpperCase().trim();
-      const authorStr = ((topUpdate.author || '') + ' ' + (remoteInc.author || '')).toUpperCase();
-      const isSentByMe = Boolean(isSenderSuppressionActive() || (myCall && myCall !== 'GUEST' && authorStr.includes(myCall)));
-      if (isSentByMe) {
-        console.log(`🔇 Incident update transmitted by this station (${myCall}) - suppressing siren and heads-up banner on sender device.`);
-        return;
-      }
-
-      // 2. SUPPRESSION FOR SITREPs & RESPONDER STATUSES: Field SITREPs & responses update the board silently without alert sirens or beeps
-      const isSitrepOnly = Boolean(topUpdate.isSitrepOnly === true || topUpdate.isSitrep === true || topUpdate.isResponseStatus === true);
-      if (isSitrepOnly) {
-        console.log('📋 Field SITREP received: updated response board & dashboard stream silently.');
-        showTacticalBannerNotification(`📻 Field SITREP #${topUpdate.updateNum || ''} from ${topUpdate.author || 'Field Station'}`);
-        return;
-      }
-
-      // 3. Emergency Incident Callout: Initial dispatch gets Minitor pager siren; subsequent updates get crisp two-tone beep + banner
-      if (isOperatorOnDuty()) {
-        const isInitialDispatch = (remoteInc.updateCount === 1 || !remoteInc.updateCount);
-        if (isInitialDispatch) {
-          console.log('🚨 ON DUTY: INITIAL Emergency Dispatch received! Triggering authentic Motorola Minitor pager siren & banner...');
-          playSelectedSiren();
-        } else {
-          console.log(`⚡ ON DUTY: Incident Alert UPDATE #${remoteInc.updateCount} received! Playing crisp two-tone alert beep (siren sounds only on initial dispatch)...`);
-          playTwoToneBeep();
-        }
-        showActiveAlertHeadsUpBanner(remoteInc);
-        showSystemPushNotification(remoteInc);
-      } else {
-        console.log('💤 OFF DUTY: Alert received in background, audible tone suppressed.');
-      }
+      */
     }
 
     async function pushRosterSyncToCloud() {
@@ -20025,7 +19963,7 @@ Your console is now authorized and unlocked.`);
         category: 'OFFICIAL OPERATOR FIELD MANUAL',
         title: 'FREESTONE COUNTY ARES TACTICAL MOBILE',
         subtitle: 'COMPLETE OPERATOR FIELD GUIDE • MARINE-PROOF EDITION',
-        meta: 'Step-By-Step Illustrated Visual Instructions for Android & iOS\nCross-Platform Unified Architecture • Build 103 (v7.9.27) • November 2026\nCounty Emergency Coordinator: Brian Davis (KG5TZT)',
+        meta: 'Step-By-Step Illustrated Visual Instructions for Android & iOS\nCross-Platform Unified Architecture • Build 104 (v7.9.27) • November 2026\nCounty Emergency Coordinator: Brian Davis (KG5TZT)',
         image: 'guide_screens/screen_02_dashboard_annotated.png'
       },
       {
@@ -21215,7 +21153,7 @@ Your console is now authorized and unlocked.`);
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.27 (Build 103)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.27 (Build 104)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>

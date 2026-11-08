@@ -32,6 +32,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     private let firebaseUrl = "https://freestone-ares-tactical-default-rtdb.firebaseio.com"
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // [BUILD 104 SECURITY LOCK] Push notification initialization and remote alert listeners commented out to physically block ghost messages
+        /*
         // 1. Configure Notification Center for High-Priority Emergency Alerts
         let center = UNUserNotificationCenter.current()
         center.delegate = self
@@ -45,6 +47,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 NSLog("[Freestone ARES] Notification authorization error: \(error.localizedDescription)")
             }
         }
+        */
+        UIApplication.shared.unregisterForRemoteNotifications()
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
 
         // 2. ActiveAlert Background Persistence: Configure Audio Session so app remains active in background
         do {
@@ -54,8 +60,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             NSLog("[Freestone ARES] Background audio session configuration notice: \(error.localizedDescription)")
         }
 
-        // 3. Start continuous background dispatch monitoring
-        startDispatchMonitoring()
+        // 3. Background dispatch monitoring disabled to physically block ghost messages
+        // startDispatchMonitoring()
 
         return true
     }
@@ -73,6 +79,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     // MARK: - Background CAD Dispatch Monitor
     func startDispatchMonitoring() {
+        // [BUILD 104 SECURITY LOCK] Remote polling disabled to physically block ghost messages
+        /*
         guard monitorTimer == nil else { return }
 
         // Initial seed checks
@@ -88,6 +96,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             }
         }
         RunLoop.main.add(monitorTimer!, forMode: .common)
+        */
     }
 
     private func checkActivationLevel() {
@@ -273,6 +282,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
 
     func sendLocalEmergencyAlert(title: String, body: String) {
+        // [BUILD 104 SECURITY LOCK] Local emergency notification delivery commented out to physically block ghost messages
+        /*
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
@@ -293,17 +304,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 NSLog("[Freestone ARES] Notification delivery error: \(error.localizedDescription)")
             }
         }
+        */
     }
 
     // MARK: - UNUserNotificationCenterDelegate
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        if isSenderSuppressed() {
-            NSLog("[Freestone ARES] willPresent: Sender suppression active, totally muting foreground alert.")
-            completionHandler([])
-            return
-        }
-        // Show banner and play sound for recipients
-        completionHandler([.banner, .sound, .badge, .list])
+        // [BUILD 104 SECURITY LOCK] Suppress any incoming notification banner/sound
+        completionHandler([])
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
@@ -312,11 +319,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     // MARK: - Background Task Lifecycle
     func applicationDidEnterBackground(_ application: UIApplication) {
-        bgTask = application.beginBackgroundTask(withName: "FreestoneARESDispatchMonitor") { [weak self] in
-            if let task = self?.bgTask, task != .invalid {
-                application.endBackgroundTask(task)
-                self?.bgTask = .invalid
-            }
+        if bgTask != .invalid {
+            application.endBackgroundTask(bgTask)
+            bgTask = .invalid
         }
     }
 
@@ -325,9 +330,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             application.endBackgroundTask(bgTask)
             bgTask = .invalid
         }
-        // Force immediate check on foreground return
-        checkActivationLevel()
-        checkActiveIncident()
+        // [BUILD 104 SECURITY LOCK] Remote alert check on foreground return commented out
+        // checkActivationLevel()
+        // checkActiveIncident()
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
@@ -336,15 +341,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         } else {
             application.applicationIconBadgeNumber = 0
         }
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
         UNUserNotificationCenter.current().removeAllDeliveredNotifications()
     }
 
     // MARK: - APNs Remote Push Notifications (ActiveAlert Cloud Push)
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        // [BUILD 104 SECURITY LOCK] Remote APNs token registration disabled to physically block ghost messages
+        /*
         let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
         let token = tokenParts.joined()
         NSLog("[Freestone ARES] Successfully received APNs device token: \(token)")
         registerTokenWithFirebase(token: token)
+        */
     }
 
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
@@ -352,11 +361,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
 
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        // [BUILD 104 SECURITY LOCK] Remote push notification handler disabled
+        /*
         NSLog("[Freestone ARES] Received remote push notification from Apple APNs: \(userInfo)")
-        // Immediate priority check and alert sound
         checkActivationLevel()
         checkActiveIncident()
-        completionHandler(.newData)
+        */
+        completionHandler(.noData)
     }
 
     private func registerTokenWithFirebase(token: String) {
