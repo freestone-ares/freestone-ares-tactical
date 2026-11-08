@@ -13,8 +13,12 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <!-- Camera & Storage Permissions for Mandatory Photo ID & SKYWARN Spotting -->
     <uses-permission android:name="android.permission.CAMERA" />
@@ -97,13 +101,24 @@
             </intent-filter>
         </activity>
 
-        <!-- Continuous Background CAD Dispatch & Activation Monitor -->
+        <!-- Continuous Background CAD Dispatch & Activation Monitor (Samsung Energy Profile Priority Tagged) -->
+        <meta-data
+            android:name="com.samsung.android.keepalive.density"
+            android:value="true" />
+        <meta-data
+            android:name="com.samsung.android.multidisplay.keep_process_alive"
+            android:value="true" />
+
         <service
             android:name=".EmergencyDispatchService"
             android:enabled="true"
             android:exported="false"
             android:stopWithTask="false"
-            android:foregroundServiceType="dataSync" />
+            android:foregroundServiceType="dataSync|specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="samsung_priority_emergency_dispatch_wake_lock_monitor" />
+        </service>
 
         <!-- Automatic Restart on Device Boot or App Update -->
         <receiver

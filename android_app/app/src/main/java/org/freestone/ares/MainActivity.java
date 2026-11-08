@@ -542,6 +542,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @JavascriptInterface
+        public String getSamsungEnergyProfileStatus() {
+            return "ACTIVE:" + EmergencyDispatchService.SAMSUNG_PRIORITY_PERF_TAG;
+        }
+
+        @JavascriptInterface
         public boolean openManualWithFileProvider(String assetPath) {
             String target = (assetPath == null || assetPath.trim().isEmpty())
                     ? "assets/docs/Tactical_Field_Binder_7.5.pdf"

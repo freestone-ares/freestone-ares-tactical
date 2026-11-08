@@ -13,9 +13,11 @@ import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.Process;
 import android.os.SystemClock;
 import android.util.Log;
 
@@ -42,6 +44,8 @@ public class EmergencyDispatchService extends Service {
     private boolean isRunning = false;
     private Thread monitorThread;
     private PowerManager.WakeLock wakeLock;
+    private WifiManager.WifiLock wifiLock;
+    public static final String SAMSUNG_PRIORITY_PERF_TAG = "FreestoneARES::SamsungPriorityPerfWakeLock";
 
     private int lastKnownLevel = -1;
     private String lastIncidentFingerprint = null;
@@ -82,12 +86,25 @@ public class EmergencyDispatchService extends Service {
             if (wakeLock == null) {
                 PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
                 if (pm != null) {
-                    wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "FreestoneARES::EmergencyDispatchWakeLock");
+                    wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, SAMSUNG_PRIORITY_PERF_TAG);
                     wakeLock.setReferenceCounted(false);
                 }
             }
             if (wakeLock != null && !wakeLock.isHeld()) {
-                wakeLock.acquire(10 * 60 * 1000L);
+                wakeLock.acquire(30 * 60 * 1000L);
+            }
+            if (wifiLock == null) {
+                WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                if (wm != null) {
+                    int lockMode = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+                            ? WifiManager.WIFI_MODE_FULL_LOW_LATENCY
+                            : WifiManager.WIFI_MODE_FULL_HIGH_PERF;
+                    wifiLock = wm.createWifiLock(lockMode, "FreestoneARES::SamsungPriorityWifiLock");
+                    wifiLock.setReferenceCounted(false);
+                }
+            }
+            if (wifiLock != null && !wifiLock.isHeld()) {
+                wifiLock.acquire();
             }
         } catch (Exception e) {
             Log.w(TAG, "WakeLock notice: " + e.getMessage());
@@ -135,6 +152,9 @@ public class EmergencyDispatchService extends Service {
         try {
             if (wakeLock != null && wakeLock.isHeld()) {
                 wakeLock.release();
+            }
+            if (wifiLock != null && wifiLock.isHeld()) {
+                wifiLock.release();
             }
         } catch (Exception ignored) {}
         super.onDestroy();
@@ -200,10 +220,12 @@ public class EmergencyDispatchService extends Service {
 
         return new NotificationCompat.Builder(this, CHANNEL_MONITOR)
                 .setContentTitle("Freestone County ARES")
-                .setContentText("Emergency Dispatch & CAD Standby Active")
+                .setContentText("Emergency Dispatch & CAD Standby Active (Samsung Priority Profile)")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pi)
                 .setOngoing(true)
+                .setCategory(NotificationCompat.CATEGORY_SERVICE)
+                .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .build();
     }
@@ -215,6 +237,9 @@ public class EmergencyDispatchService extends Service {
         monitorThread = new Thread(new Runnable() {
             @Override
             public void run() {
+                try {
+                    Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_DISPLAY);
+                } catch (Exception ignored) {}
                 Log.i(TAG, "Monitoring daemon thread started. Polling Firebase REST API every 20s.");
                 while (isRunning) {
                     try {
