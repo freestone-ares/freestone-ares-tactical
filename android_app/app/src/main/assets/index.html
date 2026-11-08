@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Freestone County ARES Tactical Mobile v7.9.26</title>
+  <title>Freestone County ARES Tactical Mobile v7.9.27</title>
   <meta name="description" content="Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES">
   <meta name="theme-color" content="#0b0e14">
   <meta name="mobile-web-app-capable" content="yes">
@@ -162,29 +162,129 @@
       }
     }
 
-    /* Responsive Desktop & Tablet Scaling: iPad, MacBook & iMac (Phones < 768px remain 100% untouched) */
+    /* =====================================================================
+       UNIVERSAL CROSS-PLATFORM RESPONSIVE LAYOUT ENGINE (BUILD 103)
+       Adapts fluidly across Smartphones, Tablets, Laptops, Desktops,
+       Raspberry Pi Touchscreens (800x480 / 1024x600), and NUC Mini-PC Wall Displays
+       ===================================================================== */
+    :root {
+      --fluid-container-pad: clamp(0.65rem, 2vw, 1.75rem);
+      --fluid-card-pad: clamp(0.75rem, 1.6vw, 1.35rem);
+    }
+
+    #main-container {
+      width: 100% !important;
+      max-width: min(100vw, 104rem) !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+      padding-left: max(env(safe-area-inset-left, 0px), var(--fluid-container-pad)) !important;
+      padding-right: max(env(safe-area-inset-right, 0px), var(--fluid-container-pad)) !important;
+    }
+
+    /* Prevent flex/grid children from overflowing or overlapping text on any screen */
+    .tab-content *, .pace-master-card *, #skywarn-subpanel-report * {
+      min-width: 0;
+    }
+
+    input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+    select,
+    textarea {
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    /* PACE Master Cards & Channel Number Alignment Guarantees */
+    .pace-master-grid {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)) !important;
+      gap: clamp(0.75rem, 1.5vw, 1.25rem) !important;
+      align-items: stretch !important;
+    }
+    .pace-master-card {
+      padding-top: 1.75rem !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      height: 100% !important;
+    }
+    .pace-ch-badge {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      min-width: 4.4rem !important;
+      white-space: nowrap !important;
+      font-variant-numeric: tabular-nums !important;
+      letter-spacing: 0.03em !important;
+      line-height: 1.2 !important;
+      flex-shrink: 0 !important;
+    }
+    #channels-table-body td {
+      vertical-align: middle !important;
+      font-variant-numeric: tabular-nums !important;
+    }
+
+    /* Certified Spotter Form & Phenomenon Grid Alignment */
+    .spotter-phenom-grid {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 155px), 1fr)) !important;
+      gap: 0.5rem !important;
+    }
+    .spotter-endorsement-row {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 0.75rem !important;
+    }
+
+    /* 1. Tiny Smartphones (< 380px width) */
+    @media screen and (max-width: 380px) {
+      html { font-size: 14px; }
+      .pace-master-grid { grid-template-columns: 1fr !important; }
+      .spotter-phenom-grid { grid-template-columns: 1fr !important; }
+    }
+
+    /* 2. Raspberry Pi 7" Display & Compact Landscape Panels (640px - 1023px) */
+    @media screen and (min-width: 640px) and (max-width: 1023px) {
+      html { font-size: 15px; }
+      .pace-master-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      }
+      .max-w-7xl {
+        max-width: 98vw !important;
+      }
+    }
+
+    /* 3. Laptops, Desktops & Raspberry Pi Chromium Desktop (1024px - 1439px) */
     @media (min-width: 1024px) {
       html {
         font-size: 16px;
       }
       .max-w-7xl {
-        max-width: min(100%, 80rem) !important;
+        max-width: min(96vw, 84rem) !important;
+      }
+      .pace-master-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
       }
     }
+
+    /* 4. Large Desktops & Widescreen Monitors (1440px - 1919px) */
     @media (min-width: 1440px) {
       html {
-        font-size: 17px;
+        font-size: 16.5px;
       }
       .max-w-7xl {
-        max-width: min(100%, 90rem) !important;
+        max-width: min(95vw, 94rem) !important;
       }
     }
+
+    /* 5. NUC Mini-PC EOC Wall Displays & 4K Ultrawide Monitors (1920px+) */
     @media (min-width: 1920px) {
       html {
-        font-size: 18px;
+        font-size: 17.5px;
       }
       .max-w-7xl {
-        max-width: min(100%, 100rem) !important;
+        max-width: min(94vw, 108rem) !important;
       }
     }
 
@@ -2284,7 +2384,7 @@
         <!-- Slide Footer Keyboard & Swipe Hints -->
         <div class="flex items-center justify-between text-[11px] text-slate-400 px-2 font-mono-tac">
           <div>💡 <strong>Tips:</strong> Swipe left / right on touchscreen or use PREV / NEXT to flip through training slides.</div>
-          <div>Marine-Proof Training System &bull; Build 102 (v7.9.26)</div>
+          <div>Marine-Proof Training System &bull; Build 103 (v7.9.27)</div>
         </div>
 
       </div> <!-- End of manual-guide-container -->
@@ -2295,24 +2395,27 @@
     <section id="view-pace" class="tab-content hidden space-y-6">
       
       <!-- THE 4 PACE MASTER CARDS (PRIMARY, ALTERNATE, CONTINGENCY, EMERGENCY) -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 font-mono-tac">
+      <div class="pace-master-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 font-mono-tac">
         
         <!-- [P] PRIMARY CARD -->
-        <div class="bg-[#10151d] border-2 border-emerald-500/70 rounded-xl p-4 shadow-lg flex flex-col justify-between space-y-3 relative overflow-hidden">
-          <div class="absolute top-0 right-0 px-2 py-0.5 bg-emerald-950 text-emerald-400 border-b border-l border-emerald-800 text-[10px] font-bold">
+        <div class="pace-master-card bg-[#10151d] border-2 border-emerald-500/70 rounded-xl p-4 pt-7 shadow-lg flex flex-col justify-between space-y-3 relative overflow-hidden">
+          <div class="absolute top-0 right-0 px-2.5 py-0.5 bg-emerald-950 text-emerald-400 border-b border-l border-emerald-800 text-[10px] font-bold tracking-wider">
             ONLINE // PRIMARY
           </div>
           <div>
-            <div class="flex items-center gap-2 mb-1">
-              <span class="w-7 h-7 rounded-full bg-emerald-950 text-emerald-400 font-bold text-sm flex items-center justify-center border border-emerald-500">P</span>
-              <div>
-                <span class="text-xs font-bold text-emerald-400 block">[P] PRIMARY METHOD</span>
-                <span class="text-slate-400 text-[10px]">Normal Incident Operations</span>
+            <div class="flex items-center gap-2.5 mb-1 min-w-0">
+              <span class="w-7 h-7 rounded-full bg-emerald-950 text-emerald-400 font-bold text-sm flex items-center justify-center border border-emerald-500 shrink-0">P</span>
+              <div class="min-w-0">
+                <span class="text-xs font-bold text-emerald-400 block truncate">[P] PRIMARY METHOD</span>
+                <span class="text-slate-400 text-[10px] block truncate">Normal Incident Operations</span>
               </div>
             </div>
-            <div class="mt-2 p-2 rounded bg-[#0b0e14] border border-slate-800 space-y-1">
-              <div class="text-base font-bold text-white">FF 110 (CH 01)</div>
-              <div class="text-xs text-amber-400 font-bold">145.110 MHz (-600 kHz) | TSQ 146.2 Hz</div>
+            <div class="mt-2 p-2.5 rounded bg-[#0b0e14] border border-slate-800 space-y-1">
+              <div class="flex items-center justify-between gap-2 flex-wrap">
+                <span class="text-base font-bold text-white whitespace-nowrap">FF 110</span>
+                <span class="pace-ch-badge px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600 text-xs font-black">CH 01</span>
+              </div>
+              <div class="text-xs text-amber-400 font-bold break-words">145.110 MHz (-600 kHz) | TSQ 146.2 Hz</div>
               <div class="text-[11px] text-emerald-400 font-bold">CTCSS: TSQ 146.2 Hz (Tone Squelch)</div>
               <div class="text-[10px] text-slate-400 mt-1">W5NFL Fairfield VHF</div>
               <div class="text-[10px] text-slate-300 font-semibold pt-1 border-t border-slate-800/80">
@@ -2331,20 +2434,23 @@
         </div>
 
         <!-- [A] ALTERNATE CARD -->
-        <div class="bg-[#10151d] border-2 border-amber-500/70 rounded-xl p-4 shadow-lg flex flex-col justify-between space-y-3 relative overflow-hidden">
-          <div class="absolute top-0 right-0 px-2 py-0.5 bg-amber-950 text-amber-400 border-b border-l border-amber-800 text-[10px] font-bold">
+        <div class="pace-master-card bg-[#10151d] border-2 border-amber-500/70 rounded-xl p-4 pt-7 shadow-lg flex flex-col justify-between space-y-3 relative overflow-hidden">
+          <div class="absolute top-0 right-0 px-2.5 py-0.5 bg-amber-950 text-amber-400 border-b border-l border-amber-800 text-[10px] font-bold tracking-wider">
             STANDBY // VERIFIED
           </div>
           <div>
-            <div class="flex items-center gap-2 mb-1">
-              <span class="w-7 h-7 rounded-full bg-amber-950 text-amber-400 font-bold text-sm flex items-center justify-center border border-amber-500">A</span>
-              <div>
-                <span class="text-xs font-bold text-amber-400 block">[A] ALTERNATE METHOD</span>
-                <span class="text-slate-400 text-[10px]">Backup When Primary Fails</span>
+            <div class="flex items-center gap-2.5 mb-1 min-w-0">
+              <span class="w-7 h-7 rounded-full bg-amber-950 text-amber-400 font-bold text-sm flex items-center justify-center border border-amber-500 shrink-0">A</span>
+              <div class="min-w-0">
+                <span class="text-xs font-bold text-amber-400 block truncate">[A] ALTERNATE METHOD</span>
+                <span class="text-slate-400 text-[10px] block truncate">Backup When Primary Fails</span>
               </div>
             </div>
-            <div class="mt-2 p-2 rounded bg-[#0b0e14] border border-slate-800 space-y-1">
-              <div class="text-base font-bold text-white">WRTM 760 (CH 02)</div>
+            <div class="mt-2 p-2.5 rounded bg-[#0b0e14] border border-slate-800 space-y-1">
+              <div class="flex items-center justify-between gap-2 flex-wrap">
+                <span class="text-base font-bold text-white whitespace-nowrap">WRTM 760</span>
+                <span class="pace-ch-badge px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-600 text-xs font-black">CH 02</span>
+              </div>
               <div class="text-xs text-amber-400 font-bold">146.760 MHz (-600 kHz)</div>
               <div class="text-[11px] text-amber-400">CTCSS Tone: 136.5 Hz</div>
               <div class="text-[10px] text-slate-400 mt-1">KE5DFY Wortham VHF &bull; Primary Ops Backup</div>
@@ -2364,20 +2470,23 @@
         </div>
 
         <!-- [C] CONTINGENCY CARD -->
-        <div class="bg-[#10151d] border-2 border-blue-500/70 rounded-xl p-4 shadow-lg flex flex-col justify-between space-y-3 relative overflow-hidden">
-          <div class="absolute top-0 right-0 px-2 py-0.5 bg-blue-950 text-blue-400 border-b border-l border-blue-800 text-[10px] font-bold">
+        <div class="pace-master-card bg-[#10151d] border-2 border-blue-500/70 rounded-xl p-4 pt-7 shadow-lg flex flex-col justify-between space-y-3 relative overflow-hidden">
+          <div class="absolute top-0 right-0 px-2.5 py-0.5 bg-blue-950 text-blue-400 border-b border-l border-blue-800 text-[10px] font-bold tracking-wider">
             SIMPLEX // NO GRID
           </div>
           <div>
-            <div class="flex items-center gap-2 mb-1">
-              <span class="w-7 h-7 rounded-full bg-blue-950 text-blue-400 font-bold text-sm flex items-center justify-center border border-blue-500">C</span>
-              <div>
-                <span class="text-xs font-bold text-blue-400 block">[C] CONTINGENCY METHOD</span>
-                <span class="text-slate-400 text-[10px]">Degraded / Zero Repeater Grid</span>
+            <div class="flex items-center gap-2.5 mb-1 min-w-0">
+              <span class="w-7 h-7 rounded-full bg-blue-950 text-blue-400 font-bold text-sm flex items-center justify-center border border-blue-500 shrink-0">C</span>
+              <div class="min-w-0">
+                <span class="text-xs font-bold text-blue-400 block truncate">[C] CONTINGENCY METHOD</span>
+                <span class="text-slate-400 text-[10px] block truncate">Degraded / Zero Repeater Grid</span>
               </div>
             </div>
-            <div class="mt-2 p-2 rounded bg-[#0b0e14] border border-slate-800 space-y-1">
-              <div class="text-base font-bold text-white">ARES TAC (CH 09)</div>
+            <div class="mt-2 p-2.5 rounded bg-[#0b0e14] border border-slate-800 space-y-1">
+              <div class="flex items-center justify-between gap-2 flex-wrap">
+                <span class="text-base font-bold text-white whitespace-nowrap">ARES TAC</span>
+                <span class="pace-ch-badge px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-600 text-xs font-black">CH 09</span>
+              </div>
               <div class="text-xs text-amber-400 font-bold">146.580 MHz Simplex</div>
               <div class="text-[11px] text-blue-400">CTCSS Tone: 123.0 Hz (Tone Squelch)</div>
               <div class="text-[10px] text-slate-400 mt-1">Countywide Tactical Simplex &bull; Direct Relays</div>
@@ -2397,20 +2506,23 @@
         </div>
 
         <!-- [E] EMERGENCY CARD -->
-        <div class="bg-[#10151d] border-2 border-red-500/70 rounded-xl p-4 shadow-lg flex flex-col justify-between space-y-3 relative overflow-hidden">
-          <div class="absolute top-0 right-0 px-2 py-0.5 bg-red-950 text-red-400 border-b border-l border-red-800 text-[10px] font-bold">
+        <div class="pace-master-card bg-[#10151d] border-2 border-red-500/70 rounded-xl p-4 pt-7 shadow-lg flex flex-col justify-between space-y-3 relative overflow-hidden">
+          <div class="absolute top-0 right-0 px-2.5 py-0.5 bg-red-950 text-red-400 border-b border-l border-red-800 text-[10px] font-bold tracking-wider">
             LAST RESORT
           </div>
           <div>
-            <div class="flex items-center gap-2 mb-1">
-              <span class="w-7 h-7 rounded-full bg-red-950 text-red-400 font-bold text-sm flex items-center justify-center border border-red-500">E</span>
-              <div>
-                <span class="text-xs font-bold text-red-400 block">[E] EMERGENCY METHOD</span>
-                <span class="text-slate-400 text-[10px]">Total RF Failure / Grid Outage</span>
+            <div class="flex items-center gap-2.5 mb-1 min-w-0">
+              <span class="w-7 h-7 rounded-full bg-red-950 text-red-400 font-bold text-sm flex items-center justify-center border border-red-500 shrink-0">E</span>
+              <div class="min-w-0">
+                <span class="text-xs font-bold text-red-400 block truncate">[E] EMERGENCY METHOD</span>
+                <span class="text-slate-400 text-[10px] block truncate">Total RF Failure / Grid Outage</span>
               </div>
             </div>
-            <div class="mt-2 p-2 rounded bg-[#0b0e14] border border-slate-800 space-y-1">
-              <div class="text-base font-bold text-white">HF NET / GMRS / RUNNER</div>
+            <div class="mt-2 p-2.5 rounded bg-[#0b0e14] border border-slate-800 space-y-1">
+              <div class="flex items-center justify-between gap-2 flex-wrap">
+                <span class="text-base font-bold text-white whitespace-nowrap">HF NET / GMRS</span>
+                <span class="pace-ch-badge px-2 py-0.5 rounded bg-red-950 text-red-300 border border-red-600 text-xs font-black">CH 06-08</span>
+              </div>
               <div class="text-xs text-amber-400 font-bold">HF: 7.290 MHz / 3.873 MHz</div>
               <div class="text-[11px] text-red-400">GMRS Ch 6-8 + Physical Runners</div>
               <div class="text-[10px] text-slate-400 mt-1">Statewide traffic nets, GMRS links & couriers</div>
@@ -3380,10 +3492,10 @@
 
           <!-- STEP 1: 1-TAP SEVERE PHENOMENON QUICK SELECTOR -->
           <div class="space-y-2">
-            <label class="text-xs font-black text-amber-400 block uppercase tracking-wider flex items-center gap-1.5">
+            <label class="text-xs font-black text-amber-400 block uppercase tracking-wider flex flex-wrap items-center gap-1.5">
               <span>STEP 1:</span><span>SELECT OBSERVED SEVERE CONDITION (1-TAP QUICK SELECT):</span>
             </label>
-            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
+            <div class="spotter-phenom-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
               <!-- Tornado -->
               <button type="button" onclick="selectQuickSkywarnType('🌪️ Tornado / Rotating Wall Cloud', 'TORNADO / WALL CLOUD: Rapid rotation and lowering observed.', 'CRITICAL / LIFE SAFETY', 'bg-red-950 text-red-300 border-red-600')" class="quick-phenom-btn p-3 rounded-xl bg-red-950/40 hover:bg-red-900/60 border-2 border-red-600/70 text-left transition space-y-1 cursor-pointer">
                 <span class="text-2xl block">🌪️</span>
@@ -3460,12 +3572,12 @@
 
           <!-- STEP 3: LOCATION & REAL DEVICE GPS -->
           <div class="grid grid-cols-1 md:grid-cols-12 gap-3 p-3 bg-[#080b10] rounded-xl border border-slate-800">
-            <div class="md:col-span-7 space-y-1">
-              <div class="flex items-center justify-between">
-                <label class="text-[11px] font-bold text-slate-300 uppercase flex items-center gap-1.5">
+            <div class="md:col-span-7 space-y-1.5 min-w-0">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <label class="text-[11px] font-bold text-slate-300 uppercase flex items-center gap-1.5 min-w-0">
                   <span>STEP 3:</span><span>OBSERVATION LOCATION &amp; GPS:</span>
                 </label>
-                <button type="button" id="skywarn-gps-btn" onclick="autofillSpotterGpsLocation()" class="text-xs px-2.5 py-1 bg-emerald-950 hover:bg-emerald-900 border border-emerald-600 text-emerald-300 rounded font-bold flex items-center gap-1 cursor-pointer shadow transition">
+                <button type="button" id="skywarn-gps-btn" onclick="autofillSpotterGpsLocation()" class="text-xs px-2.5 py-1 bg-emerald-950 hover:bg-emerald-900 border border-emerald-600 text-emerald-300 rounded font-bold flex items-center gap-1 cursor-pointer shadow transition flex-shrink-0">
                   <span>📍</span><span>AUTOFILL DEVICE GPS</span>
                 </button>
               </div>
@@ -3510,7 +3622,7 @@
 
           <!-- STEP 5: IMPACT REMARKS & QUICK TAGS -->
           <div class="space-y-1.5">
-            <div class="flex justify-between items-center">
+            <div class="flex flex-wrap justify-between items-center gap-2">
               <label class="text-[11px] font-bold text-slate-300 uppercase">STEP 5: OBSERVATION REMARKS &amp; IMPACT DETAILS:</label>
               <div class="flex items-center gap-1 text-[9px] flex-wrap">
                 <span class="text-slate-500">QUICK TAGS:</span>
@@ -14502,14 +14614,13 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
 
 
     // ==========================================
-    // MANDATORY OPERATOR PHOTO UPLOAD (CANVAS COMPRESSION)
+    // MANDATORY OPERATOR PHOTO UPLOAD (UNIVERSAL WEB-FALLBACK + NATIVE WRAPPERS)
     // ==========================================
-    function handlePhotoUpload(event, previewId, dataTargetId, placeholderId) {
-      const file = event.target.files && event.target.files[0];
+    function processSelectedPhotoFile(file, previewId, dataTargetId, placeholderId) {
       if (!file) return;
 
-      if (!file.type.startsWith('image/')) {
-        alert('Please select a valid image file (JPEG, PNG).');
+      if (file.type && !file.type.startsWith('image/')) {
+        alert('Please select a valid image file (JPEG, PNG, WEBP, HEIC).');
         return;
       }
 
@@ -14558,6 +14669,52 @@ Notice: Emergency dispatch broadcasted in real time to all Freestone County ARES
         img.src = e.target.result;
       };
       reader.readAsDataURL(file);
+    }
+
+    function handlePhotoUpload(event, previewId, dataTargetId, placeholderId) {
+      const file = event && event.target && event.target.files && event.target.files[0];
+      if (!file) return;
+      processSelectedPhotoFile(file, previewId, dataTargetId, placeholderId);
+    }
+
+    async function triggerUniversalPhotoPicker(inputId, previewId, dataTargetId, placeholderId) {
+      // Standard HTML5 file input click first (supported natively by iOS WKWebView, Android WebChromeClient, macOS, Windows, Linux, Raspberry Pi)
+      const fileInput = document.getElementById(inputId);
+      if (fileInput) {
+        fileInput.value = '';
+        fileInput.removeAttribute('capture'); // Ensure gallery + camera options both appear on mobile & desktop
+        fileInput.click();
+        return;
+      }
+
+      // Secondary Chromium / Desktop File System Access API fallback
+      if (typeof window.showOpenFilePicker === 'function') {
+        try {
+          const [handle] = await window.showOpenFilePicker({
+            types: [{
+              description: 'Operator Portrait Images',
+              accept: { 'image/*': ['.jpg', '.jpeg', '.png', '.webp', '.heic'] }
+            }],
+            multiple: false
+          });
+          if (handle) {
+            const file = await handle.getFile();
+            processSelectedPhotoFile(file, previewId, dataTargetId, placeholderId);
+            return;
+          }
+        } catch (pickerErr) {
+          if (pickerErr && pickerErr.name === 'AbortError') return;
+        }
+      }
+
+      // Dynamic ephemeral input fallback
+      const tempInput = document.createElement('input');
+      tempInput.type = 'file';
+      tempInput.accept = 'image/*';
+      tempInput.onchange = function(ev) {
+        handlePhotoUpload(ev, previewId, dataTargetId, placeholderId);
+      };
+      tempInput.click();
     }
 
     // ==========================================
@@ -18699,11 +18856,11 @@ Your console is now authorized and unlocked.`);
         const tr = document.createElement('tr');
         tr.className = rowClass;
         tr.innerHTML = `
-          <td class="p-3">
-            <span class="px-2 py-0.5 rounded border text-[11px] font-bold ${chBadgeClass}">CH ${ch.ch}</span>
+          <td class="p-3 whitespace-nowrap">
+            <span class="pace-ch-badge px-2 py-0.5 rounded border text-[11px] font-bold ${chBadgeClass}">CH ${ch.ch}</span>
           </td>
           <td class="p-3 font-bold text-white whitespace-nowrap">
-            ${ch.name} ${paceTag}
+            <div class="inline-flex items-center gap-1.5 flex-nowrap"><span>${ch.name}</span>${paceTag}</div>
           </td>
           <td class="p-3 font-bold text-amber-400 whitespace-nowrap">${ch.rx} MHz</td>
           <td class="p-3 text-slate-300 whitespace-nowrap text-[11px]">${ch.tx} MHz <span class="text-slate-500">(${ch.offset})</span></td>
@@ -19868,7 +20025,7 @@ Your console is now authorized and unlocked.`);
         category: 'OFFICIAL OPERATOR FIELD MANUAL',
         title: 'FREESTONE COUNTY ARES TACTICAL MOBILE',
         subtitle: 'COMPLETE OPERATOR FIELD GUIDE • MARINE-PROOF EDITION',
-        meta: 'Step-By-Step Illustrated Visual Instructions for Android & iOS\nCross-Platform Unified Architecture • Build 102 (v7.9.26) • November 2026\nCounty Emergency Coordinator: Brian Davis (KG5TZT)',
+        meta: 'Step-By-Step Illustrated Visual Instructions for Android & iOS\nCross-Platform Unified Architecture • Build 103 (v7.9.27) • November 2026\nCounty Emergency Coordinator: Brian Davis (KG5TZT)',
         image: 'guide_screens/screen_02_dashboard_annotated.png'
       },
       {
@@ -20626,15 +20783,15 @@ Your console is now authorized and unlocked.`);
         </div>
 
         <!-- STORM SPOTTER ADDITIONAL LEVEL / ENDORSEMENT -->
-        <div class="p-2.5 bg-[#080b10] rounded-xl border border-amber-500/50 flex items-center justify-between">
-          <div>
+        <div class="spotter-endorsement-row p-2.5 bg-[#080b10] rounded-xl border border-amber-500/50 flex flex-wrap items-center justify-between gap-2">
+          <div class="min-w-0 flex-1">
             <span class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
               <span>⛈️</span>
               <span>STORM SPOTTER ENDORSEMENT</span>
             </span>
             <p class="text-[10px] text-slate-400">Assign SKYWARN certified weather spotter credential to this operator (any level)</p>
           </div>
-          <label class="relative inline-flex items-center cursor-pointer">
+          <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
             <input type="checkbox" id="ec-edit-is-spotter" class="sr-only peer">
             <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
           </label>
@@ -20642,8 +20799,8 @@ Your console is now authorized and unlocked.`);
 
         <!-- EMERGENCY PAGING DISPATCH DELEGATION (EC OUT-OF-TOWN AUTHORITY) -->
         <div class="p-3 bg-red-950/30 rounded-xl border border-red-500/70 space-y-1">
-          <div class="flex items-center justify-between">
-            <div>
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="min-w-0 flex-1">
               <span class="text-xs font-bold text-red-400 flex items-center gap-1.5">
                 <span>🚨</span>
                 <span>EMERGENCY PAGING &amp; DISPATCH AUTHORITY</span>
@@ -20663,18 +20820,21 @@ Your console is now authorized and unlocked.`);
         <!-- Professional Photo -->
         <div class="p-3 bg-[#080b10] rounded-xl border border-slate-800 space-y-2">
           <label class="text-[10px] text-slate-300 font-bold block">OPERATOR CREDENTIAL PHOTO:</label>
-          <div class="flex items-center gap-3">
+          <div class="flex flex-wrap items-center gap-3">
             <img id="ec-edit-photo-preview" src="" class="w-14 h-14 rounded-xl object-cover border border-slate-700 hidden">
-            <div class="flex-1 space-y-1.5">
-              <div class="flex items-center gap-2">
-                <button type="button" onclick="openLiveCameraModal('ec-edit-photo-preview', 'ec-edit-photo-data', null, 'user')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-lg text-[10px] flex items-center gap-1 shadow cursor-pointer">
+            <div class="flex-1 min-w-[200px] space-y-1.5">
+              <div class="flex flex-wrap items-center gap-2">
+                <button type="button" onclick="openLiveCameraModal('ec-edit-photo-preview', 'ec-edit-photo-data', null, 'user')" class="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-lg text-[10px] flex items-center gap-1 shadow cursor-pointer">
                   <span>📸</span>
                   <span>Take Live Photo</span>
                 </button>
-                <span class="text-[10px] text-slate-400">or choose file below:</span>
+                <button type="button" onclick="triggerUniversalPhotoPicker('ec-edit-photo-input', 'ec-edit-photo-preview', 'ec-edit-photo-data', null)" class="px-2.5 py-1.5 bg-sky-600 hover:bg-sky-500 text-slate-950 font-bold rounded-lg text-[10px] flex items-center gap-1 shadow cursor-pointer">
+                  <span>📂</span>
+                  <span>Choose Photo</span>
+                </button>
               </div>
-              <input type="file" accept="image/*" onchange="handlePhotoUpload(event, 'ec-edit-photo-preview', 'ec-edit-photo-data')" class="block w-full text-[10px] text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-[10px] file:font-bold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer">
-              <span class="text-[9px] text-slate-500 block">White background &bull; No hat on</span>
+              <input type="file" id="ec-edit-photo-input" accept="image/*" onchange="handlePhotoUpload(event, 'ec-edit-photo-preview', 'ec-edit-photo-data')" class="block w-full text-[10px] text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-[10px] file:font-bold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer">
+              <span class="text-[9px] text-slate-500 block">White background &bull; No hat on &bull; Camera or Gallery</span>
               <input type="hidden" id="ec-edit-photo-data" value="">
             </div>
           </div>
@@ -20974,16 +21134,16 @@ Your console is now authorized and unlocked.`);
 
 
         <!-- STORM SPOTTER ENDORSEMENT (EC AUTHORIZATION ONLY) -->
-        <div class="p-3 bg-[#080b10] rounded-xl border border-amber-500/60 flex items-center justify-between">
-          <div>
+        <div class="spotter-endorsement-row p-3 bg-[#080b10] rounded-xl border border-amber-500/60 flex flex-wrap items-center justify-between gap-2">
+          <div class="min-w-0 flex-1">
             <span class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
               <span>⛈️</span>
               <span>STORM SPOTTER ENDORSEMENT</span>
             </span>
             <p class="text-[10px] text-slate-400">Emergency Coordinator Certification Only • Contact EC Brian Davis (KG5TZT) to certify</p>
           </div>
-          <div id="self-edit-spotter-badge-container">
-            <span id="self-edit-spotter-status-badge" class="px-2.5 py-1 rounded text-xs font-bold font-mono-tac bg-slate-900 border border-slate-700 text-slate-400">
+          <div id="self-edit-spotter-badge-container" class="flex-shrink-0">
+            <span id="self-edit-spotter-status-badge" class="px-2.5 py-1 rounded text-xs font-bold font-mono-tac bg-slate-900 border border-slate-700 text-slate-400 whitespace-nowrap inline-block">
               🔒 NOT CERTIFIED
             </span>
           </div>
@@ -20991,28 +21151,31 @@ Your console is now authorized and unlocked.`);
 
         <!-- Professional Photo -->
         <div class="p-3 bg-[#080b10] rounded-xl border-2 border-emerald-500/60 space-y-2">
-          <div class="flex items-center justify-between">
+          <div class="flex flex-wrap items-center justify-between gap-2">
             <span class="text-xs font-bold text-emerald-400">📸 PROFESSIONAL PHOTO IDENTIFICATION</span>
             <span class="text-[9px] bg-red-950 text-red-300 border border-red-800 px-1.5 py-0.5 rounded font-bold">REQUIRED</span>
           </div>
           <p class="text-[10px] text-slate-300 leading-relaxed">
             Must be a professional self-taken portrait photo with a plain <strong>WHITE BACKGROUND</strong> and <strong>NO HAT ON</strong>.
           </p>
-          <div class="flex items-center gap-3 pt-1">
+          <div class="flex flex-wrap items-center gap-3 pt-1">
             <img id="self-edit-photo-preview" src="" class="w-16 h-16 rounded-xl object-cover border-2 border-emerald-500 hidden">
             <div id="self-edit-photo-placeholder" class="w-16 h-16 rounded-xl bg-slate-900 border-2 border-slate-700 flex items-center justify-center text-2xl text-slate-600 flex-shrink-0">
               👤
             </div>
-            <div class="flex-1 space-y-1.5">
-              <div class="flex items-center gap-2">
-                <button type="button" onclick="openLiveCameraModal('self-edit-photo-preview', 'self-edit-photo-data', 'self-edit-photo-placeholder', 'user')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-lg text-[10px] flex items-center gap-1 shadow cursor-pointer">
+            <div class="flex-1 min-w-[200px] space-y-1.5">
+              <div class="flex flex-wrap items-center gap-2">
+                <button type="button" onclick="openLiveCameraModal('self-edit-photo-preview', 'self-edit-photo-data', 'self-edit-photo-placeholder', 'user')" class="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-lg text-[10px] flex items-center gap-1 shadow cursor-pointer">
                   <span>📸</span>
                   <span>Take Live Photo</span>
                 </button>
-                <span class="text-[10px] text-slate-400">or choose file below:</span>
+                <button type="button" onclick="triggerUniversalPhotoPicker('self-edit-photo-input', 'self-edit-photo-preview', 'self-edit-photo-data', 'self-edit-photo-placeholder')" class="px-2.5 py-1.5 bg-sky-600 hover:bg-sky-500 text-slate-950 font-bold rounded-lg text-[10px] flex items-center gap-1 shadow cursor-pointer">
+                  <span>📂</span>
+                  <span>Choose Photo</span>
+                </button>
               </div>
-              <input type="file" accept="image/*" capture="user" onchange="handlePhotoUpload(event, 'self-edit-photo-preview', 'self-edit-photo-data', 'self-edit-photo-placeholder')" class="block w-full text-[10px] text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-[10px] file:font-bold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer">
-              <span class="text-[9px] text-slate-500 block">White background &bull; No hat &bull; Facing forward</span>
+              <input type="file" id="self-edit-photo-input" accept="image/*" onchange="handlePhotoUpload(event, 'self-edit-photo-preview', 'self-edit-photo-data', 'self-edit-photo-placeholder')" class="block w-full text-[10px] text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-[10px] file:font-bold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer">
+              <span class="text-[9px] text-slate-500 block">White background &bull; No hat &bull; Camera or Gallery</span>
               <input type="hidden" id="self-edit-photo-data" value="">
             </div>
           </div>
@@ -21052,7 +21215,7 @@ Your console is now authorized and unlocked.`);
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.26 (Build 102)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.27 (Build 103)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>
@@ -21304,16 +21467,16 @@ Your console is now authorized and unlocked.`);
 
 
         <!-- NWS SKYWARN STORM SPOTTER ENDORSEMENT (LOCKED TO EC) -->
-        <div class="p-3 bg-[#080b10] rounded-xl border border-amber-500/60 flex items-center justify-between">
-          <div>
+        <div class="spotter-endorsement-row p-3 bg-[#080b10] rounded-xl border border-amber-500/60 flex flex-wrap items-center justify-between gap-2">
+          <div class="min-w-0 flex-1">
             <span class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
               <span>⛈️</span>
               <span>STORM SPOTTER ENDORSEMENT</span>
             </span>
             <p class="text-[10px] text-slate-400">Official SKYWARN Endorsement • Certified by Emergency Coordinator</p>
           </div>
-          <div>
-            <span id="verify-spotter-status-badge" class="px-2.5 py-1 rounded text-xs font-bold font-mono-tac bg-slate-900 border border-slate-700 text-slate-400">
+          <div class="flex-shrink-0">
+            <span id="verify-spotter-status-badge" class="px-2.5 py-1 rounded text-xs font-bold font-mono-tac bg-slate-900 border border-slate-700 text-slate-400 whitespace-nowrap inline-block">
               🔒 EC KG5TZT ONLY
             </span>
           </div>
@@ -21377,7 +21540,7 @@ Your console is now authorized and unlocked.`);
 
         <!-- MANDATORY PROFESSIONAL PHOTO IDENTIFICATION -->
         <div class="p-3 bg-[#080b10] rounded-xl border-2 border-emerald-500/60 space-y-2">
-          <div class="flex items-center justify-between">
+          <div class="flex flex-wrap items-center justify-between gap-2">
             <span class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
               <span>📸</span>
               <span>PROFESSIONAL OPERATOR PHOTO ID</span>
@@ -21387,21 +21550,24 @@ Your console is now authorized and unlocked.`);
           <p class="text-[10px] text-slate-300 leading-relaxed">
             Must be a professional self-taken portrait photo with a plain <strong>WHITE BACKGROUND</strong> and <strong>NO HAT ON</strong>.
           </p>
-          <div class="flex items-center gap-3 pt-1">
+          <div class="flex flex-wrap items-center gap-3 pt-1">
             <img id="verify-photo-preview" src="" class="w-16 h-16 rounded-xl object-cover border-2 border-emerald-500 hidden">
             <div id="verify-photo-placeholder" class="w-16 h-16 rounded-xl bg-slate-900 border-2 border-slate-700 flex items-center justify-center text-2xl text-slate-600 flex-shrink-0">
               👤
             </div>
-            <div class="flex-1 space-y-1.5">
-              <div class="flex items-center gap-2">
-                <button type="button" onclick="openLiveCameraModal('verify-photo-preview', 'verify-photo-data', 'verify-photo-placeholder', 'user')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-lg text-[10px] flex items-center gap-1 shadow cursor-pointer">
+            <div class="flex-1 min-w-[200px] space-y-1.5">
+              <div class="flex flex-wrap items-center gap-2">
+                <button type="button" onclick="openLiveCameraModal('verify-photo-preview', 'verify-photo-data', 'verify-photo-placeholder', 'user')" class="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-lg text-[10px] flex items-center gap-1 shadow cursor-pointer">
                   <span>📸</span>
                   <span>Take Live Photo</span>
                 </button>
-                <span class="text-[10px] text-slate-400">or choose file below:</span>
+                <button type="button" onclick="triggerUniversalPhotoPicker('verify-photo-input', 'verify-photo-preview', 'verify-photo-data', 'verify-photo-placeholder')" class="px-2.5 py-1.5 bg-sky-600 hover:bg-sky-500 text-slate-950 font-bold rounded-lg text-[10px] flex items-center gap-1 shadow cursor-pointer">
+                  <span>📂</span>
+                  <span>Choose Photo</span>
+                </button>
               </div>
-              <input type="file" id="verify-photo-input" accept="image/*" capture="user" onchange="handlePhotoUpload(event, 'verify-photo-preview', 'verify-photo-data', 'verify-photo-placeholder')" class="block w-full text-[10px] text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-[10px] file:font-bold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer">
-              <span class="text-[9px] text-slate-500 block">White background &bull; No hat &bull; Facing forward</span>
+              <input type="file" id="verify-photo-input" accept="image/*" onchange="handlePhotoUpload(event, 'verify-photo-preview', 'verify-photo-data', 'verify-photo-placeholder')" class="block w-full text-[10px] text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-[10px] file:font-bold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer">
+              <span class="text-[9px] text-slate-500 block">White background &bull; No hat &bull; Camera or Gallery</span>
               <input type="hidden" id="verify-photo-data" value="">
             </div>
           </div>
@@ -21448,10 +21614,15 @@ Your console is now authorized and unlocked.`);
         </div>
       </div>
 
-      <div class="flex items-center justify-between gap-2 pt-1">
+      <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
         <button type="button" onclick="flipLiveCamera()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
           <span>🔄</span>
           <span>FLIP CAMERA</span>
+        </button>
+
+        <button type="button" onclick="closeLiveCameraModal(); triggerUniversalPhotoPicker('', currentPhotoTargetIds.previewId, currentPhotoTargetIds.dataTargetId, currentPhotoTargetIds.placeholderId);" class="px-3 py-2 bg-sky-600 hover:bg-sky-500 text-slate-950 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
+          <span>📂</span>
+          <span>CHOOSE PHOTO</span>
         </button>
 
         <button type="button" onclick="captureLiveCameraPhoto()" class="flex-1 py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 text-slate-950 font-black rounded-xl text-xs shadow-lg transition flex items-center justify-center gap-2 cursor-pointer">
