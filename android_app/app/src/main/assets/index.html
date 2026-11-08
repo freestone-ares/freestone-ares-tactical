@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Freestone County ARES Tactical Mobile v7.9.27</title>
+  <title>Freestone County ARES Tactical Mobile v7.9.28</title>
   <meta name="description" content="Tactical Emergency Communications, CAD Dispatch, Incident Mapping & FEMA ICS Form Generator for Freestone County ARES">
   <meta name="theme-color" content="#0b0e14">
   <meta name="mobile-web-app-capable" content="yes">
@@ -2148,7 +2148,7 @@
               <div class="flex items-center gap-2 flex-wrap">
                 <h2 class="text-base sm:text-lg font-black text-white uppercase tracking-wider">FREESTONE COUNTY ARES TACTICAL FIELD BINDER</h2>
                 <span id="manual-version-badge" class="px-2.5 py-0.5 rounded text-xs font-black bg-emerald-950 text-emerald-300 border border-emerald-600 shadow">
-                  REVISION 7.5 (OCTOBER 2026)
+                  REVISION 7.5 (SIGNED 11/01/2026)
                 </span>
                 <span id="manual-storage-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-900 text-slate-300 border border-slate-700">
                   OFFICIAL BUNDLE
@@ -2384,7 +2384,7 @@
         <!-- Slide Footer Keyboard & Swipe Hints -->
         <div class="flex items-center justify-between text-[11px] text-slate-400 px-2 font-mono-tac">
           <div>💡 <strong>Tips:</strong> Swipe left / right on touchscreen or use PREV / NEXT to flip through training slides.</div>
-          <div>Marine-Proof Training System &bull; Build 103 (v7.9.27)</div>
+          <div>Marine-Proof Training System &bull; Build 105 (v7.9.28)</div>
         </div>
 
       </div> <!-- End of manual-guide-container -->
@@ -2515,19 +2515,19 @@
               <span class="w-7 h-7 rounded-full bg-red-950 text-red-400 font-bold text-sm flex items-center justify-center border border-red-500 shrink-0">E</span>
               <div class="min-w-0">
                 <span class="text-xs font-bold text-red-400 block truncate">[E] EMERGENCY METHOD</span>
-                <span class="text-slate-400 text-[10px] block truncate">Total RF Failure / Grid Outage</span>
+                <span class="text-slate-400 text-[10px] block truncate">LAST RESORT • AS REQUIRED</span>
               </div>
             </div>
             <div class="mt-2 p-2.5 rounded bg-[#0b0e14] border border-slate-800 space-y-1">
               <div class="flex items-center justify-between gap-2 flex-wrap">
-                <span class="text-base font-bold text-white whitespace-nowrap">HF NET / GMRS</span>
-                <span class="pace-ch-badge px-2 py-0.5 rounded bg-red-950 text-red-300 border border-red-600 text-xs font-black">CH 06-08</span>
+                <span class="text-sm font-bold text-white">HF / GMRS / MESSAGE DELIVERY</span>
+                <span class="pace-ch-badge px-2 py-0.5 rounded bg-red-950 text-red-300 border border-red-600 text-xs font-black">CH 06-08 / 28-30</span>
               </div>
-              <div class="text-xs text-amber-400 font-bold">HF: 7.290 MHz / 3.873 MHz</div>
-              <div class="text-[11px] text-red-400">GMRS Ch 6-8 + Physical Runners</div>
-              <div class="text-[10px] text-slate-400 mt-1">Statewide traffic nets, GMRS links & couriers</div>
+              <div class="text-xs text-amber-400 font-bold">1. HF Radio • 2. GMRS Interop (Ch 06-08: 462.600 / 462.700 / 462.550)</div>
+              <div class="text-[11px] text-red-400">3. Physical Messenger (Written ICS-213) • 4. Winlink / Digital (Ch 28-29)</div>
+              <div class="text-[10px] text-slate-400 mt-1">5. APRS Messaging (Ch 30: 144.390) • 6. Telephone / Cellular</div>
               <div class="text-[10px] text-slate-300 font-semibold pt-1 border-t border-slate-800/80">
-                Dispatch couriers with physical carbon-copy ICS-213 forms
+                All local VHF/UHF infrastructure offline — execute 6-step last-resort sequence
               </div>
             </div>
           </div>
@@ -2609,8 +2609,8 @@
 
           <!-- Action Toolbar Buttons -->
           <div class="flex flex-wrap items-center gap-2">
-            <button onclick="openEncryptedConfigModalFromPace()" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-black font-black text-xs rounded-lg shadow transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer" title="AES-256 Encrypted Repeater & Tactical Config Export/Import">
-              🔐 <span>AES-256 CONFIG SYNC</span>
+            <button onclick="openEncryptedConfigModalFromPace()" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-black font-black text-xs rounded-lg shadow transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer" title="Signed Repeater & Tactical Config Export/Import">
+              🔐 <span>SIGNED CONFIG SYNC</span>
             </button>
             <button onclick="downloadChirpCodeplugCsv()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg shadow transition flex items-center gap-1.5 whitespace-nowrap" title="Download CHIRP-compatible CSV">
               📥 <span>EXPORT CHIRP CSV</span>
@@ -3490,12 +3490,12 @@
             </div>
           </div>
 
-          <!-- STEP 1: 1-TAP SEVERE PHENOMENON QUICK SELECTOR -->
+          <!-- STEP 1: 1-TAP SEVERE PHENOMENON QUICK SELECTOR (THE FOUR W'S — WHAT) -->
           <div class="space-y-2">
             <label class="text-xs font-black text-amber-400 block uppercase tracking-wider flex flex-wrap items-center gap-1.5">
-              <span>STEP 1:</span><span>SELECT OBSERVED SEVERE CONDITION (1-TAP QUICK SELECT):</span>
+              <span>STEP 1 (WHAT &amp; WHO):</span><span>SELECT OBSERVED SEVERE CONDITION — THE FOUR W'S (WHAT • WHO • WHEN • WHERE):</span>
             </label>
-            <div class="spotter-phenom-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
+            <div class="spotter-phenom-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2">
               <!-- Tornado -->
               <button type="button" onclick="selectQuickSkywarnType('🌪️ Tornado / Rotating Wall Cloud', 'TORNADO / WALL CLOUD: Rapid rotation and lowering observed.', 'CRITICAL / LIFE SAFETY', 'bg-red-950 text-red-300 border-red-600')" class="quick-phenom-btn p-3 rounded-xl bg-red-950/40 hover:bg-red-900/60 border-2 border-red-600/70 text-left transition space-y-1 cursor-pointer">
                 <span class="text-2xl block">🌪️</span>
@@ -3507,14 +3507,14 @@
               <button type="button" onclick="selectQuickSkywarnType('🧊 Large Hail (>= 1.00 inch Quarter+)', 'HAIL: Severe hail >= 1.00 inch covering ground.', 'SEVERE CRITERIA', 'bg-sky-950 text-sky-300 border-sky-600')" class="quick-phenom-btn p-3 rounded-xl bg-sky-950/40 hover:bg-sky-900/60 border-2 border-sky-600/70 text-left transition space-y-1 cursor-pointer">
                 <span class="text-2xl block">🧊</span>
                 <div class="font-black text-xs text-sky-300 leading-tight">LARGE HAIL</div>
-                <div class="text-[9px] text-sky-400 font-bold">Quarter, Golf Ball, Baseball</div>
+                <div class="text-[9px] text-sky-400 font-bold">Quarter (1.00"+), Golf Ball</div>
               </button>
 
               <!-- Damaging Wind -->
-              <button type="button" onclick="selectQuickSkywarnType('💨 Damaging Wind (>= 58 MPH)', 'WIND: Damaging wind gusts estimated >= 58 MPH. Trees/limbs down.', 'SEVERE CRITERIA', 'bg-amber-950 text-amber-300 border-amber-600')" class="quick-phenom-btn p-3 rounded-xl bg-amber-950/40 hover:bg-amber-900/60 border-2 border-amber-600/70 text-left transition space-y-1 cursor-pointer">
+              <button type="button" onclick="selectQuickSkywarnType('💨 Damaging Wind (>= 50 MPH Measured / >= 58 MPH Severe)', 'WIND: Damaging wind gusts >= 50 MPH (Measured / Level II) or >= 58 MPH (Severe / Level I). Trees/limbs down.', 'SEVERE CRITERIA', 'bg-amber-950 text-amber-300 border-amber-600')" class="quick-phenom-btn p-3 rounded-xl bg-amber-950/40 hover:bg-amber-900/60 border-2 border-amber-600/70 text-left transition space-y-1 cursor-pointer">
                 <span class="text-2xl block">💨</span>
                 <div class="font-black text-xs text-amber-300 leading-tight">DAMAGING WIND</div>
-                <div class="text-[9px] text-amber-400 font-bold">58+ MPH / Trees Snapped</div>
+                <div class="text-[9px] text-amber-400 font-bold">&gt;= 50 MPH / 58+ MPH Severe</div>
               </button>
 
               <!-- Flash Flood -->
@@ -3530,6 +3530,13 @@
                 <div class="font-black text-xs text-purple-300 leading-tight">DAMAGE / HAZARD</div>
                 <div class="text-[9px] text-purple-400 font-bold">Roof Loss / Power Lines</div>
               </button>
+
+              <!-- Winter Weather (6th Official Manual Category) -->
+              <button type="button" onclick="selectQuickSkywarnType('❄️ Winter Weather (Ice / Sleet / Snow / Blizzard)', 'WINTER WEATHER: Freezing rain / ice accumulation on roadways, bridges, or power lines; heavy sleet or snow.', 'WINTER WEATHER', 'bg-cyan-950 text-cyan-300 border-cyan-500')" class="quick-phenom-btn p-3 rounded-xl bg-cyan-950/40 hover:bg-cyan-900/60 border-2 border-cyan-500/70 text-left transition space-y-1 cursor-pointer">
+                <span class="text-2xl block">❄️</span>
+                <div class="font-black text-xs text-cyan-300 leading-tight">WINTER WEATHER</div>
+                <div class="text-[9px] text-cyan-400 font-bold">Ice / Sleet / Snow / Bridges</div>
+              </button>
             </div>
           </div>
 
@@ -3538,8 +3545,8 @@
             <!-- Hail Sizes -->
             <div class="space-y-1.5">
               <div class="flex justify-between items-center">
-                <span class="text-[10px] text-slate-400 font-bold block uppercase">HAIL SIZE (NWS STANDARDS):</span>
-                <span class="text-[9px] text-amber-400 font-bold">MIN SEVERE: 1.00"</span>
+                <span class="text-[10px] text-slate-400 font-bold block uppercase">WHAT — HAIL SIZE (NWS STANDARDS):</span>
+                <span class="text-[9px] text-amber-400 font-bold">REPORTABLE: &ge; 1.00" (QUARTER)</span>
               </div>
               <div class="flex flex-wrap gap-1.5 text-xs">
                 <button type="button" data-hail='Penny 0.75"' onclick="setSkywarnHailSize('Penny 0.75" (Sub-severe)')" class="hail-btn px-2 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded text-slate-400 font-bold cursor-pointer">Penny 0.75"</button>
@@ -3556,12 +3563,12 @@
             <!-- Wind Speed -->
             <div class="space-y-1.5">
               <div class="flex justify-between items-center">
-                <span class="text-[10px] text-slate-400 font-bold block uppercase">WIND SPEED / GUSTS:</span>
-                <span class="text-[9px] text-amber-400 font-bold">MIN SEVERE: 58 MPH</span>
+                <span class="text-[10px] text-slate-400 font-bold block uppercase">WHAT — WIND SPEED (MEASURED VS. ESTIMATED):</span>
+                <span class="text-[9px] text-amber-400 font-bold">&ge; 50 MPH (LEVEL II) • &ge; 58 MPH (SEVERE)</span>
               </div>
               <div class="flex flex-wrap gap-1.5 text-xs">
-                <button type="button" data-wind="50-59 MPH" onclick="setSkywarnWindSpeed('50-59 MPH (Estimated - Large Limbs Down)')" class="wind-btn px-2 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded text-slate-300 font-bold cursor-pointer">50-59 MPH</button>
-                <button type="button" data-wind="60-69 MPH" onclick="setSkywarnWindSpeed('60-69 MPH (Severe - Trees Snapped / Utility Poles)')" class="wind-btn px-2 py-1 bg-amber-950 hover:bg-amber-900 border border-amber-700 rounded text-amber-300 font-bold cursor-pointer">60-69 MPH ★</button>
+                <button type="button" data-wind="50-59 MPH" onclick="setSkywarnWindSpeed('50-59 MPH (Measured/Estimated - Reportable >= 50 MPH)')" class="wind-btn px-2 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded text-slate-300 font-bold cursor-pointer">50-59 MPH</button>
+                <button type="button" data-wind="60-69 MPH" onclick="setSkywarnWindSpeed('60-69 MPH (Severe >= 58 MPH - Trees Snapped / Utility Poles)')" class="wind-btn px-2 py-1 bg-amber-950 hover:bg-amber-900 border border-amber-700 rounded text-amber-300 font-bold cursor-pointer">60-69 MPH ★</button>
                 <button type="button" data-wind="70+ MPH" onclick="setSkywarnWindSpeed('70+ MPH (Extreme Hurricane-Force Winds)')" class="wind-btn px-2 py-1 bg-red-950 hover:bg-red-900 border border-red-700 rounded text-red-300 font-bold cursor-pointer">70+ MPH 🚨</button>
                 <button type="button" data-wind="Trees on Road" onclick="setSkywarnWindSpeed('Trees Down Across Roadway')" class="wind-btn px-2 py-1 bg-amber-950 hover:bg-amber-900 border border-amber-700 rounded text-amber-300 font-bold cursor-pointer">Trees on Road</button>
                 <button type="button" data-wind="Power Lines Down" onclick="setSkywarnWindSpeed('Power Lines Down / Sparking')" class="wind-btn px-2 py-1 bg-rose-950 hover:bg-rose-900 border border-rose-700 rounded text-rose-300 font-bold cursor-pointer">Power Lines Down</button>
@@ -3575,7 +3582,7 @@
             <div class="md:col-span-7 space-y-1.5 min-w-0">
               <div class="flex flex-wrap items-center justify-between gap-2">
                 <label class="text-[11px] font-bold text-slate-300 uppercase flex items-center gap-1.5 min-w-0">
-                  <span>STEP 3:</span><span>OBSERVATION LOCATION &amp; GPS:</span>
+                  <span>STEP 3 (WHERE &amp; WHEN):</span><span>PRIORITY: 1. GPS • 2. HWY INTERSECTION • 3. ADDRESS • 4. LANDMARK:</span>
                 </label>
                 <button type="button" id="skywarn-gps-btn" onclick="autofillSpotterGpsLocation()" class="text-xs px-2.5 py-1 bg-emerald-950 hover:bg-emerald-900 border border-emerald-600 text-emerald-300 rounded font-bold flex items-center gap-1 cursor-pointer shadow transition flex-shrink-0">
                   <span>📍</span><span>AUTOFILL DEVICE GPS</span>
@@ -4119,22 +4126,53 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
           <div>
-            <label class="text-slate-400 block mb-1">INCIDENT NAME</label>
-            <input type="text" value="FLOOD DISPATCH - SHELTER A" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
+            <label class="text-slate-400 block mb-1 font-bold">1. INCIDENT NAME</label>
+            <input type="text" id="ics205-incident" value="FLOOD DISPATCH - SHELTER A" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
           </div>
           <div>
-            <label class="text-slate-400 block mb-1">DATE / TIME (24H LOCAL & UTC)</label>
-            <input type="text" value="2026-10-04 15:30 LOCAL / 20:30 UTC" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
+            <label class="text-slate-400 block mb-1 font-bold">2. OPERATIONAL PERIOD</label>
+            <input type="text" id="ics205-op-period" value="OPERATIONAL PERIOD #1 (24-HOUR)" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
           </div>
           <div>
-            <label class="text-slate-400 block mb-1">COMMS DISPATCH LEAD</label>
-            <input type="text" value="Freestone County ARES Net Control (N5BED / KG5TZT)" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
+            <label class="text-slate-400 block mb-1 font-bold">3. DATE / TIME FROM (24H)</label>
+            <input type="text" id="ics205-dt-from" value="2026-11-01 08:00 LOCAL (14:00Z)" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
+          </div>
+          <div>
+            <label class="text-slate-400 block mb-1 font-bold">4. DATE / TIME TO (24H)</label>
+            <input type="text" id="ics205-dt-to" value="2026-11-02 08:00 LOCAL (14:00Z)" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
           </div>
         </div>
 
-        <!-- Frequency Table in ICS-205 -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div>
+            <label class="text-slate-400 block mb-1 font-bold">5. INCIDENT COMMANDER (NAME &amp; POSITION)</label>
+            <input type="text" id="ics205-ic" value="Freestone County EMC / Incident Commander" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
+          </div>
+          <div>
+            <label class="text-slate-400 block mb-1 font-bold">6. PREPARED BY (COMMUNICATIONS UNIT LEADER)</label>
+            <input type="text" id="ics205-lead" value="Brian Davis (KG5TZT - Emergency Coordinator)" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
+          </div>
+          <div>
+            <label class="text-slate-400 block mb-1 font-bold">7. DATE / TIME PREPARED (24H LOCAL &amp; UTC)</label>
+            <input type="text" id="ics205-dt" value="2026-11-01 07:30 LOCAL / 13:30 UTC" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <label class="text-slate-400 block mb-1 font-bold">8. COMMUNICATIONS OBJECTIVES</label>
+            <input type="text" id="ics205-objectives" value="Maintain countywide PACE voice/digital interoperability between EOC, shelters, and SKYWARN spotters." class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
+          </div>
+          <div>
+            <label class="text-slate-400 block mb-1 font-bold">9. SPECIAL INSTRUCTIONS</label>
+            <input type="text" id="ics205-instructions" value="Monitor Primary Ch 01 (FF 110); upon repeater failure, transition immediately to Alternate Ch 02 (WRTM 760) or Ch 09 (ARES TAC)." class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
+          </div>
+        </div>
+
+        <!-- 10. Resource Summary — Frequency Table in ICS-205 -->
+        <div class="text-slate-400 font-bold uppercase tracking-wider">10. RESOURCE SUMMARY (RADIO CHANNEL ASSIGNMENTS — CH 01 THROUGH CH 30)</div>
         <div class="overflow-x-auto">
           <table class="w-full text-left border border-slate-800">
             <thead class="bg-[#0b0e14] text-slate-400 border-b border-slate-800">
@@ -4142,7 +4180,7 @@
                 <th class="p-2 border-r border-slate-800">CH #</th>
                 <th class="p-2 border-r border-slate-800">FUNCTION</th>
                 <th class="p-2 border-r border-slate-800">NAME</th>
-                <th class="p-2 border-r border-slate-800">ASSIGNMENT</th>
+                <th class="p-2 border-r border-slate-800">ASSIGNMENT / REMARKS</th>
                 <th class="p-2 border-r border-slate-800">RX FREQ / TONE</th>
                 <th class="p-2 border-r border-slate-800">TX FREQ / TONE</th>
                 <th class="p-2">MODE</th>
@@ -4153,7 +4191,7 @@
                 <td class="p-2 border-r border-slate-800 text-emerald-400 font-bold">01</td>
                 <td class="p-2 border-r border-slate-800 text-emerald-400">PRIMARY (P)</td>
                 <td class="p-2 border-r border-slate-800 font-bold text-white">FF 110</td>
-                <td class="p-2 border-r border-slate-800">W5NFL Fairfield VHF</td>
+                <td class="p-2 border-r border-slate-800">W5NFL Fairfield VHF (Primary Voice Net)</td>
                 <td class="p-2 border-r border-slate-800 text-amber-400">145.110 TSQ 146.2</td>
                 <td class="p-2 border-r border-slate-800 text-amber-400">144.510 TSQ 146.2</td>
                 <td class="p-2">FM Voice</td>
@@ -4162,16 +4200,16 @@
                 <td class="p-2 border-r border-slate-800 text-amber-400 font-bold">02</td>
                 <td class="p-2 border-r border-slate-800 text-amber-400">ALTERNATE (A)</td>
                 <td class="p-2 border-r border-slate-800 font-bold text-white">WRTM 760</td>
-                <td class="p-2 border-r border-slate-800">KE5DFY Wortham VHF (Primary Ops)</td>
+                <td class="p-2 border-r border-slate-800">KE5DFY Wortham VHF (Primary Ops Backup)</td>
                 <td class="p-2 border-r border-slate-800 text-amber-400">146.760 T136.5</td>
                 <td class="p-2 border-r border-slate-800 text-amber-400">146.160 T136.5</td>
                 <td class="p-2">FM Voice</td>
               </tr>
               <tr>
                 <td class="p-2 border-r border-slate-800 text-slate-400 font-bold">03</td>
-                <td class="p-2 border-r border-slate-800">UHF LINK</td>
+                <td class="p-2 border-r border-slate-800">UHF LINK (A)</td>
                 <td class="p-2 border-r border-slate-800 font-bold text-white">FF 70C</td>
-                <td class="p-2 border-r border-slate-800">KE5DFY Fairfield UHF</td>
+                <td class="p-2 border-r border-slate-800">KE5DFY Fairfield UHF (FF 70C / FF 70CM)</td>
                 <td class="p-2 border-r border-slate-800">443.900 T136.5</td>
                 <td class="p-2 border-r border-slate-800">448.900 T136.5</td>
                 <td class="p-2">FM Voice</td>
@@ -4196,7 +4234,7 @@
               </tr>
               <tr class="bg-purple-950/20">
                 <td class="p-2 border-r border-slate-800 text-purple-400 font-bold">06</td>
-                <td class="p-2 border-r border-slate-800 text-purple-400">GMRS LOCAL</td>
+                <td class="p-2 border-r border-slate-800 text-purple-400">EMERGENCY (E)</td>
                 <td class="p-2 border-r border-slate-800 font-bold text-white">FF GMRS</td>
                 <td class="p-2 border-r border-slate-800">Shared local GMRS (Fairfield Area Link)</td>
                 <td class="p-2 border-r border-slate-800">462.600 T136.5</td>
@@ -4205,7 +4243,7 @@
               </tr>
               <tr class="bg-purple-950/20">
                 <td class="p-2 border-r border-slate-800 text-purple-400 font-bold">07</td>
-                <td class="p-2 border-r border-slate-800 text-purple-400">GMRS LINK</td>
+                <td class="p-2 border-r border-slate-800 text-purple-400">EMERGENCY (E)</td>
                 <td class="p-2 border-r border-slate-800 font-bold text-white">MEX GMRS</td>
                 <td class="p-2 border-r border-slate-800">WRKY482 Tehuacana GMRS Ch 21</td>
                 <td class="p-2 border-r border-slate-800">462.700 T146.2</td>
@@ -4214,7 +4252,7 @@
               </tr>
               <tr class="bg-purple-950/20">
                 <td class="p-2 border-r border-slate-800 text-purple-400 font-bold">08</td>
-                <td class="p-2 border-r border-slate-800 text-purple-400">GMRS LINK</td>
+                <td class="p-2 border-r border-slate-800 text-purple-400">EMERGENCY (E)</td>
                 <td class="p-2 border-r border-slate-800 font-bold text-white">COR GMRS</td>
                 <td class="p-2 border-r border-slate-800">Corsicana GMRS Ch 15 (Navarro Link)</td>
                 <td class="p-2 border-r border-slate-800">462.550 T146.2</td>
@@ -4231,21 +4269,93 @@
                 <td class="p-2">FM Simplex</td>
               </tr>
               <tr>
-                <td class="p-2 border-r border-slate-800 text-slate-400 font-bold">10-14</td>
+                <td class="p-2 border-r border-slate-800 text-slate-400 font-bold">10</td>
                 <td class="p-2 border-r border-slate-800">VHF SIMPLEX</td>
-                <td class="p-2 border-r border-slate-800 font-bold text-white">ARES 1 - 5</td>
-                <td class="p-2 border-r border-slate-800">146.300, 146.900, 147.200, 147.500, 147.800</td>
-                <td class="p-2 border-r border-slate-800">Simplex T123.0</td>
-                <td class="p-2 border-r border-slate-800">Simplex T123.0</td>
+                <td class="p-2 border-r border-slate-800 font-bold text-white">ARES-1</td>
+                <td class="p-2 border-r border-slate-800">VHF Simplex Tactical Channel 1</td>
+                <td class="p-2 border-r border-slate-800">146.300 T123.0</td>
+                <td class="p-2 border-r border-slate-800">146.300 T123.0</td>
                 <td class="p-2">FM Simplex</td>
               </tr>
               <tr>
-                <td class="p-2 border-r border-slate-800 text-slate-400 font-bold">15-19</td>
+                <td class="p-2 border-r border-slate-800 text-slate-400 font-bold">11</td>
+                <td class="p-2 border-r border-slate-800">VHF SIMPLEX</td>
+                <td class="p-2 border-r border-slate-800 font-bold text-white">ARES-2</td>
+                <td class="p-2 border-r border-slate-800">VHF Simplex Tactical Channel 2</td>
+                <td class="p-2 border-r border-slate-800">146.900 T123.0</td>
+                <td class="p-2 border-r border-slate-800">146.900 T123.0</td>
+                <td class="p-2">FM Simplex</td>
+              </tr>
+              <tr>
+                <td class="p-2 border-r border-slate-800 text-slate-400 font-bold">12</td>
+                <td class="p-2 border-r border-slate-800">VHF SIMPLEX</td>
+                <td class="p-2 border-r border-slate-800 font-bold text-white">ARES-3</td>
+                <td class="p-2 border-r border-slate-800">VHF Simplex Tactical Channel 3</td>
+                <td class="p-2 border-r border-slate-800">147.200 T123.0</td>
+                <td class="p-2 border-r border-slate-800">147.200 T123.0</td>
+                <td class="p-2">FM Simplex</td>
+              </tr>
+              <tr>
+                <td class="p-2 border-r border-slate-800 text-slate-400 font-bold">13</td>
+                <td class="p-2 border-r border-slate-800">VHF SIMPLEX</td>
+                <td class="p-2 border-r border-slate-800 font-bold text-white">ARES-4</td>
+                <td class="p-2 border-r border-slate-800">VHF Simplex Tactical Channel 4</td>
+                <td class="p-2 border-r border-slate-800">147.500 T123.0</td>
+                <td class="p-2 border-r border-slate-800">147.500 T123.0</td>
+                <td class="p-2">FM Simplex</td>
+              </tr>
+              <tr>
+                <td class="p-2 border-r border-slate-800 text-slate-400 font-bold">14</td>
+                <td class="p-2 border-r border-slate-800">VHF SIMPLEX</td>
+                <td class="p-2 border-r border-slate-800 font-bold text-white">ARES-5</td>
+                <td class="p-2 border-r border-slate-800">VHF Simplex Tactical Channel 5</td>
+                <td class="p-2 border-r border-slate-800">147.800 T123.0</td>
+                <td class="p-2 border-r border-slate-800">147.800 T123.0</td>
+                <td class="p-2">FM Simplex</td>
+              </tr>
+              <tr class="bg-blue-950/10">
+                <td class="p-2 border-r border-slate-800 text-blue-400 font-bold">15</td>
+                <td class="p-2 border-r border-slate-800 text-blue-400">CONTINGENCY (C)</td>
+                <td class="p-2 border-r border-slate-800 font-bold text-white">ARES-6</td>
+                <td class="p-2 border-r border-slate-800">UHF Simplex (Contingency / Tactical Ch 6)</td>
+                <td class="p-2 border-r border-slate-800">433.145 T123.0</td>
+                <td class="p-2 border-r border-slate-800">433.145 T123.0</td>
+                <td class="p-2">FM Simplex</td>
+              </tr>
+              <tr>
+                <td class="p-2 border-r border-slate-800 text-slate-400 font-bold">16</td>
                 <td class="p-2 border-r border-slate-800">UHF SIMPLEX</td>
-                <td class="p-2 border-r border-slate-800 font-bold text-white">ARES 6 - 10</td>
-                <td class="p-2 border-r border-slate-800">433.145, 433.525, 433.775, 444.215, 444.715</td>
-                <td class="p-2 border-r border-slate-800">Simplex T123.0</td>
-                <td class="p-2 border-r border-slate-800">Simplex T123.0</td>
+                <td class="p-2 border-r border-slate-800 font-bold text-white">ARES-7</td>
+                <td class="p-2 border-r border-slate-800">UHF Simplex Tactical Channel 7</td>
+                <td class="p-2 border-r border-slate-800">433.525 T123.0</td>
+                <td class="p-2 border-r border-slate-800">433.525 T123.0</td>
+                <td class="p-2">FM Simplex</td>
+              </tr>
+              <tr>
+                <td class="p-2 border-r border-slate-800 text-slate-400 font-bold">17</td>
+                <td class="p-2 border-r border-slate-800">UHF SIMPLEX</td>
+                <td class="p-2 border-r border-slate-800 font-bold text-white">ARES-8</td>
+                <td class="p-2 border-r border-slate-800">UHF Simplex Tactical Channel 8</td>
+                <td class="p-2 border-r border-slate-800">433.775 T123.0</td>
+                <td class="p-2 border-r border-slate-800">433.775 T123.0</td>
+                <td class="p-2">FM Simplex</td>
+              </tr>
+              <tr>
+                <td class="p-2 border-r border-slate-800 text-slate-400 font-bold">18</td>
+                <td class="p-2 border-r border-slate-800">UHF SIMPLEX</td>
+                <td class="p-2 border-r border-slate-800 font-bold text-white">ARES-9</td>
+                <td class="p-2 border-r border-slate-800">UHF Simplex Tactical Channel 9</td>
+                <td class="p-2 border-r border-slate-800">444.215 T123.0</td>
+                <td class="p-2 border-r border-slate-800">444.215 T123.0</td>
+                <td class="p-2">FM Simplex</td>
+              </tr>
+              <tr>
+                <td class="p-2 border-r border-slate-800 text-slate-400 font-bold">19</td>
+                <td class="p-2 border-r border-slate-800">UHF SIMPLEX</td>
+                <td class="p-2 border-r border-slate-800 font-bold text-white">ARES-10</td>
+                <td class="p-2 border-r border-slate-800">UHF Simplex Tactical Channel 10</td>
+                <td class="p-2 border-r border-slate-800">444.715 T123.0</td>
+                <td class="p-2 border-r border-slate-800">444.715 T123.0</td>
                 <td class="p-2">FM Simplex</td>
               </tr>
               <tr class="bg-cyan-950/20">
@@ -4278,6 +4388,11 @@
             </tbody>
           </table>
         </div>
+
+        <div>
+          <label class="text-slate-400 block mb-1 font-bold">11. ADDITIONAL INFORMATION / REMARKS</label>
+          <input type="text" id="ics205-remarks" value="All channels verified against Freestone County ARES Tactical Field Binder Revision 7.5 (Signed 11/01/2026). Emergency fallback: HF / GMRS / Message Delivery." class="w-full bg-[#0b0e14] border border-slate-700 rounded p-2 text-slate-200">
+        </div>
       </div>
 
       <!-- FORM CONTAINER: ICS-214 (Activity Log) -->
@@ -4298,13 +4413,31 @@
           </div>
         </div>
 
-        <div class="p-3 bg-black/60 rounded-lg border border-slate-800 space-y-1">
+        <div class="p-3 bg-black/60 rounded-lg border border-slate-800 space-y-2">
           <div class="flex justify-between items-center text-xs">
-            <span class="text-slate-300 font-bold">INCIDENT: <span class="text-white">SEVERE WEATHER & FLASH FLOODING</span></span>
+            <span class="text-slate-300 font-bold">INCIDENT: <span class="text-white">SEVERE WEATHER &amp; FLASH FLOODING</span></span>
             <span class="text-emerald-400 font-bold">14.0 Cumulative Volunteer Man-Hours (5 Operators)</span>
           </div>
           <div class="text-[11px] text-slate-400">
             Unit Leader: Brian Davis (KG5TZT - EC) • Home Agency: Freestone County ARES / Texas RACES
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-800/80">
+            <div>
+              <label class="text-[10px] text-slate-400 block mb-0.5 font-bold">POSITION / ROLE</label>
+              <input type="text" id="ics214-inline-role" value="Field Operator / Net Control" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-1.5 text-xs text-slate-200">
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-400 block mb-0.5 font-bold">CHECK-IN TIME (24H)</label>
+              <input type="text" id="ics214-checkin-time" value="14:45 LOCAL (19:45Z)" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-1.5 text-xs text-emerald-400 font-bold">
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-400 block mb-0.5 font-bold">CHECK-OUT TIME (24H)</label>
+              <input type="text" id="ics214-checkout-time" value="17:28 LOCAL (22:28Z)" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-1.5 text-xs text-amber-400 font-bold">
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-400 block mb-0.5 font-bold">NCS SIGNATURE / VERIFICATION</label>
+              <input type="text" id="ics214-ncs-sig" value="Verified by KG5TZT (EC / NCS)" class="w-full bg-[#0b0e14] border border-slate-700 rounded p-1.5 text-xs text-slate-200">
+            </div>
           </div>
         </div>
 
@@ -4348,6 +4481,26 @@
             <button type="button" onclick="copyIcsRadiogram('ICS-213')" class="px-2.5 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-bold rounded-lg flex items-center gap-1 cursor-pointer" title="Copy formatted text for Winlink / Net">
               <span>📋</span><span>COPY</span>
             </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="text-slate-400 block mb-1 font-bold">MESSAGE PRECEDENCE (MANUAL SEC 2.4)</label>
+            <select id="ics213-precedence" class="w-full bg-[#0b0e14] border border-slate-700 rounded-lg p-2 text-amber-400 font-bold focus:outline-none focus:border-blue-500">
+              <option value="ROUTINE" selected>ROUTINE — Normal / Administrative Traffic</option>
+              <option value="WELFARE">WELFARE — Health &amp; Welfare Inquiry</option>
+              <option value="PRIORITY">PRIORITY — Time-Sensitive Operational Traffic</option>
+              <option value="EMERGENCY">EMERGENCY — Life Safety / Immediate Danger</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-slate-400 block mb-1 font-bold">MESSAGE NUMBER</label>
+            <input type="text" id="ics213-msg-num" value="FC-213-001" placeholder="e.g. FC-213-001" class="w-full bg-[#0b0e14] border border-slate-700 rounded-lg p-2 text-slate-200 font-bold focus:outline-none focus:border-blue-500">
+          </div>
+          <div>
+            <label class="text-slate-400 block mb-1 font-bold">DATE &amp; TIME PREPARED (24H LOCAL / UTC)</label>
+            <input type="text" id="ics213-datetime" placeholder="e.g. 2026-11-01 14:30 LOCAL" class="w-full bg-[#0b0e14] border border-slate-700 rounded-lg p-2 text-slate-200 focus:outline-none focus:border-blue-500">
           </div>
         </div>
 
@@ -5832,12 +5985,12 @@
               <span class="text-slate-300">Quarter size (1.00") or larger. Pea/dime/nickel are non-severe and should NOT be reported.</span>
             </div>
             <div class="p-2.5 rounded bg-[#080b10] border border-sky-900/60">
-              <strong class="text-sky-400 block">💨 DAMAGING WIND ≥ 58 MPH</strong>
-              <span class="text-slate-300">Measured or estimated gusts causing trees down, large limbs snapped, or roof damage.</span>
+              <strong class="text-sky-400 block">💨 DAMAGING WIND ≥ 50 MPH (LEVEL II) / ≥ 58 MPH (SEVERE)</strong>
+              <span class="text-slate-300">Measured gusts ≥ 50 MPH (Level II / Spotter Criteria) or ≥ 58 MPH (Severe / Level I), trees down, or structural roof damage.</span>
             </div>
             <div class="p-2.5 rounded bg-[#080b10] border border-blue-900/60">
-              <strong class="text-blue-400 block">🌊 FLASH FLOODING</strong>
-              <span class="text-slate-300">Water rising rapidly over roadways, impassable bridges, or overflowing creeks.</span>
+              <strong class="text-blue-400 block">🌊 FLASH FLOODING &amp; ❄️ WINTER WEATHER</strong>
+              <span class="text-slate-300">Water rising over roadways/impassable bridges, or freezing rain/ice/sleet/snow accumulation on roads and power lines.</span>
             </div>
           </div>
         </div>
@@ -6194,7 +6347,7 @@
   <!-- JAVASCRIPT STATE ENGINE -->
   <script>
     // ==========================================
-    // TACTICAL CRYPTO ENGINE: AES-256 LOCAL STORAGE & BCRYPT/PBKDF2-SHA256 PASSWORD HASHING
+    // TACTICAL CRYPTO ENGINE: NATIVE OS SANDBOX STORAGE & BCRYPT/PBKDF2-SHA256 PASSWORD HASHING
     // ==========================================
     const TacticalCryptoEngine = (function() {
       // FIPS 180-4 SHA-256 Pure Synchronous Implementation (Offline WebView & Cloud Sync Safe)
@@ -6723,19 +6876,19 @@ assignedSpots: [
       channels: [
         { ch: '01', name: 'FF 110', rx: '145.1100', tx: '144.5100', offset: '-0.600 MHz', tone: 'TSQ 146.2 Hz', mode: 'FM', power: '50W', category: 'repeater', pace: 'P', assignment: 'W5NFL Fairfield VHF - Sunday 2000 Training Net' },
         { ch: '02', name: 'WRTM 760', rx: '146.7600', tx: '146.1600', offset: '-0.600 MHz', tone: '136.5 Hz', mode: 'FM', power: '50W', category: 'repeater', pace: 'A', assignment: 'KE5DFY Wortham VHF (Primary Operations Backup)' },
-        { ch: '03', name: 'FF 70C', rx: '443.9000', tx: '448.9000', offset: '+5.000 MHz', tone: '136.5 Hz', mode: 'FM', power: '40W', category: 'repeater', pace: '', assignment: 'KE5DFY Fairfield UHF Link' },
+        { ch: '03', name: 'FF 70C', rx: '443.9000', tx: '448.9000', offset: '+5.000 MHz', tone: '136.5 Hz', mode: 'FM', power: '40W', category: 'repeater', pace: 'A', assignment: 'KE5DFY Fairfield UHF (FF 70C / FF 70CM)' },
         { ch: '04', name: 'MEX 390', rx: '145.3900', tx: '144.7900', offset: '-0.600 MHz', tone: '146.2 Hz', mode: 'FM', power: '50W', category: 'repeater', pace: '', assignment: 'W5NFL Tehuacana VHF (Limestone ARES / EchoLink W5KFX-R)' },
         { ch: '05', name: 'COR 290', rx: '145.2900', tx: '144.6900', offset: '-0.600 MHz', tone: '146.2 Hz', mode: 'FM', power: '50W', category: 'repeater', pace: '', assignment: 'W5NFL Corsicana Nature Park (Navarro County ARES)' },
-        { ch: '06', name: 'FF GMRS', rx: '462.6000', tx: '467.6000', offset: '+5.000 MHz', tone: '136.5 Hz', mode: 'FM', power: '50W', category: 'gmrs', pace: '', assignment: 'Shared local GMRS (Fairfield Area Link Ch 17)' },
-        { ch: '07', name: 'MEX GMRS', rx: '462.7000', tx: '467.7000', offset: '+5.000 MHz', tone: '146.2 Hz', mode: 'FM', power: '50W', category: 'gmrs', pace: '', assignment: 'WRKY482 Tehuacana GMRS Ch 21 (Limestone Area Link)' },
-        { ch: '08', name: 'COR GMRS', rx: '462.5500', tx: '467.5500', offset: '+5.000 MHz', tone: '146.2 Hz', mode: 'FM', power: '50W', category: 'gmrs', pace: '', assignment: 'Corsicana GMRS Ch 15 (Navarro Area Link)' },
-        { ch: '09', name: 'ARES TAC', rx: '146.5800', tx: '146.5800', offset: 'Simplex', tone: '123.0 Hz (TSQ)', mode: 'FM', power: '50W', category: 'vhf', pace: 'C', assignment: 'VHF Simplex Countywide Tactical Relays (Contingency)' },
+        { ch: '06', name: 'FF GMRS', rx: '462.6000', tx: '467.6000', offset: '+5.000 MHz', tone: '136.5 Hz', mode: 'FM', power: '50W', category: 'gmrs', pace: 'E', assignment: 'Shared local GMRS (Fairfield Area Link)' },
+        { ch: '07', name: 'MEX GMRS', rx: '462.7000', tx: '467.7000', offset: '+5.000 MHz', tone: '146.2 Hz', mode: 'FM', power: '50W', category: 'gmrs', pace: 'E', assignment: 'WRKY482 Tehuacana GMRS Ch 21 (Limestone Area Link)' },
+        { ch: '08', name: 'COR GMRS', rx: '462.5500', tx: '467.5500', offset: '+5.000 MHz', tone: '146.2 Hz', mode: 'FM', power: '50W', category: 'gmrs', pace: 'E', assignment: 'Corsicana GMRS Ch 15 (Navarro Area Link)' },
+        { ch: '09', name: 'ARES TAC', rx: '146.5800', tx: '146.5800', offset: 'Simplex', tone: '123.0 Hz (TSQ)', mode: 'FM', power: '50W', category: 'vhf', pace: 'C', assignment: 'VHF Simplex (Contingency Directed)' },
         { ch: '10', name: 'ARES-1', rx: '146.3000', tx: '146.3000', offset: 'Simplex', tone: '123.0 Hz', mode: 'FM', power: '25W', category: 'vhf', pace: '', assignment: 'VHF Simplex Tactical Channel 1' },
         { ch: '11', name: 'ARES-2', rx: '146.9000', tx: '146.9000', offset: 'Simplex', tone: '123.0 Hz', mode: 'FM', power: '25W', category: 'vhf', pace: '', assignment: 'VHF Simplex Tactical Channel 2' },
         { ch: '12', name: 'ARES-3', rx: '147.2000', tx: '147.2000', offset: 'Simplex', tone: '123.0 Hz', mode: 'FM', power: '25W', category: 'vhf', pace: '', assignment: 'VHF Simplex Tactical Channel 3' },
         { ch: '13', name: 'ARES-4', rx: '147.5000', tx: '147.5000', offset: 'Simplex', tone: '123.0 Hz', mode: 'FM', power: '25W', category: 'vhf', pace: '', assignment: 'VHF Simplex Tactical Channel 4' },
         { ch: '14', name: 'ARES-5', rx: '147.8000', tx: '147.8000', offset: 'Simplex', tone: '123.0 Hz', mode: 'FM', power: '25W', category: 'vhf', pace: '', assignment: 'VHF Simplex Tactical Channel 5' },
-        { ch: '15', name: 'ARES-6', rx: '433.1450', tx: '433.1450', offset: 'Simplex', tone: '123.0 Hz', mode: 'FM', power: '20W', category: 'uhf', pace: '', assignment: 'UHF Simplex Tactical Channel 6' },
+        { ch: '15', name: 'ARES-6', rx: '433.1450', tx: '433.1450', offset: 'Simplex', tone: '123.0 Hz', mode: 'FM', power: '20W', category: 'uhf', pace: 'C', assignment: 'UHF Simplex (Contingency)' },
         { ch: '16', name: 'ARES-7', rx: '433.5250', tx: '433.5250', offset: 'Simplex', tone: '123.0 Hz', mode: 'FM', power: '20W', category: 'uhf', pace: '', assignment: 'UHF Simplex Tactical Channel 7' },
         { ch: '17', name: 'ARES-8', rx: '433.7750', tx: '433.7750', offset: 'Simplex', tone: '123.0 Hz', mode: 'FM', power: '20W', category: 'uhf', pace: '', assignment: 'UHF Simplex Tactical Channel 8' },
         { ch: '18', name: 'ARES-9', rx: '444.2150', tx: '444.2150', offset: 'Simplex', tone: '123.0 Hz', mode: 'FM', power: '20W', category: 'uhf', pace: '', assignment: 'UHF Simplex Tactical Channel 9' },
@@ -6786,7 +6939,7 @@ assignedSpots: [
       if (clearance.levelNum === 6 || appState.myCall === 'KG5TZT' || clearance.canSendAlerts) {
         const cur = getCountyResponseLevel();
         const pick = prompt(
-          `🚨 FREESTONE COUNTY ARES: RESPONSE LEVEL CONTROL\n\nCurrent Active Posture: Level ${cur}\n\nEnter new County Response Level number (1-3):\n\n1 = LEVEL 1: FULL ACTIVATION\n2 = LEVEL 2: STAND BY\n3 = LEVEL 3: MONITORING`,
+          `🚨 FREESTONE COUNTY ARES: RESPONSE LEVEL CONTROL\n\nCurrent Active Posture: Level ${cur}\n\nENTER COMMAND STATUS LEVEL:\n1 = LEVEL 1 (I): FULL ACTIVATION (EMERGENCY)\n2 = LEVEL 2 (II): ESCALATED / STANDBY (SEVERE WX)\n3 = LEVEL 3 (III): MONITORING (STEADY STATE)`,
           cur
         );
         if (pick !== null) {
@@ -12004,7 +12157,7 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
     }
 
     // ==========================================
-    // AES-256 ENCRYPTED CONFIGURATION EXPORT & IMPORT (EC REPEATER & TACTICAL SYNC)
+    // HMAC-SHA256 SIGNED CONFIGURATION EXPORT & IMPORT (EC REPEATER & TACTICAL SYNC)
     // ==========================================
     function exportEncryptedTacticalConfig() {
       if (typeof hasEcDispatchAuthority === 'function' && !hasEcDispatchAuthority()) {
@@ -12123,9 +12276,9 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
           statusEl.textContent = `✅ Verified & Imported ${bundle.channels.length} Channels (Signed by ${bundle.exportedBy})`;
         }
 
-        alert(`✅ AES-256 CONFIGURATION VERIFIED & APPLIED!\n\n• Signed By: ${bundle.exportedBy}\n• Timestamp: ${bundle.exportedAt}\n• Verified Repeaters/Channels Updated: ${bundle.channels.length}\n• Activation Posture: Level ${bundle.countyResponseLevel}\n\nYour local repeater matrix and tactical configurations are now synchronized.`);
+        alert(`✅ SIGNED CONFIGURATION VERIFIED & APPLIED!\n\n• Signed By: ${bundle.exportedBy}\n• Timestamp: ${bundle.exportedAt}\n• Verified Repeaters/Channels Updated: ${bundle.channels.length}\n• Activation Posture: Level ${bundle.countyResponseLevel}\n\nYour local repeater matrix and tactical configurations are now synchronized.`);
       } catch (err) {
-        alert(`❌ AES-256 DECRYPTION / INTEGRITY CHECK FAILED\n\n${err.message}\n\nVerify that the Tactical Encryption Passphrase matches the EC's export key and that the encrypted string was copied in full.`);
+        alert(`❌ SIGNATURE / INTEGRITY CHECK FAILED\n\n${err.message}\n\nVerify that the Tactical Authentication Key matches the EC's export key and that the signed string was copied in full.`);
       }
     }
 
@@ -12185,6 +12338,9 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
 
     // Transmit ICS-213 General Message directly to EC Brian Davis via Cloud & In-App Dispatch
     async function transmitIcs213ToEc() {
+      const precVal = document.getElementById('ics213-precedence') ? document.getElementById('ics213-precedence').value : 'ROUTINE';
+      const msgNumVal = document.getElementById('ics213-msg-num') ? document.getElementById('ics213-msg-num').value.trim() : 'FC-213-001';
+      const dtInputVal = document.getElementById('ics213-datetime') ? document.getElementById('ics213-datetime').value.trim() : '';
       const toVal = document.getElementById('ics213-to') ? document.getElementById('ics213-to').value.trim() : 'Emergency Coordinator Brian Davis (KG5TZT)';
       let fromVal = document.getElementById('ics213-from') ? document.getElementById('ics213-from').value.trim() : '';
       const posVal = document.getElementById('ics213-position') ? document.getElementById('ics213-position').value.trim() : 'Field Station';
@@ -12217,18 +12373,20 @@ Dispatch Authority: ${appState.canSendAlerts ? 'AUTHORIZED (Full Broadcast/Demob
 
       const formId = 'ICS213_' + Date.now();
       const now = new Date();
-      const localTimeStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const localTimeStr = dtInputVal || (now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }));
 
       const formPayload = {
         id: formId,
         formType: 'ICS-213',
         formTitle: 'ICS FORM 213 — GENERAL MESSAGE',
+        precedence: precVal,
+        messageNumber: msgNumVal,
         timestamp: Date.now(),
         dateLocal: localTimeStr,
         to: toVal,
         from: fromVal,
         position: posVal,
-        subject: subjVal,
+        subject: `[${precVal}] ${subjVal}`,
         message: msgVal,
         replyRequired: replyVal,
         authorCall: authorCall || 'FIELD-OP',
@@ -15737,14 +15895,17 @@ function toggleIncidentDetailsExpanded() {
       `;
     }
 
-    // 7. Member Operational Status System
+    // 7. Member Operational Status System (Aligned with Manual Sections 4.1, 4.3, 4.5)
     const OPERATIONAL_STATUS_OPTIONS = [
       { id: 'available', label: 'AVAILABLE / STANDBY', dot: 'bg-emerald-400', badgeClass: 'bg-emerald-950 text-emerald-300 border-emerald-500' },
+      { id: 'assigned', label: 'ASSIGNED', dot: 'bg-cyan-400', badgeClass: 'bg-cyan-950 text-cyan-200 border-cyan-500 font-bold' },
       { id: 'responding', label: 'RESPONDING', dot: 'bg-red-500 animate-pulse', badgeClass: 'bg-red-950 text-red-200 border-red-600 font-black' },
+      { id: 'en_route', label: 'EN ROUTE', dot: 'bg-blue-400 animate-pulse', badgeClass: 'bg-blue-950 text-blue-200 border-blue-600' },
       { id: 'on_scene', label: 'ON SCENE / STAGED', dot: 'bg-amber-400', badgeClass: 'bg-amber-950 text-amber-300 border-amber-600' },
       { id: 'net_control', label: 'NET CONTROL', dot: 'bg-purple-400', badgeClass: 'bg-purple-950 text-purple-200 border-purple-600 font-black' },
-      { id: 'en_route', label: 'EN ROUTE', dot: 'bg-blue-400 animate-pulse', badgeClass: 'bg-blue-950 text-blue-200 border-blue-600' },
-      { id: 'off_duty', label: 'OFF DUTY', dot: 'bg-slate-500', badgeClass: 'bg-slate-900 text-slate-400 border-slate-700' }
+      { id: 'delayed', label: 'DELAYED / LIMITED AVAILABILITY', dot: 'bg-orange-400', badgeClass: 'bg-orange-950 text-orange-300 border-orange-600' },
+      { id: 'off_duty', label: 'UNAVAILABLE / OFF DUTY', dot: 'bg-slate-500', badgeClass: 'bg-slate-900 text-slate-400 border-slate-700' },
+      { id: 'lost_contact', label: 'LOST CONTACT', dot: 'bg-rose-500 animate-ping', badgeClass: 'bg-rose-950 text-rose-200 border-rose-500 font-black' }
     ];
 
     async function setMyOperationalStatus(statusId) {
@@ -19508,11 +19669,11 @@ Your console is now authorized and unlocked.`);
         }
       }
 
-      // 2. Load bundled official Revision 7.5
-      if (loadingText) loadingText.textContent = 'Loading Bundled Revision 7.5 (68.6 MB)...';
+      // 2. Load bundled official Revision 7.5 (Signed 11/01/2026 — 81.5 MB)
+      if (loadingText) loadingText.textContent = 'Loading Bundled Revision 7.5 (81.5 MB)...';
       tacticalPdfSource = 'bundled';
       tacticalPdfFileName = 'Tactical_Field_Binder_7.5.pdf';
-      updateManualHeaderUI('Tactical_Field_Binder_7.5.pdf', 71935279, false);
+      updateManualHeaderUI('Tactical_Field_Binder_7.5.pdf', 85475516, false);
 
       try {
         const loadingTask = pdfjsLib.getDocument(DEFAULT_BUNDLED_PATH);
@@ -19582,7 +19743,7 @@ Your console is now authorized and unlocked.`);
         if (resetBtn) resetBtn.classList.remove('hidden');
       } else {
         if (versionBadge) {
-          versionBadge.textContent = 'REVISION 7.5 (OCTOBER 2026)';
+          versionBadge.textContent = 'REVISION 7.5 (SIGNED 11/01/2026)';
           versionBadge.className = 'px-2.5 py-0.5 rounded text-xs font-black bg-emerald-950 text-emerald-300 border border-emerald-600 shadow';
         }
         if (storageBadge) {
@@ -19963,7 +20124,7 @@ Your console is now authorized and unlocked.`);
         category: 'OFFICIAL OPERATOR FIELD MANUAL',
         title: 'FREESTONE COUNTY ARES TACTICAL MOBILE',
         subtitle: 'COMPLETE OPERATOR FIELD GUIDE • MARINE-PROOF EDITION',
-        meta: 'Step-By-Step Illustrated Visual Instructions for Android & iOS\nCross-Platform Unified Architecture • Build 104 (v7.9.27) • November 2026\nCounty Emergency Coordinator: Brian Davis (KG5TZT)',
+        meta: 'Step-By-Step Illustrated Visual Instructions for Android & iOS\nCross-Platform Unified Architecture • Build 105 (v7.9.28) • November 2026\nCounty Emergency Coordinator: Brian Davis (KG5TZT)',
         image: 'guide_screens/screen_02_dashboard_annotated.png'
       },
       {
@@ -21153,7 +21314,7 @@ Your console is now authorized and unlocked.`);
         </div>
         <div>
           <div class="text-base font-black text-white">Tactical Mobile App</div>
-          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.27 (Build 104)</div>
+          <div class="text-xs font-bold text-emerald-400 mt-0.5">Version 7.9.28 (Build 105)</div>
           <div class="text-[10px] text-slate-400 font-mono mt-1">Official Countywide Emergency Release</div>
         </div>
       </div>

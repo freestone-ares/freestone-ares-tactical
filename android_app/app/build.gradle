@@ -20,8 +20,8 @@ android {
         applicationId "org.freestone.ares.tactical"
         minSdk 24
         targetSdk 36
-        versionCode 104
-        versionName "7.9.27"
+        versionCode 105
+        versionName "7.9.28"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
