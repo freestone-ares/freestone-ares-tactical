@@ -46,19 +46,19 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug --stacktrace
           ./gradlew bundleRelease --stacktrace
-          cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.9.27.apk
+          cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical-v7.9.28.apk
           cp app/build/outputs/apk/debug/app-debug.apk ../Freestone-ARES-Tactical.apk
-          cp app/build/outputs/bundle/release/*.aab ../Freestone-ARES-Tactical-v7.9.27.aab || cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical-v7.9.27.aab
+          cp app/build/outputs/bundle/release/*.aab ../Freestone-ARES-Tactical-v7.9.28.aab || cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical-v7.9.28.aab
           cp app/build/outputs/bundle/release/*.aab ../Freestone-ARES-Tactical.aab || cp app/build/outputs/bundle/*/*.aab ../Freestone-ARES-Tactical.aab
 
       - name: Upload APK & Bundle as Workflow Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Freestone-ARES-Tactical-v7.9.27-Distribution
+          name: Freestone-ARES-Tactical-v7.9.28-Distribution
           path: |
-            Freestone-ARES-Tactical-v7.9.27.apk
+            Freestone-ARES-Tactical-v7.9.28.apk
             Freestone-ARES-Tactical.apk
-            Freestone-ARES-Tactical-v7.9.27.aab
+            Freestone-ARES-Tactical-v7.9.28.aab
             Freestone-ARES-Tactical.aab
           retention-days: 30
 
@@ -66,30 +66,29 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v7.9.27
+          tag_name: v7.9.28
           target_commitish: ${{ github.sha }}
-          name: "Freestone ARES Tactical v7.9.27 Build 104 (Remote Alert Listeners Blocked, Responsive Engine & Universal Photo Picker)"
+          name: "Freestone ARES Tactical v7.9.28 Build 105 (Official Signed Field Binder 7.5 & 100% Manual Alignment)"
           make_latest: true
           body: |
-            ## Freestone County ARES - Tactical Operations Field Build (v7.9.27 / Build 104)
+            ## Freestone County ARES - Tactical Operations Field Build (v7.9.28 / Build 105)
             
             Universal release for Android Phones & Tablets and Apple iOS, iPadOS, and macOS (Designed for iPad).
             
             ### Package Files Included:
-            - **`Freestone-ARES-Tactical.apk` / `Freestone-ARES-Tactical-v7.9.27.apk`**: Standalone Android field installer.
-            - **`Freestone-ARES-Tactical.aab` / `Freestone-ARES-Tactical-v7.9.27.aab`**: Signed Android App Bundle for Google Play.
+            - **`Freestone-ARES-Tactical.apk` / `Freestone-ARES-Tactical-v7.9.28.apk`**: Standalone Android field installer.
+            - **`Freestone-ARES-Tactical.aab` / `Freestone-ARES-Tactical-v7.9.28.aab`**: Signed Android App Bundle for Google Play.
             - **`Freestone_ARES_Tactical_User_Guide.pptx`**: Full 16:9 widescreen PowerPoint presentation guide.
             - **`Freestone_ARES_Tactical_User_Guide.pdf`**: High-resolution printable field booklet.
             
-            ### What's New in Build 103:
-            - **Cross-Platform Responsive Layout Engine:** Fluid grids and media queries scaling across smartphones, tablets, laptops, desktops, Raspberry Pi browsers, and NUC mini-PC displays.
-            - **Operator ID Photo Universal Picker:** Explicit "Choose Photo" button using universal HTML5/File System Access APIs alongside native camera/gallery wrappers across iOS, Android, macOS, Windows, Linux, and Chromium.
-            - **Storm Spotter & PACE Flexbox Alignment:** Re-engineered PACE channel badges (`CH 01` - `CH 22`) and Certified Spotter console layouts to prevent overlapping on all screen sizes.
+            ### What's New in Build 105:
+            - **100% Field Manual 7.5 Alignment:** Applied all 8 consistency fixes across PACE Emergency card, channel remarks, EC command status prompt, SKYWARN 6-hazard selector & Four W's, ICS-205 11-block form & 22-channel table, ICS-213 Message Precedence, ICS-214 accountability fields, and operator status classifications.
+            - **Bundled Signed Tactical Field Binder 7.5:** Synced the newly signed `Tactical_Field_Binder_7.5.pdf` (81.5 MB, signed by EC Brian Davis 11/01/2026) across all platforms.
             - **Export Compliance (`ITSAppUsesNonExemptEncryption = false`):** Preserved in `Info.plist`.
           files: |
-            Freestone-ARES-Tactical-v7.9.27.apk
+            Freestone-ARES-Tactical-v7.9.28.apk
             Freestone-ARES-Tactical.apk
-            Freestone-ARES-Tactical-v7.9.27.aab
+            Freestone-ARES-Tactical-v7.9.28.aab
             Freestone-ARES-Tactical.aab
             web/Freestone_ARES_Tactical_User_Guide.pptx
             web/Freestone_ARES_Tactical_User_Guide.pdf
